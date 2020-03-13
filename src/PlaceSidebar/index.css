@@ -1,0 +1,15 @@
+.roundButton{
+	border-radius: 999px !important;
+}
+
+
+.MuiCardContent-root .MuiListItem-gutters {
+    padding-left: 32px;
+    padding-right: 32px;
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+}
+
+..MuiSlider-track{
+	background: green;
+}

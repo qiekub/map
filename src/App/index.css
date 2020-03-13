@@ -1,0 +1,79 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: black;
+
+	--z-index-page: 1;
+	--z-index-fabs: 2;
+	--z-index-infocard: 3;
+	--z-index-sidebar: 4;
+	--z-index-searchbar: 5;
+}
+#root{
+	border-radius: 8px;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.addNewFab{
+	z-index: var(--z-index-fabs);
+	position: absolute !important;
+	background: white !important;
+	color: black !important;
+
+	bottom: 16px;
+	left: 16px;
+}
+
+.page {
+	z-index: var(--z-index-page);
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+
+.SearchBar,
+.InfoCard,
+.Sidebar{
+	position: absolute;
+	height: auto;
+	width: 400px;
+	max-width: 100%;
+	left: 0;
+}
+
+.Sidebar{
+	z-index: var(--z-index-sidebar);
+	top: 0;
+	bottom: 0;
+
+	border-radius: 0 !important;
+	padding-top: 86px;
+
+	overflow: auto !important;
+	overflow-x: hidden !important;
+}
+.Sidebar.hide{
+	display: none;
+}
+
+.SearchBar{
+	z-index: var(--z-index-searchbar);
+	top: 0;
+}
+.InfoCard{
+	z-index: var(--z-index-infocard);
+	bottom: 0;
+}
+
+

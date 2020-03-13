@@ -1,0 +1,33 @@
+.map{
+	width: 100%;
+	height: 100%;
+}
+
+/* popup styles: */
+.leaflet-popup-content-wrapper{
+	--hello: 'welt';
+	border-radius: 0 !important;
+	padding: 0 !important;
+}
+.leaflet-popup-content{
+	margin: 0 !important;
+}
+.popupBackground {
+	padding: 8px;
+	border: 4px solid white;
+}
+.popupContent {
+	background: white;
+	padding: 8px;
+}
+.popupContent h1{
+	margin-right: 38px;
+}
+.popupContent p{
+	margin: 18px 0 0 0;
+}
+.leaflet-container a.leaflet-popup-close-button {
+	padding: 27px 27px 0 0 !important;
+	color: red !important;
+	font-size: 24px !important;
+}
