@@ -25,7 +25,7 @@ export default class PageMap extends React.Component {
 		super(props)
 
 		this.state = {
-			places: [],
+			docs: [],
 			bounds: null,
 		}
 
@@ -50,9 +50,6 @@ export default class PageMap extends React.Component {
 				flyTo: (...attr) => this.map.leafletElement.flyTo(...attr),
 			})
 		}
-
-		// console.log('leafletElement', this.map.leafletElement)
-		// console.log('getBounds', this.map.leafletElement.getBounds())
 	}
 	componentWillUnmount(){
 		clearTimeout(this.viewportChangedTimeout)
@@ -76,23 +73,69 @@ export default class PageMap extends React.Component {
 
 	loadMarkers(){
 		window.graphql.query({query: gql`{
-			getAllPlaces{
+		  	getAllPlaces {
 				_id
-				_type
-				name
-				lat
-				lng
+				properties {
+					... on Place {
+						name
+						
+						location {
+							lng
+							lat
+						}
+						address
+				
+						min_age
+						max_age
+						links
+						this_is_a_place_for
+						tags
+					}
+				}
 			}
 		}`}).then(result => {
-			this.setState({places: result.data.getAllPlaces})
+			this.setState({docs: result.data.getAllPlaces})
+
+			// for (const doc of result.data.getAllPlaces) {
+			// 	break
+			//
+			// 	const changeset = {
+			// 		forDoc: null,
+			// 		properties: doc.properties,
+			// 		sources: 'https://thomasrosen.github.io/queer-centers/',
+			// 		comment: '',
+			// 		fromBot: true,
+			// 		created_by: 'queer.qiekub.com',
+			// 		created_at: new Date()*1,
+			// 	}
+			//
+			// 	let changeset_json = JSON.stringify(changeset)
+			// 	changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
+			//
+			// 	window.graphql.mutate({mutation: gql`mutation {
+			// 		addChangeset(changeset:${changeset_json}) {
+			// 			_id
+			// 			properties {
+			// 				... on Changeset {
+			// 					forDoc
+			// 				}
+			// 			}
+			// 		}
+			// 	}`}).then(result => {
+			// 		console.info('mutate-result', result)
+			// 	}).catch(error=>{
+			// 		console.error('mutate-error', error)
+			// 	})
+			// }
+
 		}).catch(error=>{
 			console.error(error)
 		})
 	}
 
-	async showPlace(place,thisMarkerRef) {
-		await navigate(`/place/${place.name}/`)
-		// await navigate(`/place/${place._id}/`)
+	async showPlace(doc,thisMarkerRef) {
+		// await navigate(`/place/${doc.properties.name}/`)
+		await navigate(`/place/${doc._id}/`)
 	}
 
 	render() {
@@ -140,24 +183,28 @@ export default class PageMap extends React.Component {
 
 
 				<LayerGroup ref={this.MarkerLayerRef}>
-					{this.state.places.map(place=>{
+					{this.state.docs.map(doc=>{
 						const thisMarkerRef = React.createRef()
-						return (<Marker
-							key={place.name}
-							position={[place.lat,place.lng]} 
-							icon={markerIcon}
-							ref={thisMarkerRef}
-							onClick={()=>this.showPlace(place,thisMarkerRef)}
-						>
-							<Tooltip
-								sticky={true}
-								interactive={false}
-								opacity={1}
-								permanent={false}
+						const location = doc.properties.location || {}
+						if (location.lng && location.lat) {
+							return (<Marker
+								key={doc.properties.name}
+								position={[location.lat,location.lng]} 
+								icon={markerIcon}
+								ref={thisMarkerRef}
+								onClick={()=>this.showPlace(doc,thisMarkerRef)}
 							>
-								{place.name}
-							</Tooltip>
-						</Marker>)
+								<Tooltip
+									sticky={true}
+									interactive={false}
+									opacity={1}
+									permanent={false}
+								>
+									{doc.properties.name}
+								</Tooltip>
+							</Marker>)
+						}
+						return null
 					})}
 				</LayerGroup>
 			</Map>

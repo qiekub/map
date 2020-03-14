@@ -14,7 +14,7 @@ import {
 import PageMap from '../PageMap/index.js'
 import SearchBar from '../SearchBar/index.js'
 // import InfoCard from '../InfoCard/index.js'
-import PlaceSidebar from '../PlaceSidebar/index.js'
+import Sidebar from '../Sidebar/index.js'
 
 import 'typeface-roboto'
 
@@ -53,19 +53,38 @@ export default class App extends React.Component {
 	startSearch(queryString,callback){
 		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
 			window.graphql.query({query: gql`{
-				geocode(search:"${queryString}"){
-					lat
-					lng
-					boundingbox
+				search(query:"${queryString}"){	
+					geometry {
+						boundingbox {
+							northeast {
+								lng
+								lat
+							}
+							southwest {
+								lng
+								lat
+							}
+						}
+					}
 				}
 			}`}).then(async result => {
-
 				await navigate(`/`)
 
 				this.functions['PageMap'].setBounds([
-					[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
-					[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
+					[
+						result.data.search.geometry.boundingbox.southwest.lat,
+						result.data.search.geometry.boundingbox.southwest.lng,
+					],
+					[
+						result.data.search.geometry.boundingbox.northeast.lat,
+						result.data.search.geometry.boundingbox.northeast.lng,
+					]
 				])
+
+				// this.functions['PageMap'].setBounds([
+				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
+				// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
+				// ])
 				callback()
 			}).catch(error=>{
 				console.error(error)
@@ -112,8 +131,8 @@ export default class App extends React.Component {
 			</Fab>
 
 			<Router primary={false}>
-				<PlaceSidebar
-					path="/place/:placeID"
+				<Sidebar
+					path="/place/:docID"
 					className="Sidebar"
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}

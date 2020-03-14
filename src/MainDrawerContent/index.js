@@ -11,7 +11,7 @@ import {
 
 import {
 	History as HistoryIcon,
-	ContactSupport as ContactSupportIcon,
+	// ContactSupport as ContactSupportIcon,
 	Fullscreen as FullscreenIcon,
 	FullscreenExit as FullscreenExitIcon,
 } from '@material-ui/icons'
@@ -56,11 +56,9 @@ export default class MainDrawerContent extends React.Component {
 			<Divider />
 			<List>
 				<ListItemLink>
-					<ListItemIcon></ListItemIcon>
 					<ListItemText primary="Imprint + Privacy Policy" />
 				</ListItemLink>
 				<ListItemLink>
-					<ListItemIcon><ContactSupportIcon style={{color:'black'}} /></ListItemIcon>
 					<ListItemText primary="Contact" />
 				</ListItemLink>
 			</List>

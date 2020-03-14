@@ -1,6 +1,7 @@
 import React from 'react'
 import './index.css'
 
+import {navigate} from '@reach/router'
 import {gql} from 'apollo-boost'
 
 import {
@@ -47,18 +48,18 @@ const tag_suggestions = ['youthcenter','cafe','bar','education','community-cente
 const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
 
 
-export default class PlaceSidebar extends React.Component {
+export default class Sidebar extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			placeID: null,
-			place: {},
-			changeset: {},
+			docID: null,
+			doc: {},
+			changedProperties: {},
 			stage: 'viewing', // viewing editing submitting
 		}
 
-		this.loadPlaceData = this.loadPlaceData.bind(this)
+		this.loadDoc = this.loadDoc.bind(this)
 
 		this.edit = this.edit.bind(this)
 		this.addComment = this.addComment.bind(this)
@@ -67,79 +68,81 @@ export default class PlaceSidebar extends React.Component {
 
 		this.renderView = this.renderView.bind(this)
 
-			console.log('window.graphql', window.graphql)
-
-		this.updateChangeset = this.updateChangeset.bind(this)
+		this.updateChangedProperties = this.updateChangedProperties.bind(this)
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
-		this.setPlaceID = this.setPlaceID.bind(this)
+		this.setDocID = this.setDocID.bind(this)
+		this.getChangesetDoc = this.getChangesetDoc.bind(this)
 	}
 
 
-	setPlaceID(newPlaceID){
-		if (newPlaceID === 'add') {
+	setDocID(newDocID){
+		if (newDocID === 'add') {
 			this.setState({
-				placeID: null,
-				place: {},
-				changeset: {},
+				docID: null,
+				doc: {},
+				changedProperties: {},
 				stage: 'editing',
 			}, ()=>{
 				this.props.onSetSearchBarValue('Add Place')
 			})
 		}else{
 			this.setState({
-				placeID: newPlaceID,
-				place: {},
-				changeset: {},
+				docID: newDocID,
+				doc: {},
+				changedProperties: {},
 				stage: 'viewing',
 			}, ()=>{
-				this.loadPlaceData(this.state.placeID)
+				this.loadDoc(this.state.docID)
 			})
 		}
 
 		if (this.props.onSetSidebarIsOpen) {
-			this.props.onSetSidebarIsOpen(newPlaceID!=='')
+			this.props.onSetSidebarIsOpen(newDocID!=='')
 		}
 	}
 	componentDidMount() {
-		if (this.props.placeID !== this.state.placeID) {
-			this.setPlaceID(this.props.placeID)
+		if (this.props.docID !== this.state.docID) {
+			this.setDocID(this.props.docID)
 		}
 	}
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (
-			this.props.placeID !== prevProps.placeID &&
-			this.props.placeID !== this.state.placeID
+			this.props.docID !== prevProps.docID &&
+			this.props.docID !== this.state.docID
 		) {
-			this.setPlaceID(this.props.placeID)
+			this.setDocID(this.props.docID)
 		}
 	}
 
-	loadPlaceData(placeID){
-		console.log('placeID', placeID)
-		if (placeID && placeID !== '' && placeID.length > 1 && /\S/.test(placeID)) {
+	loadDoc(docID){
+		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			window.graphql.query({query: gql`{
-				getPlace(_id:"${placeID}"){
+				getPlace(_id:"${docID}"){
 					_id
-					_type
-					name
-					address
-					min_age
-					max_age
-					links
-					this_is_a_place_for
-					tags
-
-					lat
-					lng
+					properties {
+						... on Place {
+							name
+							address
+							min_age
+							max_age
+							links
+							this_is_a_place_for
+							tags
+		
+							location {
+								lng
+								lat
+							}
+						}
+					}
 				}
 			}`}).then(result => {
-				console.log('getPlace-result', result)
-				const place = result.data.getPlace
-				if (this.state.placeID === place.name) {
-				// if (this.state.placeID === place._id) {
-					this.setState({place:place}, ()=>{
+				const doc = result.data.getPlace
+				// if (!!doc && this.state.docID === doc.properties.name) {
+				if (!!doc && this.state.docID === doc._id) {
+					this.setState({doc:doc}, ()=>{
 						if (this.props.onSetSearchBarValue) {
-							this.props.onSetSearchBarValue(place.name)
+							this.props.onSetSearchBarValue(doc.properties.name)
 						}
 
 						// let zoomLevel = (this.props.onGetZoom ? this.props.onGetZoom() : 17)
@@ -149,11 +152,11 @@ export default class PlaceSidebar extends React.Component {
 						//
 						// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
 						// 	if (this.props.onSetView) {
-						// 		this.props.onSetView([place.lat,place.lng],zoomLevel)
+						// 		this.props.onSetView([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
 						// 	}
 						// }else{
 						// 	if (this.props.onFlyTo) {
-						// 		this.props.onFlyTo([place.lat,place.lng],zoomLevel)
+						// 		this.props.onFlyTo([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
 						// 	}
 						// }
 					})
@@ -170,64 +173,113 @@ export default class PlaceSidebar extends React.Component {
 	addComment(){
 		this.setState({stage:'submitting'})
 	}
-	submit(){
-		this.setState({stage:'viewing'})
-
-/*
-{
-	"comment": "d",
-	"sources": "s",
-	"name": "dHarvey House",
-	"address": "2039 W Laskey Rd, dToledo, OH 43612, USA",
-	"min_age": "s",
-	"max_age": "s",
-	"tags": [
-		"youthcenter",
-		"mediaprojects"
-	],
-	"links": "shttp://harveyhousenwo.org/s",
-	"this_is_a_place_for": [
-		"queer",
-		"undecided",
-		"friends",
-		"hetero"
-	]
-}
-*/
-		// const changesetTemp = this.state.changeset
-		let changesetTemp = {
-			...this.state.place,
-			...this.state.changeset,
+	getChangesetDoc(){
+		// const properties = this.state.changedProperties
+		let properties = {
+			// ...this.state.doc.properties,
+			...this.state.changedProperties,
 		}
-		delete changesetTemp.__typename
+		console.log('properties', properties)
 
-		const changesetData = {
-			...changesetTemp,
-			sources: undefined,
-			comment: undefined,
+		// START parse age-range
+		if (properties.min_age || properties.max_age) {
+			let min_age = Number.parseInt(properties.min_age || this.state.doc.properties.min_age)
+			let max_age = Number.parseInt(properties.max_age || this.state.doc.properties.max_age)
+	
+			if (Number.isNaN(min_age) || min_age < 0) {
+				min_age = null
+			}
+			if (Number.isNaN(max_age) || max_age < 0) {
+				max_age = null
+			}
+	
+			if (
+				!Number.isNaN(min_age) && min_age !== null &&
+				!Number.isNaN(max_age) && max_age !== null
+			){
+				const numbers = [min_age,max_age]
+				const numbersSorted = [...numbers].sort((a,b)=>a-b)
+	
+				min_age = numbersSorted[0]
+				max_age = numbersSorted[1]
+	
+				if (
+					numbers[0] === numbersSorted[0] &&
+					numbers[1] === numbersSorted[1]
+				) {
+					if (properties.min_age) {
+						properties.min_age = min_age
+					}
+					if (properties.max_age) {
+						properties.max_age = max_age
+					}
+				}else{
+					properties.min_age = min_age
+					properties.max_age = max_age
+				}
+			}else{
+				if (properties.min_age && min_age !== null) {
+					properties.min_age = min_age
+				}
+				if (properties.max_age && max_age !== null) {
+					properties.max_age = max_age
+				}
+			}
 		}
-		if (Object.keys(changesetData).length > 0) {
-			const changeset = {
-				data: changesetData,
-				sources: changesetTemp.sources,
-				comment: changesetTemp.comment,
+		// END parse age-range
+
+		const sources = this.state.changedProperties.sources
+		const comment = this.state.changedProperties.comment
+
+		if (Object.keys(properties).length > 0) {
+			return {
+				forDoc: this.state.docID,
+				properties: {
+					...properties,
+					sources: undefined,
+					comment: undefined,
+					__typename: 'Place',
+				},
+				sources: sources,
+				comment: comment,
 				fromBot: false,
 				created_by: 'queer.qiekub.com',
 				created_at: new Date()*1,
 			}
+		}else{
+			return null
+		}
+	}
+	submit(){
+		this.setState({stage:'viewing'})
 
-			let changeset_json = JSON.stringify(changeset)
+		const changesetDoc = this.getChangesetDoc()
+
+		if (changesetDoc !== null) {
+			let changeset_json = JSON.stringify(changesetDoc)
 			changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
 
 			window.graphql.mutate({mutation: gql`mutation {
-				addChangeset(changeset:${changeset_json})
-			}`}).then(result => {
-				console.log('mutate-result', result)
+				addChangeset(changeset:${changeset_json}) {
+					_id
+					properties {
+						... on Changeset {
+							forDoc
+							properties {
+								__typename
+							}
+						}
+					}
+				}
+			}`}).then(async result => {
+				console.info('mutate-result', result)
+
+				if (result.data.addChangeset.properties.forDoc) {
+					await navigate(`/place/${result.data.addChangeset.properties.forDoc}/`)
+				}
 			}).catch(error=>{
 				console.error('mutate-error', error)
 			})
-		}else{
-			console.log('else')
 		}
 
 	}
@@ -239,29 +291,30 @@ export default class PlaceSidebar extends React.Component {
 		}
 	}
 
-	// setPlace(place,callback){
-	// 	this.setState({place:place},callback)
-	// }
-	updateChangeset(newValues){
+	updateChangedProperties(newValues){
 		this.setState((state, props) => {
-			return {changeset: {
-				...state.changeset,
+			return {changedProperties: {
+				...state.changedProperties,
 				...newValues,
 			}}
 		})
 	}
 
 	getAgeRangeText(min_age,max_age){
+		min_age = Number.parseInt(min_age)
+		max_age = Number.parseInt(max_age)
 
-		const numbers = [min_age,max_age].sort()
-
-		min_age = Number.parseInt(numbers[0])
 		if (Number.isNaN(min_age) || min_age < 0) {
 			min_age = null
 		}
-		max_age = Number.parseInt(numbers[1])
 		if (Number.isNaN(max_age) || max_age < 0) {
 			max_age = null
+		}
+
+		if (!Number.isNaN(min_age) && !Number.isNaN(max_age)){
+			const numbers = [min_age,max_age].sort((a,b)=>a-b)
+			min_age = numbers[0]
+			max_age = numbers[1]
 		}
 
 		return (
@@ -278,21 +331,22 @@ export default class PlaceSidebar extends React.Component {
 	}
 
 	renderView(){
-		const place = this.state.place
-		// const place = {
-		// 	...this.state.place,
-		// 	...this.state.changeset,
+		const doc = this.state.doc
+		const properties = {...doc.properties}
+		// const properties = {
+		// 	...this.state.doc.properties,
+		// 	...this.state.changedProperties,
 		// }
 
-		if (!(!!place.name) || place.name === '') {
+		if (!(!!properties.name) || properties.name === '') {
 			return ''
 		}
 
-		const name = (place.name ? place.name : '')
+		const name = (properties.name ? properties.name : '')
 
-		const age_range_text = this.getAgeRangeText(place.min_age,place.max_age)
+		const age_range_text = this.getAgeRangeText(properties.min_age,properties.max_age)
 
-		const links = (place.links ? place.links : '').split('\n')
+		const links = (properties.links && properties.links.length > 0 ? properties.links.split('\n') : [])
 
 		return (<React.Fragment key="view">
 				{/*<CardMedia
@@ -307,7 +361,7 @@ export default class PlaceSidebar extends React.Component {
 						{name}
 					</Typography>
 
-					<Typography gutterBottom variant="body2" component="p" color="textSecondary">{place.address}</Typography>
+					<Typography gutterBottom variant="body2" component="p" color="textSecondary">{properties.address}</Typography>
 					
 					{age_range_text === '' ? null : <Typography variant="body2" component="p" color="textSecondary">{age_range_text}</Typography>}
 				
@@ -318,7 +372,7 @@ export default class PlaceSidebar extends React.Component {
 					justifyContent: 'flex-start',
 					flexWrap: 'wrap',
 				}}>
-					{place.tags.map(tag => <Chip key={tag} label={tag} style={{margin:'4px'}}/>)}
+					{(properties.tags || []).map(tag => <Chip key={tag} label={tag} style={{margin:'4px'}}/>)}
 				</CardContent>
 				<Divider />
 				<CardContent>
@@ -366,39 +420,50 @@ export default class PlaceSidebar extends React.Component {
 	}
 
 	renderEdit(){
-		const place = {
-			...this.state.place,
-			...this.state.changeset,
+		const properties = {
+			...this.state.doc.properties,
+			...this.state.changedProperties,
 		}
 
 		const inputStyleProps = {
 			style: {marginBottom:'16px'},
 			variant: 'outlined',
 		}
-		const commonTextFieldProps = (fieldName) => {
+		const commonTextFieldProps = (options) => {
+			// const options = {
+			//	key: 'min_age', // fieldName
+			// 	parser: value => value,
+			// }
+
 			return {
 				...inputStyleProps,
-				defaultValue: (place[fieldName] || ''),
-				onChange: e => this.updateChangeset({[fieldName]:e.target.value}),
+				defaultValue: (properties[options.key] || ''),
+				onChange: e => {
+					let value = e.target.value
+					// if (options.parser) {
+					// 	value = options.parser(value)
+					// }
+					this.updateChangedProperties({[options.key]:value})
+				},
 				multiline: true,
 				fullWidth: true,
-				key: 'TextField_'+fieldName,
+				key: 'TextField_'+options.key,
 			}
 		}
 
-		const age_range_text = this.getAgeRangeText(place.min_age,place.max_age)
+		const age_range_text = this.getAgeRangeText(properties.min_age, properties.max_age)
 
 		return (<React.Fragment key="edit">
 			<CardContent style={{margin:'0 16px'}}>
 				<Typography gutterBottom variant="h5" component="h2">
-					{this.state.placeID === null ? 'Add Place' : 'Edit Place'}
+					{this.state.docID === null ? 'Add Place' : 'Edit Place'}
 				</Typography>
 			</CardContent>
 			<Divider />	
 			<CardContent>
 
-				<TextField {...commonTextFieldProps('name')} label="Name"/>
-				<TextField {...commonTextFieldProps('address')} label="Address"/>
+				<TextField {...commonTextFieldProps({key:'name'})} label="Name"/>
+				<TextField {...commonTextFieldProps({key:'address'})} label="Address"/>
 
 				<fieldset style={{
 					padding: '0 16px 8px 16px',
@@ -421,9 +486,9 @@ export default class PlaceSidebar extends React.Component {
 						alignItems: 'center',
 					}}>
 						<Typography variant="body2" color="textSecondary" style={{padding:'0 16px 0 0',height:'21px',lineHeight:'1.1875em'}}>From</Typography>
-						<TextField {...commonTextFieldProps('min_age')} placeholder="Minimum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
+						<TextField {...commonTextFieldProps({key:'min_age'})} multiline={false} inputProps={{type:"Number"}} placeholder="Minimum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
 						<Typography variant="body2" color="textSecondary" style={{padding:'0 16px',height:'21px',lineHeight:'1.1875em'}}>to</Typography>
-						<TextField {...commonTextFieldProps('max_age')} placeholder="Maximum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
+						<TextField {...commonTextFieldProps({key:'max_age'})} multiline={false} inputProps={{type:"Number"}} placeholder="Maximum" fullWidth={false} variant="standard" style={{width:'50%'}}/>
 					</div>
 				</fieldset>
 
@@ -433,12 +498,12 @@ export default class PlaceSidebar extends React.Component {
 					disableClearable
 					disableCloseOnSelect={false}
 					options={tag_suggestions}
-					defaultValue={place.tags || []}
+					defaultValue={properties.tags || []}
 					renderTags={(suggestions, getProps) => {
 						return suggestions.map((suggestion, index) => (<Chip key={suggestion} label={suggestion} {...getProps({index})} />))
 					}}
 					renderInput={params => (<TextField {...params} label="Tags" {...inputStyleProps}/>)}
-					onChange={(e,value)=>this.updateChangeset({tags:value})}
+					onChange={(e,value)=>this.updateChangedProperties({tags:value})}
 				/>
 
 				<Autocomplete
@@ -447,18 +512,18 @@ export default class PlaceSidebar extends React.Component {
 					disableClearable
 					disableCloseOnSelect={false}
 					options={this_is_a_place_for_suggestions}
-					defaultValue={place.this_is_a_place_for || []}
+					defaultValue={properties.this_is_a_place_for || []}
 					renderTags={(suggestions, getProps) => {
 						return suggestions.map((suggestion, index) => (<Chip key={suggestion} label={suggestion} {...getProps({index})} />))
 					}}
 					renderInput={params => (<TextField {...params} label="Whom's it for?" {...inputStyleProps}/>)}
-					onChange={(e,value)=>this.updateChangeset({this_is_a_place_for:value})}
+					onChange={(e,value)=>this.updateChangedProperties({this_is_a_place_for:value})}
 				/>
 
-				<TextField {...commonTextFieldProps('links')} label="Links" rows={3} rowsMax={99} helperText={'Only links are accepted.'/* Use markdown to add a title. */}/>
+				<TextField {...commonTextFieldProps({key:'links'})} label="Links" rows={3} rowsMax={99} helperText={'Only links are accepted.'/* Use markdown to add a title. */}/>
 
 				<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
-					{this.state.placeID === null ? null : (<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+					{this.state.docID === null ? null : (<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
 						Back
 					</Button>)}
 					<Button onClick={this.addComment} variant="outlined" size="large" className="roundButton" endIcon={<ArrowForwardIcon style={{color:'black'}} />}>
@@ -470,25 +535,57 @@ export default class PlaceSidebar extends React.Component {
 	}
 
 	renderSubmitScreen(){
-		const allData = JSON.stringify(this.state.changeset,null,'\t')
+		const changesetDoc = this.getChangesetDoc()
+		if (changesetDoc === null) {
+			return (<React.Fragment key="submit">
+				<CardContent style={{margin:'0 16px'}}>
+					<Typography gutterBottom variant="h6" component="h2">
+						Did you change anything?
+					</Typography>
+				</CardContent>
+				<Divider />
+				<CardContent>
+					<Typography style={{margin:'0 16px'}} gutterBottom variant="body2" component="p">
+						Go back to suggest an edit.
+					</Typography>
+	
+					<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
+						<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+							Back
+						</Button>
+					</div>
+				</CardContent>
+			</React.Fragment>)
+		}
 
-		// const place = {
-		// 	...this.state.place,
-		// 	...this.state.changeset,
+		// const properties = {
+		// 	...this.state.doc.properties,
+		// 	...this.state.changedProperties,
 		// }
 
 		const inputStyleProps = {
 			style: {marginBottom:'16px'},
 			variant: 'outlined',
 		}
-		const commonTextFieldProps = (fieldName) => {
+		const commonTextFieldProps = (options) => {
+			// const options = {
+			//	key: 'min_age', // fieldName
+			// 	parser: value => value,
+			// }
+
 			return {
 				...inputStyleProps,
-				// defaultValue: (place[fieldName] || ''),
-				onChange: e => this.updateChangeset({[fieldName]:e.target.value}),
+				// defaultValue: (properties[options.key] || ''),
+				onChange: e => {
+					let value = e.target.value
+					// if (options.parser) {
+					// 	value = options.parser(value)
+					// }
+					this.updateChangedProperties({[options.key]:value})
+				},
 				multiline: true,
 				fullWidth: true,
-				key: 'TextField_'+fieldName,
+				key: 'TextField_'+options.key,
 			}
 		}
 
@@ -505,8 +602,8 @@ export default class PlaceSidebar extends React.Component {
 					https://wiki.openstreetmap.org/wiki/Good_changeset_comments
 				*/}
 				
-				<TextField {...commonTextFieldProps('comment')} label="Comment" placeholder="Brief description of your contributions" />
-				<TextField {...commonTextFieldProps('sources')} label="Sources" placeholder="URLs..." />
+				<TextField {...commonTextFieldProps({key:'comment'})} label="Comment" placeholder="Brief description of your contributions" />
+				<TextField {...commonTextFieldProps({key:'sources'})} label="Sources" placeholder="URLs..." />
 				
 				<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
 					<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
@@ -519,7 +616,7 @@ export default class PlaceSidebar extends React.Component {
 			</CardContent>
 
 			<CardContent>
-				<TextField disabled value={allData} multiline label="The data we'll upload:" style={{marginBottom:'16px'}} variant="filled" fullWidth/>
+				<TextField disabled value={JSON.stringify(changesetDoc,null,'\t')} multiline label="The data we'll upload:" style={{marginBottom:'16px'}} variant="filled" fullWidth/>
 			</CardContent>
 		</React.Fragment>)
 	}
