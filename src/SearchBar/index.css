@@ -4,4 +4,11 @@
 	display: flex;
 	align-items: center;
 	/*border-radius: 52px !important;*/
+
+	transition: box-shadow 0ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+}
+.header.sidebarIsOpen{
+	margin: 0;
+	padding: 16px;
+	border-radius: 0 !important;
 }

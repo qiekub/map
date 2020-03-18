@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 
-import {navigate} from "@reach/router"
+import {navigate} from '@reach/router'
 
 import {
 	Paper,
@@ -74,6 +74,9 @@ export default class SearchBar extends React.Component {
 			if (this.props.onSetSidebarIsOpen) {
 				this.props.onSetSidebarIsOpen(false)
 			}
+			if (this.props.onSetSearchBarValue) {
+				this.props.onSetSearchBarValue('')
+			}
 		})
 	}
 
@@ -88,9 +91,9 @@ export default class SearchBar extends React.Component {
 			<Drawer open={this.state.isMainDrawerOpen} onClose={this.toggleMainDrawer}>
 				<MainDrawerContent />
 			</Drawer>
-			<Paper className="header" elevation={6} variant={this.props.variant}>
+			<Paper className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')} elevation={(this.props.sidebarIsOpen ? 0 : 6)} variant={(this.props.sidebarIsOpen ? 'elevation'/*'outlined'*/ : 'elevation')}>
 				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
-					<MenuIcon />
+					<MenuIcon style={{color:'black'}} />
 				</IconButton>
 				<InputBase
 					style={{
@@ -117,9 +120,9 @@ export default class SearchBar extends React.Component {
 						{(
 							this.state.loadingSearchResult
 							?
-							<HourglassEmptyIcon />
+							<HourglassEmptyIcon style={{color:'black'}} />
 							:
-							<SearchIcon />
+							<SearchIcon style={{color:'black'}} />
 						)}
 					</IconButton>
 				)}

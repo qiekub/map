@@ -1,5 +1,5 @@
 import React from 'react'
-import { Map, TileLayer, Marker, Tooltip, LayerGroup} from 'react-leaflet'
+import { Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
 import {gql} from 'apollo-boost'
@@ -8,6 +8,10 @@ import './index.css'
 
 import L from 'leaflet'
 import './leaflet/leaflet.css'
+
+import MarkerClusterGroup from 'react-leaflet-markercluster'
+import 'react-leaflet-markercluster/dist/styles.min.css'
+
 import image_markerIcon1x from './marker_icon/dot_pinlet-2-medium-1x.png'
 import image_markerIcon2x from './marker_icon/dot_pinlet-2-medium-2x.png'
 
@@ -31,23 +35,24 @@ export default class PageMap extends React.Component {
 
 		this.viewportChangedTimeout = null;
 
-		this.MarkerLayerRef = React.createRef()
-		this.MapRef = React.createRef()
+		// this.MarkerLayerRef = React.createRef()
+		this.map = null
 
 		this.onViewportChanged = this.onViewportChanged.bind(this)
 		this.showPlace = this.showPlace.bind(this)
+		this.gotMapRef = this.gotMapRef.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadMarkers()
 
-		if (this.props.onSaveFunctions) {
-			this.props.onSaveFunctions({
-				getZoom: () => this.map.leafletElement.getZoom(),
-				getBounds: () => this.map.leafletElement.getBounds(),
-				setBounds: bounds => this.map.leafletElement.flyToBounds(bounds),
-				setView: (...attr) => this.map.leafletElement.setView(...attr),
-				flyTo: (...attr) => this.map.leafletElement.flyTo(...attr),
+		if (this.props.onFunctions) {
+			this.props.onFunctions({
+				getZoom: () => this.map.getZoom(),
+				getBounds: () => this.map.getBounds(),
+				setBounds: bounds => this.map.flyToBounds(bounds),
+				setView: (...attr) => this.map.setView(...attr),
+				flyTo: (...attr) => this.map.flyTo(...attr),
 			})
 		}
 	}
@@ -60,9 +65,9 @@ export default class PageMap extends React.Component {
 		// this.viewportChangedTimeout = setTimeout(()=>{		
 		// 	const mapViewport = {
 		// 		// ...viewport,
-		// 		bounds: this.map.leafletElement.getCenter(),
-		// 		zoom: this.map.leafletElement.getZoom(),
-		// 		bounds: this.map.leafletElement.getBounds().toBBoxString(),
+		// 		bounds: this.map.getCenter(),
+		// 		zoom: this.map.getZoom(),
+		// 		bounds: this.map.getBounds().toBBoxString(),
 		// 		location: window.location+''
 		// 	}
 		// 	// could be used to send stats to the server
@@ -133,9 +138,24 @@ export default class PageMap extends React.Component {
 		})
 	}
 
-	async showPlace(doc,thisMarkerRef) {
-		// await navigate(`/place/${doc.properties.name}/`)
+	async showPlace(doc,thisMarkerRef) {		
 		await navigate(`/place/${doc._id}/`)
+		if (this.props.onViewDoc) {
+			this.props.onViewDoc(doc._id)
+		}
+	}
+
+	gotMapRef(Map){
+		this.mapRef = Map
+		this.map = Map.leafletElement
+	}
+
+	createClusterCustomIcon(cluster){
+		return L.divIcon({
+			html: cluster.getChildCount(),
+			className: 'marker-cluster-custom-icon',
+			iconSize: L.point(40, 40, true),
+		})
 	}
 
 	render() {
@@ -143,7 +163,7 @@ export default class PageMap extends React.Component {
 
 		return (<div className={this.props.className}>
 			<Map
-				ref={Map => this.map = Map}
+				ref={this.gotMapRef}
 				className="map"
 				useFlyTo={true}
 				bounds={this.state.bounds}
@@ -167,22 +187,37 @@ export default class PageMap extends React.Component {
 					attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
 					url="https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=JdjEr7nrztG6lZV91e7l"
 				/>*/}
+
+				{/*
+					https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt
+					https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.png?client_id=czhaNGs0SExWRUVJeEZoaGptckZQdzpkYzc5MjE5NGZkNGY1ZmNi
+					https://raster-tiles.mapillary.com/v0.1/{z}/{x}/{y}.png
+				*/}
+
 				{<TileLayer
 					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
 					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
 				/>}
+
+				{/*<TileLayer
+					attribution='mapillary.com'
+					url="https://raster-tiles.mapillary.com/v0.1/{z}/{x}/{y}.png"
+					maxZoom={17}
+				/>*/}
+				{/*
+					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
+				*/}
 				{/*<TileLayer
 					attribution='href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
 					url="https://api.mapbox.com/styles/v1/petacat/cixrvkhut001a2rnts6cgmkn5/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
 				/>*/}
 
 
-
-
-
-
-
-				<LayerGroup ref={this.MarkerLayerRef}>
+		<MarkerClusterGroup
+            spiderfyDistanceMultiplier={1}
+            showCoverageOnHover={false}
+            iconCreateFunction={this.createClusterCustomIcon}
+          >
 					{this.state.docs.map(doc=>{
 						const thisMarkerRef = React.createRef()
 						const location = doc.properties.location || {}
@@ -206,7 +241,33 @@ export default class PageMap extends React.Component {
 						}
 						return null
 					})}
-				</LayerGroup>
+          </MarkerClusterGroup>
+
+				{/*<LayerGroup>
+					{this.state.docs.map(doc=>{
+						const thisMarkerRef = React.createRef()
+						const location = doc.properties.location || {}
+						if (location.lng && location.lat) {
+							return (<Marker
+								key={doc.properties.name}
+								position={[location.lat,location.lng]} 
+								icon={markerIcon}
+								ref={thisMarkerRef}
+								onClick={()=>this.showPlace(doc,thisMarkerRef)}
+							>
+								<Tooltip
+									sticky={true}
+									interactive={false}
+									opacity={1}
+									permanent={false}
+								>
+									{doc.properties.name}
+								</Tooltip>
+							</Marker>)
+						}
+						return null
+					})}
+				</LayerGroup>*/}
 			</Map>
 		</div>)
 	}

@@ -4,7 +4,7 @@
 }
 
 body {
-	background: black;
+	/*background: black;*/
 
 	--z-index-page: 1;
 	--z-index-fabs: 2;
@@ -12,7 +12,7 @@ body {
 	--z-index-sidebar: 4;
 	--z-index-searchbar: 5;
 }
-#root{
+/*#root{
 	border-radius: 8px;
 	overflow: hidden;
 	position: absolute;
@@ -20,7 +20,7 @@ body {
 	right: 0;
 	bottom: 0;
 	left: 0;
-}
+}*/
 
 .addNewFab{
 	z-index: var(--z-index-fabs);
@@ -62,6 +62,7 @@ body {
 
 	overflow: auto !important;
 	overflow-x: hidden !important;
+	-webkit-overflow-scrolling: touch;
 }
 .Sidebar.hide{
 	display: none;

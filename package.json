@@ -14,10 +14,11 @@
     "apollo-boost": "^0.4.7",
     "graphql": "^14.6.0",
     "leaflet": "^1.6.0",
+    "leaflet.markercluster": "^1.4.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-leaflet": "^2.6.1",
-    "react-leaflet-markercluster": "^1.1.8",
+    "react-leaflet-markercluster": "^2.0.0-rc3",
     "react-scripts": "3.4.0",
     "typeface-roboto": "^0.0.75"
   },

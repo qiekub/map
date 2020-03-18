@@ -1,8 +1,12 @@
 import React from 'react'
 import './index.css'
 
-import {gql} from 'apollo-boost'
-import {Router,navigate} from "@reach/router"
+// import {gql} from 'apollo-boost'
+import {Router,navigate} from '@reach/router'
+import {
+	loadDoc as query_loadDoc,
+	search as query_search,
+} from '../queries.js'
 
 import {
 	Fab
@@ -25,6 +29,7 @@ export default class App extends React.Component {
 		this.state = {
 			searchBarValue: '',
 			sidebarIsOpen: false,
+			doc: null,
 		}
 
 		this.functions = {}
@@ -33,6 +38,7 @@ export default class App extends React.Component {
 		this.setSearchBarValue = this.setSearchBarValue.bind(this)
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.addPlace = this.addPlace.bind(this)
+		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
@@ -52,22 +58,10 @@ export default class App extends React.Component {
 
 	startSearch(queryString,callback){
 		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
-			window.graphql.query({query: gql`{
-				search(query:"${queryString}"){	
-					geometry {
-						boundingbox {
-							northeast {
-								lng
-								lat
-							}
-							southwest {
-								lng
-								lat
-							}
-						}
-					}
-				}
-			}`}).then(async result => {
+			window.graphql.query({
+				query: query_search,
+				variables: {query: queryString},
+			}).then(async result => {
 				await navigate(`/`)
 
 				this.functions['PageMap'].setBounds([
@@ -95,8 +89,53 @@ export default class App extends React.Component {
 		}
 	}
 
+	loadAndViewDoc(docID){
+		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
+			window.graphql.query({
+				query: query_loadDoc,
+				variables: {_id:docID},
+			}).then(async result=>{
+				const doc = result.data.getPlace
+		
+				if (doc !== null) {
+					this.functions['Sidebar'].setDoc(doc)
+		
+					// let zoomLevel = (this.props.onGetZoom ? this.props.onGetZoom() : 17)
+					// if (zoomLevel < 17) {
+					// 	zoomLevel = 17
+					// }
+					//
+					// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+					// 	if (this.props.onSetView) {
+					// 		this.props.onSetView([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
+					// 	}
+					// }else{
+					// 	if (this.props.onFlyTo) {
+					// 		this.props.onFlyTo([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
+					// 	}
+					// }
+				}
+			}).catch(error=>{
+				console.error(error)
+			})
+		}
+	}
+
 	async addPlace(){
+
 		await navigate(`/place/add/`)
+		setTimeout(()=>{
+			this.functions['Sidebar'].editNewDoc('Place')
+		}, 100)
+
+		// this.setState({doc:{
+		// 	_id: null,
+		// 	properties: {
+		// 		__typename: 'Place',
+		// 	},
+		// }}, async ()=>{
+		// 	await navigate(`/place/add/`)
+		// })
 	}
 
 	setView(...attr){
@@ -112,12 +151,12 @@ export default class App extends React.Component {
 	render() {
 		return (<>
 			<SearchBar
-				path="*"
 				className="SearchBar"
 				onStartSearch={this.startSearch}
 				value={this.state.searchBarValue}
 				sidebarIsOpen={this.state.sidebarIsOpen}
 				onSetSidebarIsOpen={this.setSidebarIsOpen}
+				onSetSearchBarValue={this.setSearchBarValue}
 			/>
 
 			{/*<InfoCard
@@ -134,17 +173,24 @@ export default class App extends React.Component {
 				<Sidebar
 					path="/place/:docID"
 					className="Sidebar"
+					
+					hello="test"
+
+					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
+
 					onSetView={this.setView}
 					onFlyTo={this.flyTo}
 					onGetZoom={this.getZoom}
+					onFunctions={(...attr)=>{this.saveFunctions('Sidebar',...attr)}}
 				/>
 			</Router>
 			
 			<PageMap
 				className="page"
-				onSaveFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
+				onViewDoc={this.loadAndViewDoc}
+				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
 			/>
 		</>)
 	}

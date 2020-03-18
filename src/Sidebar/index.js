@@ -1,12 +1,14 @@
 import React from 'react'
 import './index.css'
 
-import {navigate} from '@reach/router'
+import {navigate/*,Router,Link*/} from '@reach/router'
 import {gql} from 'apollo-boost'
+import {loadDoc as query_loadDoc} from '../queries.js'
 
 import {
 	Typography,
 	Button,
+	Snackbar,
 
 	List,
 	ListItem,
@@ -21,14 +23,14 @@ import {
 	TextField,
 } from '@material-ui/core'
 import {
-	// Phone as PhoneIcon,
-	// Mail as MailIcon,
+	Phone as PhoneIcon,
+	Mail as MailIcon,
 
 	Link as LinkIcon,
-	// Facebook as FacebookIcon,
-	// Instagram as InstagramIcon,
-	// Twitter as TwitterIcon,
-	// YouTube as YouTubeIcon,
+	Facebook as FacebookIcon,
+	Instagram as InstagramIcon,
+	Twitter as TwitterIcon,
+	YouTube as YouTubeIcon,
 
 	Edit as EditIcon,
 	ArrowBack as ArrowBackIcon,
@@ -38,28 +40,25 @@ import {
 	Autocomplete
 } from '@material-ui/lab'
 
-// import {Router,Link} from "@reach/router"
 // import reptile from './contemplative-reptile.jpg'
-
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
 const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
 
-
 export default class Sidebar extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			docID: null,
 			doc: {},
 			changedProperties: {},
 			stage: 'viewing', // viewing editing submitting
+			whichSnackbarIsOpen: null,
 		}
 
-		this.loadDoc = this.loadDoc.bind(this)
+		// this.loadDoc = this.loadDoc.bind(this)
 
 		this.edit = this.edit.bind(this)
 		this.addComment = this.addComment.bind(this)
@@ -70,105 +69,64 @@ export default class Sidebar extends React.Component {
 
 		this.updateChangedProperties = this.updateChangedProperties.bind(this)
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
-		this.setDocID = this.setDocID.bind(this)
 		this.getChangesetDoc = this.getChangesetDoc.bind(this)
+		this.closeAllSnackbarsOnTimeout = this.closeAllSnackbarsOnTimeout.bind(this)
+
+		// this.docChanged = this.docChanged.bind(this)
+		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
+
+		this.editNewDoc = this.editNewDoc.bind(this)
+		this.setDoc = this.setDoc.bind(this)
 	}
 
-
-	setDocID(newDocID){
-		if (newDocID === 'add') {
-			this.setState({
-				docID: null,
-				doc: {},
-				changedProperties: {},
-				stage: 'editing',
-			}, ()=>{
-				this.props.onSetSearchBarValue('Add Place')
+	componentDidMount(){
+		if (this.props.onFunctions) {
+			this.props.onFunctions({
+				editNewDoc: this.editNewDoc,
+				setDoc: this.setDoc,
 			})
-		}else{
+		}
+
+		this.checkIfDocIdChanged()
+	}
+	componentDidUpdate(){
+		this.checkIfDocIdChanged()
+	}
+	async checkIfDocIdChanged(){
+		const docID = this.props.docID
+		if (!!docID && docID !== this.state.doc._id && this.props.onViewDoc) {
+			// await navigate(`/place/${doc._id}/`)
+			if (docID !== 'add') {
+				this.props.onViewDoc(docID)
+			}
+		}
+	}
+
+	editNewDoc(typename){
+		this.setState({
+			doc: {},
+			changedProperties: {},
+		}, ()=>{
+			this.props.onSetSidebarIsOpen(true)
+			this.edit()
+		})
+	}
+	setDoc(newDoc) {
+		if (newDoc !== null && newDoc._id !== null) {
 			this.setState({
-				docID: newDocID,
-				doc: {},
+				doc: newDoc,
 				changedProperties: {},
 				stage: 'viewing',
 			}, ()=>{
-				this.loadDoc(this.state.docID)
-			})
-		}
-
-		if (this.props.onSetSidebarIsOpen) {
-			this.props.onSetSidebarIsOpen(newDocID!=='')
-		}
-	}
-	componentDidMount() {
-		if (this.props.docID !== this.state.docID) {
-			this.setDocID(this.props.docID)
-		}
-	}
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		if (
-			this.props.docID !== prevProps.docID &&
-			this.props.docID !== this.state.docID
-		) {
-			this.setDocID(this.props.docID)
-		}
-	}
-
-	loadDoc(docID){
-		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
-			window.graphql.query({query: gql`{
-				getPlace(_id:"${docID}"){
-					_id
-					properties {
-						... on Place {
-							name
-							address
-							min_age
-							max_age
-							links
-							this_is_a_place_for
-							tags
-		
-							location {
-								lng
-								lat
-							}
-						}
-					}
-				}
-			}`}).then(result => {
-				const doc = result.data.getPlace
-				// if (!!doc && this.state.docID === doc.properties.name) {
-				if (!!doc && this.state.docID === doc._id) {
-					this.setState({doc:doc}, ()=>{
-						if (this.props.onSetSearchBarValue) {
-							this.props.onSetSearchBarValue(doc.properties.name)
-						}
-
-						// let zoomLevel = (this.props.onGetZoom ? this.props.onGetZoom() : 17)
-						// if (zoomLevel < 17) {
-						// 	zoomLevel = 17
-						// }
-						//
-						// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-						// 	if (this.props.onSetView) {
-						// 		this.props.onSetView([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-						// 	}
-						// }else{
-						// 	if (this.props.onFlyTo) {
-						// 		this.props.onFlyTo([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-						// 	}
-						// }
-					})
-				}
-			}).catch(error=>{
-				console.error(error)
+				this.props.onSetSidebarIsOpen(true)
+				this.props.onSetSearchBarValue(this.state.doc.properties.name)
 			})
 		}
 	}
 
 	edit(){
 		this.setState({stage:'editing'})
+		this.props.onSetSearchBarValue(!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place')
 	}
 	addComment(){
 		this.setState({stage:'submitting'})
@@ -233,7 +191,7 @@ export default class Sidebar extends React.Component {
 
 		if (Object.keys(properties).length > 0) {
 			return {
-				forDoc: this.state.docID,
+				forDoc: this.state.doc._id,
 				properties: {
 					...properties,
 					sources: undefined,
@@ -251,7 +209,7 @@ export default class Sidebar extends React.Component {
 		}
 	}
 	submit(){
-		this.setState({stage:'viewing'})
+		this.setState({whichSnackbarIsOpen:'submittingSuggestion'})
 
 		const changesetDoc = this.getChangesetDoc()
 
@@ -259,26 +217,48 @@ export default class Sidebar extends React.Component {
 			let changeset_json = JSON.stringify(changesetDoc)
 			changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
 
-			window.graphql.mutate({mutation: gql`mutation {
-				addChangeset(changeset:${changeset_json}) {
-					_id
-					properties {
-						... on Changeset {
-							forDoc
-							properties {
-								__typename
+			window.graphql.mutate({
+				mutation: gql`mutation {
+					addChangeset(changeset:${changeset_json}) {
+						_id
+						properties {
+							... on Changeset {
+								forDoc
+								properties {
+									__typename
+								}
 							}
 						}
 					}
-				}
-			}`}).then(async result => {
+				}`,
+				refetchQueries: (
+					this.state.doc._id
+					? [{
+						query: query_loadDoc,
+						variables: {_id:this.state.doc._id},
+					}]
+					: undefined
+				)
+			}).then(async result => {
 				console.info('mutate-result', result)
 
-				if (result.data.addChangeset.properties.forDoc) {
-					await navigate(`/place/${result.data.addChangeset.properties.forDoc}/`)
-				}
+				this.setState({
+					// changedProperties: {},
+					// stage: 'viewing',
+					whichSnackbarIsOpen:'finishedSuggesting',
+				})
+
+				setTimeout(async ()=>{
+					if (this.state.doc._id !== result.data.addChangeset.properties.forDoc) {
+						await navigate(`/place/${result.data.addChangeset.properties.forDoc}/`)
+					}
+
+					this.props.onViewDoc(result.data.addChangeset.properties.forDoc,true)
+				}, 100)
 			}).catch(error=>{
 				console.error('mutate-error', error)
+
+				this.setState({whichSnackbarIsOpen:'problemWhileSuggesting'})
 			})
 		}
 
@@ -330,6 +310,39 @@ export default class Sidebar extends React.Component {
 		))))
 	}
 
+	parseLinks(links){
+		// const links = `
+		// 	https://www.anyway-koeln.de/
+		// 	https://www.instagram.com/anyway_koeln/
+		// `
+
+		return [...new Set(links.match(/([a-z0-9]*:[^\s]+)/gmiu))].map(url=>new URL(url)).map(url=>{
+			let obj = {
+				url,
+				href: url.href,
+				text: url.href,
+				type: 'default',
+			}
+
+			if (url.hostname === 'www.instagram.com' || url.hostname === 'instagram.com') {
+				obj.type = 'instagram'
+			} else if (url.hostname === 'www.facebook.com' || url.hostname === 'facebook.com') {
+				obj.type = 'facebook'
+			}else if (url.hostname === 'www.twitter.com' || url.hostname === 'twitter.com') {
+				obj.type = 'twitter'
+			}else if (url.hostname === 'www.youtube.com' || url.hostname === 'youtube.com') {
+				obj.type = 'youtube'
+			}else if (url.protocol === 'tel:') {
+				obj.type = 'phonenumber'
+				obj.text = url.pathname
+			}else if (url.protocol === 'mailto:') {
+				obj.type = 'mail'
+				obj.text = url.pathname
+			}
+
+			return obj
+		})
+	}
 	renderView(){
 		const doc = this.state.doc
 		const properties = {...doc.properties}
@@ -346,9 +359,32 @@ export default class Sidebar extends React.Component {
 
 		const age_range_text = this.getAgeRangeText(properties.min_age,properties.max_age)
 
-		const links = (properties.links && properties.links.length > 0 ? properties.links.split('\n') : [])
+		// properties.links = `
+		// 	https://www.anyway-koeln.de/
+		// 	https://www.instagram.com/anyway_koeln/
+		// 	https://www.facebook.com/anyway_koeln/
+		// 	https://www.youtube.com/anyway_koeln/
+		// 	https://www.twitter.com/anyway_koeln/
+		// 	tel:09234658723
+		// 	mailto:kjqhgr@sadf.asdf
+		// `
+
+		const links = this.parseLinks(properties.links && properties.links.length > 0 ? properties.links : [])
+
+		const linkIcons = {
+			phonenumber: (<PhoneIcon style={{color:'black'}} />),
+			mail: (<MailIcon style={{color:'black'}} />),
+
+			youtube: (<YouTubeIcon style={{color:'black'}} />),
+			twitter: (<TwitterIcon style={{color:'black'}} />),
+			facebook: (<FacebookIcon style={{color:'black'}} />),
+			instagram: (<InstagramIcon style={{color:'black'}} />),
+
+			default: (<LinkIcon style={{color:'black'}} />),
+		}
 
 		return (<React.Fragment key="view">
+			<Card elevation={6} className={this.props.className}>
 				{/*<CardMedia
 					style={{marginTop:'-86px',height:'240px',background:'black'}}
 					title="Contemplative Reptile"
@@ -377,37 +413,22 @@ export default class Sidebar extends React.Component {
 				<Divider />
 				<CardContent>
 					<List dense>
-						{links.map(link => (
-							<ListItemLink target="_blank" key={link} href={link}>
-								<ListItemIcon><LinkIcon style={{color:'black'}} /></ListItemIcon>
-								<ListItemText primary={link} />
+						{links.filter(link=>link.type!=='phonenumber'&&link.type!=='mail').map(link => (
+							<ListItemLink target="_blank" key={link.href} href={link.href}>
+								<ListItemIcon>{(!!linkIcons[link.type] ? linkIcons[link.type] : linkIcons.default)}</ListItemIcon>
+								<ListItemText primary={link.text} />
 							</ListItemLink>
 						))}
 					</List>
-					{/*<List dense>
-						<ListItemLink>
-							<ListItemIcon><InstagramIcon style={{color:'black'}} /></ListItemIcon>
-							<ListItemText primary="Instagram" />
-						</ListItemLink>
-						<ListItemLink>
-							<ListItemIcon><FacebookIcon style={{color:'black'}} /></ListItemIcon>
-							<ListItemText primary="Facebook" />
-						</ListItemLink>
-						<ListItemLink>
-							<ListItemIcon><TwitterIcon style={{color:'black'}} /></ListItemIcon>
-							<ListItemText primary="Twitter" />
-						</ListItemLink>
-					</List>
+
 					<List dense>
-						<ListItemLink>
-							<ListItemIcon><PhoneIcon style={{color:'black'}} /></ListItemIcon>
-							<ListItemText primary="Wi-Fi" />
-						</ListItemLink>
-						<ListItemLink>
-							<ListItemIcon><MailIcon style={{color:'black'}} /></ListItemIcon>
-							<ListItemText primary="Wi-Fi" />
-						</ListItemLink>
-					</List>*/}
+						{links.filter(link=>link.type==='phonenumber'||link.type==='mail').map(link => (
+							<ListItemLink target="_blank" key={link.href} href={link.href}>
+								<ListItemIcon>{(!!linkIcons[link.type] ? linkIcons[link.type] : linkIcons.default)}</ListItemIcon>
+								<ListItemText primary={link.text} />
+							</ListItemLink>
+						))}
+					</List>
 				
 					<div style={{padding:'16px 0 0 0',textAlign:'center'}}>
 						<Button onClick={this.edit} variant="outlined" size="large" className="roundButton" startIcon={<EditIcon style={{color:'black'}} />}>
@@ -416,6 +437,7 @@ export default class Sidebar extends React.Component {
 					</div>
 
 				</CardContent>
+			</Card>
 		</React.Fragment>)
 	}
 
@@ -453,10 +475,10 @@ export default class Sidebar extends React.Component {
 
 		const age_range_text = this.getAgeRangeText(properties.min_age, properties.max_age)
 
-		return (<React.Fragment key="edit">
+		return (<Card key="edit" elevation={6} className={this.props.className}>
 			<CardContent style={{margin:'0 16px'}}>
 				<Typography gutterBottom variant="h5" component="h2">
-					{this.state.docID === null ? 'Add Place' : 'Edit Place'}
+					{!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place'}
 				</Typography>
 			</CardContent>
 			<Divider />	
@@ -523,21 +545,24 @@ export default class Sidebar extends React.Component {
 				<TextField {...commonTextFieldProps({key:'links'})} label="Links" rows={3} rowsMax={99} helperText={'Only links are accepted.'/* Use markdown to add a title. */}/>
 
 				<div style={{padding:'16px 0 0 0',textAlign:'right'}}>
-					{this.state.docID === null ? null : (<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
+					{!!this.state.doc && !!this.state.doc._id ? (<Button style={{float:'left'}} onClick={this.back} size="large" className="roundButton" startIcon={<ArrowBackIcon style={{color:'black'}} />}>
 						Back
-					</Button>)}
+					</Button>) : null}
 					<Button onClick={this.addComment} variant="outlined" size="large" className="roundButton" endIcon={<ArrowForwardIcon style={{color:'black'}} />}>
 						Next
 					</Button>
 				</div>
 			</CardContent>
-		</React.Fragment>)
+		</Card>)
 	}
 
 	renderSubmitScreen(){
 		const changesetDoc = this.getChangesetDoc()
 		if (changesetDoc === null) {
-			return (<React.Fragment key="submit">
+
+					
+				
+			return (<Card key="submit" elevation={6} className={this.props.className}>
 				<CardContent style={{margin:'0 16px'}}>
 					<Typography gutterBottom variant="h6" component="h2">
 						Did you change anything?
@@ -555,7 +580,7 @@ export default class Sidebar extends React.Component {
 						</Button>
 					</div>
 				</CardContent>
-			</React.Fragment>)
+			</Card>)
 		}
 
 		// const properties = {
@@ -589,7 +614,7 @@ export default class Sidebar extends React.Component {
 			}
 		}
 
-		return (<React.Fragment key="submit">
+		return (<Card key="submit" elevation={6} className={this.props.className}>
 			<CardContent style={{margin:'0 16px'}}>
 				<Typography gutterBottom variant="h6" component="h2">
 					What did you change
@@ -618,21 +643,50 @@ export default class Sidebar extends React.Component {
 			<CardContent>
 				<TextField disabled value={JSON.stringify(changesetDoc,null,'\t')} multiline label="The data we'll upload:" style={{marginBottom:'16px'}} variant="filled" fullWidth/>
 			</CardContent>
-		</React.Fragment>)
+		</Card>)
+	}
+
+	closeAllSnackbarsOnTimeout(event,reason){
+		if (reason === 'timeout') {
+			this.setState({whichSnackbarIsOpen:null})
+		}
 	}
 
 	render() {
-		let stageComponent = null
-		if (this.state.stage === 'viewing') {
-			stageComponent = this.renderView()
-		} else if (this.state.stage === 'editing') {
-			stageComponent = this.renderEdit()
-		} else if (this.state.stage === 'submitting') {
-			stageComponent = this.renderSubmitScreen()
-		}
-
-		return (<Card elevation={6} className={this.props.className}>
-			{stageComponent}
-		</Card>)
+		// if (['viewing','editing','submitting'].includes(this.state.stage)) {
+			let stageComponent = null
+			if (this.state.stage === 'viewing') {
+				stageComponent = this.renderView()
+			} else if (this.state.stage === 'editing') {
+				stageComponent = this.renderEdit()
+			} else if (this.state.stage === 'submitting') {
+				stageComponent = this.renderSubmitScreen()
+			}
+	
+			return (<>
+				{stageComponent}
+				<Snackbar
+					message="Submitting..."
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'submittingSuggestion'}
+				/>
+				<Snackbar
+					message="Couldn't submit!"
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'problemWhileSuggesting'}
+					autoHideDuration={6000}
+					onClose={this.closeAllSnackbarsOnTimeout}
+				/>
+				<Snackbar
+					message="Your suggestion got submitted!"
+					anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+					open={this.state.whichSnackbarIsOpen === 'finishedSuggesting'}
+					autoHideDuration={6000}
+					onClose={this.closeAllSnackbarsOnTimeout}
+				/>
+			</>)
+		// }else{
+		// 	return null
+		// }
 	}
 }
