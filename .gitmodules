@@ -1,0 +1,3 @@
+[submodule "src/data/iD"]
+	path = src/data/iD
+	url = https://github.com/openstreetmap/iD/
