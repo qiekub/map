@@ -3,7 +3,7 @@ import './index.css'
 
 import {navigate/*,Router,Link*/} from '@reach/router'
 import {gql} from 'apollo-boost'
-import {loadDoc as query_loadDoc} from '../queries.js'
+import {loadPoi as query_loadPoi} from '../queries.js'
 
 import {
 	Typography,
@@ -57,8 +57,6 @@ export default class Sidebar extends React.Component {
 			stage: 'viewing', // viewing editing submitting
 			whichSnackbarIsOpen: null,
 		}
-
-		// this.loadDoc = this.loadDoc.bind(this)
 
 		this.edit = this.edit.bind(this)
 		this.addComment = this.addComment.bind(this)
@@ -234,7 +232,7 @@ export default class Sidebar extends React.Component {
 				refetchQueries: (
 					this.state.doc._id
 					? [{
-						query: query_loadDoc,
+						query: query_loadPoi,
 						variables: {_id:this.state.doc._id},
 					}]
 					: undefined
@@ -357,7 +355,7 @@ export default class Sidebar extends React.Component {
 
 		const name = (properties.name ? properties.name : '')
 
-		const age_range_text = this.getAgeRangeText(properties.min_age,properties.max_age)
+		const age_range_text = this.getAgeRangeText(properties.min_age, properties.max_age)
 
 		// properties.links = `
 		// 	https://www.anyway-koeln.de/

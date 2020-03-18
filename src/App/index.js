@@ -4,7 +4,7 @@ import './index.css'
 // import {gql} from 'apollo-boost'
 import {Router,navigate} from '@reach/router'
 import {
-	loadDoc as query_loadDoc,
+	loadPoi as query_loadPoi,
 	search as query_search,
 } from '../queries.js'
 
@@ -92,7 +92,7 @@ export default class App extends React.Component {
 	loadAndViewDoc(docID){
 		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			window.graphql.query({
-				query: query_loadDoc,
+				query: query_loadPoi,
 				variables: {_id:docID},
 			}).then(async result=>{
 				const doc = result.data.getPlace

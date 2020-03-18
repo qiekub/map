@@ -2,7 +2,7 @@ import React from 'react'
 import { Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
-import {gql} from 'apollo-boost'
+import {loadPois as query_loadPois} from '../queries.js'
 
 import './index.css'
 
@@ -77,28 +77,7 @@ export default class PageMap extends React.Component {
 
 
 	loadMarkers(){
-		window.graphql.query({query: gql`{
-		  	getAllPlaces {
-				_id
-				properties {
-					... on Place {
-						name
-						
-						location {
-							lng
-							lat
-						}
-						address
-				
-						min_age
-						max_age
-						links
-						this_is_a_place_for
-						tags
-					}
-				}
-			}
-		}`}).then(result => {
+		window.graphql.query({query: query_loadPois}).then(result => {
 			this.setState({docs: result.data.getAllPlaces})
 
 			// for (const doc of result.data.getAllPlaces) {

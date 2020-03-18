@@ -1,6 +1,6 @@
 import {gql} from 'apollo-boost'
 
-export const loadDoc = gql`
+export const loadPoi = gql`
 	query($_id: String=""){
 		getPlace(_id: $_id){
 			_id
@@ -17,6 +17,31 @@ export const loadDoc = gql`
 						lng
 						lat
 					}
+				}
+			}
+		}
+	}
+`
+
+export const loadPois = gql`
+	query(){
+		getPlaces{
+			_id
+			properties {
+				... on Place {
+					name
+					
+					location {
+						lng
+						lat
+					}
+					address
+
+					min_age
+					max_age
+					links
+					this_is_a_place_for
+					tags
 				}
 			}
 		}
@@ -40,5 +65,3 @@ export const search = gql`
 		}
 	}
 `
-
-export default {loadDoc}
