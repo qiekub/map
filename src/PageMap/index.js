@@ -78,9 +78,9 @@ export default class PageMap extends React.Component {
 
 	loadMarkers(){
 		window.graphql.query({query: query_loadPois}).then(result => {
-			this.setState({docs: result.data.getAllPlaces})
+			this.setState({docs: result.data.getPlaces})
 
-			// for (const doc of result.data.getAllPlaces) {
+			// for (const doc of result.data.getPlaces) {
 			// 	break
 			//
 			// 	const changeset = {
@@ -199,7 +199,7 @@ export default class PageMap extends React.Component {
           >
 					{this.state.docs.map(doc=>{
 						const thisMarkerRef = React.createRef()
-						const location = doc.properties.location || {}
+						const location = (doc.properties.geometry || {}).location || {}
 						if (location.lng && location.lat) {
 							return (<Marker
 								key={doc.properties.name}
