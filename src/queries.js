@@ -7,16 +7,15 @@ export const loadPoi = gql`
 			properties {
 				... on Place {
 					name
-					address
-					min_age
-					max_age
-					links
-					this_is_a_place_for
-					tags
-					location {
-						lng
-						lat
+					geometry {
+						location {
+							lng
+							lat
+						}
 					}
+					osmID
+					tags
+					permanently_closed
 				}
 			}
 		}
@@ -24,29 +23,27 @@ export const loadPoi = gql`
 `
 
 export const loadPois = gql`
-	query(){
+	query{
 		getPlaces{
 			_id
 			properties {
 				... on Place {
 					name
-					
-					location {
-						lng
-						lat
+					geometry {
+						location {
+							lng
+							lat
+						}
 					}
-					address
-
-					min_age
-					max_age
-					links
-					this_is_a_place_for
+					osmID
 					tags
+					permanently_closed
 				}
 			}
 		}
 	}
 `
+
 export const search = gql`
 	query($query: String=""){
 		search(query: $query){	
