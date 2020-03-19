@@ -1,10 +1,23 @@
 import React from 'react'
-import { Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
+import {Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
 import {loadPois as query_loadPois} from '../queries.js'
 
 import './index.css'
+// import '../conic-gradient-polyfill.js'
+
+// import categories from '../data/dist/categories.json'
+import presets from '../data/dist/presets.json'
+import colors from '../data/dist/colors.json'
+import colorsByPreset from '../data/dist/colorsByPreset.json'
+import {getPreset,getColorByPreset} from '../functions.js'
+
+
+// import {
+// 	Icon,
+// } from '@material-ui/core'
+
 
 import L from 'leaflet'
 import './leaflet/leaflet.css'
@@ -12,17 +25,17 @@ import './leaflet/leaflet.css'
 import MarkerClusterGroup from 'react-leaflet-markercluster'
 import 'react-leaflet-markercluster/dist/styles.min.css'
 
-import image_markerIcon1x from './marker_icon/dot_pinlet-2-medium-1x.png'
-import image_markerIcon2x from './marker_icon/dot_pinlet-2-medium-2x.png'
+// import image_markerIcon1x from './marker_icon/dot_pinlet-2-medium-1x.png'
+// import image_markerIcon2x from './marker_icon/dot_pinlet-2-medium-2x.png'
 
-export const markerIcon = new L.Icon({
-	// https://www.google.com/maps/vt/icon/name=assets/icons/poi/tactile/pinlet_shadow_v3-2-medium.png,assets/icons/poi/tactile/pinlet_outline_v3-2-medium.png,assets/icons/poi/tactile/pinlet_v3-2-medium.png,assets/icons/poi/quantum/pinlet/dot_pinlet-2-medium.png&highlight=ff000000,ffffff,607D8B,ffffff?scale=4
-	iconUrl: image_markerIcon1x,
-	iconRetinaUrl: image_markerIcon2x,
-	iconSize: [23, 32],
-	iconAnchor: [12.5, 32],
-	popupAnchor: [0, -32],
-})
+// const markerIcon = new L.Icon({
+// 	// https://www.google.com/maps/vt/icon/name=assets/icons/poi/tactile/pinlet_shadow_v3-2-medium.png,assets/icons/poi/tactile/pinlet_outline_v3-2-medium.png,assets/icons/poi/tactile/pinlet_v3-2-medium.png,assets/icons/poi/quantum/pinlet/dot_pinlet-2-medium.png&highlight=ff000000,ffffff,607D8B,ffffff?scale=4
+// 	iconUrl: image_markerIcon1x,
+// 	iconRetinaUrl: image_markerIcon2x,
+// 	iconSize: [23, 32],
+// 	iconAnchor: [12.5, 32],
+// 	popupAnchor: [0, -32],
+// })
 
 export default class PageMap extends React.Component {
 	constructor(props) {
@@ -41,6 +54,8 @@ export default class PageMap extends React.Component {
 		this.onViewportChanged = this.onViewportChanged.bind(this)
 		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
+		this.createCustomIcon = this.createCustomIcon.bind(this)
+		this.createClusterCustomIcon = this.createClusterCustomIcon.bind(this)
 	}
 
 	componentDidMount(){
@@ -61,6 +76,7 @@ export default class PageMap extends React.Component {
 	}
 
 	onViewportChanged(viewport){
+		console.log('viewport', viewport)
 		// clearTimeout(this.viewportChangedTimeout)
 		// this.viewportChangedTimeout = setTimeout(()=>{		
 		// 	const mapViewport = {
@@ -78,7 +94,14 @@ export default class PageMap extends React.Component {
 
 	loadMarkers(){
 		window.graphql.query({query: query_loadPois}).then(result => {
-			this.setState({docs: result.data.getPlaces})
+
+			const docs = result.data.getPlaces.map(doc=>{
+				doc.___preset = getPreset(doc.properties.tags || {}, presets)
+				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+				return doc
+			})
+
+			this.setState({docs: docs})
 
 			// for (const doc of result.data.getPlaces) {
 			// 	break
@@ -117,7 +140,7 @@ export default class PageMap extends React.Component {
 		})
 	}
 
-	async showPlace(doc,thisMarkerRef) {		
+	async showPlace(doc,thisMarkerRef) {
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
 			this.props.onViewDoc(doc._id)
@@ -129,11 +152,65 @@ export default class PageMap extends React.Component {
 		this.map = Map.leafletElement
 	}
 
-	createClusterCustomIcon(cluster){
+	createCustomIcon(iconName,bg,fg){
 		return L.divIcon({
-			html: cluster.getChildCount(),
-			className: 'marker-cluster-custom-icon',
+			html: `
+				<div class="wrapper material-icons" style="--bg-color:${bg};--fg-color:${fg};">${iconName.toLowerCase()}</div>
+			`,
+			className: 'marker-custom-icon',
 			iconSize: L.point(40, 40, true),
+		})
+	}
+
+	getConicGradient(values){
+		let stops = []
+		let counter = 0
+		let currentPos = 0
+		for (const pair of values) {
+			if (counter === 0) {
+				currentPos += Math.ceil(pair[1]*360)
+				stops.push(pair[0]+' '+currentPos+'deg')
+			}else if (counter === values.length-1) {
+				stops.push(pair[0]+' 0')
+			}else{
+				currentPos += Math.ceil(pair[1]*360)
+				stops.push(pair[0]+' 0 '+currentPos+'deg')
+			}
+			counter += 1
+		}
+		stops = stops.join(', ')
+
+		var gradient = new window.ConicGradient({
+		    stops: stops, // "gold 40%, #f06 0", // required
+		    repeating: false, // Default: false
+		    size: 100, // Default: Math.max(innerWidth, innerHeight)
+		})
+
+		return gradient
+	}
+
+	createClusterCustomIcon(cluster){
+		const colors = Object.entries(cluster.getAllChildMarkers().map(m=>m.options.properties.___color.bg).reduce((obj,preset_key)=>{
+			if (!(!!obj[preset_key])) {
+				obj[preset_key] = 0
+			}
+			obj[preset_key] += 1
+			return obj
+		},{})).sort((a,b)=>a[1]-b[1])
+
+		const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
+
+		const gradient = this.getConicGradient(colors.map(pair=>{
+			return [pair[0] , pair[1]/colors_sum]
+		}))
+
+		return L.divIcon({
+			html: `
+				<div class="number">${cluster.getChildCount()}</div>
+				<div class="pieChart" style="background-image:url(${gradient.dataURL});"></div>
+			`,
+			className: 'marker-cluster-custom-icon',
+			iconSize: L.point(48, 48, true),
 		})
 	}
 
@@ -193,20 +270,43 @@ export default class PageMap extends React.Component {
 
 
 		<MarkerClusterGroup
-            spiderfyDistanceMultiplier={1}
+			maxClusterRadius={(zoomLevel)=>{
+				if (zoomLevel<10) {
+					return 80
+				} else if (zoomLevel<11) {
+					return 50
+				} else if (zoomLevel<22) {
+					return 30
+				}
+
+				return 80
+			}}
+            spiderfyDistanceMultiplier={1.5}
             showCoverageOnHover={false}
             iconCreateFunction={this.createClusterCustomIcon}
           >
 					{this.state.docs.map(doc=>{
+						// icon={markerIcon}
+
+						if (!(!!doc.___preset)) {
+							doc.___preset = {}
+						}
+
 						const thisMarkerRef = React.createRef()
 						const location = (doc.properties.geometry || {}).location || {}
+
 						if (location.lng && location.lat) {
 							return (<Marker
-								key={doc.properties.name}
+								key={doc._id}
 								position={[location.lat,location.lng]} 
-								icon={markerIcon}
+								icon={this.createCustomIcon(
+									(!!doc.___preset.icon ? doc.___preset.icon : ''),
+									doc.___color.bg,
+									doc.___color.fg
+								)}
 								ref={thisMarkerRef}
 								onClick={()=>this.showPlace(doc,thisMarkerRef)}
+								properties={doc}
 							>
 								<Tooltip
 									sticky={true}
@@ -214,7 +314,7 @@ export default class PageMap extends React.Component {
 									opacity={1}
 									permanent={false}
 								>
-									{doc.properties.name}
+									{doc.properties.name} - {doc.___preset.key}
 								</Tooltip>
 							</Marker>)
 						}

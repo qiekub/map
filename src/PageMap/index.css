@@ -32,7 +32,7 @@
 	font-size: 24px !important;
 }
 
-.marker-cluster-custom-icon {
+.marker-cluster-custom-icon{
 	/* body-1 */
 	/*font-size: 1rem;
 	font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -50,7 +50,6 @@
 
 	font-weight: 900;
 
-	line-height: 40px !important;
 	border-radius: 100%;
 	text-align: center;
 
@@ -58,7 +57,78 @@
 	/*background: #607d8b;*/
 	/*color: white;*/
 
+	box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.marker-cluster-custom-icon .number{
+	z-index: 2;
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	line-height: 40px !important;
+	top: 4px;
+	left: 4px;
+	border-radius: 50%;
 	background: white;
 	color: black;
-	box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.marker-cluster-custom-icon .pieChart{
+	z-index: 1;
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	top: 0;
+	border-radius: 50%;
+}
+
+
+.marker-custom-icon{
+	margin-top: -45px !important;
+}
+.marker-custom-icon .wrapper{
+	--bg-color: #607d8b;
+	--fg-color: #607d8b;
+
+	z-index: 1;
+
+	width: 40px;
+	height: 40px;
+	text-align: center;
+
+	border-radius: 100%;
+
+	color: var(--fg-color);
+}
+.marker-custom-icon .wrapper.material-icons{
+	line-height: 38px;
+}
+
+.marker-custom-icon .wrapper::before {
+	content: '';
+	position: absolute;
+	z-index: -2;
+
+	left: 50%;
+	bottom: -3px;
+	width: 10px;
+	height: 10px;
+	transform: rotate(45deg);
+	margin-left: -5px;
+
+	background: var(--bg-color);
+	box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.marker-custom-icon .wrapper::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background: var(--bg-color);
+    border-radius: 100%;
+
+    /*box-shadow: inset 0 0 0 4px white;*/
 }

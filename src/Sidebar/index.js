@@ -5,7 +5,9 @@ import {navigate/*,Router,Link*/} from '@reach/router'
 import {gql} from 'apollo-boost'
 import {loadPoi as query_loadPoi} from '../queries.js'
 
-import {categories, presets} from '../data/categories.js'
+// import categories from '../data/dist/categories.json'
+// import presets from '../data/dist/presets.json'
+// import {getPreset} from '../functions.js'
 
 import {
 	Typography,
@@ -44,8 +46,15 @@ import {
 
 // import reptile from './contemplative-reptile.jpg'
 
-console.log('categories', categories)
-console.log('presets', presets)
+// console.log('categories', categories)
+// console.log('presets', presets)
+//
+// const tags = {
+//     "amenity": "bar",
+//     "lgbtq": "primary",
+// }
+// console.log('The place is of type:', getPreset(tags,presets))
+
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
@@ -116,6 +125,9 @@ export default class Sidebar extends React.Component {
 	}
 	setDoc(newDoc) {
 		if (newDoc !== null && newDoc._id !== null) {
+			// console.log('newDoc', newDoc)
+			// console.log('The place is of type:', getPreset(newDoc.properties.tags,presets))
+
 			this.setState({
 				doc: newDoc,
 				changedProperties: {},
