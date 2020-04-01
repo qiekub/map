@@ -1,0 +1,2 @@
+describe('iD.uiInspector', function () {
+});

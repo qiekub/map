@@ -5,7 +5,7 @@
 	align-items: center;
 	/*border-radius: 52px !important;*/
 
-	/*transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s !important;*/
+	/*transition: box-shadow var(--transition-time) var(--timing-function) 0s !important;*/
 }
 .header.sidebarIsOpen{
 	/*margin: 0;*/

@@ -1,0 +1,16 @@
+{
+    "icon": "fas-cut",
+    "geometry": [
+        "point",
+        "area"
+    ],
+    "tags": {
+        "shop": "craft"
+    },
+    "terms": [
+        "art*",
+        "paint*",
+        "frame"
+    ],
+    "name": "Arts & Crafts Store"
+}

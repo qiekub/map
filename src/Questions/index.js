@@ -19,6 +19,7 @@ import {
 	Button,
 	Fab,
 	// Snackbar,
+	Paper,
 
 	// List,
 	// ListItem,
@@ -50,7 +51,8 @@ import {
 
 	// Edit as EditIcon,
 	DoneRounded as DoneIcon,
-	ArrowForwardRounded as ArrowForwardIcon,
+	ArrowBackRounded as ArrowBackIcon,
+	// ArrowForwardRounded as ArrowForwardIcon,
 } from '@material-ui/icons'
 // import {
 // 	Autocomplete
@@ -125,19 +127,16 @@ export default class Questions extends React.Component {
 		
 		this.inputValues = {}
 
-		this.setNextQuestionDoc = this.setNextQuestionDoc.bind(this)
 		this.answerQuestion = this.answerQuestion.bind(this)
 		this.finish = this.finish.bind(this)
 		this.loadQuestions = this.loadQuestions.bind(this)
 		this.submitInputs = this.submitInputs.bind(this)
-		this.directlySubmitInputValue = this.directlySubmitInputValue.bind(this)
+
+		this.setQuestionAsActive = this.setQuestionAsActive.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadQuestions()
-	}
-	componentDidUpdate(){
-		this.setNextQuestionDoc()
 	}
 
 	finish(){
@@ -151,83 +150,120 @@ export default class Questions extends React.Component {
 			query: query_loadQuestions,
 			// variables: {},
 		}).then(result => {
-			this.questions = result.data.questions
-			this.questionsById = this.questions.reduce((obj,questionDoc)=>{
-				obj[questionDoc._id] = questionDoc
+			// this.questions = result.data.questions
+			let counter = 0
+			this.questionsById = result.data.questions.reduce((obj,questionDoc)=>{
+				obj[questionDoc._id] = {
+					...questionDoc,
+					visible: true,
+					active: (counter === 0),
+					answered: false,
+				}
+				counter += 1
 				return obj
 			}, {})
-			this.questionIDs = Object.keys(this.questionsById)
+			// this.questionIDs = Object.keys(this.questionsById)
 
-			this.setState({questionsAreLoaded:true})
+			this.setState({
+				questionsById: this.questionsById,
+				questionsAreLoaded: true,
+			})
 		}).catch(error=>{
 			console.error(error)
 		})
 	}
 
-	answerQuestion(questionDoc, answerValue){
-		window.graphql.mutate({
-			mutation: mutation_answerQuestion,
-			variables: {
-				properties: {
-					forID: this.props.doc._id,
-					questionID: questionDoc._id,
-					answer: answerValue,
-				}
-			}
-		}).then(result=>{
-			console.info('mutate-result', result)
-		}).catch(error=>{
-			console.error('mutate-error', error)
-		})
+	setQuestionAsActive(questionID){
+		// if (Object.keys(this.inputValues).length > 0) {
+		// 	this.answerQuestion(questionDoc, this.inputValues)
+		// }
 
-		this.setState((state,props)=>{ // start this while mutating
+		this.setState((state, props) => {
+			const questionIDs = Object.keys(state.questionsById)
+
+			let questionsById = state.questionsById
+			for (const questionID of questionIDs) {
+				questionsById[questionID].active = false
+			}
+			if (!questionsById[questionID].answered) {
+				questionsById[questionID].active = true
+			}
+
 			return {
-				answersByQuestionId: {
-					...state.answersByQuestionId,
-					[questionDoc._id]: answerValue,
-				},
+				questionsById: questionsById,
 			}
 		})
 	}
 
-	directlySubmitInputValue(questionDoc, answerKey, answerValue){
-		this.answerQuestion(questionDoc, {
-			[answerKey]: answerValue
-		})
-	}
-	saveInputValue(key, event){
-		this.inputValues[key] = event.target.value
-	}
-	submitInputs(questionDoc){
-		this.answerQuestion(questionDoc, this.inputValues)
-	}
+	answerQuestion(questionDoc, answerValue){
+		let questionGotAnswered = false
+		if (Object.keys(answerValue).length > 0) {
+			questionGotAnswered = true
+		}
 
-	setNextQuestionDoc(){
-		if (this.state.questionsAreLoaded) {
-			const answeredQuestionIDs = Object.keys(this.state.answersByQuestionId)
-		
-			let nextQuestionDoc = null
-			if (answeredQuestionIDs.length < 7) { 
-				const questionIDs_NotAsked = (
-					answeredQuestionIDs.length === 0
-					? this.questionIDs
-					: this.questionIDs.filter(id=>!answeredQuestionIDs.includes(id))
-				)
-
-				if (questionIDs_NotAsked.length > 0) {
-					// nextQuestionDoc = this.questionsById[questionIDs_NotAsked[0]]
-					nextQuestionDoc = this.questionsById[questionIDs_NotAsked[ Math.random() * questionIDs_NotAsked.length >> 0 ]] // get a random item // source: https://stackoverflow.com/questions/5915096/get-random-item-from-javascript-array
+		if (questionGotAnswered) {
+			window.graphql.mutate({
+				mutation: mutation_answerQuestion,
+				variables: {
+					properties: {
+						forID: this.props.doc._id,
+						questionID: questionDoc._id,
+						answer: answerValue,
+					}
 				}
-			}
-			
-			this.setState((state,props)=>{
-				if (nextQuestionDoc !== state.questionDoc) {
-					this.inputValues = {}
-					return {questionDoc: nextQuestionDoc}
-				}
-				return null
+			}).then(result=>{
+				// console.info('mutate-result', result)
+			}).catch(error=>{
+				console.error('mutate-error', error)
 			})
 		}
+
+		this.setState((state, props) => { // start this while mutating
+			let questionsById = state.questionsById
+
+			questionsById[questionDoc._id].active = false
+			if (questionGotAnswered) {
+				questionsById[questionDoc._id].answered = true
+			}
+
+			const questionIDs = Object.keys(state.questionsById)
+			const thisIndex = questionIDs.indexOf(questionDoc._id)
+			if (thisIndex < questionIDs.length-1) {
+				for (let i=thisIndex+1; i<questionIDs.length; i+=1) {
+					if (!questionsById[questionIDs[i]].answered) {
+						questionsById[questionIDs[i]].active = true
+						break;
+					}
+				}
+			}
+
+			if (questionGotAnswered) {
+				return {
+					questionsById: questionsById,
+					answersByQuestionId: {
+						...state.answersByQuestionId,
+						[questionDoc._id]: answerValue,
+					},
+				}
+			}else{
+				return {
+					questionsById: questionsById,
+				}
+			}
+		})
+	}
+
+	saveInputValue(key, event){
+		if (!!event.target.value && event.target.value !== '') {
+			this.inputValues[key] = event.target.value
+		}else{
+			delete this.inputValues[key]
+		}
+	}
+	submitInputs(questionDoc){
+		const tmp_inputValues = this.inputValues
+		this.inputValues = {}
+		this.answerQuestion(questionDoc, tmp_inputValues)
 	}
 
 	renderQuestion(questionDoc){
@@ -247,18 +283,34 @@ export default class Questions extends React.Component {
 			)
 		}, false)
 
-		return (<React.Fragment key="question">
-			<div style={{margin:'16px'}}>
-				<Typography variant="h6">{questionDoc.properties.question}</Typography>
+		if (!questionDoc.visible) {
+			return null
+		}
 
-				<div style={{
-					display: 'flex',
-					alignItems: 'stretch',
-					alignContent: 'stretch',
-					justifyContent: 'space-between',
-					margin: '24px -8px -8px -8px',
-					flexDirection: (hasInputField ? 'column' : 'row'),
-				}}>
+		return (
+			<Paper
+				key={`question_${questionDoc._id}`}
+				className={
+					'questionCard '
+					+(questionDoc.answered ? 'answered ' : '')
+					+(questionDoc.active ? 'active ' : '')
+					+(hasInputField ? 'hasInputField ' : '')
+				}
+				elevation={0}
+				onClick={
+					!questionDoc.answered && !questionDoc.active
+					? ()=>this.setQuestionAsActive(questionDoc._id)
+					: null
+				}
+			>
+				<Typography variant="body1">{questionDoc.properties.question}</Typography>
+	
+				<div
+					className="possibleAnswers"
+					style={{
+						flexDirection: (hasInputField ? 'column' : 'row'),
+					}}
+				>
 					{questionDoc.properties.possibleAnswers.map(possibleAnswer=>{
 						const possibleAnswerKey = possibleAnswer.key
 						// const possibleAnswer = pair[0]
@@ -289,7 +341,7 @@ export default class Questions extends React.Component {
 							return (
 								<Button
 									key={possibleAnswerKey}
-									onClick={()=>this.directlySubmitInputValue(questionDoc,possibleAnswerKey,true)}
+									onClick={()=>this.answerQuestion(questionDoc,{[possibleAnswerKey]:true})}
 									variant="outlined"
 									size="large"
 									style={{
@@ -298,12 +350,13 @@ export default class Questions extends React.Component {
 										boxShadow: 'inset 0 0 0 999px rgba(0,0,0,0.04)',
 										color: 'inherit',
 										margin: '4px 8px',
-										padding: '16px 8px',
+										padding: (hasInputField ? '16px 8px 16px 16px' : '16px 8px'),
+										justifyContent: (hasInputField ? 'flex-start' : 'center'),
 									}}
 								>
 									{
 										!!possibleAnswer.icon
-										? (<div className="material-icons" style={{
+										? (<div className="material-icons-round" style={{
 											marginRight: '8px',
 										}}>{possibleAnswer.icon}</div>)
 										: null
@@ -314,46 +367,40 @@ export default class Questions extends React.Component {
 						}
 					})}
 				</div>
-
-				<div style={{
-					margin: (hasInputField ? '32px 0 0 -16px' : '64px -16px 0 -16px'),
-					padding: '0',
-					display: 'flex',
-					justifyContent: (hasInputField ? 'space-between' : 'end'),
-				}}>
+		
+				<div className="saveButton">
 					<Button
-						variant="text"
-						onClick={()=>this.answerQuestion(questionDoc,'skipped')}
+						onClick={()=>this.submitInputs(questionDoc)}
+						variant="outlined"
 						size="large"
 						style={{
+							border: 'none',
+							boxShadow: 'rgba(0, 0, 0, 0.04) 0px 0px 0px 999px inset',
 							color: 'inherit',
-							borderRadius: '999px',
-							padding: '8px 16px',
+							margin: '0',
+							padding: '8px 16px 8px 12px',
 						}}
 					>
-						Überspringen {hasInputField ? null : <ArrowForwardIcon style={{color:'inherit',marginLeft:'8px'}}/>}
+						<DoneIcon style={{color:'var(--light-green)',marginRight:'8px'}}/>
+						Speichern
 					</Button>
 
-					{
-						hasInputField
-						? (<Fab
-							variant="extended"
-							onClick={()=>this.submitInputs(questionDoc)}
-							size="large"
-							style={{
-								color: 'white',
-								background: 'black',
-								borderRadius: '999px',
-								padding: '0 16px 0 20px',
-							}}
-						>
-							Weiter <ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
-						</Fab>)
-						: null
-					}
+					{/*<Fab
+						variant="extended"
+						onClick={()=>this.submitInputs(questionDoc)}
+						size="large"
+						style={{
+							color: 'white',
+							background: 'black',
+							borderRadius: '999px',
+							padding: '0 16px 0 20px',
+						}}
+					>
+						Weiter <ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+					</Fab>*/}
 				</div>
-			</div>
-		</React.Fragment>)
+			</Paper>
+		)
 	}
 
 	render() {
@@ -370,8 +417,6 @@ export default class Questions extends React.Component {
 
 		// const properties = doc.properties
 		// const tags = properties.tags
-
-		const questionDoc = this.state.questionDoc
 
 		if (!this.state.questionsAreLoaded) {
 			return (<div style={{textAlign:'center', margin:'16px'}}>
@@ -391,9 +436,31 @@ export default class Questions extends React.Component {
 					Abbrechen
 				</Fab>
 			</div>)
-		} else if (!!questionDoc) {
-			return this.renderQuestion(questionDoc)
-		}else{
+		} else if (!!this.state.questionsById && Object.keys(this.state.questionsById).length > 0) {
+			return (<>
+				<div className="questionsList">
+					{Object.entries(this.state.questionsById).map(pair => this.renderQuestion(pair[1]))}
+				</div>
+
+				<div style={{textAlign:'left', margin:'32px 0 64px 0'}}>
+					<Fab
+						variant="extended"
+						onClick={this.finish}
+						size="large"
+						style={{
+							color: 'white',
+							background: 'black',
+							borderRadius: '999px',
+							padding: '8px 16px',
+						}}
+					>
+						<ArrowBackIcon style={{color:'var(--light-green)',marginRight:'8px'}}/>
+						Fertig
+					</Fab>
+				</div>
+			</>)
+		}
+		/*else{
 			return (<div style={{textAlign:'center', margin:'16px'}}>
 				<Typography variant="body1" style={{margin:'0 0 32px 0'}}>Du hast alle Fragen beantwortet!<br />Vielen Dank!!!</Typography>
 
@@ -411,6 +478,6 @@ export default class Questions extends React.Component {
 					<DoneIcon style={{color:'var(--light-green)',marginRight:'8px'}}/> Fertig
 				</Fab>
 			</div>)
-		}
+		}*/
 	}
 }

@@ -271,7 +271,7 @@ export default class App extends React.Component {
 					path="/place/:docID"
 					
 					className="Sidebar"
-					
+
 					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
