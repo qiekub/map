@@ -1,0 +1,14 @@
+---
+
+# https://nl.wikipedia.org/wiki/Feestdagen_in_Belgi%C3%AB
+PH:
+  - {'name': 'Nieuwjaar - Jour de l''an', 'fixed_date': [1, 1]}
+  - {'name': 'Paasmaandag - Lundi de Pâques', 'variable_date': easter, 'offset': 1}
+  - {'name': 'Dag van de Arbeid - Fête du Travail', 'fixed_date': [5, 1]}
+  - {'name': 'Onze-Lieve-Heer-Hemelvaart - Jeudi de l''Ascensionn', 'variable_date': easter, 'offset': 39}
+  - {'name': 'Pinkstermaandag - Lundi de Pentecôte', 'variable_date': easter, 'offset': 50}
+  - {'name': 'Nationale feestdag van België - Fête nationale', 'fixed_date': [7, 21]}
+  - {'name': 'Onze-Lieve-Vrouw-Hemelvaart - Assomption', 'fixed_date': [8, 15]}
+  - {'name': 'Allerheiligen - Toussaint', 'fixed_date': [11, 1]}
+  - {'name': 'Wapenstilstand - Armistice', 'fixed_date': [11, 11]}
+  - {'name': 'Kerstmis - Noël', 'fixed_date': [12, 25]}

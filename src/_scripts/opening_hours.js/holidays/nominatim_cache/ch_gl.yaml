@@ -1,0 +1,20 @@
+---
+place_id: 67287794
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 5852253156
+lat: '46.9768339'
+lon: '9.0908325'
+display_name: Nüenhüttli, Glarus Süd, Glarus, 8773, Schweiz
+address:
+  city: Glarus Süd
+  country: Schweiz
+  country_code: ch
+  locality: Nüenhüttli
+  postcode: '8773'
+  state: Glarus
+boundingbox:
+  - '46.9568339'
+  - '46.9968339'
+  - '9.0708325'
+  - '9.1108325'

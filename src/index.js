@@ -17,8 +17,8 @@ window.graphql = new ApolloClient({
 
 	// uri: window.location.origin+'/graphql/v1',
 	uri: (
-		window.location.host === 'localhost:3000'
-		? 'http://localhost:5000/queercenters/us-central1/graphql/graphql/v1'
+		window.location.host === '192.168.2.102:3000'
+		? 'http://192.168.2.102:5000/queercenters/us-central1/graphql/graphql/v1'
 		: window.location.origin+'/graphql/v1'
 	),
 	// uri: (

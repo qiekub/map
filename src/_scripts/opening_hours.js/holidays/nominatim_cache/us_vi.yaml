@@ -1,0 +1,23 @@
+---
+place_id: '2623808'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: node
+osm_id: '356559537'
+lat: '18.3430118'
+lon: '-64.9354232'
+display_name: Christ Church Methodist Church, Rosen Gade, Charlotte Amalie, St. Thomas Island, United States Virgin Islands,
+  00803, United States of America
+address:
+  country: United States of America
+  country_code: us
+  county: St. Thomas Island
+  place_of_worship: Christ Church Methodist Church
+  postcode: 00803
+  road: Rosen Gade
+  state: United States Virgin Islands
+  town: Charlotte Amalie
+boundingbox:
+  - '18.3429118'
+  - '18.3431118'
+  - '-64.9355232'
+  - '-64.9353232'

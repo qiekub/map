@@ -1,0 +1,26 @@
+---
+place_id: '77801554'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '58286612'
+lat: '51.4782693'
+lon: '7.55397917444996'
+display_name: 31, Gurlittstraße, Klein-Paris, Aplerbecker Mark, Dortmund, Regierungsbezirk Arnsberg, Nordrhein-Westfalen,
+  44287, Deutschland
+address:
+  city: Dortmund
+  country: Deutschland
+  country_code: de
+  county: Dortmund
+  house_number: '31'
+  neighbourhood: Klein-Paris
+  postcode: '44287'
+  road: Gurlittstraße
+  state: Nordrhein-Westfalen
+  state_district: Regierungsbezirk Arnsberg
+  suburb: Aplerbecker Mark
+boundingbox:
+  - '51.4781874'
+  - '51.4783425'
+  - '7.5538663'
+  - '7.554093'

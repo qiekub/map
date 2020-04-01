@@ -7,143 +7,55 @@ const supported_langs = ['en','de'] // ,'es','fr'
 
 
 
-
+/*
+(  ) Community Centers (Community Centres, Social Facilities)
+(  ) Going Out (Bars, Pubs, Nightclubs, …)
+(  ) Culture (Museums, Theatres, Historical, Libraries)
+(  ) Eating (Cafes, Restaurants)
+(  ) Tourism (Hotels, …)
+*/
 
 const categories = [
 	// This is not used in the backend. It's here as a reference for the frontend. Copy it to where it's needed.
 	{
-		icon: 'Restaurant',
-		name: {
-			en: 'Food & Drink',
-			de: 'Essen & Trinken',
-		},
-		presets: [
-			'amenity/bar',
-			// 'amenity/pub',
-			'amenity/restaurant',
-			'amenity/cafe',
-		],
-	},
-	{
-		icon: 'LocalActivity',
-		name: {
-			en: 'Things to do',
-			de: 'Aktivitäten',
-		},
-		presets: [
-			'amenity/nightclub',
-			'tourism/museum',
-			'amenity/theatre',
-			'leisure/fitness_centre',
-		],
-	},
-	{
-		icon: 'People',
-		name: {
-			en: 'Services',
-			de: 'Services',
-		},
+		name: 'Community Centers',
 		presets: [
 			'amenity/community_centre',
-			'healthcare/yes',
-			'shop/yes',
-			'amenity/place_of_worship',
-			// 'tourism/hotel',
+			'amenity/social_facility',
+			'amenity/social_centre',
+			'healthcare',
 		],
+		color: {
+			key: 'purple',
+			prideFlageMeaning: 'Spirit',
+			prideFlageColorName: 'Violet',
+			// bg: '#4A148C', // 900
+			bg: '#6A1B9A', // 800
+			// bg: '#9C27B0', // 500
+			fg: 'white',
+		},
 	},
 	{
-		icon: 'More',
-		name: {
-			en: 'More',
-			de: 'Weiteres',
-		},
-		presets: [],
-	},
-]
-
-const colors = {
-	default: {
-		prideFlageMeaning: '',
-		prideFlageColorName: '',
-		bg: '#263238', // '#607D8B', // blue-grey
-		fg: 'white',
-		presets: []
-	},
-	white: {
-		prideFlageMeaning: '',
-		prideFlageColorName: '',
-		bg: 'white', // '#607D8B', // blue-grey
-		fg: 'black',
-		presets: [
-			'office',
-			'amenity/place_of_worship',
-			'tourism/hotel',
-			'tourism/hostel',
-			'tourism/apartment',
-			'tourism/camp_site',
-			'tourism/picnic_site',
-			'tourism/guest_house',
-			'tourism/information',
-		]
-	},
-	pink: {
-		prideFlageMeaning: 'Sex',
-		prideFlageColorName: 'Hot pink',
-		bg: '#880E4F',
-		fg: 'white',
-		presets: [
-			'shop',
-			'shop/erotic',
-			'amenity/ice_cream',
-		]
-	},
-	red: {
-		prideFlageMeaning: 'Life',
-		prideFlageColorName: 'Red',
-		bg: '#B71C1C',
-		fg: 'white',
+		name: 'Going Out',
 		presets: [
 			'amenity/bar',
 			'amenity/pub',
 			'amenity/nightclub',
-			'amenity/restaurant',
-			'amenity/cafe',
 			'leisure/dance',
 			'club',
 		],
+		color: {
+			key: 'red',
+			prideFlageMeaning: 'Life',
+			prideFlageColorName: 'Red',
+			// bg: '#B71C1C', // 900
+			bg: '#C62828', // 800
+			// bg: '#F44336', // 500
+			fg: 'white',
+		},
 	},
-	orange: {
-		prideFlageMeaning: 'Healing',
-		prideFlageColorName: 'Orange',
-		bg: '#E65100',
-		fg: 'white',
-		presets: [
-			'healthcare',
-			'leisure/fitness_centre',
-			'leisure/sauna',
-		]
-	},
-	yellow: {
-		prideFlageMeaning: 'Sunlight',
-		prideFlageColorName: 'Yellow',
-		bg: '#F57F17',
-		fg: 'black',
-		presets: []
-	},
-	green: {
-		prideFlageMeaning: 'Nature',
-		prideFlageColorName: 'Green',
-		bg: '#1B5E20',
-		fg: 'white',
-		presets: [
-			'natural',
-		]
-	},
-	cyan: {
-		prideFlageMeaning: 'Magic/Art',
-		prideFlageColorName: 'Turquoise',
-		bg: '#006064',
-		fg: 'white',
+	{
+		name: 'Culture',
 		presets: [
 			'tourism/museum',
 			'amenity/theatre',
@@ -151,27 +63,147 @@ const colors = {
 			'amenity/arts_centre',
 			'tourism/gallery',
 			'historic',
-		]
+		],
+		color: {
+			key: 'cyan',
+			prideFlageMeaning: 'Magic/Art',
+			prideFlageColorName: 'Turquoise',
+			// bg: '#006064', // 900
+			bg: '#00695C', // 800
+			// bg: '#009688', // 500
+			fg: 'white',
+		},
 	},
-	indigo: {
-		prideFlageMeaning: 'Serenity',
-		prideFlageColorName: 'Indigo',
-		bg: '#1A237E',
-		fg: 'white',
-		presets: []
-	},
-	purple: {
-		prideFlageMeaning: 'Spirit',
-		prideFlageColorName: 'Violet',
-		bg: '#4A148C',
-		fg: 'white',
+	{
+		name: 'Eating',
 		presets: [
-			'amenity/community_centre',
-			'amenity/social_facility',
-			'amenity/social_centre',
+			'amenity/cafe',
+			'amenity/restaurant',
+			'amenity/ice_cream',
+		],
+		color: {
+			key: 'orange',
+			prideFlageMeaning: 'Healing',
+			prideFlageColorName: 'Orange',
+			bg: '#E65100', // 900
+			fg: 'white',
+		},
+	},
+	{
+		name: 'Fun', // "Fun"
+		presets: [
+			'shop/erotic',
+			'amenity/swingerclub',
+			'leisure/sauna',
+			'amenity/brothel',
+			'natural/beach/fkk',
+			'amenity/cruising_area',
+		],
+		color: {
+			key: 'pink',
+			prideFlageMeaning: 'Sex',
+			prideFlageColorName: 'Hot pink',
+			// bg: '#880E4F', // 900
+			bg: '#AD1457', // 800
+			// bg: '#E91E63', // 500
+			fg: 'white',
+		},
+	},
+	{
+		name: 'Tourism',
+		presets: [
+			'tourism/hotel',
+			'tourism/hostel',
+			'tourism/apartment',
+			'tourism/camp_site',
+			'tourism/picnic_site',
+			'tourism/guest_house',
+			'tourism/information',
+		],
+		color: {
+			key: 'indigo',
+			prideFlageMeaning: 'Serenity',
+			prideFlageColorName: 'Indigo',
+			// bg: '#1A237E', // 900
+			bg: '#283593', // 800
+			// bg: '#3F51B5', // 500
+			fg: 'white',
+		},
+	},
+]
+
+const colors = {
+	default: {
+		prideFlageMeaning: '',
+		prideFlageColorName: '',
+		// bg: '#263238', // 900 blue-grey
+		// bg: '#37474F', // 800 blue-grey
+		// bg: '#607D8B', // 500 blue-grey
+		// fg: 'white',
+
+		bg: 'white',
+		fg: 'black',
+
+		presets: [
+			'shop',
+			'office',
+			'amenity/place_of_worship',
 		]
 	},
+
+	...(
+		categories.reduce((obj,category)=>{
+			category.color.presets = category.presets
+			obj[category.color.key] = category.color
+			return obj
+		},{})
+	),
+
+	// white: {
+	// 	prideFlageMeaning: '',
+	// 	prideFlageColorName: '',
+	// 	bg: 'white', // '#607D8B', // blue-grey
+	// 	fg: 'black',
+	// 	presets: []
+	// },
+	// orange: {
+	// 	prideFlageMeaning: 'Healing',
+	// 	prideFlageColorName: 'Orange',
+	// 	// bg: '#E65100', // 900
+	// 	bg: '#FF9800', // 500
+	// 	fg: 'white',
+	// 	presets: [
+	// 		'leisure/fitness_centre',
+	// 	]
+	// },
+	// yellow: {
+	// 	prideFlageMeaning: 'Sunlight',
+	// 	prideFlageColorName: 'Yellow',
+	// 	// bg: '#F57F17', // 900
+	// 	bg: '#FFEB3B', // 500
+	// 	fg: 'black',
+	// 	presets: []
+	// },
+	// green: {
+	// 	prideFlageMeaning: 'Nature',
+	// 	prideFlageColorName: 'Green',
+	// 	// bg: '#1B5E20', // 900
+	// 	bg: '#43A047', // 600
+	// 	fg: 'white',
+	// 	presets: [
+	// 		'natural',
+	// 	]
+	// },
+	// indigo: {
+	// 	prideFlageMeaning: 'Serenity',
+	// 	prideFlageColorName: 'Indigo',
+	// 	// bg: '#1A237E', // 900
+	// 	bg: '#3F51B5', // 500
+	// 	fg: 'white',
+	// 	presets: []
+	// },
 }
+
 const colorsByPreset = Object.entries(colors).reduce((obj,pair)=>{
 	const key = pair[0]
 	const color = pair[1]
@@ -263,6 +295,8 @@ const preset_overwrites = {
 	'office': {
 		icon: 'business_center',
 	},
+
+	// amenity/cruising_area
 	
 	'club': {
 		icon: 'local_bar',
@@ -274,10 +308,48 @@ const preset_overwrites = {
 		icon: 'local_bar',
 	},
 	'amenity/nightclub': {
-		icon: 'local_bar', // 'star',
+		icon: 'star',
 	},
 	'leisure/dance': {
-		icon: 'local_bar', // 'star',
+		icon: 'star',
+	},
+	'amenity/swingerclub': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'swingerclub',
+		},
+		name: {
+			"en": "Swingerclub",
+			"de": "Swingerclub",
+		},
+		terms: {
+			"en": "",
+		},
+	},
+	'amenity/brothel': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'brothel',
+		},
+		name: {
+			"en": "Brothel",
+			"en": "Bordel",
+		},
+		terms: {
+			"en": "",
+		},
+	},
+	'amenity/cruising_area': {
+		icon: 'toys',
+		tags: {
+			'amenity': 'cruising_area',
+		},
+		name: {
+			"en": "Cruising Area",
+		},
+		terms: {
+			"en": "",
+		},
 	},
 
 	'amenity/community_centre': {
@@ -301,8 +373,22 @@ const preset_overwrites = {
 		icon: 'storefront',
 	},
 	'shop/erotic': {
-		icon: 'storefront', // 'toys',
+		icon: 'toys',
 	},
+	// 'shop/erotic/video/lgbtq': {		
+	// 	icon: 'toys',
+	// 	tags: {
+	// 		'shop': 'video',
+	// 		'gay': 'yes'
+	// 	},
+	// 	name: {
+	// 		"en": "LGBTQ Video Store",
+	// 		"en": "LGBTQ Video Geschäft",
+	// 	},
+	// 	terms: {
+	// 		"en": "",
+	// 	},
+	// },
 	'amenity/ice_cream': {
 		icon: 'storefront',
 	},
@@ -316,6 +402,20 @@ const preset_overwrites = {
 	'natural/beach': {
 		icon: 'beach_access',
 	},
+	'natural/beach/fkk': {
+		icon: 'beach_access',
+		tags: {
+			'natural': 'beach',
+			'nudism': 'permissive',
+		},
+		name: {
+			"en": "Naturist Beach",
+			"de": "FKK Strand",
+		},
+		terms: {
+			"en": "",
+		},
+	},
 
 	'tourism/museum': {
 		icon: 'museum',
@@ -324,12 +424,15 @@ const preset_overwrites = {
 		icon: 'museum',
 	},
 	'amenity/arts_centre': {
-		icon: 'museum',
+		icon: 'museum', // brush | palette | museum
 	},
 	'historic': {
-		icon: 'museum',
+		icon: 'local_see', // local_see | place | museum
 	},
 
+	'tourism/information': {
+		icon: 'info',
+	},
 	'tourism/hotel': {
 		icon: 'hotel',
 	},
@@ -339,21 +442,21 @@ const preset_overwrites = {
 	'tourism/apartment': {
 		icon: 'hotel',
 	},
-	'tourism/camp_site': {
-		icon: 'hotel',
-	},
-	'tourism/picnic_site': {
-		icon: 'hotel',
-	},
 	'tourism/guest_house': {
 		icon: 'hotel',
+	},
+	'tourism/camp_site': {
+		icon: 'fireplace',
+	},
+	'tourism/picnic_site': {
+		icon: 'deck',
 	},
 
 	'amenity/theatre': {
 		icon: 'local_play',
 	},
 	'amenity/cinema': {
-		icon: 'local_play',
+		icon: 'local_movies',
 	},
 
 	'amenity/library': {
@@ -414,15 +517,30 @@ for (const preset_key in id_presets) {
 		preset.geometry.includes('point') &&
 		!Object.keys(preset.tags).includes('brand:wikidata')
 	) {
+		const preset_translations = translations[preset_key] || {}
 		presets[preset_key] = {
-			tags: preset.tags,
+			tags: preset.tags || {},
 			// fields: preset.fields || [],
 			// moreFields: preset.moreFields || [],
 
-			name: translations[preset_key].name || {'en':preset.name},
-			terms: translations[preset_key].terms || preset.terms.join(' ') || '',
+			name: preset_translations.name || {'en':preset.name},
+			terms: preset_translations.terms || preset.terms.join(' ') || '',
 
 			...get_preset_overwrite(preset_key),
+		}
+	}
+}
+
+for (const preset_key in preset_overwrites) {
+	if (!presets[preset_key] && preset_overwrites[preset_key].tags) {
+		const preset_translations = translations[preset_key] || {}
+		presets[preset_key] = {
+			tags: {},
+			name: preset_translations.name || {en:''},
+			terms: preset_translations.terms || '',
+	
+			...presets[preset_key],
+			...preset_overwrites[preset_key],
 		}
 	}
 }

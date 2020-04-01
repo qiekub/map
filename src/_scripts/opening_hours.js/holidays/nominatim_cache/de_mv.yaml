@@ -1,0 +1,26 @@
+---
+place_id: '85544270'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '96307767'
+lat: '53.77375665'
+lon: '12.5756973795233'
+display_name: Liontec Versicherungen, 7, Marktplatz, Bahnhof, Pampow, Teterow, Landkreis Rostock, Mecklenburg-Vorpommern,
+  17166, Deutschland
+address:
+  address29: Liontec Versicherungen
+  country: Deutschland
+  country_code: de
+  county: Landkreis Rostock
+  house_number: '7'
+  neighbourhood: Bahnhof
+  pedestrian: Marktplatz
+  postcode: '17166'
+  state: Mecklenburg-Vorpommern
+  suburb: Pampow
+  town: Teterow
+boundingbox:
+  - '53.7737017'
+  - '53.7738096'
+  - '12.5756119'
+  - '12.5757826'

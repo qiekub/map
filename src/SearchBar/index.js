@@ -11,10 +11,10 @@ import {
 } from '@material-ui/core'
 
 import {
-	Search as SearchIcon,
-	HourglassEmpty as HourglassEmptyIcon,
-	Close as CloseIcon,
-	Menu as MenuIcon,
+	SearchRounded as SearchIcon,
+	HourglassEmptyRounded as HourglassEmptyIcon,
+	CloseRounded as CloseIcon,
+	MenuRounded as MenuIcon,
 } from '@material-ui/icons'
 
 import MainDrawerContent from '../MainDrawerContent/index.js'
@@ -26,6 +26,7 @@ export default class SearchBar extends React.Component {
 		this.state = {
 			value: '',
 			loadingSearchResult: false,
+			isMainDrawerOpen: false,
 		}
 
 		this.submitTheSearchQuery = this.submitTheSearchQuery.bind(this)
@@ -88,10 +89,18 @@ export default class SearchBar extends React.Component {
 
 	render() {
 		return (<div className={this.props.className}>
-			<Drawer open={this.state.isMainDrawerOpen} onClose={this.toggleMainDrawer}>
+			<Drawer
+				open={this.state.isMainDrawerOpen}
+				onClose={this.toggleMainDrawer}
+			>
 				<MainDrawerContent />
 			</Drawer>
-			<Paper className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')} elevation={(this.props.sidebarIsOpen ? 0 : 6)} variant={(this.props.sidebarIsOpen ? 'elevation'/*'outlined'*/ : 'elevation')}>
+
+			<Paper
+				className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')}
+				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
+				variant="elevation"
+			>
 				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
 					<MenuIcon style={{color:'black'}} />
 				</IconButton>
@@ -113,7 +122,7 @@ export default class SearchBar extends React.Component {
 					this.props.sidebarIsOpen
 					?
 					<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
-						<CloseIcon />
+						<CloseIcon style={{color:'black'}} />
 					</IconButton>
 					:
 					<IconButton type="submit" style={{margin:'4px',padding:'10px'}} aria-label="search" onClick={this.submitTheSearchQuery}>

@@ -1,0 +1,22 @@
+---
+place_id: '16145752'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: node
+osm_id: '1491131029'
+lat: '40.7997997'
+lon: '-124.1704455'
+display_name: Sole Savers Used Cars, 7th Street, Eureka, Humboldt County, California, 95501, United States of America
+address:
+  car: Sole Savers Used Cars
+  city: Eureka
+  country: United States of America
+  country_code: us
+  county: Humboldt County
+  postcode: '95501'
+  road: 7th Street
+  state: California
+boundingbox:
+  - '40.7996997'
+  - '40.7998997'
+  - '-124.1705455'
+  - '-124.1703455'

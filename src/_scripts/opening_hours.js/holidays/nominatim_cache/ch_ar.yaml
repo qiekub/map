@@ -1,0 +1,22 @@
+---
+place_id: 96062981
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 36568429
+lat: '47.39708498211328'
+lon: '9.370622457762366'
+display_name: Spiesenrüti, Battenhaus, Teufen (AR), Mittelland, Appenzell Ausserrhoden, 9052, Schweiz
+address:
+  city: Teufen (AR)
+  country: Schweiz
+  country_code: ch
+  county: Mittelland
+  hamlet: Battenhaus
+  postcode: '9052'
+  road: Spiesenrüti
+  state: Appenzell Ausserrhoden
+boundingbox:
+  - '47.3967963'
+  - '47.3996315'
+  - '9.3654191'
+  - '9.3730603'

@@ -1,0 +1,20 @@
+---
+place_id: '131102333'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '292950875'
+lat: '39.179721'
+lon: '-106.8236546'
+display_name: West Side, Pitkin County, Colorado, 81611, United States of America
+address:
+  country: United States of America
+  country_code: us
+  county: Pitkin County
+  path: West Side
+  postcode: '81611'
+  state: Colorado
+boundingbox:
+  - '39.1790348'
+  - '39.1808899'
+  - '-106.825368'
+  - '-106.8217973'

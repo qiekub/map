@@ -4,21 +4,46 @@ import './index.css'
 // import {gql} from 'apollo-boost'
 import {Router,navigate} from '@reach/router'
 import {
-	loadPoi as query_loadPoi,
+	loadPlace as query_loadPlace,
 	search as query_search,
 } from '../queries.js'
 
+// import categories from '../data/dist/categories.json'
+import presets from '../data/dist/presets.json'
+// import colors from '../data/dist/colors.json'
+// import colorsByPreset from '../data/dist/colorsByPreset.json'
+import {getWantedTagsList} from '../functions.js'
+
 import {
-	Fab
+	// Fab,
+	// Drawer,
+
+	// Card,
+	// CardActions,
+	// CardActionArea,
+	// CardContent,
+	// Typography,
+	// Divider,
+	// Button,
+	// Checkbox,
+
+	// List,
+	// ListItem,
+	// ListItemText,
+	// ListItemIcon,
+	// ListItemSecondaryAction,
 } from '@material-ui/core'
 import {
-	Add as AddIcon,
+	// AddRounded as AddIcon,
+	// FilterList as FilterListIcon,
+	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
 import PageMap from '../PageMap/index.js'
 import SearchBar from '../SearchBar/index.js'
 // import InfoCard from '../InfoCard/index.js'
 import Sidebar from '../Sidebar/index.js'
+import FiltersPanelContent from '../FiltersPanelContent/index.js'
 
 import 'typeface-roboto'
 
@@ -30,6 +55,10 @@ export default class App extends React.Component {
 			searchBarValue: '',
 			sidebarIsOpen: false,
 			doc: null,
+
+			filters: {
+				presets: []
+			}
 		}
 
 		this.functions = {}
@@ -39,6 +68,7 @@ export default class App extends React.Component {
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.addPlace = this.addPlace.bind(this)
 		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
+		this.filtersChanged = this.filtersChanged.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
@@ -52,8 +82,40 @@ export default class App extends React.Component {
 	setSearchBarValue(value){
 		this.setState({searchBarValue:value})
 	}
+	
 	setSidebarIsOpen(value){
-		this.setState({sidebarIsOpen:value})
+		// const center = this.functions['PageMap'].getCenter()
+		// const zoom = this.functions['PageMap'].getZoom()
+
+		this.setState({sidebarIsOpen:value}, ()=>{
+			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
+			// 	// this.functions['PageMap'].invalidateSize()
+			// 	setTimeout(()=>{
+			// 		// const center2 = this.functions['PageMap'].getCenter()
+			// 		console.log('center', center, zoom)
+			// 		// console.log('center2', center2)
+			// 		this.functions['PageMap'].flyTo(center, Math.round(zoom), {
+			// 			animate: true,
+			// 			duration: 1.5,
+			// 		})
+			// 		// this.functions['PageMap'].invalidateSize()
+			// 	}, 500)
+			// }
+
+			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+			// 	console.log('center-2', center)
+			// 	this.functions['PageMap'].panTo(center, {
+			// 		animate: true,
+			// 		duration: 5,
+			// 	})
+			// }else{
+			// 	this.functions['PageMap'].panTo(
+			// 		this.functions['PageMap'].getCenter(), {
+			// 		animate: true,
+			// 		duration: 5,
+			// 	})
+			// }
+		})
 	}
 
 	startSearch(queryString,callback){
@@ -64,7 +126,7 @@ export default class App extends React.Component {
 			}).then(async result => {
 				await navigate(`/`)
 
-				this.functions['PageMap'].setBounds([
+				this.functions['PageMap'].flyToBounds([
 					[
 						result.data.search.geometry.boundingbox.southwest.lat,
 						result.data.search.geometry.boundingbox.southwest.lng,
@@ -73,7 +135,10 @@ export default class App extends React.Component {
 						result.data.search.geometry.boundingbox.northeast.lat,
 						result.data.search.geometry.boundingbox.northeast.lng,
 					]
-				])
+				], {
+					animate: true,
+					duration: 1.5,
+				})
 
 				// this.functions['PageMap'].setBounds([
 				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
@@ -92,28 +157,40 @@ export default class App extends React.Component {
 	loadAndViewDoc(docID){
 		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			window.graphql.query({
-				query: query_loadPoi,
-				variables: {_id:docID},
+				query: query_loadPlace,
+				variables: {
+					_id: docID,
+					wantedTags: [
+						...this.functions['Sidebar'].getWantedTagsList(),
+						...getWantedTagsList(presets),
+					],
+				},
 			}).then(async result=>{
 				const doc = result.data.getPlace
 		
 				if (doc !== null) {
 					this.functions['Sidebar'].setDoc(doc)
 		
-					// let zoomLevel = (this.props.onGetZoom ? this.props.onGetZoom() : 17)
-					// if (zoomLevel < 17) {
-					// 	zoomLevel = 17
-					// }
-					//
-					// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-					// 	if (this.props.onSetView) {
-					// 		this.props.onSetView([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-					// 	}
+					let zoomLevel = this.functions['PageMap'].getZoom()
+					if (zoomLevel < 17) {
+						zoomLevel = 17
+					}
+
+					if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+						this.functions['PageMap'].setView(
+							[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+							zoomLevel
+						)
 					// }else{
-					// 	if (this.props.onFlyTo) {
-					// 		this.props.onFlyTo([doc.properties.location.lat,doc.properties.location.lng],zoomLevel)
-					// 	}
-					// }
+					// 	this.functions['PageMap'].flyTo(
+					// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+					// 		zoomLevel,
+					// 		{
+					// 			animate: true,
+					// 			duration: 1,
+					// 		}
+					// 	)
+					}
 				}
 			}).catch(error=>{
 				console.error(error)
@@ -148,6 +225,11 @@ export default class App extends React.Component {
 		return this.functions['PageMap'].getZoom(...attr)
 	}
 
+	filtersChanged(newFilters){
+		console.log('filtersChanged', newFilters)
+		this.setState({filters:newFilters})
+	}
+
 	render() {
 		return (<>
 			<SearchBar
@@ -159,23 +241,37 @@ export default class App extends React.Component {
 				onSetSearchBarValue={this.setSearchBarValue}
 			/>
 
+			{/*<Card>
+				Start Info:
+
+				Where can I meet queer people in my town?
+				Where is the next queer-youth-center?
+				
+				Help us answer these questions!
+
+				Add queer-infos about places around you.
+			</Card>*/}
+
 			{/*<InfoCard
 				className="InfoCard"
 				place={this.state.selectedPlace}
 			/>*/}
 
-			<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
-				<AddIcon style={{marginRight:'8px'}} />
+			{/*<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
+				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
 				Add a Place
-			</Fab>
+			</Fab>*/}
+
+			<div className="filtersPanel">
+				<FiltersPanelContent onChange={this.filtersChanged}/>
+			</div>
 
 			<Router primary={false}>
 				<Sidebar
 					path="/place/:docID"
+					
 					className="Sidebar"
 					
-					hello="test"
-
 					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
@@ -188,9 +284,12 @@ export default class App extends React.Component {
 			</Router>
 			
 			<PageMap
-				className="page"
+				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
+
 				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
+			
+				filters={this.state.filters}
 			/>
 		</>)
 	}

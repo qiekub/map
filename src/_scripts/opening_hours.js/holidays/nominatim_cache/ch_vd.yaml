@@ -1,0 +1,20 @@
+---
+place_id: 111001855
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 112050127
+lat: '46.6367872'
+lon: '6.5307259'
+display_name: Lussery-Villars, District du Gros-de-Vaud, Waadt, 1307, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  county: District du Gros-de-Vaud
+  postcode: '1307'
+  state: Waadt
+  village: Lussery-Villars
+boundingbox:
+  - '46.6346531'
+  - '46.6376917'
+  - '6.529513'
+  - '6.5314124'

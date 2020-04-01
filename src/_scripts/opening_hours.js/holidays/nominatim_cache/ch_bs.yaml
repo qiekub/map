@@ -1,0 +1,22 @@
+---
+place_id: 4602800
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 529762917
+lat: '47.5570448'
+lon: '7.5930316'
+display_name: Münster Fähre "Leu", Pfalz, Altstadt Grossbasel, Basel, Basel-Stadt, 4010, Schweiz
+address:
+  city: Basel
+  country: Schweiz
+  country_code: ch
+  ferry_terminal: Münster Fähre "Leu"
+  pedestrian: Pfalz
+  postcode: '4010'
+  state: Basel-Stadt
+  suburb: Altstadt Grossbasel
+boundingbox:
+  - '47.5569448'
+  - '47.5571448'
+  - '7.5929316'
+  - '7.5931316'

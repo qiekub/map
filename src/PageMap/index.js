@@ -1,8 +1,10 @@
 import React from 'react'
-import {Map, TileLayer, Marker, Tooltip} from 'react-leaflet'
+import {Map, TileLayer} from 'react-leaflet'
 
 import {navigate} from '@reach/router'
-import {loadPois as query_loadPois} from '../queries.js'
+import {
+	loadMarkers as query_loadMarkers,
+} from '../queries.js'
 
 import './index.css'
 // import '../conic-gradient-polyfill.js'
@@ -11,8 +13,7 @@ import './index.css'
 import presets from '../data/dist/presets.json'
 import colors from '../data/dist/colors.json'
 import colorsByPreset from '../data/dist/colorsByPreset.json'
-import {getPreset,getColorByPreset} from '../functions.js'
-
+import {getPreset, getColorByPreset, getWantedTagsList} from '../functions.js'
 
 // import {
 // 	Icon,
@@ -22,20 +23,9 @@ import {getPreset,getColorByPreset} from '../functions.js'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
-import MarkerClusterGroup from 'react-leaflet-markercluster'
-import 'react-leaflet-markercluster/dist/styles.min.css'
+import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneCluster.js'
 
-// import image_markerIcon1x from './marker_icon/dot_pinlet-2-medium-1x.png'
-// import image_markerIcon2x from './marker_icon/dot_pinlet-2-medium-2x.png'
-
-// const markerIcon = new L.Icon({
-// 	// https://www.google.com/maps/vt/icon/name=assets/icons/poi/tactile/pinlet_shadow_v3-2-medium.png,assets/icons/poi/tactile/pinlet_outline_v3-2-medium.png,assets/icons/poi/tactile/pinlet_v3-2-medium.png,assets/icons/poi/quantum/pinlet/dot_pinlet-2-medium.png&highlight=ff000000,ffffff,607D8B,ffffff?scale=4
-// 	iconUrl: image_markerIcon1x,
-// 	iconRetinaUrl: image_markerIcon2x,
-// 	iconSize: [23, 32],
-// 	iconAnchor: [12.5, 32],
-// 	popupAnchor: [0, -32],
-// })
+PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 
 export default class PageMap extends React.Component {
 	constructor(props) {
@@ -46,16 +36,19 @@ export default class PageMap extends React.Component {
 			bounds: null,
 		}
 
-		this.viewportChangedTimeout = null;
+		this.filters = null
 
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
+		this.markers = []
 
-		this.onViewportChanged = this.onViewportChanged.bind(this)
 		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
-		this.createCustomIcon = this.createCustomIcon.bind(this)
-		this.createClusterCustomIcon = this.createClusterCustomIcon.bind(this)
+
+		this.createPruneCluster = this.createPruneCluster.bind(this)
+		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
+		this.filterMarkers = this.filterMarkers.bind(this)
+		this.showAllMarkers = this.showAllMarkers.bind(this)
 	}
 
 	componentDidMount(){
@@ -64,83 +57,53 @@ export default class PageMap extends React.Component {
 		if (this.props.onFunctions) {
 			this.props.onFunctions({
 				getZoom: () => this.map.getZoom(),
+				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
-				setBounds: bounds => this.map.flyToBounds(bounds),
+				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
+				panTo: (...attr) => this.map.panTo(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
+				invalidateSize: (...attr) => this.map.invalidateSize(...attr),
 			})
 		}
 	}
-	componentWillUnmount(){
-		clearTimeout(this.viewportChangedTimeout)
+	componentDidUpdate(){
+		if (this.props.filters !== this.filters) {
+			this.filters = this.props.filters
+			this.filterMarkers(this.filters)
+		}
 	}
-
-	onViewportChanged(viewport){
-		console.log('viewport', viewport)
-		// clearTimeout(this.viewportChangedTimeout)
-		// this.viewportChangedTimeout = setTimeout(()=>{		
-		// 	const mapViewport = {
-		// 		// ...viewport,
-		// 		bounds: this.map.getCenter(),
-		// 		zoom: this.map.getZoom(),
-		// 		bounds: this.map.getBounds().toBBoxString(),
-		// 		location: window.location+''
-		// 	}
-		// 	// could be used to send stats to the server
-		// 	// but we probably shouldnt
-		// }, 500)
-	}
-
 
 	loadMarkers(){
-		window.graphql.query({query: query_loadPois}).then(result => {
-
-			const docs = result.data.getPlaces.map(doc=>{
-				doc.___preset = getPreset(doc.properties.tags || {}, presets)
+		window.graphql.query({
+			query: query_loadMarkers,
+			variables: {
+				wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
+			},
+		}).then(result => {
+			const docs = result.data.getMarkers.map(doc=>{
+				doc.___preset = getPreset(doc.tags || {}, presets)
 				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 				return doc
 			})
 
-			this.setState({docs: docs})
+			this.docs = docs
+			this.addMarkersToPruneCluster(docs)
 
-			// for (const doc of result.data.getPlaces) {
-			// 	break
-			//
-			// 	const changeset = {
-			// 		forDoc: null,
-			// 		properties: doc.properties,
-			// 		sources: 'https://thomasrosen.github.io/queer-centers/',
-			// 		comment: '',
-			// 		fromBot: true,
-			// 		created_by: 'queer.qiekub.com',
-			// 		created_at: new Date()*1,
-			// 	}
-			//
-			// 	let changeset_json = JSON.stringify(changeset)
-			// 	changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
-			//
-			// 	window.graphql.mutate({mutation: gql`mutation {
-			// 		addChangeset(changeset:${changeset_json}) {
-			// 			_id
-			// 			properties {
-			// 				... on Changeset {
-			// 					forDoc
-			// 				}
-			// 			}
-			// 		}
-			// 	}`}).then(result => {
-			// 		console.info('mutate-result', result)
-			// 	}).catch(error=>{
-			// 		console.error('mutate-error', error)
-			// 	})
-			// }
+			// 1756241 100%
+			// 1556529  80%
+			//  679779  40%
+			//   69580   4%
 
 		}).catch(error=>{
 			console.error(error)
 		})
 	}
 
-	async showPlace(doc,thisMarkerRef) {
+	async showPlace(doc) {
+		const center = this.map.getCenter()
+		console.log('center-map', center)
+
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
 			this.props.onViewDoc(doc._id)
@@ -150,33 +113,35 @@ export default class PageMap extends React.Component {
 	gotMapRef(Map){
 		this.mapRef = Map
 		this.map = Map.leafletElement
-	}
 
-	createCustomIcon(iconName,bg,fg){
-		return L.divIcon({
-			html: `
-				<div class="wrapper material-icons" style="--bg-color:${bg};--fg-color:${fg};">${iconName.toLowerCase()}</div>
-			`,
-			className: 'marker-custom-icon',
-			iconSize: L.point(40, 40, true),
-		})
+		this.createPruneCluster()
 	}
 
 	getConicGradient(values){
 		let stops = []
-		let counter = 0
-		let currentPos = 0
-		for (const pair of values) {
-			if (counter === 0) {
-				currentPos += Math.ceil(pair[1]*360)
-				stops.push(pair[0]+' '+currentPos+'deg')
-			}else if (counter === values.length-1) {
-				stops.push(pair[0]+' 0')
-			}else{
-				currentPos += Math.ceil(pair[1]*360)
-				stops.push(pair[0]+' 0 '+currentPos+'deg')
+
+		if (values.length === 1) {
+			stops = [values[0][0]+' 0']
+		}else{
+			let counter = 0
+			let currentPos = 0
+			for (const pair of values) {
+				currentPos += 5
+				if (counter === 0) {
+					stops.push('white '+currentPos+'deg')
+				}else{
+					stops.push('white 0 '+currentPos+'deg')
+				}
+	
+				if (counter === values.length-1) {
+					stops.push(pair[0]+' 0')
+				}else{
+					currentPos += Math.ceil(pair[1]*360)
+					stops.push(pair[0]+' 0 '+currentPos+'deg')
+				}
+
+				counter += 1
 			}
-			counter += 1
 		}
 		stops = stops.join(', ')
 
@@ -189,30 +154,203 @@ export default class PageMap extends React.Component {
 		return gradient
 	}
 
-	createClusterCustomIcon(cluster){
-		const colors = Object.entries(cluster.getAllChildMarkers().map(m=>m.options.properties.___color.bg).reduce((obj,preset_key)=>{
-			if (!(!!obj[preset_key])) {
-				obj[preset_key] = 0
+	createPruneCluster(){
+		this.clusterGroup = new PruneClusterForLeaflet()
+		this.clusterGroup.Cluster.Size = 120
+
+		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
+			const marker = new L.Marker(position, {
+				icon: this.clusterGroup.BuildLeafletClusterIcon(cluster),
+			})
+		
+			marker.on('click', ()=>{
+				// Compute the cluster bounds (it's slow : O(n))
+				const markersArea = this.clusterGroup.Cluster.FindMarkersInArea(cluster.bounds)
+				const clusterBounds = this.clusterGroup.Cluster.ComputeBounds(markersArea)
+		
+				if (clusterBounds) {
+					const bounds = new L.LatLngBounds(
+						new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng),
+						new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
+					)
+		
+					const zoomLevelBefore = this.clusterGroup._map.getZoom()
+					const zoomLevelAfter = this.clusterGroup._map.getBoundsZoom(bounds, false, new L.Point(20, 20, null))
+		
+					// If the zoom level doesn't change
+					if (zoomLevelAfter === zoomLevelBefore) {
+						// Send an event for the LeafletSpiderfier
+						this.clusterGroup._map.fire('overlappingmarkers', {
+							cluster: this.clusterGroup,
+							markers: markersArea,
+							center: marker.getLatLng(),
+							marker: marker,
+						})
+		
+						this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
+							animate: true,
+							duration: 0.75,
+						})
+					}else{
+						this.clusterGroup._map.flyToBounds(bounds, {
+							animate: true,
+							duration: 0.75,
+							// padding: [100,100],
+						})
+					}
+				}
+			})
+		
+			return marker
+		}
+
+		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
+			leafletMarker.setIcon(L.divIcon({
+				html: `
+					<div class="wrapper material-icons-round" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+				`,
+				className: 'marker-custom-icon',
+				iconSize: L.point(40, 40, true),
+			}))
+			
+			if (doc.name !== '') {
+				leafletMarker.bindTooltip(doc.name, {
+					sticky: true,
+					interactive: false,
+					opacity: 1,
+					permanent: false,
+				})
 			}
-			obj[preset_key] += 1
-			return obj
-		},{})).sort((a,b)=>a[1]-b[1])
+		
+			leafletMarker.on('click', ()=>this.showPlace(doc))
+		}
 
-		const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
-
-		const gradient = this.getConicGradient(colors.map(pair=>{
-			return [pair[0] , pair[1]/colors_sum]
-		}))
-
-		return L.divIcon({
-			html: `
-				<div class="number">${cluster.getChildCount()}</div>
-				<div class="pieChart" style="background-image:url(${gradient.dataURL});"></div>
-			`,
-			className: 'marker-cluster-custom-icon',
-			iconSize: L.point(48, 48, true),
-		})
+		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
+			const colors = Object.entries(cluster.GetClusterMarkers()
+				.filter(m=>!!m.data.___color.key && m.data.___color.key !== 'white')
+				.map(m=>m.data.___color.bg)
+				.reduce((obj,preset_key)=>{
+					if (!(!!obj[preset_key])) {
+						obj[preset_key] = 0
+					}
+					obj[preset_key] += 1
+					return obj
+				},{})
+			).sort((a,b)=>a[1]-b[1])
+	
+			const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
+	
+			const gradient = this.getConicGradient(colors.map(pair=>{
+				return [pair[0] , pair[1]/colors_sum]
+			}))
+	
+			return L.divIcon({
+				html: `
+					<div class="number">${cluster.population}</div>
+					<div class="pieChart" style="background-image:url(${gradient.dataURL});"></div>
+				`,
+				className: 'marker-cluster-custom-icon',
+				iconSize: L.point(48, 48, true),
+			})
+		}
+		
+		this.map.addLayer(this.clusterGroup)
 	}
+	addMarkersToPruneCluster(docs){
+		this.markers = []
+		this.clusterGroup.RemoveMarkers()
+
+		for (const doc of docs) {
+			let marker = new PruneCluster.Marker(doc.lat, doc.lng, doc)
+			marker.filtered = false
+			this.markers.push(marker)
+			this.clusterGroup.RegisterMarker(marker)
+		}
+
+		this.clusterGroup.ProcessView()
+		this.map.invalidateSize(false)
+
+		this.filterMarkers(this.filters)
+	}
+
+	showAllMarkers(){
+		const markers_length = this.markers.length
+		for (let i = markers_length - 1; i >= 0; i--) {
+			this.markers[i].filtered = false
+		}
+		this.clusterGroup.ProcessView()
+	}
+	filterMarkers(filters){
+			if (!!this.filters) {
+				const presets = this.filters.presets || []
+				// const presets = ['amenity/community_centre']
+				const presets_length = presets.length
+
+				const selectedAge = this.filters.selectedAge
+				const ageOption = this.filters.ageOption
+
+				if (presets_length > 0 || !!selectedAge) {
+					const markers_length = this.markers.length
+					for (let i = markers_length - 1; i >= 0; i--) {
+						const marker = this.markers[i]
+
+						let isInPresets = true
+						if (presets_length > 0) {
+							isInPresets = presets.map(preset_key=>{
+								return marker.data.___preset.key.startsWith(preset_key)
+							}).reduce((bool,value) => (value ? true : bool), false)
+						}
+
+						let isInAgeRange = true
+						if (!!selectedAge) {
+							isInAgeRange = false
+							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+								isInAgeRange = (
+									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								)
+							}else{
+								if (!!marker.data.tags.min_age) {
+									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+								}
+								if (isInAgeRange && !!marker.data.tags.max_age) {
+									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								}
+							}
+						}
+
+						this.markers[i].filtered = !(isInPresets && isInAgeRange)
+					}
+					this.clusterGroup.ProcessView()
+				}else{
+					this.showAllMarkers()
+				}
+			}else{
+				this.showAllMarkers()
+			}
+	}
+
+	// getMaxClusterRadius(zoomLevel){
+	// 	if (zoomLevel<5) {
+	// 		return 80
+	// 	} else if (zoomLevel<6) {
+	// 		return 120
+	// 	}  else if (zoomLevel<9) {
+	// 		return 100
+	// 	} else if (zoomLevel<11) {
+	// 		return 80
+	// 	} else if (zoomLevel<16) {
+	// 		return 60
+	// 	} else if (zoomLevel<22) {
+	// 		return 20
+	// 	}
+	//
+	// 	return 80
+	// }
 
 	render() {
 		// <ZoomControl position="bottomright" />
@@ -221,14 +359,18 @@ export default class PageMap extends React.Component {
 			<Map
 				ref={this.gotMapRef}
 				className="map"
+
+				preferCanvas={true}
 				useFlyTo={true}
 				bounds={this.state.bounds}
 				center={[51,10]}
 				minZoom={2}
 				zoom={1}
-				maxZoom={21}
+				maxZoom={19}
+				zoomSnap={1}
 				zoomControl={false}
-				onViewportChanged={this.onViewportChanged}
+
+				fadeAnimation={false}
 
 				worldCopyJump={true}
 				maxBoundsViscosity={1.0}
@@ -236,117 +378,39 @@ export default class PageMap extends React.Component {
 				maxBounds={[[-180,99999],[180,-99999]]}
 			>
 				{/*<TileLayer
-					attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+					key="tilelayer_english_labels"
+					detectRetina={false}
+					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
+					url={"https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"}
+				/>*/}
+				<TileLayer
+					key="tilelayer_international_lables"
+					detectRetina={false}
+					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
+					url={"https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"}
+				/>
+				{/*<TileLayer
+					key="tilelayer_stamen_watercolor"
+					maxZoom={19}
+					detectRetina={window.devicePixelRatio > 1}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+					url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.png"
+				/>*/}
+				{/*<TileLayer
+					key="tilelayer_openstreetmap"
+					maxZoom={19}
+					detectRetina={window.devicePixelRatio > 1}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>*/}
 				{/*<TileLayer
-					attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-					url="https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=JdjEr7nrztG6lZV91e7l"
+					key="tilelayer_CartoDB_Voyager"
+					maxZoom={19}
+					subdomains="abcd"
+					detectRetina={false}
+					attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>'
+					url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
 				/>*/}
-
-				{/*
-					https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.mvt
-					https://tiles3.mapillary.com/v0.1/{z}/{x}/{y}.png?client_id=czhaNGs0SExWRUVJeEZoaGptckZQdzpkYzc5MjE5NGZkNGY1ZmNi
-					https://raster-tiles.mapillary.com/v0.1/{z}/{x}/{y}.png
-				*/}
-
-				{<TileLayer
-					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
-				/>}
-
-				{/*<TileLayer
-					attribution='mapillary.com'
-					url="https://raster-tiles.mapillary.com/v0.1/{z}/{x}/{y}.png"
-					maxZoom={17}
-				/>*/}
-				{/*
-					url="https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
-				*/}
-				{/*<TileLayer
-					attribution='href="https://www.mapbox.com/about/maps/" target="_blank">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-					url="https://api.mapbox.com/styles/v1/petacat/cixrvkhut001a2rnts6cgmkn5/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"
-				/>*/}
-
-
-		<MarkerClusterGroup
-			maxClusterRadius={(zoomLevel)=>{
-				if (zoomLevel<10) {
-					return 80
-				} else if (zoomLevel<11) {
-					return 50
-				} else if (zoomLevel<22) {
-					return 30
-				}
-
-				return 80
-			}}
-            spiderfyDistanceMultiplier={1.5}
-            showCoverageOnHover={false}
-            iconCreateFunction={this.createClusterCustomIcon}
-          >
-					{this.state.docs.map(doc=>{
-						// icon={markerIcon}
-
-						if (!(!!doc.___preset)) {
-							doc.___preset = {}
-						}
-
-						const thisMarkerRef = React.createRef()
-						const location = (doc.properties.geometry || {}).location || {}
-
-						if (location.lng && location.lat) {
-							return (<Marker
-								key={doc._id}
-								position={[location.lat,location.lng]} 
-								icon={this.createCustomIcon(
-									(!!doc.___preset.icon ? doc.___preset.icon : ''),
-									doc.___color.bg,
-									doc.___color.fg
-								)}
-								ref={thisMarkerRef}
-								onClick={()=>this.showPlace(doc,thisMarkerRef)}
-								properties={doc}
-							>
-								<Tooltip
-									sticky={true}
-									interactive={false}
-									opacity={1}
-									permanent={false}
-								>
-									{doc.properties.name} - {doc.___preset.key}
-								</Tooltip>
-							</Marker>)
-						}
-						return null
-					})}
-          </MarkerClusterGroup>
-
-				{/*<LayerGroup>
-					{this.state.docs.map(doc=>{
-						const thisMarkerRef = React.createRef()
-						const location = doc.properties.location || {}
-						if (location.lng && location.lat) {
-							return (<Marker
-								key={doc.properties.name}
-								position={[location.lat,location.lng]} 
-								icon={markerIcon}
-								ref={thisMarkerRef}
-								onClick={()=>this.showPlace(doc,thisMarkerRef)}
-							>
-								<Tooltip
-									sticky={true}
-									interactive={false}
-									opacity={1}
-									permanent={false}
-								>
-									{doc.properties.name}
-								</Tooltip>
-							</Marker>)
-						}
-						return null
-					})}
-				</LayerGroup>*/}
 			</Map>
 		</div>)
 	}

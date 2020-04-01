@@ -1,0 +1,21 @@
+---
+place_id: 131158941
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 187486710
+lat: '47.69713505'
+lon: '8.63450595796282'
+display_name: Stadthaus, Stadthausgasse, Schaffhausen, 8202, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  postcode: '8202'
+  road: Stadthausgasse
+  state: Schaffhausen
+  town: Schaffhausen
+  townhall: Stadthaus
+boundingbox:
+  - '47.6969343'
+  - '47.6972769'
+  - '8.6343538'
+  - '8.6348404'

@@ -1,0 +1,23 @@
+---
+place_id: '204274960'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: node
+osm_id: '1818862993'
+lat: '52.517322'
+lon: '13.388977'
+display_name: Douglas, Unter den Linden, Mitte, Berlin, 10117, Deutschland
+address:
+  address29: Douglas
+  city: Berlin
+  city_district: Mitte
+  country: Deutschland
+  country_code: de
+  postcode: '10117'
+  road: Unter den Linden
+  state: Berlin
+  suburb: Mitte
+boundingbox:
+  - '52.517222'
+  - '52.517422'
+  - '13.388877'
+  - '13.389077'

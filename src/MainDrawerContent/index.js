@@ -10,10 +10,10 @@ import {
 } from '@material-ui/core'
 
 import {
-	History as HistoryIcon,
-	// ContactSupport as ContactSupportIcon,
-	Fullscreen as FullscreenIcon,
-	FullscreenExit as FullscreenExitIcon,
+	HistoryRounded as HistoryIcon,
+	// ContactSupportRounded as ContactSupportIcon,
+	FullscreenRounded as FullscreenIcon,
+	FullscreenExitRounded as FullscreenExitIcon,
 } from '@material-ui/icons'
 
 // WhatsApp

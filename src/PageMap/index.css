@@ -32,6 +32,35 @@
 	font-size: 24px !important;
 }
 
+
+.leaflet-container .leaflet-control-attribution{
+	position: fixed;
+	right: 4px;
+	bottom: 4px;
+	/*left: 4px;*/
+	text-align: right;
+	background: rgba(255,255,255,0.3) !important;
+	color: black;
+	backdrop-filter: blur(16px);
+	border-radius: 4px;
+
+	font-size: 0.75rem !important;
+	font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+	font-weight: 400 !important;
+	/*line-height: 1.66 !important;*/
+	letter-spacing: 0.03333em !important;
+
+	height: 20px !important;
+	line-height: 20px !important;
+
+	pointer-events: none;
+}
+.leaflet-container .leaflet-control-attribution a{
+	color: inherit;
+	pointer-events: auto;
+}
+
+
 .marker-cluster-custom-icon{
 	/* body-1 */
 	/*font-size: 1rem;
@@ -98,8 +127,14 @@
 
 	color: var(--fg-color);
 }
-.marker-custom-icon .wrapper.material-icons{
+.marker-custom-icon .wrapper.material-icons,
+.marker-custom-icon .wrapper.material-icons-outlined,
+.marker-custom-icon .wrapper.material-icons-sharp,
+.marker-custom-icon .wrapper.material-icons-two-tone{
 	line-height: 38px;
+}
+.marker-custom-icon .wrapper.material-icons-round{
+	line-height: 40px;
 }
 
 .marker-custom-icon .wrapper::before {

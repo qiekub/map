@@ -1,0 +1,22 @@
+---
+place_id: '86770457'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '101614587'
+lat: '49.4173294'
+lon: '6.9783698'
+display_name: Klingelfloßtalbrücke, Eppelborn, Landkreis Neunkirchen, Saarland, 66571, Deutschland
+address:
+  city_district: Eppelborn
+  country: Deutschland
+  country_code: de
+  county: Landkreis Neunkirchen
+  postcode: '66571'
+  road: Klingelfloßtalbrücke
+  state: Saarland
+  village: Eppelborn
+boundingbox:
+  - '49.415945'
+  - '49.4187733'
+  - '6.9767841'
+  - '6.9803664'

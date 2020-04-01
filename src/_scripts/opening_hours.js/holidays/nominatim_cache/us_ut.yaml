@@ -1,0 +1,22 @@
+---
+place_id: '124868801'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '257809595'
+lat: '40.5886217'
+lon: '-111.6378685'
+display_name: Alta Lodge Tow, East Perruvian Acre Road, Alta, Salt Lake County, Utah, 84138, United States of America
+address:
+  address29: Alta Lodge Tow
+  country: United States of America
+  country_code: us
+  county: Salt Lake County
+  postcode: '84138'
+  road: East Perruvian Acre Road
+  state: Utah
+  town: Alta
+boundingbox:
+  - '40.5886217'
+  - '40.589815'
+  - '-111.6378685'
+  - '-111.6373543'

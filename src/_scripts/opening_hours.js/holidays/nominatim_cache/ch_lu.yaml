@@ -1,0 +1,21 @@
+---
+place_id: 114762904
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 120747762
+lat: '47.09217921920416'
+lon: '8.172871033070647'
+display_name: Windblosenstrasse, Hunkele, Ruswil, Luzern, 6016, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  hamlet: Hunkele
+  postcode: '6016'
+  road: Windblosenstrasse
+  state: Luzern
+  village: Ruswil
+boundingbox:
+  - '47.0907406'
+  - '47.0934436'
+  - '8.1664537'
+  - '8.1750956'

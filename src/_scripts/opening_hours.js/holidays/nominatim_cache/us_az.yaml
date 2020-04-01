@@ -1,0 +1,19 @@
+---
+place_id: '128696839'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '284558228'
+lat: '34.9381065'
+lon: '-109.7597016'
+display_name: Blue Mesa Trail, Apache County, Arizona, United States of America
+address:
+  country: United States of America
+  country_code: us
+  county: Apache County
+  footway: Blue Mesa Trail
+  state: Arizona
+boundingbox:
+  - '34.9361754'
+  - '34.939458'
+  - '-109.7611979'
+  - '-109.756191'

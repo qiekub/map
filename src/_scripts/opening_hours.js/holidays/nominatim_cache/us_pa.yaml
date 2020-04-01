@@ -1,0 +1,22 @@
+---
+place_id: '126942958'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '260794611'
+lat: '40.3340718'
+lon: '-75.9294293956808'
+display_name: Parking Garage, Cherry Street, Reading, Berks County, Pennsylvania, 19602, United States of America
+address:
+  city: Reading
+  country: United States of America
+  country_code: us
+  county: Berks County
+  parking: Parking Garage
+  postcode: '19602'
+  road: Cherry Street
+  state: Pennsylvania
+boundingbox:
+  - '40.3337776'
+  - '40.3343481'
+  - '-75.9298373'
+  - '-75.9290223'

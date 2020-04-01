@@ -1,0 +1,23 @@
+---
+place_id: 43482540
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 3190916917
+lat: '46.2264555'
+lon: '6.1437747'
+display_name: The Conquest of Space, Avenue de la Paix, Sécheron, Pâquis, Genf, 1202, Schweiz
+address:
+  city: Genf
+  country: Schweiz
+  country_code: ch
+  memorial: The Conquest of Space
+  neighbourhood: Sécheron
+  postcode: '1202'
+  road: Avenue de la Paix
+  state: Genf
+  suburb: Pâquis
+boundingbox:
+  - '46.2263555'
+  - '46.2265555'
+  - '6.1436747'
+  - '6.1438747'

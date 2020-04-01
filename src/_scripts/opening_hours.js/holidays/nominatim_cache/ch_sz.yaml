@@ -1,0 +1,21 @@
+---
+place_id: 46922551
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 3602074251
+lat: '47.0444132'
+lon: '8.7341668'
+display_name: Furggelen, Alpthal, Schwyz, 8849, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  county: Schwyz
+  locality: Furggelen
+  postcode: '8849'
+  state: Schwyz
+  village: Alpthal
+boundingbox:
+  - '47.0244132'
+  - '47.0644132'
+  - '8.7141668'
+  - '8.7541668'

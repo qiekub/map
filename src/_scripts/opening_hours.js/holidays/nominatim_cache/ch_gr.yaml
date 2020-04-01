@@ -1,0 +1,21 @@
+---
+place_id: 76174245
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 6725269662
+lat: '46.6895634'
+lon: '9.609875'
+display_name: Hetta da las Nuorsas, Albula, Regiun Alvra, Graubünden, 7450, Schweiz
+address:
+  city: Albula
+  country: Schweiz
+  country_code: ch
+  county: Regiun Alvra
+  hamlet: Hetta da las Nuorsas
+  postcode: '7450'
+  state: Graubünden
+boundingbox:
+  - '46.6495634'
+  - '46.7295634'
+  - '9.569875'
+  - '9.649875'
