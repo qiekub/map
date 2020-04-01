@@ -1,0 +1,76 @@
+{
+	"hosting": {
+		"predeploy": [
+			"yarn build"
+		],
+		"public": "./build/",
+		"ignore": [
+			"firebase.json",
+			"**/.*",
+			"**/node_modules/**"
+		],
+		"cleanUrls": true,
+		"trailingSlash": true,
+
+
+
+		"rewrites": [{
+				// Shows the same content for multiple URLs
+				"source": "/opening_hours+deps.min.js",
+				"destination": "/opening_hours+deps.min.js"
+			},{
+				// Directs a request to Cloud Functions
+				"source": "/graphql/**",
+				"function": "graphql"
+			},
+			/*{
+					 // Directs a request to a Cloud Run containerized app
+					 "source": "/helloworld",
+					 "run": {
+						 "serviceId": "helloworld",
+						 "region": "us-central1"
+					 }
+				 },*/
+			{
+				// Shows the same content for multiple URLs
+				"source": "**",
+				"destination": "/index.html"
+			}
+		],
+
+
+
+		"headers": [
+			{
+				"source": "/service-worker.js",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "no-cache"
+				}]
+			},
+			{
+				// Overrides the default 1 hour browser cache with a 2 hour cache for all image files
+				"source": "manifest.json",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=2629800"
+				}]
+			}, {
+				"source": "**",
+				"headers": [{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}]
+			},
+			{
+				// Overrides the default 1 hour browser cache with a 2 hour cache for all image files
+				"source": "**/*.@(jpg|jpeg|gif|png)",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=7200"
+				}]
+			}
+		]
+
+	},
+}
