@@ -23,10 +23,11 @@
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
-  	"saveLocalIP": "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | echo \"\\\"$(cat)\\\"\" > ./src/.env.local_ip.json",
+    "backup_commit": "git commit -a -m \"#deploy\"",
+    "saveLocalIP": "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | echo \"\\\"$(cat)\\\"\" > ./src/.env.local_ip.json",
     
     "serve": "yarn saveLocalIP; yarn start",
-    "deploy": "yarn build; firebase deploy --only hosting",
+    "deploy": "yarn backup_commit; yarn build; firebase deploy --only hosting",
 
     "start": "PORT=3000 react-scripts start",
     "build": "echo \"\\\"\\\"\" > ./src/.env.local_ip.json; react-scripts build",
