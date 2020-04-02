@@ -46,4 +46,4 @@ https://github.com/thomasrosen/queermap-firebase-functions
 I use Mapbox raster tiles and want to add Mapbox as a geocoder.
 But these are to expensive for an open source project that currently isn't getting any donations.
 
-Do you have a discount or other options, so that I can use your services in this project?
+Can you provide me with a discount or do you have other options, so that I can use your services in this project?
