@@ -1,5 +1,7 @@
 # Request to Mapbox
 
+The request can be found here: https://support.mapbox.com/hc/en-us/requests/82901
+
 **What can we help you with?:** Mapbox Community (non-profits and positive impact projects)
 **Your email address:** thomas.rosen@qiekub.com
 **Full name:** Thomas Rosen
