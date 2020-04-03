@@ -252,6 +252,11 @@ export default class App extends React.Component {
 				Help us answer these questions!
 
 				Add queer-infos about places around you.
+
+				-----
+
+				Info about who supports the project or which services/libraries/tools are used:
+				Mapbox, OSM, Overpass, GitHub, Firebase
 			</Card>*/}
 
 			{/*<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
