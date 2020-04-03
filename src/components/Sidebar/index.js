@@ -5,6 +5,8 @@ Wheelchair accessible / Not wheelchair accessible
 import React from 'react'
 import './index.css'
 
+import { Localized } from '../Localized/'
+
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
 // import {loadPlace as query_loadPlace} from '../queries.js'
@@ -619,7 +621,8 @@ export default class Sidebar extends React.Component {
 				size="large"
 				className="improveFab"
 			>
-				<EditIcon className="icon"/> Verbessern
+				<EditIcon className="icon"/>
+				<Localized id="improve" />
 			</Fab>
 		</React.Fragment>)
 	}

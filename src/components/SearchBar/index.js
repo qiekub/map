@@ -1,6 +1,7 @@
 import React from 'react'
 import './index.css'
 
+import { withLocalization } from '../Localized/'
 import {navigate} from '@reach/router'
 
 import {
@@ -19,7 +20,7 @@ import {
 
 import MainDrawerContent from '../MainDrawerContent/'
 
-export default class SearchBar extends React.Component {
+class SearchBar extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -111,8 +112,7 @@ export default class SearchBar extends React.Component {
 						flex: 1,
 					}}
 					value={this.state.value}
-					placeholder="Search For Queerness!"
-					inputProps={{'aria-label': 'search input'}}
+					placeholder={this.props.getString('search-for-qeerness')}
 					onChange={this.saveSearchQueryText}
 					onKeyPress={this.searchKeypressed}
 
@@ -168,6 +168,8 @@ export default class SearchBar extends React.Component {
 		</div>)
 	}
 }
+
+export default withLocalization(SearchBar)
 
 
 // <a className="infoLink" rel="noopener noreferrer" href="https://github.com/thomasrosen/queer-centers" target="_blank">Infos / Ort hinzufügen</a>

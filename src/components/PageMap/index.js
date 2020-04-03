@@ -1,5 +1,6 @@
 import React from 'react'
-import {Map, TileLayer} from 'react-leaflet'
+
+import { withLocalization } from '../Localized/'
 
 import {navigate} from '@reach/router'
 import {
@@ -19,7 +20,7 @@ import {getPreset, getColorByPreset, getWantedTagsList} from '../../functions.js
 // 	Icon,
 // } from '@material-ui/core'
 
-
+import {Map, TileLayer} from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
@@ -27,7 +28,7 @@ import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneClu
 
 PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 
-export default class PageMap extends React.Component {
+class PageMap extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -418,3 +419,5 @@ export default class PageMap extends React.Component {
 		</div>)
 	}
 }
+
+export default withLocalization(PageMap)
