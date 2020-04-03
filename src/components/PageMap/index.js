@@ -1,25 +1,26 @@
 import React from 'react'
-import {Map, TileLayer} from 'react-leaflet'
+
+import { withLocalization } from '../Localized/'
 
 import {navigate} from '@reach/router'
 import {
 	loadMarkers as query_loadMarkers,
-} from '../queries.js'
+} from '../../queries.js'
 
 import './index.css'
-// import '../conic-gradient-polyfill.js'
+// import '../../conic-gradient-polyfill.js'
 
-// import categories from '../data/dist/categories.json'
-import presets from '../data/dist/presets.json'
-import colors from '../data/dist/colors.json'
-import colorsByPreset from '../data/dist/colorsByPreset.json'
-import {getPreset, getColorByPreset, getWantedTagsList} from '../functions.js'
+// import categories from '../../data/dist/categories.json'
+import presets from '../../data/dist/presets.json'
+import colors from '../../data/dist/colors.json'
+import colorsByPreset from '../../data/dist/colorsByPreset.json'
+import {getPreset, getColorByPreset, getWantedTagsList} from '../../functions.js'
 
 // import {
 // 	Icon,
 // } from '@material-ui/core'
 
-
+import {Map, TileLayer} from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
@@ -27,7 +28,7 @@ import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneClu
 
 PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 
-export default class PageMap extends React.Component {
+class PageMap extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -101,8 +102,7 @@ export default class PageMap extends React.Component {
 	}
 
 	async showPlace(doc) {
-		const center = this.map.getCenter()
-		console.log('center-map', center)
+		// const center = this.map.getCenter()
 
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
@@ -366,7 +366,7 @@ export default class PageMap extends React.Component {
 				center={[51,10]}
 				minZoom={2}
 				zoom={1}
-				maxZoom={19}
+				maxZoom={22}
 				zoomSnap={1}
 				zoomControl={false}
 
@@ -386,8 +386,12 @@ export default class PageMap extends React.Component {
 				<TileLayer
 					key="tilelayer_international_lables"
 					detectRetina={false}
-					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
-					url={"https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"}
+					attribution={`
+						<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
+						<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
+						| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+					`}
+					url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
 				/>
 				{/*<TileLayer
 					key="tilelayer_stamen_watercolor"
@@ -415,3 +419,5 @@ export default class PageMap extends React.Component {
 		</div>)
 	}
 }
+
+export default withLocalization(PageMap)

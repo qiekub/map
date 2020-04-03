@@ -2,6 +2,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
+    "@fluent/bundle": "^0.15.0",
+    "@fluent/langneg": "^0.4.0",
+    "@fluent/react": "^0.11.1",
     "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.46",
@@ -11,24 +14,20 @@
     "@testing-library/user-event": "^7.1.2",
     "apollo-boost": "^0.4.7",
     "graphql": "^14.6.0",
+    "intl-pluralrules": "^1.1.2",
     "leaflet": "^1.6.0",
-    "leaflet.markercluster": "^1.4.1",
     "material-ui-popup-state": "^1.5.3",
-    "opening_hours": "^3.5.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-leaflet": "^2.6.1",
-    "react-leaflet-markercluster": "^2.0.0-rc3",
     "react-scripts": "3.4.0",
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
     "backup_commit": "git commit -a -m \"#deploy\"",
     "saveLocalIP": "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | echo \"\\\"$(cat)\\\"\" > ./src/.env.local_ip.json",
-    
     "serve": "yarn saveLocalIP; yarn start",
     "deploy": "yarn backup_commit; yarn build; firebase deploy --only hosting",
-
     "start": "PORT=3000 react-scripts start",
     "build": "echo \"\\\"\\\"\" > ./src/.env.local_ip.json; react-scripts build",
     "test": "react-scripts test",

@@ -1,26 +1,26 @@
 import React from 'react'
 // import './index.css'
 
+import { withLocalization } from '../Localized/'
+
 import {
 	List,
 	ListItem,
-	ListItemIcon,
+	// ListItemIcon,
 	ListItemText,
-	Divider,
+	// Divider,
 } from '@material-ui/core'
 
 import {
-	HistoryRounded as HistoryIcon,
+	// HistoryRounded as HistoryIcon,
 	// ContactSupportRounded as ContactSupportIcon,
-	FullscreenRounded as FullscreenIcon,
-	FullscreenExitRounded as FullscreenExitIcon,
+	// FullscreenRounded as FullscreenIcon,
+	// FullscreenExitRounded as FullscreenExitIcon,
 } from '@material-ui/icons'
-
-// WhatsApp
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
-export default class MainDrawerContent extends React.Component {
+class MainDrawerContent extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -49,20 +49,13 @@ export default class MainDrawerContent extends React.Component {
 		return (<>
 			<List>
 				<ListItemLink>
-					<ListItemIcon><HistoryIcon style={{color:'black'}} /></ListItemIcon>
-					<ListItemText primary="Changes Under Review" />
-				</ListItemLink>
-			</List>
-			<Divider />
-			<List>
-				<ListItemLink>
-					<ListItemText primary="Imprint + Privacy Policy" />
+					<ListItemText primary={this.props.getString('imprint_and_pp')} />
 				</ListItemLink>
 				<ListItemLink>
-					<ListItemText primary="Contact" />
+					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
-			<Divider />
+			{/*<Divider />
 			<List>
 				{document.fullscreenEnabled ? (<ListItem button onClick={this.toogleFullscreen}>
 					<ListItemIcon>
@@ -70,10 +63,11 @@ export default class MainDrawerContent extends React.Component {
 					</ListItemIcon>
 					<ListItemText primary={this.state.windowIsFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} />
 				</ListItem>) : null}
-			</List>
+			</List>*/}
 		</>)
 	}
 }
 
+export default withLocalization(MainDrawerContent)
 
 

@@ -1,18 +1,20 @@
 import React from 'react'
 import './index.css'
 
+import { Localized } from '../Localized/'
+
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
 import {
 	loadQuestions as query_loadQuestions,
 	answerQuestion as mutation_answerQuestion,
-} from '../queries.js'
+} from '../../queries.js'
 
-// import categories from '../data/dist/categories.json'
-// import presets from '../data/dist/presets.json'
-// import colors from '../data/dist/colors.json'
-// import colorsByPreset from '../data/dist/colorsByPreset.json'
-// import {getPreset, getColorByPreset} from '../functions.js'
+// import categories from '../../data/dist/categories.json'
+// import presets from '../../data/dist/presets.json'
+// import colors from '../../data/dist/colors.json'
+// import colorsByPreset from '../../data/dist/colorsByPreset.json'
+// import {getPreset, getColorByPreset} from '../../functions.js'
 
 import {
 	Typography,
@@ -382,7 +384,7 @@ export default class Questions extends React.Component {
 						}}
 					>
 						<DoneIcon style={{color:'var(--light-green)',marginRight:'8px'}}/>
-						Speichern
+						<Localized id="save" />
 					</Button>
 
 					{/*<Fab
@@ -396,7 +398,8 @@ export default class Questions extends React.Component {
 							padding: '0 16px 0 20px',
 						}}
 					>
-						Weiter <ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+						<Localized id="next" />
+						<ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
 					</Fab>*/}
 				</div>
 			</Paper>
@@ -420,7 +423,9 @@ export default class Questions extends React.Component {
 
 		if (!this.state.questionsAreLoaded) {
 			return (<div style={{textAlign:'center', margin:'16px'}}>
-				<Typography variant="body1" style={{margin:'0 0 32px 0'}}>Die Fragen werden geladen...</Typography>
+				<Typography variant="body1" style={{margin:'0 0 32px 0'}}>
+					<Localized id="questions_are_loading" />
+				</Typography>
 
 				<Fab
 					variant="extended"
@@ -433,7 +438,7 @@ export default class Questions extends React.Component {
 						padding: '8px 16px',
 					}}
 				>
-					Abbrechen
+					<Localized id="stop_loading" />
 				</Fab>
 			</div>)
 		} else if (!!this.state.questionsById && Object.keys(this.state.questionsById).length > 0) {
@@ -455,7 +460,7 @@ export default class Questions extends React.Component {
 						}}
 					>
 						<ArrowBackIcon style={{color:'var(--light-green)',marginRight:'8px'}}/>
-						Fertig
+						<Localized id="back_to_viewing" />
 					</Fab>
 				</div>
 			</>)

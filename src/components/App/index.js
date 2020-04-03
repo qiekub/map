@@ -6,13 +6,13 @@ import {Router,navigate} from '@reach/router'
 import {
 	loadPlace as query_loadPlace,
 	search as query_search,
-} from '../queries.js'
+} from '../../queries.js'
 
-// import categories from '../data/dist/categories.json'
-import presets from '../data/dist/presets.json'
-// import colors from '../data/dist/colors.json'
-// import colorsByPreset from '../data/dist/colorsByPreset.json'
-import {getWantedTagsList} from '../functions.js'
+// import categories from '../../data/dist/categories.json'
+import presets from '../../data/dist/presets.json'
+// import colors from '../../data/dist/colors.json'
+// import colorsByPreset from '../../data/dist/colorsByPreset.json'
+import {getWantedTagsList} from '../../functions.js'
 
 import {
 	// Fab,
@@ -39,13 +39,14 @@ import {
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
-import PageMap from '../PageMap/index.js'
-import SearchBar from '../SearchBar/index.js'
-// import InfoCard from '../InfoCard/index.js'
-import Sidebar from '../Sidebar/index.js'
-import FiltersPanelContent from '../FiltersPanelContent/index.js'
+import PageMap from '../PageMap/'
+import SearchBar from '../SearchBar/'
+import Sidebar from '../Sidebar/'
+import FiltersPanelContent from '../FiltersPanelContent/'
 
 import 'typeface-roboto'
+
+
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -226,12 +227,13 @@ export default class App extends React.Component {
 	}
 
 	filtersChanged(newFilters){
-		console.log('filtersChanged', newFilters)
 		this.setState({filters:newFilters})
 	}
 
 	render() {
 		return (<>
+			{/*<Localized id="hello" $name={"Thomas"} $date={new Date()} />*/}
+
 			<SearchBar
 				className="SearchBar"
 				onStartSearch={this.startSearch}
@@ -251,11 +253,6 @@ export default class App extends React.Component {
 
 				Add queer-infos about places around you.
 			</Card>*/}
-
-			{/*<InfoCard
-				className="InfoCard"
-				place={this.state.selectedPlace}
-			/>*/}
 
 			{/*<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
 				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
@@ -285,12 +282,11 @@ export default class App extends React.Component {
 			
 			<PageMap
 				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
-
 				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
-			
 				filters={this.state.filters}
 			/>
+			
 		</>)
 	}
 }

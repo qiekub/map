@@ -1,6 +1,8 @@
 import React from 'react'
 import './index.css'
 
+import { Localized } from '../Localized/'
+
 import {
 	// ListSubheader,
 	// List,
@@ -26,8 +28,7 @@ import {
 
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
 
-import _categories_ from '../data/dist/categories.json'
-console.log('_categories_', _categories_)
+import _categories_ from '../../data/dist/categories.json'
 
 export default class FiltersPanelContent extends React.Component {
 	constructor(props) {
@@ -102,7 +103,7 @@ export default class FiltersPanelContent extends React.Component {
 									<div className="filterMenuDot" style={{margin:'0 8px 0 -4px',background:this.state.category.color.bg}}></div>
 									{this.state.category.name}
 								</>)
-								: 'What to show?'
+								: <Localized id="what-to-show" />
 							}
 							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
 						</Fab>
@@ -116,7 +117,7 @@ export default class FiltersPanelContent extends React.Component {
 						>
 							<MenuItem value="" onClick={()=>this.setValue('category', null,popupState.close)}>
 								<div className="filterMenuDot" style={{background:'transparent'}}></div>
-								Everything
+								<Localized id="show-everything" />
 							</MenuItem>
 							{_categories_.map(category=>{
 								const isSelected = (!!this.state.category && category.name === this.state.category.name)
@@ -152,8 +153,12 @@ export default class FiltersPanelContent extends React.Component {
 						>
 							{
 								!!this.state.age
-								? (this.state.age===this.highest_ages_entry ? 'For age '+this.state.age+' and up' : 'For age '+this.state.age)
-								: 'For which age?'
+								? (
+									this.state.age===this.highest_ages_entry
+									? <Localized id="for-age-x-and-up" $age={this.state.age}/>
+									: <Localized id="for-age-x" $age={this.state.age} />
+								)
+								: <Localized id="for-which-age" />
 							}
 							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
 						</Fab>

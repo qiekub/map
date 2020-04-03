@@ -1,21 +1,25 @@
+/*
+Wheelchair accessible / Not wheelchair accessible
+*/
+
 import React from 'react'
 import './index.css'
+
+import { Localized } from '../Localized/'
 
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
 // import {loadPlace as query_loadPlace} from '../queries.js'
 
-// import categories from '../data/dist/categories.json'
-import presets from '../data/dist/presets.json'
-import colors from '../data/dist/colors.json'
-import colorsByPreset from '../data/dist/colorsByPreset.json'
-import {getPreset, getColorByPreset} from '../functions.js'
+// import categories from '../../data/dist/categories.json'
+import presets from '../../data/dist/presets.json'
+import colors from '../../data/dist/colors.json'
+import colorsByPreset from '../../data/dist/colorsByPreset.json'
+import {getPreset, getColorByPreset} from '../../functions.js'
 
 import {
 	Typography,
 	Fab,
-	// Button,
-	Snackbar,
 
 	List,
 	ListItem,
@@ -26,12 +30,8 @@ import {
 	Paper,
 	Card,
 	CardContent,
-	// Divider,
-	// Chip,
 
 	Icon,
-	// Backdrop,
-	// TextField,
 } from '@material-ui/core'
 import {
 	// Block as BlockIcon,
@@ -61,14 +61,14 @@ import {
 // 	Autocomplete
 // } from '@material-ui/lab'
 
-import Questions from '../Questions/index.js'
+import Questions from '../Questions/'
 
-import yelp_icon from '../_images/yelp.png'
-import facebook_icon from '../_images/facebook.png'
-import instagram_icon from '../_images/instagram.png'
-import youtube_icon from '../_images/youtube.png'
-import twitter_icon from '../_images/twitter.png'
-import openstreetmap_icon from '../_images/openstreetmap.svg'
+import yelp_icon from '../../images/yelp.png'
+import facebook_icon from '../../images/facebook.png'
+import instagram_icon from '../../images/instagram.png'
+import youtube_icon from '../../images/youtube.png'
+import twitter_icon from '../../images/twitter.png'
+import openstreetmap_icon from '../../images/openstreetmap.svg'
 
 const YelpIcon			= props => <Icon style={{backgroundImage:'url('+yelp_icon+')',		backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const FacebookIcon		= props => <Icon style={{backgroundImage:'url('+facebook_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
@@ -78,8 +78,8 @@ const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+
 const OpenstreetmapIcon	= props => <Icon style={{backgroundImage:'url('+openstreetmap_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 
 
-// import opening_hours from '../_scripts/opening_hours.js/index.js'
-// import '../_scripts/opening_hours+deps.min.js'
+// import opening_hours from '../../scripts/opening_hours.js/index.js'
+// import '../../scripts/opening_hours+deps.min.js'
 
 // import opening_hours from 'opening_hours'
 
@@ -103,7 +103,6 @@ export default class Sidebar extends React.Component {
 			doc: {},
 			changedProperties: {},
 			stage: 'viewing', // viewing editing submitting
-			whichSnackbarIsOpen: null,
 		}
 
 		this.edit = this.edit.bind(this)
@@ -114,10 +113,9 @@ export default class Sidebar extends React.Component {
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
 
-		this.updateChangedProperties = this.updateChangedProperties.bind(this)
+		// this.updateChangedProperties = this.updateChangedProperties.bind(this)
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
-		this.getChangesetDoc = this.getChangesetDoc.bind(this)
-		this.closeAllSnackbarsOnTimeout = this.closeAllSnackbarsOnTimeout.bind(this)
+		// this.getChangesetDoc = this.getChangesetDoc.bind(this)
 
 		// this.docChanged = this.docChanged.bind(this)
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
@@ -200,12 +198,11 @@ export default class Sidebar extends React.Component {
 
 	edit(){
 		this.setState({stage:'editing'})
-		// this.props.onSetSearchBarValue(!!this.state.doc && !!this.state.doc._id ? 'Edit Place' : 'Add Place')
 	}
 	view(){
 		this.setState({stage:'viewing'})
 	}
-	getChangesetDoc(){
+	/*getChangesetDoc(){
 		// const properties = this.state.changedProperties
 		let properties = {
 			// ...this.state.doc.properties,
@@ -280,70 +277,16 @@ export default class Sidebar extends React.Component {
 		}else{
 			return null
 		}
-	}
-	/*submit(){
-		this.setState({whichSnackbarIsOpen:'submittingSuggestion'})
-
-		const changesetDoc = this.getChangesetDoc()
-
-		if (changesetDoc !== null) {
-			let changeset_json = JSON.stringify(changesetDoc)
-			changeset_json = changeset_json.replace(/"(\w+)"\s*:/g, '$1:')
-
-			window.graphql.mutate({
-				mutation: gql`mutation {
-					addChangeset(changeset:${changeset_json}) {
-						_id
-						properties {
-							... on Changeset {
-								forDoc
-								properties {
-									__typename
-								}
-							}
-						}
-					}
-				}`,
-				refetchQueries: (
-					this.state.doc._id
-					? [{
-						query: query_loadPoi,
-						variables: {_id:this.state.doc._id},
-					}]
-					: undefined
-				)
-			}).then(async result => {
-				console.info('mutate-result', result)
-
-				this.setState({
-					// changedProperties: {},
-					// stage: 'viewing',
-					whichSnackbarIsOpen:'finishedSuggesting',
-				})
-
-				setTimeout(async ()=>{
-					if (this.state.doc._id !== result.data.addChangeset.properties.forDoc) {
-						await navigate(`/place/${result.data.addChangeset.properties.forDoc}/`)
-					}
-
-					this.props.onViewDoc(result.data.addChangeset.properties.forDoc,true)
-				}, 100)
-			}).catch(error=>{
-				console.error('mutate-error', error)
-
-				this.setState({whichSnackbarIsOpen:'problemWhileSuggesting'})
-			})
-		}
 	}*/
 
-	updateChangedProperties(newValues){
+	/*updateChangedProperties(newValues){
 		this.setState((state, props) => {
 			return {changedProperties: {
 				...state.changedProperties,
 				...newValues,
 			}}
 		})
-	}
+	}*/
 
 	getAgeRangeText(min_age,max_age){
 		min_age = Number.parseInt(min_age)
@@ -678,7 +621,8 @@ export default class Sidebar extends React.Component {
 				size="large"
 				className="improveFab"
 			>
-				<EditIcon className="icon"/> Verbessern
+				<EditIcon className="icon"/>
+				<Localized id="improve" />
 			</Fab>
 		</React.Fragment>)
 	}
@@ -693,12 +637,6 @@ export default class Sidebar extends React.Component {
 				</CardContent>
 			</Card>
 		</React.Fragment>)
-	}
-
-	closeAllSnackbarsOnTimeout(event,reason){
-		if (reason === 'timeout') {
-			this.setState({whichSnackbarIsOpen:null})
-		}
 	}
 
 	render(){
@@ -730,13 +668,6 @@ export default class Sidebar extends React.Component {
 					flexDirection: 'column',
 				}}
 			>
-
-			{/*<CardMedia
-				style={{marginTop:'-86px',height:'240px',background:'black'}}
-				title="Contemplative Reptile"
-				component="div"
-				image={reptile}
-			/>*/}
 
 			<Card
 				elevation={0}
@@ -775,26 +706,6 @@ export default class Sidebar extends React.Component {
 			}
 
 			</Paper>
-
-			<Snackbar
-				message="Submitting..."
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'submittingSuggestion'}
-			/>
-			<Snackbar
-				message="Couldn't submit!"
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'problemWhileSuggesting'}
-				autoHideDuration={6000}
-				onClose={this.closeAllSnackbarsOnTimeout}
-			/>
-			<Snackbar
-				message="Your suggestion got submitted!"
-				anchorOrigin={{vertical:'bottom',horizontal:'left'}}
-				open={this.state.whichSnackbarIsOpen === 'finishedSuggesting'}
-				autoHideDuration={6000}
-				onClose={this.closeAllSnackbarsOnTimeout}
-			/>
 		</>)
 	}
 }
