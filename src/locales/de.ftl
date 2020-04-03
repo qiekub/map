@@ -1,0 +1,1 @@
+hello = Salut le monde ! | { DATETIME($date, month: "long", day: "numeric") }
