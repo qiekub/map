@@ -101,8 +101,7 @@ export default class PageMap extends React.Component {
 	}
 
 	async showPlace(doc) {
-		const center = this.map.getCenter()
-		console.log('center-map', center)
+		// const center = this.map.getCenter()
 
 		await navigate(`/place/${doc._id}/`)
 		if (this.props.onViewDoc) {
