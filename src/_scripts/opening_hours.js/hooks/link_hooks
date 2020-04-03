@@ -1,4 +1,0 @@
-#!/bin/sh
-## link hooks to .git/hooks
-
-ln -s ../../hooks/pre-commit .git/hooks/

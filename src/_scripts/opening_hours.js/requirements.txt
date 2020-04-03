@@ -1,5 +1,0 @@
-hc
-yq
-yamllint
-html5validator
-ruamel.yaml>=0.16
