@@ -1,0 +1,172 @@
+/*
+ * This file is part of YoHours.
+ * 
+ * YoHours is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ * 
+ * YoHours is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with YoHours.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * YoHours
+ * Web interface to make opening hours data for OpenStreetMap the easy way
+ * Author: Adrien PAVIE
+ *
+ * CSS Style
+ */
+
+/** Node modules imports **/
+@import "../../node_modules/bootstrap/dist/css/bootstrap.css";
+@import "../../node_modules/bootstrap/dist/css/bootstrap-theme.css";
+@import "../../node_modules/fullcalendar/dist/fullcalendar.css";
+
+
+/**********
+ * Global *
+ **********/
+
+body {
+	margin-top: 80px;
+	height: 100%;
+}
+
+body.minimal {
+	margin: 10px;
+}
+
+footer {
+	border-top: 1px solid #ddd;
+	margin-top: 20px;
+	padding: 10px;
+	text-align: center;
+}
+
+/** Full width row line **/
+.row-line {
+	display: table;
+	width: 100%;
+}
+
+.row-line [class*="col-"] {
+	float: none;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+
+/**********
+ * Header *
+ **********/
+
+.navbar-default.navbar-yo {
+	background-color: #fcfce6;
+	background-image: linear-gradient(to bottom, #ffffed 0px, #fffdea 100%);
+}
+
+.navbar-brand {
+	padding-top: 5px;
+}
+
+.navbar-brand img {
+	height: 40px;
+}
+
+
+/***********************
+ * Opening hours input *
+ ***********************/
+
+#oh {
+	font-family: monospace,Courier;
+}
+
+/** OSM tag **/
+.osm-tag {
+	font-size: 115%;
+	background: #DDE none repeat scroll 0% 0%;
+	white-space: nowrap;
+	font-family: monospace,Courier;
+}
+
+.osm-key {
+	font-weight: bold;
+}
+
+
+/************
+ * Calendar *
+ ************/
+
+/* Date range navigation bar */
+#range-nav {
+	margin-bottom: 10px;
+}
+
+.nav-tabs li.add a {
+	color: green;
+	background-color: #9CCF99;
+	font-weight: bold;
+}
+
+.nav-tabs li.add a:hover {
+	background-color: #C3E1C2;
+	border-color: #C3E1C2;
+}
+
+/********************
+ * Date range modal *
+ ********************/
+
+#modal-range-nav {
+	margin-bottom: 10px;
+}
+
+.input-inline input, .input-inline select {
+	display: inline;
+	width: auto;
+}
+
+.nav a {
+	cursor: pointer;
+}
+
+#modal-range-alert {
+	margin-bottom: 10px;
+}
+
+#range-holiday label {
+	margin-right: 15px;
+}
+
+/**************
+ * Help modal *
+ **************/
+
+@media (min-width: 768px) {
+
+	#modal-help .modal-dialog {
+		width: 90%;
+		max-width: 1000px;
+	}
+
+}
+
+.modal-help-title {
+	font-weight: bold;
+}
+
+/**************************
+ * Minimal navigation bar *
+ **************************/
+
+.nav.nav-sm > li > a {
+	padding: 5px 10px;
+}

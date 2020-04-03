@@ -1,0 +1,22 @@
+---
+place_id: '80182180'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '73851137'
+lat: '43.71474935'
+lon: '-98.0248767861259'
+display_name: Mitchell Corn Palace, East 6th Avenue, Mitchell, Davison County, South Dakota, 57301, United States of America
+address:
+  attraction: Mitchell Corn Palace
+  city: Mitchell
+  country: United States of America
+  country_code: us
+  county: Davison County
+  postcode: '57301'
+  road: East 6th Avenue
+  state: South Dakota
+boundingbox:
+  - '43.7145656'
+  - '43.7149864'
+  - '-98.0254572'
+  - '-98.0242946'

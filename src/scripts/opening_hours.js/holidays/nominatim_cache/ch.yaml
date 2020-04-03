@@ -1,0 +1,22 @@
+---
+place_id: 4574073
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 516200692
+lat: '46.7985102'
+lon: '8.2317957'
+display_name: Mittelpunkt der Schweiz, Egg, Älggi, Sachseln, Obwalden, 6072, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  # attraction: Mittelpunkt der Schweiz
+  # hamlet: Älggi
+  # path: Egg
+  # postcode: 6072
+  # state: Obwalden
+  # village: Sachseln
+boundingbox:
+  - '46.7984102'
+  - '46.7986102'
+  - '8.2316957'
+  - '8.2318957'

@@ -1,0 +1,22 @@
+---
+place_id: 226451266
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 706225680
+lat: '47.3606621'
+lon: '7.1580024'
+display_name: Route du Clos Du Doubs, En Chavatte, Clos du Doubs, Bezirk Pruntrut, Jura, 2885, Schweiz
+address:
+  city: Clos du Doubs
+  country: Schweiz
+  country_code: ch
+  county: Bezirk Pruntrut
+  hamlet: En Chavatte
+  postcode: '2885'
+  road: Route du Clos Du Doubs
+  state: Jura
+boundingbox:
+  - '47.3376991'
+  - '47.3658146'
+  - '7.1182371'
+  - '7.1626268'

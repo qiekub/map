@@ -1,0 +1,19 @@
+---
+place_id: 34515937
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 2835196854
+lat: '46.8555371'
+lon: '8.2157104'
+display_name: Ewil, Obwalden, 6062, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  postcode: '6062'
+  state: Obwalden
+  village: Ewil
+boundingbox:
+  - '46.8155371'
+  - '46.8955371'
+  - '8.1757104'
+  - '8.2557104'

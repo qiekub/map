@@ -1,0 +1,25 @@
+---
+place_id: '107570419'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '189846068'
+lat: '35.7804055'
+lon: '-78.639099844006'
+display_name: Union Square, East Edenton Street, Historic Oakwood, Warehouse District, Raleigh, Wake County, North Carolina,
+  27601, United States of America
+address:
+  city: Raleigh
+  country: United States of America
+  country_code: us
+  county: Wake County
+  neighbourhood: Historic Oakwood
+  park: Union Square
+  postcode: '27601'
+  road: East Edenton Street
+  state: North Carolina
+  suburb: Warehouse District
+boundingbox:
+  - '35.7796269'
+  - '35.7811801'
+  - '-78.6400488'
+  - '-78.6381485'

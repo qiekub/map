@@ -1,0 +1,19 @@
+---
+place_id: '134791139'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '316579342'
+lat: '46.8606902'
+lon: '-121.7462981'
+display_name: Emmons Glacier Route, Pierce County, Washington, United States of America
+address:
+  country: United States of America
+  country_code: us
+  county: Pierce County
+  path: Emmons Glacier Route
+  state: Washington
+boundingbox:
+  - '46.8528966'
+  - '46.8703243'
+  - '-121.7604617'
+  - '-121.7330483'

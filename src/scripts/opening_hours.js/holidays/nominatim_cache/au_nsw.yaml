@@ -1,0 +1,22 @@
+---
+place_id: '148522393'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '353552766'
+lat: '-33.8676663'
+lon: '151.20917105647'
+display_name: Martin Place, Sydney, Council of the City of Sydney, New South Wales, 2000, Australia
+address:
+  city: Sydney
+  country: Australia
+  country_code: au
+  county: Council of the City of Sydney
+  pedestrian: Martin Place
+  postcode: '2000'
+  state: New South Wales
+  suburb: Sydney
+boundingbox:
+  - '-33.8677699'
+  - '-33.8675198'
+  - '151.2084727'
+  - '151.2098691'

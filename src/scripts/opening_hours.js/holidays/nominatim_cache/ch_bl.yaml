@@ -1,0 +1,20 @@
+---
+place_id: 112284940
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 112441520
+lat: '47.5091464'
+lon: '7.6587688'
+display_name: Muttenz, Bezirk Arlesheim, Basel-Landschaft, 4132, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  county: Bezirk Arlesheim
+  postcode: '4132'
+  state: Basel-Landschaft
+  town: Muttenz
+boundingbox:
+  - '47.5058235'
+  - '47.5097901'
+  - '7.6568934'
+  - '7.6663272'

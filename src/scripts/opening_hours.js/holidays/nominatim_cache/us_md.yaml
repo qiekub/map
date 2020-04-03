@@ -1,0 +1,21 @@
+---
+place_id: '76762706'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '47701025'
+lat: '38.3152772'
+lon: '-75.6248896'
+display_name: South Fruitland Boulevard, Fruitland, Wicomico County, Maryland, 21826, United States of America
+address:
+  city: Fruitland
+  country: United States of America
+  country_code: us
+  county: Wicomico County
+  postcode: '21826'
+  road: South Fruitland Boulevard
+  state: Maryland
+boundingbox:
+  - '38.306383'
+  - '38.3222886'
+  - '-75.6313919'
+  - '-75.6197739'

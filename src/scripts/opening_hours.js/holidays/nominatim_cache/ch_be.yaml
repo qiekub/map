@@ -1,0 +1,22 @@
+---
+place_id: 94188768
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 33266250
+lat: '46.83599540635457'
+lon: '7.604476771038909'
+display_name: Haubenstrasse, Herbligen, Verwaltungskreis Bern-Mittelland, Verwaltungsregion Bern-Mittelland, Bern, 3671, Schweiz
+address:
+  country: Schweiz
+  country_code: ch
+  county: Verwaltungskreis Bern-Mittelland
+  postcode: '3671'
+  road: Haubenstrasse
+  state: Bern
+  state_district: Verwaltungsregion Bern-Mittelland
+  village: Herbligen
+boundingbox:
+  - '46.8350757'
+  - '46.8361985'
+  - '7.6044049'
+  - '7.6045846'

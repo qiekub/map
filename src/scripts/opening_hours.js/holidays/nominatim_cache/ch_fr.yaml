@@ -1,0 +1,20 @@
+---
+place_id: 234655193
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: relation
+osm_id: 1683337
+lat: '46.6696479'
+lon: '7.1083702'
+display_name: Hauteville, Greyerzbezirk, Freiburg, 1648, Schweiz
+address:
+  city: Hauteville
+  country: Schweiz
+  country_code: ch
+  county: Greyerzbezirk
+  postcode: '1648'
+  state: Freiburg
+boundingbox:
+  - '46.6529491'
+  - '46.6868864'
+  - '7.0944712'
+  - '7.1757931'

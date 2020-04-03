@@ -1,0 +1,24 @@
+---
+place_id: 8752662
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: node
+osm_id: 942932499
+lat: '47.1549041'
+lon: '9.3401115'
+display_name: 'Geologischer Rundweg: Tafel 8, Lüsisstrasse, Lüsis, Walenstadt, Wahlkreis Sarganserland, Sankt Gallen, 8880,
+  Schweiz'
+address:
+  country: Schweiz
+  country_code: ch
+  county: Wahlkreis Sarganserland
+  hamlet: Lüsis
+  information: 'Geologischer Rundweg: Tafel 8'
+  postcode: '8880'
+  road: Lüsisstrasse
+  state: Sankt Gallen
+  village: Walenstadt
+boundingbox:
+  - '47.1548041'
+  - '47.1550041'
+  - '9.3400115'
+  - '9.3402115'

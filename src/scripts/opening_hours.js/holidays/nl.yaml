@@ -1,0 +1,13 @@
+---
+
+# https://nl.wikipedia.org/wiki/Feestdagen_in_Nederland
+PH:
+  - {'name': 'Nieuwjaarsdag', 'fixed_date': [1, 1]}
+  - {'name': 'Goede vrijdag', 'variable_date': easter, 'offset': -2}
+  - {'name': 'Tweede Paasdag', 'variable_date': easter, 'offset': 1}
+  - {'name': 'Koningsdag', 'fixed_date': [4, 27]}
+  - {'name': 'Bevrijdingsdag', 'fixed_date': [5, 5]}
+  - {'name': 'Hemelvaartsdag', 'variable_date': easter, 'offset': 39}
+  - {'name': 'Tweede Pinksterdag', 'variable_date': easter, 'offset': 50}
+  - {'name': 'Eerste Kerstdag', 'fixed_date': [12, 25]}
+  - {'name': 'Tweede Kerstdag', 'fixed_date': [12, 26]}

@@ -1,0 +1,20 @@
+---
+place_id: 235663489
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: relation
+osm_id: 1685349
+lat: '46.2816939'
+lon: '7.6957835'
+display_name: Oberems, Leuk, Wallis, 3948, Schweiz
+address:
+  city: Oberems
+  country: Schweiz
+  country_code: ch
+  county: Leuk
+  postcode: '3948'
+  state: Wallis
+boundingbox:
+  - '46.1107536'
+  - '46.2877887'
+  - '7.6537126'
+  - '7.7137362'

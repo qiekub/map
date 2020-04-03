@@ -1,0 +1,3 @@
+[submodule "submodules/YoHours"]
+	path = submodules/YoHours
+	url = https://framagit.org/PanierAvide/YoHours.git

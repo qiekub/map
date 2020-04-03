@@ -1,0 +1,172 @@
+---
+
+# https://en.wikipedia.org/wiki/Public_holidays_in_Canada
+PH:
+  - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+  - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+  - {'name': 'Canada Day', 'variable_date': canadaDay}
+  - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+  - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+Alberta:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Alberta Family Day', 'variable_date': firstFebruaryMonday, 'offset': 14}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Easter Monday', 'variable_date': easter, 'offset': 1}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Heritage Day', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}
+'British Columbia':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Family Day', 'variable_date': firstFebruaryMonday, 'offset': 7}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'British Columbia Day', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+Manitoba:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Louis Riel Day', 'variable_date': firstFebruaryMonday, 'offset': 14}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Civic Holiday', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+'New Brunswick':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'New Brunswick Day', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}
+'Newfoundland and Labrador':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Saint Patrick''s Day', 'fixed_date': [3, 17]}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Saint George''s Day', 'fixed_date': [4, 23]}
+    - {'name': 'Discovery Day', 'fixed_date': [6, 24]}
+    - {'name': 'Memorial Day', 'fixed_date': [7, 1]}
+    - {'name': 'Orangemen''s Day', 'fixed_date': [7, 12]}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Armistice Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+'Northwest Territories':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'National Aboriginal Day', 'fixed_date': [6, 21]}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Civic Holiday', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+'Nova Scotia':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Natal Day', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}
+Nunavut:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Nunavut Day', 'fixed_date': [7, 9]}
+    - {'name': 'Civic Holiday', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+Ontario:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Family Day', 'variable_date': firstFebruaryMonday, 'offset': 14}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'August Civic Public Holiday', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}
+'Prince Edward Island':
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Islander Day', 'variable_date': firstFebruaryMonday, 'offset': 14}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Easter Monday', 'variable_date': easter, 'offset': 1}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Civic Holiday', 'variable_date': firstAugustMonday}
+    - {'name': 'Gold Cup Parade Day', 'variable_date': firstAugustMonday, 'offset': 18}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}
+Quebec:
+  PH:
+    - {'name': 'Jour de l''an', 'fixed_date': [1, 1]}
+    - {'name': 'Vendredi saint', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Lundi de Pâques', 'variable_date': easter, 'offset': 1}
+    - {'name': 'Journée nationale des patriotes', 'variable_date': victoriaDay}
+    - {'name': 'Fête nationale du Québec', 'fixed_date': [6, 24]}
+    - {'name': 'Fête du Canada', 'variable_date': canadaDay}
+    - {'name': 'Fête du Travail', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Jour de l''Action de grâce', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Noël', 'fixed_date': [12, 25]}
+Saskatchewan:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Family Day', 'variable_date': firstFebruaryMonday, 'offset': 14}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Saskatchewan Day', 'variable_date': firstAugustMonday}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+Yukon:
+  PH:
+    - {'name': 'New Year''s Day', 'fixed_date': [1, 1]}
+    - {'name': 'Heritage Day', 'variable_date': lastFebruarySunday, 'offset': -2}
+    - {'name': 'Good Friday', 'variable_date': easter, 'offset': -2}
+    - {'name': 'Easter Monday', 'variable_date': easter, 'offset': 1}
+    - {'name': 'Victoria Day', 'variable_date': victoriaDay}
+    - {'name': 'Canada Day', 'variable_date': canadaDay}
+    - {'name': 'Discovery Day', 'variable_date': firstAugustMonday, 'offset': 14}
+    - {'name': 'Labour Day', 'variable_date': firstSeptemberMonday}
+    - {'name': 'Thanksgiving', 'variable_date': firstOctoberMonday, 'offset': 7}
+    - {'name': 'Remembrance Day', 'fixed_date': [11, 11]}
+    - {'name': 'Christmas Day', 'fixed_date': [12, 25]}
+    - {'name': 'Boxing Day', 'fixed_date': [12, 26]}

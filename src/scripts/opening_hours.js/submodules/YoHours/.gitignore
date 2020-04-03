@@ -1,0 +1,6 @@
+/nbproject/private/
+/node_modules
+/test/*.js
+/dist
+/*.log
+/dist.zip

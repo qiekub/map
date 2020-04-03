@@ -1,0 +1,25 @@
+---
+place_id: '125082031'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '264540336'
+lat: '42.71532985'
+lon: '-84.4995249806439'
+display_name: Building 1572, 30, Middlevale Road, Spartan Village, East Lansing, Ingham County, Michigan, 48823, United States
+  of America
+address:
+  building: Building 1572
+  city: East Lansing
+  country: United States of America
+  country_code: us
+  county: Ingham County
+  house_number: '30'
+  postcode: '48823'
+  residential: Spartan Village
+  road: Middlevale Road
+  state: Michigan
+boundingbox:
+  - '42.7151622'
+  - '42.7154709'
+  - '-84.4997235'
+  - '-84.4992914'

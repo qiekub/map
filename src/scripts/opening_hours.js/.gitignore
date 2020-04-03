@@ -1,0 +1,27 @@
+export*
+
+# Enable the following line for repositories which should track statistical data.
+# !export♡*♡stats.csv
+
+*.csv
+*.log
+*.json
+
+## Neko bytecode
+*.n
+
+!bower.json
+!taginfo.json
+!taginfo_template.json
+!uglifyjs.log
+
+opening_hours.js
+opening_hours.min.js
+opening_hours+deps.js
+opening_hours+deps.min.js
+node_modules
+tags
+README.html
+tmp_query*
+lockfile_*
+bower_components

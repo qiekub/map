@@ -1,0 +1,22 @@
+---
+place_id: '69037723'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '25610298'
+lat: '53.5446624'
+lon: '10.0099043'
+display_name: Stadtdeich, Hammerbrook, Hamburg-Mitte, Hamburg, 20097, Deutschland
+address:
+  city: Hamburg
+  city_district: Hamburg-Mitte
+  country: Deutschland
+  country_code: de
+  postcode: '20097'
+  road: Stadtdeich
+  state: Hamburg
+  suburb: Hammerbrook
+boundingbox:
+  - '53.5439419'
+  - '53.5447175'
+  - '10.0098431'
+  - '10.0104739'

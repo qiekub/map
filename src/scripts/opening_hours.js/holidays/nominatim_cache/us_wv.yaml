@@ -1,0 +1,21 @@
+---
+place_id: '63689957'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '15572790'
+lat: '38.368065'
+lon: '-81.6063089'
+display_name: Barlow Drive, Twomile, Kanawha County, West Virginia, 25311, United States of America
+address:
+  country: United States of America
+  country_code: us
+  county: Kanawha County
+  hamlet: Twomile
+  postcode: '25311'
+  road: Barlow Drive
+  state: West Virginia
+boundingbox:
+  - '38.3587016'
+  - '38.3807117'
+  - '-81.6213396'
+  - '-81.5953362'

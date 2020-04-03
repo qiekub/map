@@ -1,0 +1,24 @@
+---
+place_id: '72433317'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: way
+osm_id: '33908928'
+lat: '42.05189995'
+lon: '-87.6759578506092'
+display_name: University Hall, 1897, Sheridan Road, Downtown, Evanston, Cook County, Illinois, 60208, United States of America
+address:
+  building: University Hall
+  city: Evanston
+  country: United States of America
+  country_code: us
+  county: Cook County
+  house_number: '1897'
+  neighbourhood: Downtown
+  postcode: '60208'
+  road: Sheridan Road
+  state: Illinois
+boundingbox:
+  - '42.0517375'
+  - '42.0520571'
+  - '-87.6761203'
+  - '-87.6757928'

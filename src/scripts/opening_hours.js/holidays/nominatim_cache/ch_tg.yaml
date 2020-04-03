@@ -1,0 +1,21 @@
+---
+place_id: 140116312
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: 224489224
+lat: '47.5837005'
+lon: '9.1427106'
+display_name: Beckelswilen, Berg (TG), Bezirk Weinfelden, Thurgau, 8572, Schweiz
+address:
+  city: Berg (TG)
+  country: Schweiz
+  country_code: ch
+  county: Bezirk Weinfelden
+  hamlet: Beckelswilen
+  postcode: '8572'
+  state: Thurgau
+boundingbox:
+  - '47.5819712'
+  - '47.584497'
+  - '9.1311788'
+  - '9.154837'

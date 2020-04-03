@@ -1,0 +1,19 @@
+---
+place_id: 235481884
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: relation
+osm_id: 1683078
+lat: '46.7376202'
+lon: '8.6281646'
+display_name: Gurtnellen, Uri, 6482, Schweiz
+address:
+  city: Gurtnellen
+  country: Schweiz
+  country_code: ch
+  postcode: '6482'
+  state: Uri
+boundingbox:
+  - '46.6712253'
+  - '46.7993039'
+  - '8.5365597'
+  - '8.6935873'

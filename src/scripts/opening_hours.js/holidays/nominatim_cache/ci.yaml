@@ -1,0 +1,23 @@
+---
+place_id: '161420889'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright
+osm_type: way
+osm_id: '410505549'
+lat: '5.32065635'
+lon: '-4.01595655075758'
+display_name: Siège de la Banque de l'Habitat de Côte d'Ivoire (BHCI), 01 BP 2325 Abidjan 01, Avenue Joseph Anoma, Le Plateau,
+  Abidjan, 00225, Côte d’Ivoire
+address:
+  country: Côte d’Ivoire
+  country_code: ci
+  # bank: Siège de la Banque de l'Habitat de Côte d'Ivoire (BHCI)
+  # city: Le Plateau
+  # house_number: 01 BP 2325 Abidjan 01
+  # postcode: 00225
+  # road: Avenue Joseph Anoma
+  # state: Abidjan
+boundingbox:
+  - '5.3205231'
+  - '5.3207896'
+  - '-4.0162073'
+  - '-4.0157058'

@@ -1,0 +1,24 @@
+---
+place_id: '4981024'
+licence: Data © OpenStreetMap contributors, ODbL 1.0. http://www.openstreetmap.org/copyright
+osm_type: node
+osm_id: '587601599'
+lat: '53.4825244'
+lon: '18.7584881'
+display_name: Auto Gaz, Dworcowa, Osiedle Tysiąclecia, Śródmieście Zewnętrzne, Grudziądz, województwo kujawsko-pomorskie,
+  Polska
+address:
+  country: Polska
+  country_code: pl
+  # city: Grudziądz
+  # city_district: Śródmieście Zewnętrzne
+  # county: Grudziądz
+  # fuel: Auto Gaz
+  # neighbourhood: Osiedle Tysiąclecia
+  # road: Dworcowa
+  # state: województwo kujawsko-pomorskie
+boundingbox:
+  - '53.4824244'
+  - '53.4826244'
+  - '18.7583881'
+  - '18.7585881'
