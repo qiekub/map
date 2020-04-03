@@ -1,0 +1,36 @@
+/*.myToggleButtonGroup{
+	background: transparent !important;
+	margin: -2px -6px;
+}
+.myToggleButtonGroup button{
+	border-radius: 4px !important;
+	margin: 2px !important;
+	border: 0;
+}*/
+
+.filterMenuDot{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 100%;
+	margin-right: 16px;
+}
+
+.filterMenuInner button{
+	margin: 0 8px;
+}
+.filterMenuInner button:first-of-type{
+	margin-left: 0px;
+}
+.filterMenuInner button:last-of-type{
+	margin-right: 0px;
+}
+
+html body .filterMenuInner .fab{
+	padding: 0 8px 0 16px;
+	text-transform: none;
+	background: white;
+}
+.filterMenuInner .fab .ArrowDropDownIcon{
+	margin-left: 16px;
+}

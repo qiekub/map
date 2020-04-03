@@ -1,0 +1,16 @@
+.header {
+	margin: 16px;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	/*border-radius: 52px !important;*/
+
+	/*transition: box-shadow var(--transition-time) var(--timing-function) 0s !important;*/
+}
+.header.sidebarIsOpen{
+	/*margin: 0;*/
+	/*padding: 16px;*/
+	/*border-radius: 0 !important;*/
+
+	/*box-shadow: 0 0 0 1px rgba(0,0,0,0.12) !important;*/
+}
