@@ -365,7 +365,7 @@ export default class PageMap extends React.Component {
 				center={[51,10]}
 				minZoom={2}
 				zoom={1}
-				maxZoom={19}
+				maxZoom={22}
 				zoomSnap={1}
 				zoomControl={false}
 
