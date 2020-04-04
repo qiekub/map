@@ -86,10 +86,10 @@ export default class App extends React.Component {
 	}
 
 	setTheme(prefersDarkMode){
-		prefersDarkMode = false
+		// prefersDarkMode = false
 
-		const background_paper = prefersDarkMode ? '#303030' : '#FFFFFF'
-		const background_default = prefersDarkMode ? '#404040' : '#F5F5F5'
+		const background_paper = prefersDarkMode ? '#202020' : '#ffffff'
+		const background_default = prefersDarkMode ? '#181818' : '#f9f9f9'
 
 		const secondary_main = prefersDarkMode ? '#448aff' : '#2962ff' // A200_A700
 
