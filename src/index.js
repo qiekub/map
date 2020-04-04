@@ -16,12 +16,13 @@ import ApolloClient from 'apollo-boost'
 // const cache = new InMemoryCache()
 
 window.pageOpenTS = new Date()
+window.env_local_ip = local_ip
 
 window.graphql = new ApolloClient({
 	// cache,
 	uri: (
-		local_ip !== ''
-		? `http://${local_ip}:5000/queercenters/us-central1/graphql/graphql/v1`
+		window.env_local_ip !== ''
+		? `http://${window.env_local_ip}:5000/queercenters/us-central1/graphql/graphql/v1`
 		: `${window.location.origin}/graphql/v1`
 	),
 })
