@@ -352,6 +352,22 @@ export default class App extends React.Component {
 				onSetSearchBarValue={this.setSearchBarValue}
 			/>
 
+			<Card className="introCard" elevation={6}>
+				<CardContent>
+					<Typography variant="h6" component="h1" gutterBottom>Welcome to the QueerMap!</Typography>
+
+					<Typography variant="body2" color="textSecondary" gutterBottom>
+						A map of LGBTQ places, collected by people like you.
+					</Typography>
+					<Typography variant="body2" color="textSecondary">
+						Many thanks to <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer">Mapbox</Link> for donating map-resources!
+					</Typography>
+				</CardContent>
+				{/*<CardActions>
+					<Button>Learn more</Button> <Button>Add a Place</Button>
+				</CardActions>*/}
+			</Card>
+
 			{/*<Card>
 				Start Info:
 
