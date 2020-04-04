@@ -15,7 +15,7 @@ import presets from '../../data/dist/presets.json'
 import {getWantedTagsList} from '../../functions.js'
 
 import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core'
+// import { CssBaseline } from '@material-ui/core'
 
 import {
 	Link,
@@ -339,7 +339,6 @@ export default class App extends React.Component {
 
 	render() {
 		return (<>
-			<CssBaseline />
 			<ThemeProvider theme={this.state.theme}>
 			<StylesProvider injectFirst>
 			
