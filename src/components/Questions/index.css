@@ -6,49 +6,47 @@ html body .questionCard{
 	margin: 0 -16px;
 	border-radius: 0;
 	opacity: 1;
-	background: rgba(0,0,0,0);
-	box-shadow: 0 0 0 1px rgba(0,0,0,0);
+	/*background: rgba(0,0,0,0);*/
+	border-right-color: transparent !important;
+	border-left-color: transparent !important;
 
 	transition:
 		opacity       var(--transition-time) var(--timing-function) 0ms,
 		border-radius var(--transition-time) var(--timing-function) 0ms,
-		box-shadow    var(--transition-time) var(--timing-function) 0ms,
+		border-color  var(--transition-time) var(--timing-function) 0ms,
 		background    var(--transition-time) var(--timing-function) 0ms,
 		padding       var(--transition-time) var(--timing-function) 0ms,
 		margin        var(--transition-time) var(--timing-function) 0ms
 	;
 }
-/*html body .questionCard:not(.active):hover {*/
+html body .questionCard:not(.active):not(:hover) {
+	background: transparent;
+	border-color: transparent;
+}
+html body .questionCard:not(.active) {
+	border-color: transparent;
+}
 html body .questionCard:hover {
-	background: rgba(0,0,0,0.04);
 	cursor: pointer;
 }
 html body .questionCard.answered {
-	background: rgba(0,0,0,0) !important;
 	cursor: default !important;
 	opacity: 0.3 !important;
 	pointer-events: none !important;
-	/*text-decoration: line-through;*/
-	/*color: var(--light-green);*/
 }
 html body .questionCard.active{
-	background: var(--color-paper);
 	cursor: default;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
 
 	padding: 32px 32px;
 	margin: 16px -16px;
 }
 html body .questionCard.active:first-child{
 	margin-top: -16px;
-	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12);
+	border-top-color: transparent;
 
 	border-top-right-radius: var(--border-radius);
 	border-top-left-radius: var(--border-radius);
 }
-/*html body .questionCard.active:last-child{
-	margin-bottom: -16px;
-}*/
 
 html body .questionCard .possibleAnswers{
 	display: flex;
@@ -83,23 +81,3 @@ html body .questionCard.hasInputField.active .saveButton{
 	justify-content: flex-end;
 	margin: 32px 0 0 -16px;
 }
-/*html body .questionCard.hasInputField .saveButton{
-	display: flex;
-	justify-content: flex-end;
-
-	opacity: 0;
-	margin: 0 0 -48px -16px;
-	transition:
-		opacity calc(var(--transition-time) * 0.5) var(--timing-function) 0s,
-		margin       var(--transition-time)        var(--timing-function) 0s;
-}
-html body .questionCard.hasInputField.active .saveButton{
-	opacity: 1;
-	margin: 32px 0 0 -16px;
-	transition:
-		opacity	var(--transition-time) var(--timing-function) 0s,
-		margin  var(--transition-time) var(--timing-function) 0s;
-}*/
-
-
-

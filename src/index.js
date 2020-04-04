@@ -9,11 +9,13 @@ import local_ip from './.env.local_ip.json'
 
 // import * as serviceWorker from './serviceWorker'
 
-import App from './components/App/index.js'
+import App from './components/App/'
 
 import ApolloClient from 'apollo-boost'
 // import { InMemoryCache } from 'apollo-cache-inmemory';
 // const cache = new InMemoryCache()
+
+window.pageOpenTS = new Date()
 
 window.graphql = new ApolloClient({
 	// cache,
@@ -23,8 +25,6 @@ window.graphql = new ApolloClient({
 		: `${window.location.origin}/graphql/v1`
 	),
 })
-
-window.pageOpenTS = new Date()
 
 ReactDOM.render(
 	<AppLocalizationProvider userLocales={navigator.languages}>

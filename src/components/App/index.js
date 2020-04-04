@@ -14,24 +14,21 @@ import presets from '../../data/dist/presets.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import {getWantedTagsList} from '../../functions.js'
 
+import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import { CssBaseline } from '@material-ui/core'
+
 import {
+	Link,
 	// Fab,
 	// Drawer,
+	Typography,
 
-	// Card,
+	Card,
 	// CardActions,
 	// CardActionArea,
-	// CardContent,
-	// Typography,
+	CardContent,
 	// Divider,
 	// Button,
-	// Checkbox,
-
-	// List,
-	// ListItem,
-	// ListItemText,
-	// ListItemIcon,
-	// ListItemSecondaryAction,
 } from '@material-ui/core'
 import {
 	// AddRounded as AddIcon,
@@ -46,7 +43,11 @@ import FiltersPanelContent from '../FiltersPanelContent/'
 
 import 'typeface-roboto'
 
-
+const defaultTheme = createMuiTheme({
+	palette: {
+		tonalOffset: 0.05,
+	},
+})
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -56,10 +57,12 @@ export default class App extends React.Component {
 			searchBarValue: '',
 			sidebarIsOpen: false,
 			doc: null,
+			prefersDarkMode: false,
 
 			filters: {
-				presets: []
-			}
+				presets: [],
+			},
+			theme: defaultTheme,
 		}
 
 		this.functions = {}
@@ -70,10 +73,114 @@ export default class App extends React.Component {
 		this.addPlace = this.addPlace.bind(this)
 		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
+		this.startDarkThemeListener = this.startDarkThemeListener.bind(this)
+		this.setTheme = this.setTheme.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
+	}
+
+	componentDidMount(){
+		this.startDarkThemeListener()
+	}
+
+	setTheme(prefersDarkMode){
+		prefersDarkMode = false
+
+		const background_paper = prefersDarkMode ? '#303030' : '#FFFFFF'
+		const background_default = prefersDarkMode ? '#404040' : '#F5F5F5'
+
+		const secondary_main = prefersDarkMode ? '#448aff' : '#2962ff' // A200_A700
+
+		const theme = createMuiTheme({
+			palette: {
+				type: prefersDarkMode ? 'dark' : 'light',
+				primary: {
+					main: '#fff', // this.state.prefersDarkMode ? '#000' : '#fff' // '#fff'
+				},
+				secondary: {
+					main: secondary_main,
+				},
+				action: {
+					active: prefersDarkMode ? '#fff' : '#000',
+				},
+				background: {
+					paper: background_paper,
+					default: background_default,
+				},
+				tonalOffset: 0.05,
+			},
+			shape: {
+				borderRadius: 8,
+			},
+			transitions: {
+				duration: {
+					complex: 200, // 375,
+					enteringScreen: 200, // 225,
+					leavingScreen: 200, // 195,
+					short: 200, // 250,
+					shorter: 200, // 200,
+					shortest: 200, // 150,
+					standard: 200, // 300,
+				},
+				easing: {
+					easeIn: "ease", // "cubic-bezier(0.4, 0, 1, 1)",
+					easeInOut: "ease", // "cubic-bezier(0.4, 0, 0.2, 1)"
+					easeOut: "ease", // "cubic-bezier(0.0, 0, 0.2, 1)",
+					sharp: "ease", // "cubic-bezier(0.4, 0, 0.6, 1)",
+				},
+			},
+			overrides: {
+				MuiLink: {
+					root: {
+						color: secondary_main,
+					}
+				},
+				MuiFab: {
+					root: {
+						backgroundColor: background_paper,
+						color: defaultTheme.palette.getContrastText(background_paper),
+						transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+						'&:hover': {
+							backgroundColor: background_default,
+							color: defaultTheme.palette.getContrastText(background_paper),
+						},
+					},
+					secondary: {
+						backgroundColor: defaultTheme.palette.getContrastText(background_paper),
+						color: background_paper,
+						transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+						'&:hover': {
+							backgroundColor: defaultTheme.palette.getContrastText(background_paper),
+							color: background_default,
+						},
+					},
+				},
+			},
+		})
+
+		this.setState({theme})
+	}
+	startDarkThemeListener(){
+		// https://react-theming.github.io/create-mui-theme
+		// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
+
+		if (!!window.matchMedia) {
+			const checker = event => {
+				if(event.matches) {
+					this.setTheme(true)
+				} else {
+					this.setTheme(false)
+				}
+			}
+			const matcher = window.matchMedia('(prefers-color-scheme: dark)')
+		
+			checker(matcher)
+			matcher.addListener(checker)
+		}else{
+			this.setTheme(false)
+		}
 	}
 
 	saveFunctions(componentName, functionsObject){
@@ -232,8 +339,10 @@ export default class App extends React.Component {
 
 	render() {
 		return (<>
-			{/*<Localized id="hello" $name={"Thomas"} $date={new Date()} />*/}
-
+			<CssBaseline />
+			<ThemeProvider theme={this.state.theme}>
+			<StylesProvider injectFirst>
+			
 			<SearchBar
 				className="SearchBar"
 				onStartSearch={this.startSearch}
@@ -292,6 +401,8 @@ export default class App extends React.Component {
 				filters={this.state.filters}
 			/>
 			
+		</StylesProvider>
+		</ThemeProvider>
 		</>)
 	}
 }

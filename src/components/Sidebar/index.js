@@ -60,6 +60,7 @@ import {
 // import {
 // 	Autocomplete
 // } from '@material-ui/lab'
+import { withTheme } from '@material-ui/core/styles'
 
 import Questions from '../Questions/'
 
@@ -95,7 +96,7 @@ const ListItemLink = props => <ListItem button component="a" {...props} />
 // const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
 // const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
 
-export default class Sidebar extends React.Component {
+class Sidebar extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -525,14 +526,14 @@ export default class Sidebar extends React.Component {
 
 
 		const linkIcons = {
-			default: (<LinkIcon style={{color:'black'}} />),
+			default: (<LinkIcon />),
 
-			osm: <OpenstreetmapIcon />, // (<MapIcon style={{color:'black'}} />),
+			osm: <OpenstreetmapIcon />, // (<MapIcon />),
 			yelp: <YelpIcon />,
 
-			phonenumber: (<PhoneIcon style={{color:'black'}} />),
-			faxnumber: (<PrintIcon style={{color:'black'}} />),
-			email: (<MailIcon style={{color:'black'}} />),
+			phonenumber: (<PhoneIcon />),
+			faxnumber: (<PrintIcon />),
+			email: (<MailIcon />),
 
 			youtube: <YouTubeIcon />,
 			twitter: <TwitterIcon />,
@@ -563,10 +564,6 @@ export default class Sidebar extends React.Component {
 		*/
 
 		return (<React.Fragment key="viewing">
-			<Card
-				elevation={6}
-				className="sidebarContentCard"
-			>
 				<CardContent>
 					{
 						age_range_text === ''
@@ -574,7 +571,7 @@ export default class Sidebar extends React.Component {
 						: (
 							<List dense>
 								<ListItem>
-									<ListItemIcon><CheckIcon style={{color:'black'}}/></ListItemIcon>
+									<ListItemIcon><CheckIcon /></ListItemIcon>
 									<ListItemText primary={'Altersbeschränkung: '+age_range_text} />
 								</ListItem>
 							</List>
@@ -613,12 +610,12 @@ export default class Sidebar extends React.Component {
 						{openingHoursComponent}
 					</List>) : null}
 				</CardContent>
-			</Card>
 
 			<Fab
 				variant="extended"
 				onClick={this.edit}
 				size="large"
+				color="secondary"
 				className="improveFab"
 			>
 				<EditIcon className="icon"/>
@@ -628,16 +625,13 @@ export default class Sidebar extends React.Component {
 	}
 	renderQuestions(doc){
 		return (<React.Fragment key="editing">
-			<Card
-				elevation={6}
-				className="sidebarContentCard"
-			>
 				<CardContent>
 					<Questions key="the_questions" doc={doc} onFinish={this.view}/>
 				</CardContent>
-			</Card>
 		</React.Fragment>)
 	}
+
+	// this.props.theme.palette.background.default
 
 	render(){
 		const doc = this.state.doc
@@ -662,7 +656,11 @@ export default class Sidebar extends React.Component {
 				className={this.props.className}
 				style={{
 					backgroundColor: doc.___color.bg,
-					background: `linear-gradient(180deg, ${doc.___color.bg} 50%, var(--color-surface) 50%)`,
+					background: `linear-gradient(180deg, ${doc.___color.bg} 50%, ${
+						this.state.stage === 'viewing'
+						? this.props.theme.palette.background.paper
+						: this.props.theme.palette.background.default
+					} 50%)`,
 					display: 'flex',
 					alignContent: 'stretch',
 					flexDirection: 'column',
@@ -699,13 +697,27 @@ export default class Sidebar extends React.Component {
 				</CardContent>
 			</Card>
 
-			{
-				this.state.stage === 'viewing'
-				? this.renderView(doc)
-				: this.renderQuestions(doc)
-			}
+			<Card
+				elevation={6}
+				className="sidebarContentCard"
+				style={{
+					backgroundColor: (
+						this.state.stage === 'viewing'
+						? this.props.theme.palette.background.paper
+						: this.props.theme.palette.background.default
+					),
+				}}
+			>
+				{
+					this.state.stage === 'viewing'
+					? this.renderView(doc)
+					: this.renderQuestions(doc)
+				}
+			</Card>
 
 			</Paper>
 		</>)
 	}
 }
+
+export default withTheme(Sidebar)

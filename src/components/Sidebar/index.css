@@ -5,39 +5,20 @@
     width: calc(100% + 32px);
 }
 
-.MuiSlider-track{
-	background: green;
-}
-
-html body .MuiListSubheader-sticky {
-	top: -2px;
-	background: white;
-}
-
 html body .sidebarContentCard{
 	position: relative;
 	overflow: visible;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
-	background: var(--color-surface);
 	flex-grow: 1;
+
+	/*transition: background-color var(--transition-time) var(--timing-function);*/
 }
-/*.sidebarContentCard:after{
-	content: '';
-	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: -50px;
-	height: 50px;
-	background: white;
-}*/
 
 
 html body .improveFab{
 	z-index: var(--z-index-fabs);
 	position: fixed;
-	background: black !important;
-	color: white;
 
 	bottom: 16px;
 	left: 16px;

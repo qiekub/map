@@ -59,6 +59,7 @@ import {
 // import {
 // 	Autocomplete
 // } from '@material-ui/lab'
+import { withTheme } from '@material-ui/core/styles'
 
 /*
 const questions = [
@@ -117,7 +118,7 @@ const questionIDs = Object.keys(questionsById)
 console.log('questionsById', questionsById)
 */
 
-export default class Questions extends React.Component {
+class Questions extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -304,6 +305,7 @@ export default class Questions extends React.Component {
 					? ()=>this.setQuestionAsActive(questionDoc._id)
 					: null
 				}
+				variant="outlined"
 			>
 				<Typography variant="body1">{questionDoc.properties.question}</Typography>
 	
@@ -323,6 +325,7 @@ export default class Questions extends React.Component {
 								label={possibleAnswer.title}
 								variant="outlined"
 								multiline
+								color="secondary"
 								onChange={(event)=>this.saveInputValue(possibleAnswerKey, event)}
 								style={{
 									margin: '4px 8px',
@@ -334,6 +337,7 @@ export default class Questions extends React.Component {
 								key={possibleAnswerKey}
 								label={possibleAnswer.title}
 								variant="outlined"
+								color="secondary"
 								onChange={(event)=>this.saveInputValue(possibleAnswerKey, event)}
 								style={{
 									margin: '4px 8px',
@@ -349,11 +353,12 @@ export default class Questions extends React.Component {
 									style={{
 										flexGrow: '1',
 										border: 'none',
-										boxShadow: 'inset 0 0 0 999px rgba(0,0,0,0.04)',
 										color: 'inherit',
 										margin: '4px 8px',
 										padding: (hasInputField ? '16px 8px 16px 16px' : '16px 8px'),
 										justifyContent: (hasInputField ? 'flex-start' : 'center'),
+
+										boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.divider}`,
 									}}
 								>
 									{
@@ -377,7 +382,8 @@ export default class Questions extends React.Component {
 						size="large"
 						style={{
 							border: 'none',
-							boxShadow: 'rgba(0, 0, 0, 0.04) 0px 0px 0px 999px inset',
+							boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.divider}`,
+							// boxShadow: 'rgba(0, 0, 0, 0.04) 0px 0px 0px 999px inset',
 							color: 'inherit',
 							margin: '0',
 							padding: '8px 16px 8px 12px',
@@ -431,9 +437,10 @@ export default class Questions extends React.Component {
 					variant="extended"
 					onClick={this.finish}
 					size="large"
+					color="secondary"
 					style={{
-						color: 'white',
-						background: 'black',
+						// color: 'white',
+						// background: 'black',
 						borderRadius: '999px',
 						padding: '8px 16px',
 					}}
@@ -452,9 +459,10 @@ export default class Questions extends React.Component {
 						variant="extended"
 						onClick={this.finish}
 						size="large"
+						color="secondary"
 						style={{
-							color: 'white',
-							background: 'black',
+							// color: 'white',
+							// background: 'black',
 							borderRadius: '999px',
 							padding: '8px 16px',
 						}}
@@ -473,9 +481,10 @@ export default class Questions extends React.Component {
 					variant="extended"
 					onClick={this.finish}
 					size="large"
+					color="secondary"
 					style={{
-						color: 'white',
-						background: 'black',
+						// color: 'white',
+						// background: 'black',
 						borderRadius: '999px',
 						padding: '8px 16px',
 					}}
@@ -486,3 +495,6 @@ export default class Questions extends React.Component {
 		}*/
 	}
 }
+
+export default withTheme(Questions)
+

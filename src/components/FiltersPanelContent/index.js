@@ -14,6 +14,9 @@ import {
 	// Checkbox,
 
 	Fab,
+	// Paper,
+	// Button,
+
 	Menu,
 	MenuItem,
 } from '@material-ui/core'
@@ -25,12 +28,13 @@ import {
 // 	ToggleButton,
 // 	ToggleButtonGroup,
 // } from '@material-ui/lab'
+import { withTheme } from '@material-ui/core/styles'
 
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
 
 import _categories_ from '../../data/dist/categories.json'
 
-export default class FiltersPanelContent extends React.Component {
+class FiltersPanelContent extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -87,6 +91,41 @@ export default class FiltersPanelContent extends React.Component {
 	}
 
 	render() {
+		/*
+						<Fab
+							{...bindTrigger(popupState)}
+							size="small"
+							variant="extended"
+							color="primary"
+							className="fab"
+						>
+		*/
+
+		/*
+    width: auto;
+    height: 34px;
+    padding: 0 8px;
+    min-width: 34px;
+    border-radius: 17px;
+    padding-block-start: 0px;
+    padding-inline-end: 8px;
+    padding-block-end: 0px;
+    padding-inline-start: 8px;
+    font-size: 0.875rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    line-height: 1.75;
+    letter-spacing: 0.02857em;
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    vertical-align: middle;
+    justify-content: center;
+    cursor: pointer;
+		*/
+
+		console.log('this.props.theme', this.props.theme)
+
 		return (<div className="filterMenuInner">
 			<PopupState variant="popover">
 				{popupState => (
@@ -129,7 +168,12 @@ export default class FiltersPanelContent extends React.Component {
 									selected={isSelected}
 									style={{
 										background: (isSelected ? category.color.bg : ''),
-										color: (isSelected ? category.color.fg : category.color.bg),
+										...(
+											this.props.theme.palette.type === 'light'
+											? {color: (isSelected ? category.color.fg : category.color.bg)}
+											: undefined
+										),
+										// color: (isSelected ? category.color.fg : category.color.bg),
 									}}
 								>
 									<div className="filterMenuDot" style={{background:(isSelected ? category.color.fg : category.color.bg)}}></div>
@@ -238,5 +282,5 @@ export default class FiltersPanelContent extends React.Component {
 	}
 }
 
-
+export default withTheme(FiltersPanelContent)
 

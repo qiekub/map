@@ -103,7 +103,7 @@ class SearchBar extends React.Component {
 				variant="elevation"
 			>
 				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
-					<MenuIcon style={{color:'black'}} />
+					<MenuIcon />
 				</IconButton>
 				<InputBase
 					style={{
@@ -122,16 +122,16 @@ class SearchBar extends React.Component {
 					this.props.sidebarIsOpen
 					?
 					<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
-						<CloseIcon style={{color:'black'}} />
+						<CloseIcon />
 					</IconButton>
 					:
 					<IconButton type="submit" style={{margin:'4px',padding:'10px'}} aria-label="search" onClick={this.submitTheSearchQuery}>
 						{(
 							this.state.loadingSearchResult
 							?
-							<HourglassEmptyIcon style={{color:'black'}} />
+							<HourglassEmptyIcon />
 							:
-							<SearchIcon style={{color:'black'}} />
+							<SearchIcon />
 						)}
 					</IconButton>
 				)}
