@@ -24,11 +24,11 @@ import {
 	Typography,
 
 	Card,
-	// CardActions,
+	CardActions,
 	// CardActionArea,
 	CardContent,
 	// Divider,
-	// Button,
+	Button,
 } from '@material-ui/core'
 import {
 	// AddRounded as AddIcon,
@@ -59,6 +59,8 @@ export default class App extends React.Component {
 			doc: null,
 			prefersDarkMode: false,
 
+			introIsOpen: true,
+
 			filters: {
 				presets: [],
 			},
@@ -75,6 +77,7 @@ export default class App extends React.Component {
 		this.filtersChanged = this.filtersChanged.bind(this)
 		this.startDarkThemeListener = this.startDarkThemeListener.bind(this)
 		this.setTheme = this.setTheme.bind(this)
+		this.closeIntro = this.closeIntro.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
@@ -181,6 +184,10 @@ export default class App extends React.Component {
 		}else{
 			this.setTheme(false)
 		}
+	}
+
+	closeIntro(){
+		this.setState({introIsOpen: false})
 	}
 
 	saveFunctions(componentName, functionsObject){
@@ -351,7 +358,10 @@ export default class App extends React.Component {
 				onSetSearchBarValue={this.setSearchBarValue}
 			/>
 
-			<Card className="introCard" elevation={6}>
+			<Card
+				className={`introCard ${this.state.introIsOpen ? 'open' : 'closed'}`}
+				elevation={6}
+			>
 				<CardContent>
 					<Typography variant="h6" component="h1" gutterBottom>Welcome to the QueerMap!</Typography>
 
@@ -362,6 +372,9 @@ export default class App extends React.Component {
 						Many thanks to <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer">Mapbox</Link> for donating map-resources!
 					</Typography>
 				</CardContent>
+				<CardActions>
+					<Button onClick={this.closeIntro}>Close</Button>
+				</CardActions>
 				{/*<CardActions>
 					<Button>Learn more</Button> <Button>Add a Place</Button>
 				</CardActions>*/}
