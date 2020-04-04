@@ -1,4 +1,3 @@
-# Queer Map
+# QueerMap
 
-Eine Karte über Jugendzentren oder andere hilfreiche Anlaufstellen für Queere Menschen.
-
+A map of community centers and other helpful information for queer (LGBTQ) people.
