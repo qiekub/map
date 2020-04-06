@@ -638,25 +638,31 @@ class Sidebar extends React.Component {
 
 		if (!(
 			!!doc &&
-			!!doc._id &&
-			!!doc.properties &&
-			!!doc.properties.tags
+			!!doc._id // &&
+			// !!doc.properties &&
+			// !!doc.properties.tags
 		)) {
 			return null
 		}
 
-		const properties = doc.properties
-		// const tags = properties.tags
+		// console.log('doc.___color', doc.___color, this.props.theme.palette.background)
 
-		const name = properties.name[0].text // || tags['official_name'] || tags['alt_name'] || tags['short_name'] || ''
+
+		const headerBackgroundColor = (
+			doc.___color.key === 'default'
+			? this.props.theme.palette.background.default
+			: doc.___color.bg
+		)
+
+		// console.log('headerBackgroundColor', headerBackgroundColor)
 
 		return (<>
 			<Paper
 				elevation={6}
 				className={this.props.className}
 				style={{
-					backgroundColor: doc.___color.bg,
-					background: `linear-gradient(180deg, ${doc.___color.bg} 50%, ${
+					backgroundColor: headerBackgroundColor,
+					background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
 						this.state.stage === 'viewing'
 						? this.props.theme.palette.background.paper
 						: this.props.theme.palette.background.default

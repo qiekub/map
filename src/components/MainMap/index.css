@@ -4,7 +4,7 @@
 }
 
 /* popup styles: */
-.leaflet-popup-content-wrapper{
+/*.leaflet-popup-content-wrapper{
 	--hello: 'welt';
 	border-radius: 0 !important;
 	padding: 0 !important;
@@ -30,7 +30,7 @@
 	padding: 27px 27px 0 0 !important;
 	color: red !important;
 	font-size: 24px !important;
-}
+}*/
 
 
 .leaflet-container .leaflet-control-attribution{
@@ -39,8 +39,6 @@
 	bottom: 4px;
 	/*left: 4px;*/
 	text-align: right;
-	background: rgba(255,255,255,0.3) !important;
-	color: black;
 	backdrop-filter: blur(16px);
 	border-radius: 4px;
 
@@ -54,10 +52,19 @@
 	line-height: 20px !important;
 
 	pointer-events: none;
+
+	background: rgba(255,255,255,0.3) !important;
+	color: black;
 }
 .leaflet-container .leaflet-control-attribution a{
 	color: inherit;
 	pointer-events: auto;
+}
+@media (prefers-color-scheme: dark) {
+	.leaflet-container .leaflet-control-attribution{
+		background: rgba(0,0,0,0.3) !important;
+		color: rgba(255,255,255,0.8);
+	}
 }
 
 
@@ -97,8 +104,15 @@
 	top: 4px;
 	left: 4px;
 	border-radius: 50%;
+
 	background: white;
 	color: black;
+}
+@media (prefers-color-scheme: dark) {
+	.marker-cluster-custom-icon .number{
+		background: #181818;
+		color: white;
+	}
 }
 .marker-cluster-custom-icon .pieChart{
 	z-index: 1;
@@ -115,7 +129,7 @@
 }
 .marker-custom-icon .wrapper{
 	--bg-color: #607d8b;
-	--fg-color: #607d8b;
+	--fg-color: white;
 
 	z-index: 1;
 

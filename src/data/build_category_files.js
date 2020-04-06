@@ -204,7 +204,15 @@ const colors = {
 	// },
 }
 
-const colorsByPreset = Object.entries(colors).reduce((obj,pair)=>{
+const colorsWithKey = Object.entries(colors).reduce((obj,pair) => {
+	obj[pair[0]] = {
+		key: pair[0],
+		...pair[1]
+	}
+	return obj
+}, {})
+
+const colorsByPreset = Object.entries(colorsWithKey).reduce((obj,pair)=>{
 	const key = pair[0]
 	const color = pair[1]
 	for (const preset_key of color.presets) {
@@ -559,7 +567,7 @@ const presets_sorted = Object.entries(presets).map(pair=>{
 
 
 
-fs.writeFileSync('./dist/colors.json', JSON.stringify(colors))
+fs.writeFileSync('./dist/colors.json', JSON.stringify(colorsWithKey))
 fs.writeFileSync('./dist/colorsByPreset.json', JSON.stringify(colorsByPreset_sorted))
 fs.writeFileSync('./dist/presets.json', JSON.stringify(presets_sorted))
 fs.writeFileSync('./dist/categories.json', JSON.stringify(categories))

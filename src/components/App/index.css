@@ -38,8 +38,8 @@ html body .MuiButton-root{
 html body .addNewFab{
 	z-index: var(--z-index-fabs);
 	position: absolute;
-	background: black !important;
-	color: white;
+	/*background: black !important;*/
+	/*color: white;*/
 
 	top: auto;
 	bottom: 16px;

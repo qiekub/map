@@ -122,6 +122,8 @@ class MainMap extends React.Component {
 	getConicGradient(values){
 		let stops = []
 
+		const gapColor = this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
+
 		if (values.length === 1) {
 			stops = [values[0][0]+' 0']
 		}else{
@@ -130,9 +132,9 @@ class MainMap extends React.Component {
 			for (const pair of values) {
 				currentPos += 5
 				if (counter === 0) {
-					stops.push('white '+currentPos+'deg')
+					stops.push(gapColor+' '+currentPos+'deg')
 				}else{
-					stops.push('white 0 '+currentPos+'deg')
+					stops.push(gapColor+' 0 '+currentPos+'deg')
 				}
 	
 				if (counter === values.length-1) {
@@ -378,25 +380,53 @@ class MainMap extends React.Component {
 				maxBoundsViscosity={1.0}
 
 				maxBounds={[[-180,99999],[180,-99999]]}
+
+				style={{
+					backgroundColor: (
+						this.props.theme.palette.type === 'dark'
+						? this.props.theme.palette.background.default
+						: '#ebe7e1'
+					)
+				}}
 			>
+				{
+					this.props.theme.palette.type === 'light'
+					? (
+						<TileLayer
+							key="tilelayer_international_lables_light"
+							detectRetina={false}
+							tileSize={512}
+							zoomOffset={-1}
+							attribution={`
+								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
+								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+							`}
+							url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
+						/>
+					)
+					: (
+						<TileLayer
+							key="tilelayer_international_lables_dark"
+							detectRetina={false}
+							tileSize={512}
+							zoomOffset={-1}
+							attribution={`
+								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
+								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+							`}
+							url="https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
+						/>
+					)
+				}
+		
 				{/*<TileLayer
 					key="tilelayer_english_labels"
 					detectRetina={false}
 					attribution='<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">&copy; MapBox</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">&copy; OpenStreetMap contributors</a>'
 					url={"https://api.mapbox.com/styles/v1/petacat/ck7h7qgtg4c4b1ikiifin5it7/tiles/256/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicGV0YWNhdCIsImEiOiJjaWl0MGpqOHEwM2VhdTZrbmhsNG96MjFrIn0.Uhlmj9xPIaPK_3fLUm4nIw"}
 				/>*/}
-				<TileLayer
-					key="tilelayer_international_lables"
-					detectRetina={false}
-					tileSize={512}
-					zoomOffset={-1}
-					attribution={`
-						<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
-						<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-						| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
-					`}
-					url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
-				/>
 				{/*<TileLayer
 					key="tilelayer_stamen_watercolor"
 					maxZoom={19}
@@ -424,4 +454,4 @@ class MainMap extends React.Component {
 	}
 }
 
-export default withLocalization(MainMap)
+export default withLocalization(withTheme(MainMap))
