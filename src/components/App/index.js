@@ -199,33 +199,33 @@ export default class App extends React.Component {
 	}
 	
 	setSidebarIsOpen(value){
-		// const center = this.functions['PageMap'].getCenter()
-		// const zoom = this.functions['PageMap'].getZoom()
+		// const center = this.functions['MainMap'].getCenter()
+		// const zoom = this.functions['MainMap'].getZoom()
 
 		this.setState({sidebarIsOpen:value}, ()=>{
 			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
-			// 	// this.functions['PageMap'].invalidateSize()
+			// 	// this.functions['MainMap'].invalidateSize()
 			// 	setTimeout(()=>{
-			// 		// const center2 = this.functions['PageMap'].getCenter()
+			// 		// const center2 = this.functions['MainMap'].getCenter()
 			// 		console.log('center', center, zoom)
 			// 		// console.log('center2', center2)
-			// 		this.functions['PageMap'].flyTo(center, Math.round(zoom), {
+			// 		this.functions['MainMap'].flyTo(center, Math.round(zoom), {
 			// 			animate: true,
 			// 			duration: 1.5,
 			// 		})
-			// 		// this.functions['PageMap'].invalidateSize()
+			// 		// this.functions['MainMap'].invalidateSize()
 			// 	}, 500)
 			// }
 
 			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
 			// 	console.log('center-2', center)
-			// 	this.functions['PageMap'].panTo(center, {
+			// 	this.functions['MainMap'].panTo(center, {
 			// 		animate: true,
 			// 		duration: 5,
 			// 	})
 			// }else{
-			// 	this.functions['PageMap'].panTo(
-			// 		this.functions['PageMap'].getCenter(), {
+			// 	this.functions['MainMap'].panTo(
+			// 		this.functions['MainMap'].getCenter(), {
 			// 		animate: true,
 			// 		duration: 5,
 			// 	})
@@ -244,7 +244,7 @@ export default class App extends React.Component {
 			}).then(async result => {
 				await navigate(`/`)
 
-				this.functions['PageMap'].flyToBounds([
+				this.functions['MainMap'].flyToBounds([
 					[
 						result.data.search.geometry.boundingbox.southwest.lat,
 						result.data.search.geometry.boundingbox.southwest.lng,
@@ -258,7 +258,7 @@ export default class App extends React.Component {
 					duration: 1.5,
 				})
 
-				// this.functions['PageMap'].setBounds([
+				// this.functions['MainMap'].setBounds([
 				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
 				// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
 				// ])
@@ -290,18 +290,18 @@ export default class App extends React.Component {
 				if (doc !== null) {
 					this.functions['Sidebar'].setDoc(doc)
 		
-					let zoomLevel = this.functions['PageMap'].getZoom()
+					let zoomLevel = this.functions['MainMap'].getZoom()
 					if (zoomLevel < 17) {
 						zoomLevel = 17
 					}
 
 					if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-						this.functions['PageMap'].setView(
+						this.functions['MainMap'].setView(
 							[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
 							zoomLevel
 						)
 					// }else{
-					// 	this.functions['PageMap'].flyTo(
+					// 	this.functions['MainMap'].flyTo(
 					// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
 					// 		zoomLevel,
 					// 		{
@@ -335,13 +335,13 @@ export default class App extends React.Component {
 	}
 
 	setView(...attr){
-		return this.functions['PageMap'].setView(...attr)
+		return this.functions['MainMap'].setView(...attr)
 	}
 	flyTo(...attr){
-		return this.functions['PageMap'].flyTo(...attr)
+		return this.functions['MainMap'].flyTo(...attr)
 	}
 	getZoom(...attr){
-		return this.functions['PageMap'].getZoom(...attr)
+		return this.functions['MainMap'].getZoom(...attr)
 	}
 
 	filtersChanged(newFilters){
@@ -426,10 +426,10 @@ export default class App extends React.Component {
 				/>
 			</Router>
 			
-			<PageMap
+			<MainMap
 				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
 				onViewDoc={this.loadAndViewDoc}
-				onFunctions={(...attr)=>{this.saveFunctions('PageMap',...attr)}}
+				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
 				filters={this.state.filters}
 			/>
 			

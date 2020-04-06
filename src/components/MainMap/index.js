@@ -28,7 +28,7 @@ import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneClu
 
 PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 
-class PageMap extends React.Component {
+class MainMap extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -60,6 +60,7 @@ class PageMap extends React.Component {
 				getZoom: () => this.map.getZoom(),
 				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
+				zoomIn: () => this.map.zoomIn(),
 				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
 				panTo: (...attr) => this.map.panTo(...attr),
@@ -423,4 +424,4 @@ class PageMap extends React.Component {
 	}
 }
 
-export default withLocalization(PageMap)
+export default withLocalization(MainMap)
