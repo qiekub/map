@@ -237,7 +237,10 @@ export default class App extends React.Component {
 		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
 			window.graphql.query({
 				query: query_search,
-				variables: {query: queryString},
+				variables: {
+					// languages: navigator.languages,
+					query: queryString,
+				},
 			}).then(async result => {
 				await navigate(`/`)
 
@@ -274,6 +277,7 @@ export default class App extends React.Component {
 			window.graphql.query({
 				query: query_loadPlace,
 				variables: {
+					languages: navigator.languages,
 					_id: docID,
 					wantedTags: [
 						...this.functions['Sidebar'].getWantedTagsList(),

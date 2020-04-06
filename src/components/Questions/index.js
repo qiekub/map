@@ -151,7 +151,9 @@ class Questions extends React.Component {
 	loadQuestions(){
 		window.graphql.query({
 			query: query_loadQuestions,
-			// variables: {},
+			variables: {
+				languages: navigator.languages,
+			},
 		}).then(result => {
 			// this.questions = result.data.questions
 			let counter = 0

@@ -79,7 +79,7 @@ class PageMap extends React.Component {
 		window.graphql.query({
 			query: query_loadMarkers,
 			variables: {
-				languages: ['en','de'],
+				languages: navigator.languages,
 				wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		}).then(result => {
