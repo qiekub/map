@@ -122,7 +122,7 @@ class MainMap extends React.Component {
 	getConicGradient(values){
 		let stops = []
 
-		const gapColor = this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
+		const gapColor = 'transparent' // this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
 
 		if (values.length === 1) {
 			stops = [values[0][0]+' 0']

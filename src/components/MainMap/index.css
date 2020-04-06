@@ -95,6 +95,15 @@
 
 	box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
 }
+.marker-cluster-custom-icon{
+	background: white;
+}
+@media (prefers-color-scheme: dark) {
+	.marker-cluster-custom-icon{
+		background: #181818;
+		color: white;
+	}
+}
 .marker-cluster-custom-icon .number{
 	z-index: 2;
 	position: absolute;
@@ -105,14 +114,8 @@
 	left: 4px;
 	border-radius: 50%;
 
-	background: white;
-	color: black;
-}
-@media (prefers-color-scheme: dark) {
-	.marker-cluster-custom-icon .number{
-		background: #181818;
-		color: white;
-	}
+	background: inherit;
+	color: inherit;
 }
 .marker-cluster-custom-icon .pieChart{
 	z-index: 1;
