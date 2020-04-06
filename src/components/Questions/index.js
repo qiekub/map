@@ -307,7 +307,7 @@ class Questions extends React.Component {
 				}
 				variant="outlined"
 			>
-				<Typography variant="body1">{questionDoc.properties.question}</Typography>
+				<Typography variant="body1">{questionDoc.properties.question[0].text}</Typography>
 	
 				<div
 					className="possibleAnswers"
@@ -322,7 +322,7 @@ class Questions extends React.Component {
 						if (possibleAnswer.inputtype === 'text') {
 							return (<TextField
 								key={possibleAnswerKey}
-								label={possibleAnswer.title}
+								label={possibleAnswer.title[0].text}
 								variant="outlined"
 								multiline
 								color="secondary"
@@ -335,7 +335,7 @@ class Questions extends React.Component {
 							return (<TextField
 								type="number"
 								key={possibleAnswerKey}
-								label={possibleAnswer.title}
+								label={possibleAnswer.title[0].text}
 								variant="outlined"
 								color="secondary"
 								onChange={(event)=>this.saveInputValue(possibleAnswerKey, event)}
@@ -368,7 +368,7 @@ class Questions extends React.Component {
 										}}>{possibleAnswer.icon}</div>)
 										: null
 									}
-									{possibleAnswer.title}
+									{possibleAnswer.title[0].text}
 								</Button>
 							)
 						}

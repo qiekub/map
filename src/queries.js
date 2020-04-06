@@ -1,12 +1,15 @@
 import {gql} from 'apollo-boost'
 
 export const loadPlace = gql`
-	query($_id: String="", $wantedTags: [String]){
+	query($_id: String="", $wantedTags: [String], $languages: [String]){
 		getPlace(_id: $_id){
 			_id
 			properties {
 				... on Place {
-					name
+					name (languages: $languages){
+						text
+						language
+					}
 					geometry {
 						location {
 							lng
@@ -43,10 +46,13 @@ export const loadPlaces = gql`
 `
 
 export const loadMarkers = gql`
-	query($wantedTags: [String]){
+	query($wantedTags: [String], $languages: [String]){
 		getMarkers{
 			_id
-			name
+			name (languages: $languages){
+				text
+				language
+			}
 			lng
 			lat
 			tags(keys: $wantedTags)
@@ -74,17 +80,23 @@ export const search = gql`
 `
 
 export const loadQuestions = gql`
-	query{
+	query($languages: [String]){
 		questions: getQuestions {
 			_id
 			properties {
 				... on Question {
-					question
+					question (languages: $languages){
+						text
+						language
+					}
 					possibleAnswers {
 						inputtype
 						key
 						icon
-						title
+						title (languages: $languages){
+							text
+							language
+						}
 						tags
 					}
 				}

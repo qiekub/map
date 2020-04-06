@@ -79,6 +79,7 @@ class PageMap extends React.Component {
 		window.graphql.query({
 			query: query_loadMarkers,
 			variables: {
+				languages: ['en','de'],
 				wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		}).then(result => {
@@ -213,8 +214,8 @@ class PageMap extends React.Component {
 				iconSize: L.point(40, 40, true),
 			}))
 			
-			if (doc.name !== '') {
-				leafletMarker.bindTooltip(doc.name, {
+			if (!!doc.name && doc.name.length > 0) {
+				leafletMarker.bindTooltip(doc.name[0].text, {
 					sticky: true,
 					interactive: false,
 					opacity: 1,

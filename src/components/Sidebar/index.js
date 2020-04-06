@@ -192,7 +192,7 @@ class Sidebar extends React.Component {
 				stage: 'viewing',
 			}, ()=>{
 				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.doc.properties.name)
+				this.props.onSetSearchBarValue(this.state.doc.properties.name[0].text)
 			})
 		}
 	}
@@ -648,7 +648,7 @@ class Sidebar extends React.Component {
 		const properties = doc.properties
 		// const tags = properties.tags
 
-		const name = properties.name // || tags['official_name'] || tags['alt_name'] || tags['short_name'] || ''
+		const name = properties.name[0].text // || tags['official_name'] || tags['alt_name'] || tags['short_name'] || ''
 
 		return (<>
 			<Paper
