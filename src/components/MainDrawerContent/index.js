@@ -17,6 +17,9 @@ import {
 	// FullscreenRounded as FullscreenIcon,
 	// FullscreenExitRounded as FullscreenExitIcon,
 } from '@material-ui/icons'
+import { withTheme } from '@material-ui/core/styles'
+
+import buymeacoffee_green from '../../images/buymeacoffee_green.webp'
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
@@ -64,10 +67,25 @@ class MainDrawerContent extends React.Component {
 					<ListItemText primary={this.state.windowIsFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} />
 				</ListItem>) : null}
 			</List>*/}
+
+			<a
+				href="https://www.buymeacoffee.com/thomasrosen"
+				target="_blank"
+				rel="noreferrer"
+				style={{
+					margin: '16px',
+				}}
+			>
+				<img src={buymeacoffee_green} alt="Buy Me A Coffee" style={{
+					width: '200px',
+					borderRadius: '8px',
+					boxShadow: this.props.theme.shadows[3],
+				}} />
+			</a>
 		</>)
 	}
 }
 
-export default withLocalization(MainDrawerContent)
+export default withLocalization(withTheme(MainDrawerContent))
 
 
