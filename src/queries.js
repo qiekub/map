@@ -1,5 +1,11 @@
 import {gql} from 'apollo-boost'
 
+export const getID = gql`
+	query{
+		id: getID
+	}
+`
+
 export const loadPlace = gql`
 	query($_id: String="", $wantedTags: [String], $languages: [String]){
 		getPlace(_id: $_id){
@@ -97,7 +103,13 @@ export const loadQuestions = gql`
 							text
 							language
 						}
+						description (languages: $languages){
+							text
+							language
+						}
+						followUpQuestionIDs
 						tags
+						hidden
 					}
 				}
 			}

@@ -1,0 +1,218 @@
+---
+{
+	"properties" :
+		"question" : {
+			"en": "Is this place wheelchair accessible?",
+			"de": "Ist dieser Ort mit einem Rollstuhl erreichbar?"
+		},
+		"possibleAnswers" : [ 
+			{
+				"key" : "yes",
+				"icon" : "check",
+				"title" : {
+					"en" : "Yes",
+					"de" : "Ja"
+				},
+				"tags" : {
+					"wheelchair" : "yes"
+				}
+			}, 
+			{
+				"key" : "no",
+				"icon" : "clear",
+				"title" : {
+					"en" : "No",
+					"de" : "Nein"
+				},
+				"tags" : {
+					"wheelchair" : "no"
+				}
+			}
+		]
+	}
+}
+---
+{
+	"__typename" : "Doc",
+	"properties" : {
+		"__typename" : "Question",
+		"question" : "Hat dieser Ort Toiletten?",
+		"q" : [ 
+			{
+				"text" : "Hat dieser Ort Toiletten?",
+				"language" : "de"
+			}
+		],
+		"possibleAnswers" : [ 
+			{
+				"key" : "yes",
+				"title" : "Ja",
+				"tags" : {
+					"toilets" : "yes"
+				}
+			}, 
+			{
+				"key" : "no",
+				"title" : "Nein",
+				"tags" : {
+					"toilets" : "no"
+				}
+			}
+		]
+	}
+}
+---
+{
+	"__typename" : "Doc",
+	"properties" : {
+		"__typename" : "Question",
+		"question" : "Sind die Toiletten geschlechtsspezifisch getrennt?",
+		"condition" : {
+			"toilets" : "*"
+		},
+		"possibleAnswers" : [ 
+			{
+				"key" : "yes",
+				"title" : "Ja",
+				"tags" : {
+					"toilets:gender_segregation" : "yes"
+				}
+			}, 
+			{
+				"key" : "no",
+				"title" : "Nein",
+				"tags" : {
+					"toilets:gender_segregation" : "no"
+				}
+			}
+		]
+	}
+}
+---
+{
+	"__typename" : "Doc",
+	"properties" : {
+		"__typename" : "Question",
+		"question" : [ 
+			{
+				"text" : "Is something wrong with this place?",
+				"language" : "en"
+			}
+		],
+		"possibleAnswers" : [ 
+			{
+				"key" : "missing_infos",
+				"icon" : "edit_location",
+				"title" : [ 
+					{
+						"text" : "Missing information",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "I want to contribute my knowledge!",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "closed",
+				"icon" : "location_off",
+				"title" : [ 
+					{
+						"text" : "Closed",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "This place permanently closed, moved, or was replaced.",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "duplicate",
+				"icon" : "compare_arrows",
+				"title" : [ 
+					{
+						"text" : "Duplicate",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "There's more than one of these on the map in this location.",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "spam",
+				"icon" : "report",
+				"title" : [ 
+					{
+						"text" : "Spam",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "It's fake, offensize, or doesn't exist.",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "wrong_location",
+				"icon" : "pin_drop",
+				"title" : [ 
+					{
+						"text" : "Wrong location",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "This marker is in the wrong place or the address is incorrect.",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "typo",
+				"icon" : "short_text",
+				"title" : [ 
+					{
+						"text" : "Typo",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "There's a typo in the name but it's otherwise correct.",
+						"language" : "en"
+					}
+				]
+			}, 
+			{
+				"key" : "other",
+				"icon" : "more_horiz",
+				"title" : [ 
+					{
+						"text" : "Other",
+						"language" : "en"
+					}
+				],
+				"description" : [ 
+					{
+						"text" : "There's something else about this place that isn't right.",
+						"language" : "en"
+					}
+				]
+			}
+		]
+	}
+}
+...

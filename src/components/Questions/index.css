@@ -48,6 +48,14 @@ html body .questionCard.active:first-child{
 	border-top-left-radius: var(--border-radius);
 }
 
+html body .questionCard .questionText{
+	margin-bottom: 0;
+	transition: margin-bottom var(--transition-time) var(--timing-function) 0ms;
+}
+html body .questionCard.active .questionText{
+	margin-bottom: 16px;
+}
+
 html body .questionCard .possibleAnswers{
 	display: flex;
 	align-items: stretch;
@@ -65,10 +73,11 @@ html body .questionCard .possibleAnswers{
 }
 html body .questionCard.active .possibleAnswers{
 	opacity: 1;
-	margin: 24px -8px -8px -8px;
+	/*margin: 24px -8px -8px -8px;*/
+	margin: 0px -8px;
 	height: 66.25px;
 }
-html body .questionCard.hasInputField.active .possibleAnswers{
+html body .questionCard.isMultiRow.active .possibleAnswers{
 	height: auto;
 }
 

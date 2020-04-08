@@ -18,6 +18,15 @@ import ApolloClient from 'apollo-boost'
 window.pageOpenTS = new Date()
 window.env_local_ip = local_ip
 
+window.getTranslation = (array) => {
+	array = array || []
+	return (
+		array.length > 0
+		? (!!array[0].text ? array[0].text : '')
+		: ''
+	)
+}
+
 window.graphql = new ApolloClient({
 	// cache,
 	uri: (

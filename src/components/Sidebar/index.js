@@ -9,7 +9,11 @@ import { Localized } from '../Localized/'
 
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
-// import {loadPlace as query_loadPlace} from '../queries.js'
+// import {loadPlace as query_loadPlace} from '../../queries.js'
+
+import {
+	getID as query_getID,
+} from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
 import presets from '../../data/dist/presets.json'
@@ -90,7 +94,6 @@ const OpenstreetmapIcon	= props => <Icon style={{backgroundImage:'url('+openstre
       //   conf: { locale: 'de' },
       // });
 
-
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 // const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
@@ -102,10 +105,12 @@ class Sidebar extends React.Component {
 
 		this.state = {
 			doc: {},
-			changedProperties: {},
 			stage: 'viewing', // viewing editing submitting
+			headerText: '',
 		}
 
+		this.editNewDoc = this.editNewDoc.bind(this)
+		this.setDoc = this.setDoc.bind(this)
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
 		// this.submit = this.submit.bind(this)
@@ -114,18 +119,9 @@ class Sidebar extends React.Component {
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
 
-		// this.updateChangedProperties = this.updateChangedProperties.bind(this)
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
-		// this.getChangesetDoc = this.getChangesetDoc.bind(this)
 
-		// this.docChanged = this.docChanged.bind(this)
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
-
-		this.editNewDoc = this.editNewDoc.bind(this)
-		this.setDoc = this.setDoc.bind(this)
-
-		// this.renderQuestions = this.renderQuestions.bind(this)
-		// this.closeQuestions = this.closeQuestions.bind(this)
 	}
 
 	componentDidMount(){
@@ -173,12 +169,33 @@ class Sidebar extends React.Component {
 	}
 
 	editNewDoc(typename){
-		this.setState({
-			doc: {},
-			changedProperties: {},
-		}, ()=>{
-			this.props.onSetSidebarIsOpen(true)
-			this.edit()
+
+		window.graphql.query({
+			query: query_getID,
+		}).then(async result => {
+			const emptyDoc = {
+				__typename: 'Doc',
+				_id: result.data.id,
+				properties: {
+					__typename: typename,
+					tags: {},
+				},
+			}
+
+			emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
+			emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
+
+			this.setState({
+				doc: emptyDoc,
+				stage: 'editing',
+				headerText: 'Add a new place'
+			}, ()=>{
+				this.props.onSetSidebarIsOpen(true)
+				this.props.onSetSearchBarValue(this.state.headerText)
+			})
+
+		}).catch(error=>{
+			console.error(error)
 		})
 	}
 	setDoc(newDoc) {
@@ -188,11 +205,18 @@ class Sidebar extends React.Component {
 
 			this.setState({
 				doc: newDoc,
-				changedProperties: {},
-				stage: 'viewing',
+				stage: 'editing',
+				headerText: (
+					newDoc &&
+					newDoc.properties &&
+					newDoc.properties.name &&
+					newDoc.properties.name.length > 0
+					? newDoc.properties.name[0].text
+					: ''
+				),
 			}, ()=>{
 				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.doc.properties.name[0].text)
+				this.props.onSetSearchBarValue(this.state.headerText)
 			})
 		}
 	}
@@ -203,91 +227,6 @@ class Sidebar extends React.Component {
 	view(){
 		this.setState({stage:'viewing'})
 	}
-	/*getChangesetDoc(){
-		// const properties = this.state.changedProperties
-		let properties = {
-			// ...this.state.doc.properties,
-			...this.state.changedProperties,
-		}
-
-		// START parse age-range
-		if (properties.min_age || properties.max_age) {
-			let min_age = Number.parseInt(properties.min_age || this.state.doc.properties.min_age)
-			let max_age = Number.parseInt(properties.max_age || this.state.doc.properties.max_age)
-	
-			if (Number.isNaN(min_age) || min_age < 0) {
-				min_age = null
-			}
-			if (Number.isNaN(max_age) || max_age < 0) {
-				max_age = null
-			}
-	
-			if (
-				!Number.isNaN(min_age) && min_age !== null &&
-				!Number.isNaN(max_age) && max_age !== null
-			){
-				const numbers = [min_age,max_age]
-				const numbersSorted = [...numbers].sort((a,b)=>a-b)
-	
-				min_age = numbersSorted[0]
-				max_age = numbersSorted[1]
-	
-				if (
-					numbers[0] === numbersSorted[0] &&
-					numbers[1] === numbersSorted[1]
-				) {
-					if (properties.min_age) {
-						properties.min_age = min_age
-					}
-					if (properties.max_age) {
-						properties.max_age = max_age
-					}
-				}else{
-					properties.min_age = min_age
-					properties.max_age = max_age
-				}
-			}else{
-				if (properties.min_age && min_age !== null) {
-					properties.min_age = min_age
-				}
-				if (properties.max_age && max_age !== null) {
-					properties.max_age = max_age
-				}
-			}
-		}
-		// END parse age-range
-
-		const sources = this.state.changedProperties.sources
-		const comment = this.state.changedProperties.comment
-
-		if (Object.keys(properties).length > 0) {
-			return {
-				forDoc: this.state.doc._id,
-				properties: {
-					...properties,
-					sources: undefined,
-					comment: undefined,
-					__typename: 'Place',
-				},
-				sources: sources,
-				comment: comment,
-				fromBot: false,
-				created_by: 'queer.qiekub.com',
-				created_at: new Date()*1,
-			}
-		}else{
-			return null
-		}
-	}*/
-
-	/*updateChangedProperties(newValues){
-		this.setState((state, props) => {
-			return {changedProperties: {
-				...state.changedProperties,
-				...newValues,
-			}}
-		})
-	}*/
 
 	getAgeRangeText(min_age,max_age){
 		min_age = Number.parseInt(min_age)
@@ -625,9 +564,9 @@ class Sidebar extends React.Component {
 	}
 	renderQuestions(doc){
 		return (<React.Fragment key="editing">
-				<CardContent>
-					<Questions key="the_questions" doc={doc} onFinish={this.view}/>
-				</CardContent>
+			<CardContent>
+				<Questions key="the_questions" doc={doc} onFinish={this.view}/>
+			</CardContent>
 		</React.Fragment>)
 	}
 
@@ -679,14 +618,22 @@ class Sidebar extends React.Component {
 					margin: '0 0 -8px 0',
 					borderRadius: '0px',
 					padding: '86px 0 8px 0',
-					color: doc.___color.fg,
-					background: doc.___color.bg,
 					flexShrink: 0,
+
+					background: 'transparent',
+					/*...(
+						doc.___color.key !== 'default'
+						? {
+							color: doc.___color.fg,
+							background: headerBackgroundColor,
+						}
+						: undefined
+					)*/
 				}}
 			>
 				<CardContent>
 					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900'}}>
-						{name}
+						{this.state.headerText}
 					</Typography>
 					
 					{

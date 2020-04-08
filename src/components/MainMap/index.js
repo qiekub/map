@@ -14,13 +14,12 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import {getPreset, getColorByPreset, getWantedTagsList} from '../../functions.js'
+import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
-// import {
-// 	Icon,
-// } from '@material-ui/core'
+// import {} from '@material-ui/core'
+import { withTheme } from '@material-ui/core/styles'
 
-import {Map, TileLayer} from 'react-leaflet'
+import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
@@ -35,6 +34,8 @@ class MainMap extends React.Component {
 		this.state = {
 			docs: [],
 			bounds: null,
+			isGeoChooser: false,
+			center: [52,10],
 		}
 
 		this.filters = null
@@ -50,6 +51,8 @@ class MainMap extends React.Component {
 		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
 		this.filterMarkers = this.filterMarkers.bind(this)
 		this.showAllMarkers = this.showAllMarkers.bind(this)
+
+		this.setMapPos = this.setMapPos.bind(this)
 	}
 
 	componentDidMount(){
@@ -66,12 +69,33 @@ class MainMap extends React.Component {
 				panTo: (...attr) => this.map.panTo(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
 				invalidateSize: (...attr) => this.map.invalidateSize(...attr),
+				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
 			})
 		}
+
+		window.addEventListener('updateMainMapView', this.setMapPos)
 	}
 	componentDidUpdate(){
 		if (this.props.filters !== this.filters) {
 			this.filters = this.props.filters
+			this.filterMarkers(this.filters)
+		}
+	}
+	componentWillUnmount(){
+		window.removeEventListener('updateMainMapView', this.setMapPos)
+	}
+
+	setMapPos(event){
+		// console.log('event', event)
+		this.setState({center:window.map_center})
+	}
+
+	useAsGeoChooser(yesOrNo){
+		if (yesOrNo) {
+			this.setState({isGeoChooser:true})
+			this.hideAllMarkers()
+		}else{
+			this.setState({isGeoChooser:false})
 			this.filterMarkers(this.filters)
 		}
 	}
@@ -256,8 +280,8 @@ class MainMap extends React.Component {
 				className: 'marker-cluster-custom-icon',
 				iconSize: L.point(48, 48, true),
 			})
-		}
-		
+		}		
+
 		this.map.addLayer(this.clusterGroup)
 	}
 	addMarkersToPruneCluster(docs){
@@ -266,7 +290,7 @@ class MainMap extends React.Component {
 
 		for (const doc of docs) {
 			let marker = new PruneCluster.Marker(doc.lat, doc.lng, doc)
-			marker.filtered = false
+			marker.filtered = true
 			this.markers.push(marker)
 			this.clusterGroup.RegisterMarker(marker)
 		}
@@ -277,6 +301,13 @@ class MainMap extends React.Component {
 		this.filterMarkers(this.filters)
 	}
 
+	hideAllMarkers(){
+		const markers_length = this.markers.length
+		for (let i = markers_length - 1; i >= 0; i--) {
+			this.markers[i].filtered = true
+		}
+		this.clusterGroup.ProcessView()
+	}
 	showAllMarkers(){
 		const markers_length = this.markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
@@ -285,57 +316,59 @@ class MainMap extends React.Component {
 		this.clusterGroup.ProcessView()
 	}
 	filterMarkers(filters){
-			if (!!this.filters) {
-				const presets = this.filters.presets || []
-				// const presets = ['amenity/community_centre']
-				const presets_length = presets.length
+		if (this.state.isGeoChooser) {
+			this.hideAllMarkers()
+		} else if (!!this.filters) {
+			const presets = this.filters.presets || []
+			// const presets = ['amenity/community_centre']
+			const presets_length = presets.length
 
-				const selectedAge = this.filters.selectedAge
-				const ageOption = this.filters.ageOption
+			const selectedAge = this.filters.selectedAge
+			const ageOption = this.filters.ageOption
 
-				if (presets_length > 0 || !!selectedAge) {
-					const markers_length = this.markers.length
-					for (let i = markers_length - 1; i >= 0; i--) {
-						const marker = this.markers[i]
+			if (presets_length > 0 || !!selectedAge) {
+				const markers_length = this.markers.length
+				for (let i = markers_length - 1; i >= 0; i--) {
+					const marker = this.markers[i]
 
-						let isInPresets = true
-						if (presets_length > 0) {
-							isInPresets = presets.map(preset_key=>{
-								return marker.data.___preset.key.startsWith(preset_key)
-							}).reduce((bool,value) => (value ? true : bool), false)
-						}
+					let isInPresets = true
+					if (presets_length > 0) {
+						isInPresets = presets.map(preset_key=>{
+							return marker.data.___preset.key.startsWith(preset_key)
+						}).reduce((bool,value) => (value ? true : bool), false)
+					}
 
-						let isInAgeRange = true
-						if (!!selectedAge) {
-							isInAgeRange = false
-							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+					let isInAgeRange = true
+					if (!!selectedAge) {
+						isInAgeRange = false
+						if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+							const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+							const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+							isInAgeRange = (
+								   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+								&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+							)
+						}else{
+							if (!!marker.data.tags.min_age) {
 								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+								isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+							}
+							if (isInAgeRange && !!marker.data.tags.max_age) {
 								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-								isInAgeRange = (
-									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
-								)
-							}else{
-								if (!!marker.data.tags.min_age) {
-									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-								}
-								if (isInAgeRange && !!marker.data.tags.max_age) {
-									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
-								}
+								isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
 							}
 						}
-
-						this.markers[i].filtered = !(isInPresets && isInAgeRange)
 					}
-					this.clusterGroup.ProcessView()
-				}else{
-					this.showAllMarkers()
+
+					this.markers[i].filtered = !(isInPresets && isInAgeRange)
 				}
+				this.clusterGroup.ProcessView()
 			}else{
 				this.showAllMarkers()
 			}
+		}else{
+			this.showAllMarkers()
+		}
 	}
 
 	// getMaxClusterRadius(zoomLevel){
@@ -359,17 +392,30 @@ class MainMap extends React.Component {
 	render() {
 		// <ZoomControl position="bottomright" />
 
-		return (<div className={this.props.className}>
+		return (<div className={this.props.className}>						
+			<div className={`markerInTheMiddel rainbow ${this.state.isGeoChooser ? 'visible' : 'hidden'}`}>
+				<div className="leaflet-marker-icon marker-custom-icon">
+					<div className="wrapper material-icons-round">not_listed_location</div>
+				</div>
+			</div>
+
 			<Map
 				ref={this.gotMapRef}
 				className="map"
+
+				onViewportChanged={(viewport)=>{
+					console.log('viewport', viewport)
+					window.map_center = viewport.center
+					window.map_zoom = viewport.zoom
+					window.dispatchEvent(new Event('mapViewportUpdated'))
+				}}
 
 				preferCanvas={true}
 				useFlyTo={true}
 				bounds={this.state.bounds}
 				center={[51,10]}
 				minZoom={2}
-				zoom={1}
+				zoom={3}
 				maxZoom={22}
 				zoomSnap={1}
 				zoomControl={false}

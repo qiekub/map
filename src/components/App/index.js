@@ -19,7 +19,7 @@ import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core
 
 import {
 	Link,
-	// Fab,
+	Fab,
 	// Drawer,
 	Typography,
 
@@ -31,12 +31,12 @@ import {
 	Button,
 } from '@material-ui/core'
 import {
-	// AddRounded as AddIcon,
+	AddRounded as AddIcon,
 	// FilterList as FilterListIcon,
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
-import PageMap from '../PageMap/'
+import MainMap from '../MainMap/'
 import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
 import FiltersPanelContent from '../FiltersPanelContent/'
@@ -45,6 +45,20 @@ import 'typeface-roboto'
 
 const defaultTheme = createMuiTheme({
 	palette: {
+		type: 'light',
+		primary: {
+			main: '#fff',
+		},
+		secondary: {
+			main: '#000',
+		},
+		action: {
+			active: '#000',
+		},
+		background: {
+			paper: '#ffffff',
+			default: '#f9f9f9',
+		},
 		tonalOffset: 0.05,
 	},
 })
@@ -82,10 +96,39 @@ export default class App extends React.Component {
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
+
+		this.showGeoChooser = this.showGeoChooser.bind(this)
+		this.hideGeoChooser = this.hideGeoChooser.bind(this)
+	}
+
+	pretendToSearch(){
+		this.setSearchBarValue('Los Angeles')
+		this.startSearch('Los Angeles',()=>{
+			setTimeout(()=>{
+				this.functions['MainMap'].zoomIn()
+				this.addPlace()
+			}, 1500)
+		})
 	}
 
 	componentDidMount(){
 		this.startDarkThemeListener()
+		// this.pretendToSearch()
+		// this.addPlace()
+
+		window.addEventListener('showGeoChooser', this.showGeoChooser)
+		window.addEventListener('hideGeoChooser', this.hideGeoChooser)
+	}
+	componentWillUnmount(){
+		window.removeEventListener('showGeoChooser', this.showGeoChooser)
+		window.removeEventListener('hideGeoChooser', this.hideGeoChooser)
+	}
+
+	showGeoChooser(){
+		this.functions['MainMap'].useAsGeoChooser(true)
+	}
+	hideGeoChooser(){
+		this.functions['MainMap'].useAsGeoChooser(false)
 	}
 
 	setTheme(prefersDarkMode){
@@ -295,20 +338,22 @@ export default class App extends React.Component {
 						zoomLevel = 17
 					}
 
-					if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-						this.functions['MainMap'].setView(
-							[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-							zoomLevel
-						)
-					// }else{
-					// 	this.functions['MainMap'].flyTo(
-					// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-					// 		zoomLevel,
-					// 		{
-					// 			animate: true,
-					// 			duration: 1,
-					// 		}
-					// 	)
+					if (doc.properties.geometry) {
+						if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+							this.functions['MainMap'].setView(
+								[doc.properties.geometry.location.lat, doc.properties.geometry.location.lng],
+								zoomLevel
+							)
+						// }else{
+						// 	this.functions['MainMap'].flyTo(
+						// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+						// 		zoomLevel,
+						// 		{
+						// 			animate: true,
+						// 			duration: 1,
+						// 		}
+						// 	)
+						}
 					}
 				}
 			}).catch(error=>{
@@ -400,10 +445,15 @@ export default class App extends React.Component {
 				Mapbox, OSM, Overpass, GitHub, Firebase
 			</Card>*/}
 
-			{/*<Fab variant="extended" className="addNewFab" onClick={this.addPlace}>
+			<Fab
+				variant="extended"
+				color="secondary"
+				className="addNewFab"
+				onClick={this.addPlace}
+			>
 				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
 				Add a Place
-			</Fab>*/}
+			</Fab>
 
 			<div className="filtersPanel">
 				<FiltersPanelContent onChange={this.filtersChanged}/>
