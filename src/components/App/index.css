@@ -124,8 +124,10 @@ html body .addNewFab{
 	
 	transition: left var(--transition-time) var(--timing-function);
 }
-.page.sidebarIsOpen{
-	left: 200px;
+@media (min-width: 800px) {
+	.page.sidebarIsOpen{
+		left: 400px;
+	}
 }
 
 
