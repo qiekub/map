@@ -567,10 +567,15 @@ const presets_sorted = Object.entries(presets).map(pair=>{
 
 
 
-fs.writeFileSync('./dist/colors.json', JSON.stringify(colorsWithKey))
-fs.writeFileSync('./dist/colorsByPreset.json', JSON.stringify(colorsByPreset_sorted))
-fs.writeFileSync('./dist/presets.json', JSON.stringify(presets_sorted))
-fs.writeFileSync('./dist/categories.json', JSON.stringify(categories))
+const distPath = './dist/'
+if (!fs.existsSync(distPath)){
+	fs.mkdirSync(distPath)
+}
+
+fs.writeFileSync(distPath+'colors.json', JSON.stringify(colorsWithKey))
+fs.writeFileSync(distPath+'colorsByPreset.json', JSON.stringify(colorsByPreset_sorted))
+fs.writeFileSync(distPath+'presets.json', JSON.stringify(presets_sorted))
+fs.writeFileSync(distPath+'categories.json', JSON.stringify(categories))
 
 
 
