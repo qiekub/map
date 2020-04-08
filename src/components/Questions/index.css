@@ -31,7 +31,7 @@ html body .questionCard:hover {
 }
 html body .questionCard.answered {
 	cursor: default !important;
-	opacity: 0.3 !important;
+	opacity: 0.2 !important;
 	pointer-events: none !important;
 }
 html body .questionCard.active{
