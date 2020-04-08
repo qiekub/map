@@ -71,7 +71,7 @@ class MainDrawerContent extends React.Component {
 			<a
 				href="https://www.buymeacoffee.com/thomasrosen"
 				target="_blank"
-				rel="noreferrer"
+				rel="noopener noreferrer"
 				style={{
 					margin: '16px',
 				}}
