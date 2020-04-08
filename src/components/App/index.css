@@ -160,6 +160,8 @@ html body .Sidebar{
 .SearchBar{
 	z-index: var(--z-index-searchbar);
 	top: 0;
+	margin: 16px;
+	width: calc(400px - 32px);
 }
 .InfoCard{
 	z-index: var(--z-index-infocard);
