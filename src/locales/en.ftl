@@ -1,4 +1,11 @@
 
+# App
+add-place-fab = Add a Place
+welcome-heading = Welcome to the QueerMap!
+project-summary = A map of LGBTQ places, collected by people like you.
+tiny-thanks = The map is sponsored by the <mapbox_link>Mapbox Community team</mapbox_link>.
+close-button = close
+
 
 # FiltersPanelContent
 what-to-show = What to show?
@@ -27,3 +34,9 @@ search-for-qeerness = Search For Queerness!
 
 # Sidebar
 improve = Improve
+
+
+# GeoInput
+instructions = Move the map to choose the location.
+lat = Latitude: {$lat}
+lng = Longitude: {$lng}
