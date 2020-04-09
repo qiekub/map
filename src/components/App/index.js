@@ -14,6 +14,13 @@ import presets from '../../data/dist/presets.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import {getWantedTagsList} from '../../functions.js'
 
+import { Localized/*, withLocalization*/ } from '../Localized/'
+
+import {
+	Localized as LocalizedOriginal,
+	// withLocalization
+} from '@fluent/react'
+
 import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 // import { CssBaseline } from '@material-ui/core'
 
@@ -411,17 +418,27 @@ export default class App extends React.Component {
 				elevation={6}
 			>
 				<CardContent>
-					<Typography variant="h6" component="h1" gutterBottom>Welcome to the QueerMap!</Typography>
+					<Typography variant="h6" component="h1" gutterBottom>
+						<Localized id="welcome-heading" />
+					</Typography>
 
 					<Typography variant="body2" color="textSecondary" gutterBottom>
-						A map of LGBTQ places, collected by people like you.
+						<Localized id="project-summary" />
 					</Typography>
-					<Typography variant="body2" color="textSecondary">
-						Many thanks to <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer">Mapbox</Link> for donating map-resources!
+
+					<Typography variant="body2" color="textSecondary" style={{marginTop:'8px'}}>
+						<Localized
+							id="tiny-thanks"
+							elems={{
+								mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
+							}}
+						></Localized>
 					</Typography>
 				</CardContent>
 				<CardActions>
-					<Button onClick={this.closeIntro}>Close</Button>
+					<Button onClick={this.closeIntro}>
+						<Localized id="close-button" />
+					</Button>
 				</CardActions>
 				{/*<CardActions>
 					<Button>Learn more</Button> <Button>Add a Place</Button>
@@ -451,7 +468,7 @@ export default class App extends React.Component {
 				onClick={this.addPlace}
 			>
 				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
-				Add a Place
+				<Localized id="add-place-fab" />
 			</Fab>
 
 			<div className="filtersPanel">
