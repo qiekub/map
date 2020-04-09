@@ -211,7 +211,7 @@ class Sidebar extends React.Component {
 
 			this.setState({
 				doc: newDoc,
-				stage: 'editing',
+				stage: 'viewing',
 				headerText: (
 					newDoc &&
 					newDoc.properties &&
