@@ -1011,19 +1011,19 @@
   resolved "https://registry.yarnpkg.com/@fluent/langneg/-/langneg-0.4.0.tgz#40d6d8feb36747910aac05bfb850fec8f363bbef"
   integrity sha512-MV5/cFL5TrTNhZ/gOlkJmU0KWSHSIxsyJiNjwkIsQOGZlZ56vU92hOfgG47tBRJ9Or74WTxyQcteCSlPHddnww==
 
-"@fluent/react@^0.11.1":
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/@fluent/react/-/react-0.11.1.tgz#89b93050bcd7f24d3b963a549d8def74487ffc73"
-  integrity sha512-LSQzTGmYCyIM0G2RrfoLyOE5BBOSqtdFeO52Yj/84nTdhIut7RPuMuYEOU2BeLsIMnowofjxMVczxvfij2NICA==
+"@fluent/react@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@fluent/react/-/react-0.12.0.tgz#df4dc87172cb62db8aa666d5a47cb6a049f5f923"
+  integrity sha512-JrQS0OMrPk913HOSuZ356mQ7z7O98GXv20R8pPKj8OMv2XHzL0tP1/kJ1kZUc74TOXtYOUUqD15n3r5vYJrALg==
   dependencies:
-    "@fluent/sequence" "0.4.0"
+    "@fluent/sequence" "0.5.0"
     cached-iterable "^0.2.1"
     prop-types "^15.6.0"
 
-"@fluent/sequence@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@fluent/sequence/-/sequence-0.4.0.tgz#ddba05770fa8a1259dca302ca3530af26c38599a"
-  integrity sha512-ADP/GYbmQZ8DxBHzLGN4I1Vrq0h+ujQuIa9O8E4+Fh5MiSUtPNW0sSH/NzikmAPPQ5cnz5cb53OBv54ANrsvCw==
+"@fluent/sequence@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@fluent/sequence/-/sequence-0.5.0.tgz#6349b614711df2d8ed256598fa31a757fe032539"
+  integrity sha512-70LhnbPO/sO2rI2vHws66QwKq9a7PKiEN0hrc65xY3LzWq3AlATZnt+EmFG1ihmPI+5mqGPnJMAdpp3qze3X2Q==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

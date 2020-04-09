@@ -164,8 +164,8 @@ class FiltersPanelContent extends React.Component {
 								!!this.state.age
 								? (
 									this.state.age===this.highest_ages_entry
-									? <Localized id="for-age-x-and-up" $age={this.state.age}/>
-									: <Localized id="for-age-x" $age={this.state.age} />
+									? <Localized id="for-age-x-and-up" vars={{age:this.state.age}}/>
+									: <Localized id="for-age-x" vars={{age:this.state.age}} />
 								)
 								: <Localized id="for-which-age" />
 							}

@@ -3,7 +3,7 @@ import React from 'react'
 // https://projectfluent.org/play/
 
 // import {LocalizationProvider,Localized} from '@fluent/react' // '@fluent/react/compat'
-import { LocalizationProvider } from '@fluent/react'
+import { ReactLocalization, LocalizationProvider } from '@fluent/react'
 import { FluentBundle, FluentResource } from '@fluent/bundle'
 import { negotiateLanguages } from '@fluent/langneg'
 
@@ -53,8 +53,8 @@ export class AppLocalizationProvider extends React.Component {
 			{ defaultLocale: _defaultLocale_ }
 		)
 
-		const generateBundles  = await createMessagesGenerator(currentLocales)
-		this.setState({ bundles: generateBundles() })
+		const generateBundles = await createMessagesGenerator(currentLocales)
+		this.setState({ bundles: new ReactLocalization(generateBundles()) })
 	}
 
 	render() {
@@ -67,7 +67,7 @@ export class AppLocalizationProvider extends React.Component {
 		}
 
 		return (
-			<LocalizationProvider bundles={bundles}>
+			<LocalizationProvider l10n={bundles}>
 				{children}
 			</LocalizationProvider>
 		)
