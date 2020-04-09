@@ -24,7 +24,7 @@
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
-    "buildData": "node ./src/data/build_category_files.js",
+    "buildData": "cd ./src/data/; node ./build_category_files.js; cd ../../;",
     "saveLocalIP": "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | echo \"\\\"$(cat)\\\"\" > ./src/.env.local_ip.json",
     "serve": "yarn saveLocalIP; yarn start",
     "deploy": "yarn buildData; yarn build; firebase deploy --only hosting",
