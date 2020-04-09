@@ -71,12 +71,21 @@ export default class GeoInput extends React.Component {
 				zoom: currentZoom,
 			}
 
-			const newZoom = currentZoom > 18 ? currentZoom : 18
 		
 			let markerPos = {
 				lng: marker.center.lng, 
-				lat: marker.center.lat
+				lat: marker.center.lat,
 			}
+
+			let newZoom = currentZoom > 18 ? currentZoom : 18
+			if (markerPos.lat === 0 && markerPos.lng === 0) {
+				newZoom = 3
+				markerPos = {
+					lng: -35, 
+					lat: 40,
+				}
+			}
+
 
 			if (window.sidebarIsOpen) { // TODO window.sidebarIsOpen isn't enough on small screens
 				markerPos = window.mainMapFunctions.unproject(window.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
