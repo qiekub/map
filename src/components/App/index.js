@@ -16,11 +16,6 @@ import {getWantedTagsList} from '../../functions.js'
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
 
-import {
-	Localized as LocalizedOriginal,
-	// withLocalization
-} from '@fluent/react'
-
 import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 // import { CssBaseline } from '@material-ui/core'
 
