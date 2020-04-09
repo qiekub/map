@@ -261,7 +261,6 @@ export default class App extends React.Component {
 			// }
 
 			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-			// 	console.log('center-2', center)
 			// 	this.functions['MainMap'].panTo(center, {
 			// 		animate: true,
 			// 		duration: 5,

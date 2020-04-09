@@ -584,16 +584,11 @@ class Sidebar extends React.Component {
 			return null
 		}
 
-		// console.log('doc.___color', doc.___color, this.props.theme.palette.background)
-
-
 		const headerBackgroundColor = (
 			doc.___color.key === 'default'
 			? this.props.theme.palette.background.default
 			: doc.___color.bg
 		)
-
-		// console.log('headerBackgroundColor', headerBackgroundColor)
 
 		return (<>
 			<Paper
