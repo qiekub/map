@@ -271,14 +271,16 @@ const colorsByPreset_sorted = Object.entries(colorsByPreset).sort((a,b)=>b[0].le
 
 
 
+const iD_locales_path = './src/data/iD/dist/locales/'
+const iD_locales_path_relative_to_script = './iD/dist/locales/'
 
-const files = fs.readdirSync('./iD/dist/locales/')
+const files = fs.readdirSync(iD_locales_path)
 const translations = {}
 for (const filename of files) {
 	const lang = filename.split('.')[0]
 
 	if (supported_langs.includes(lang)) {
-		const data = require('./iD/dist/locales/'+lang+'.json')[lang]
+		const data = require(iD_locales_path_relative_to_script+lang+'.json')[lang]
 	
 		if (data && data.presets && data.presets.presets) {
 			const presets = data.presets.presets
