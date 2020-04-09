@@ -67,7 +67,7 @@ import GeoInput from '../GeoInput/'
 
 const nextQuestionIDs_templates = {
 	improve: ['start_improve'],
-	create: ['geo_pos','name','answer_more'],
+	create: ['name','geo_pos','answer_more'],
 }
 
 class Questions extends React.Component {
