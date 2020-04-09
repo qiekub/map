@@ -227,16 +227,8 @@ export default class App extends React.Component {
 		}else{
 			window.isSmallScreen = false
 		}
+		
 		// const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-
-		// this.setState({mapIsResizing: true}, ()=>{
-		// 	this.functions['MainMap'].invalidateSize()
-
-		// 	setTimeout(()=>{
-		// 		this.functions['MainMap'].invalidateSize()
-		// 		this.setState({mapIsResizing: false})
-		// 	}, (300 + 100)) // needs to be the bigger than the in CSS-transition-length
-		// })
 	}
 
 	closeIntro(){
