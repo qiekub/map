@@ -35,7 +35,7 @@ class MainMap extends React.Component {
 			docs: [],
 			bounds: null,
 			isGeoChooser: false,
-			center: [52,10],
+			middleMarkerDoc: undefined,
 		}
 
 		this.filters = null
@@ -53,24 +53,33 @@ class MainMap extends React.Component {
 		this.showAllMarkers = this.showAllMarkers.bind(this)
 
 		this.setMapPos = this.setMapPos.bind(this)
+		this.viewportChanged = this.viewportChanged.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadMarkers()
 
 		if (this.props.onFunctions) {
-			this.props.onFunctions({
+			const functions = {
+				setZoom: (...attr) => this.map.setZoom(...attr),
 				getZoom: () => this.map.getZoom(),
 				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
 				zoomIn: () => this.map.zoomIn(),
 				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
+				panBy: (...attr) => this.map.panBy(...attr),
 				panTo: (...attr) => this.map.panTo(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
 				invalidateSize: (...attr) => this.map.invalidateSize(...attr),
+				project: (...attr) => this.map.project(...attr),
+				unproject: (...attr) => this.map.unproject(...attr),
+				latLngToContainerPoint: (...attr) => this.map.latLngToContainerPoint(...attr),
+
 				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
-			})
+			}
+			window.mainMapFunctions = functions
+			this.props.onFunctions(functions)
 		}
 
 		window.addEventListener('updateMainMapView', this.setMapPos)
@@ -86,16 +95,21 @@ class MainMap extends React.Component {
 	}
 
 	setMapPos(event){
-		// console.log('event', event)
 		this.setState({center:window.map_center})
 	}
 
-	useAsGeoChooser(yesOrNo){
+	useAsGeoChooser(yesOrNo, middleMarkerDoc){
 		if (yesOrNo) {
-			this.setState({isGeoChooser:true})
+			this.setState({
+				isGeoChooser: true,
+				middleMarkerDoc,
+			})
 			this.hideAllMarkers()
 		}else{
-			this.setState({isGeoChooser:false})
+			this.setState({
+				isGeoChooser: false,
+				middleMarkerDoc: undefined,
+			})
 			this.filterMarkers(this.filters)
 		}
 	}
@@ -218,12 +232,15 @@ class MainMap extends React.Component {
 						this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
 							animate: true,
 							duration: 0.75,
+							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
+							paddingbottomRight: [0, 0]
 						})
 					}else{
 						this.clusterGroup._map.flyToBounds(bounds, {
 							animate: true,
 							duration: 0.75,
-							// padding: [100,100],
+							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
+							paddingbottomRight: [0, 0]
 						})
 					}
 				}
@@ -389,13 +406,32 @@ class MainMap extends React.Component {
 	// 	return 80
 	// }
 
+	viewportChanged(viewport){
+		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
+			window.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
+		}else{
+			window.map_center = viewport.center
+		}
+
+		window.map_zoom = viewport.zoom
+		window.dispatchEvent(new Event('mapViewportUpdated'))
+	}
+
 	render() {
 		// <ZoomControl position="bottomright" />
 
-		return (<div className={this.props.className}>						
+		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>						
 			<div className={`markerInTheMiddel rainbow ${this.state.isGeoChooser ? 'visible' : 'hidden'}`}>
 				<div className="leaflet-marker-icon marker-custom-icon">
-					<div className="wrapper material-icons-round">not_listed_location</div>
+					{
+						!!this.state.middleMarkerDoc &&
+						!!this.state.middleMarkerDoc.___color &&
+						!!this.state.middleMarkerDoc.___color.bg &&
+						!!this.state.middleMarkerDoc.___color.fg &&
+						!!this.state.middleMarkerDoc.___preset
+						? <div className="wrapper material-icons-round" style={{'--bg-color':this.state.middleMarkerDoc.___color.bg,'--fg-color':this.state.middleMarkerDoc.___color.fg}}>{this.state.middleMarkerDoc.___preset.icon ? this.state.middleMarkerDoc.___preset.icon.toLowerCase() : 'not_listed_location'}</div>
+						: <div className="wrapper material-icons-round">not_listed_location</div>
+					}
 				</div>
 			</div>
 
@@ -403,12 +439,7 @@ class MainMap extends React.Component {
 				ref={this.gotMapRef}
 				className="map"
 
-				onViewportChanged={(viewport)=>{
-					console.log('viewport', viewport)
-					window.map_center = viewport.center
-					window.map_zoom = viewport.zoom
-					window.dispatchEvent(new Event('mapViewportUpdated'))
-				}}
+				onViewportChanged={this.viewportChanged}
 
 				preferCanvas={true}
 				useFlyTo={true}

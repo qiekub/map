@@ -77,7 +77,6 @@ class Questions extends React.Component {
 		this.state = {
 			questionsAreLoaded: false,
 			answersByQuestionId: {},
-			questionDoc: null,
 
 			questionsById: {},
 			nextQuestionIDs: nextQuestionIDs_templates.create,
@@ -272,6 +271,8 @@ class Questions extends React.Component {
 			return null
 		}
 
+		const location = this.props.doc.properties.geometry.location
+
 		const hasInputField = questionDoc.properties.possibleAnswers.reduce((bool,possibleAnswer)=>{
 			return (
 				bool ||
@@ -331,7 +332,11 @@ class Questions extends React.Component {
 								if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput
 										key={possibleAnswerKey}
-										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
+										marker={{
+											center: location,
+											zoom: 18,
+										}}
+										doc={this.props.doc}
 										onChange={(newValue)=>this.saveGeoValue(questionDoc._id, newValue)}
 										style={{
 											margin: '4px 8px',

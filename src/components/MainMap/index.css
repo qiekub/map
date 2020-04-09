@@ -3,6 +3,44 @@
 	height: 100%;
 }
 
+/*
+.map::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: calc(50% + 200px);
+	background: red;
+	width: 1px;
+	bottom: 0;
+	z-index: 999999999999;
+	pointer-events: none;
+
+	background: transparent;
+	border: 1px solid red;
+	border-width: 0 1px;
+	border-left-color: #f0f;
+	width: 200px;
+	left: 50%;
+}
+.map::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	background: red;
+	height: 1px;
+	right: 0;
+	z-index: 999999999999;
+	pointer-events: none;
+}
+.mapIsResizing .map::before,
+.mapIsResizing .map::after{
+	content: none;
+	opacity: 0;
+	background: transparent;
+}
+*/
+
 /* popup styles: */
 /*.leaflet-popup-content-wrapper{
 	--hello: 'welt';
@@ -195,16 +233,26 @@
 	transform: translate3d(-50%, -50%, 0);
 	cursor: text;
 
-	margin-top: -5px;
+	/*margin-top: -5px;*/
+	margin-top: -25px;
 	width: 40px;
 	height: 40px;
 
 	pointer-events: none;
 
 	display: none;
+	margin-left: 200px;
+}
+@media (max-width: 800px) {
+	.markerInTheMiddel{
+		margin-left: 0;
+	}
 }
 .markerInTheMiddel.visible{
 	display: block;
+}
+.mapIsResizing .markerInTheMiddel{
+	display: none !important;
 }
 .markerInTheMiddel .marker-custom-icon{
 	width: 40px;

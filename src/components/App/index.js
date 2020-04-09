@@ -96,16 +96,15 @@ export default class App extends React.Component {
 		this.addPlace = this.addPlace.bind(this)
 		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
-		this.startDarkThemeListener = this.startDarkThemeListener.bind(this)
 		this.setTheme = this.setTheme.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
+
+		this.check_color_scheme = this.check_color_scheme.bind(this)
+		this.check_small_screen = this.check_small_screen.bind(this)
 
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
-
-		this.showGeoChooser = this.showGeoChooser.bind(this)
-		this.hideGeoChooser = this.hideGeoChooser.bind(this)
 	}
 
 	pretendToSearch(){
@@ -119,23 +118,28 @@ export default class App extends React.Component {
 	}
 
 	componentDidMount(){
-		this.startDarkThemeListener()
 		// this.pretendToSearch()
 		// this.addPlace()
 
-		window.addEventListener('showGeoChooser', this.showGeoChooser)
-		window.addEventListener('hideGeoChooser', this.hideGeoChooser)
+		if (!!window.matchMedia) {
+			// https://react-theming.github.io/create-mui-theme
+			// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
+
+			this.matcher_color_scheme = window.matchMedia('(prefers-color-scheme: dark)')
+			this.check_color_scheme(this.matcher_color_scheme)
+			this.matcher_color_scheme.addListener(this.check_color_scheme)
+
+			this.matcher_small_screen = window.matchMedia('(min-width: 800px)')
+			this.matcher_small_screen.addListener(this.check_small_screen)
+		}else{
+			this.setTheme(false)
+		}
 	}
 	componentWillUnmount(){
-		window.removeEventListener('showGeoChooser', this.showGeoChooser)
-		window.removeEventListener('hideGeoChooser', this.hideGeoChooser)
-	}
-
-	showGeoChooser(){
-		this.functions['MainMap'].useAsGeoChooser(true)
-	}
-	hideGeoChooser(){
-		this.functions['MainMap'].useAsGeoChooser(false)
+		if (!!window.matchMedia) {
+			this.matcher_color_scheme.removeListener(this.check_color_scheme)
+			this.matcher_small_screen.removeListener(this.check_small_screen)
+		}
 	}
 
 	setTheme(prefersDarkMode){
@@ -215,25 +219,29 @@ export default class App extends React.Component {
 
 		this.setState({theme})
 	}
-	startDarkThemeListener(){
-		// https://react-theming.github.io/create-mui-theme
-		// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
-
-		if (!!window.matchMedia) {
-			const checker = event => {
-				if(event.matches) {
-					this.setTheme(true)
-				} else {
-					this.setTheme(false)
-				}
-			}
-			const matcher = window.matchMedia('(prefers-color-scheme: dark)')
-		
-			checker(matcher)
-			matcher.addListener(checker)
-		}else{
+	check_color_scheme(event){
+		if(event.matches) {
+			this.setTheme(true)
+		} else {
 			this.setTheme(false)
 		}
+	}
+	check_small_screen(event){
+		if (event.matches) {
+			window.isSmallScreen = true
+		}else{
+			window.isSmallScreen = false
+		}
+		// const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+
+		// this.setState({mapIsResizing: true}, ()=>{
+		// 	this.functions['MainMap'].invalidateSize()
+
+		// 	setTimeout(()=>{
+		// 		this.functions['MainMap'].invalidateSize()
+		// 		this.setState({mapIsResizing: false})
+		// 	}, (300 + 100)) // needs to be the bigger than the in CSS-transition-length
+		// })
 	}
 
 	closeIntro(){
@@ -247,18 +255,26 @@ export default class App extends React.Component {
 	setSearchBarValue(value){
 		this.setState({searchBarValue:value})
 	}
-	
+
 	setSidebarIsOpen(value){
 		// const center = this.functions['MainMap'].getCenter()
 		// const zoom = this.functions['MainMap'].getZoom()
 
-		this.setState({sidebarIsOpen:value}, ()=>{
+		window.sidebarIsOpen = value
+
+		this.setState({
+			mapIsResizing: true,
+			sidebarIsOpen: value,
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({mapIsResizing: false})
+			}, 300)
+			// this.check_small_screen()
+
 			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
 			// 	// this.functions['MainMap'].invalidateSize()
 			// 	setTimeout(()=>{
 			// 		// const center2 = this.functions['MainMap'].getCenter()
-			// 		console.log('center', center, zoom)
-			// 		// console.log('center2', center2)
 			// 		this.functions['MainMap'].flyTo(center, Math.round(zoom), {
 			// 			animate: true,
 			// 			duration: 1.5,
@@ -493,10 +509,12 @@ export default class App extends React.Component {
 			</Router>
 			
 			<MainMap
-				className={'page'+(this.state.sidebarIsOpen ? ' sidebarIsOpen' : '')}
+				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
 				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
 				filters={this.state.filters}
+				mapIsResizing={this.state.mapIsResizing}
+				sidebarIsOpen={this.state.sidebarIsOpen}
 			/>
 			
 		</StylesProvider>

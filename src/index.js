@@ -18,6 +18,10 @@ import ApolloClient from 'apollo-boost'
 window.pageOpenTS = new Date()
 window.env_local_ip = local_ip
 
+window.transitionDuration = 300
+window.isSmallScreen = true
+window.sidebarIsOpen = false
+
 window.getTranslation = (array) => {
 	array = array || []
 	return (
@@ -37,7 +41,7 @@ window.graphql = new ApolloClient({
 })
 
 ReactDOM.render(
-	<AppLocalizationProvider userLocales={navigator.languages}>
+	<AppLocalizationProvider userLocales={/*['de'] || */navigator.languages}>
 		<App />
 	</AppLocalizationProvider>,
 	document.getElementById('root')

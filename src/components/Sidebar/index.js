@@ -179,6 +179,12 @@ class Sidebar extends React.Component {
 				properties: {
 					__typename: typename,
 					tags: {},
+					geometry: {
+						location: {
+							lat: 0,
+							lng: 0,
+						},
+					}
 				},
 			}
 
@@ -215,6 +221,17 @@ class Sidebar extends React.Component {
 					: ''
 				),
 			}, ()=>{
+
+				if (!window.isSmallScreen) {
+					const docLocation = newDoc.properties.geometry.location
+					const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
+					if (asPixel.x < 400) {
+						window.mainMapFunctions.panTo(
+							window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // map center with sidebar offset
+						)
+					}
+				}
+
 				this.props.onSetSidebarIsOpen(true)
 				this.props.onSetSearchBarValue(this.state.headerText)
 			})
