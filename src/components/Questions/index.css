@@ -30,12 +30,12 @@ html body .questionCard:hover {
 	cursor: pointer;
 }
 html body .questionCard.answered {
-	cursor: default !important;
+	cursor: auto !important;
 	opacity: 0.2 !important;
 	pointer-events: none !important;
 }
 html body .questionCard.active{
-	cursor: default;
+	cursor: auto;
 
 	padding: 32px 32px;
 	margin: 16px -16px;
