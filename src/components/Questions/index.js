@@ -226,6 +226,8 @@ class Questions extends React.Component {
 				}
 			}
 
+			nextQuestionIDs = nextQuestionIDs.filter(id => !props.startQuestions.includes(id))
+
 			if (questionGotAnswered) {
 				return {
 					nextQuestionIDs: nextQuestionIDs,
