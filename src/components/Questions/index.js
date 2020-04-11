@@ -65,10 +65,10 @@ import GeoInput from '../GeoInput/'
 
 
 
-const nextQuestionIDs_templates = {
-	improve: ['start_improve'],
-	create: ['name','geo_pos','answer_more'],
-}
+// const nextQuestionIDs_templates = {
+// 	improve: ['start_improve'],
+// 	create: ['name','geo_pos','answer_more'],
+// }
 
 class Questions extends React.Component {
 	constructor(props) {
@@ -79,7 +79,7 @@ class Questions extends React.Component {
 			answersByQuestionId: {},
 
 			questionsById: {},
-			nextQuestionIDs: nextQuestionIDs_templates.create,
+			nextQuestionIDs: [], // nextQuestionIDs_templates.create,
 		}
 
 		this.inputValues = {}
@@ -110,6 +110,12 @@ class Questions extends React.Component {
 				languages: navigator.languages,
 			},
 		}).then(result => {
+
+			const nextQuestionIDs = [
+				...this.props.startQuestions,
+				...this.state.nextQuestionIDs,
+			]
+
 			// this.questions = result.data.questions
 			// let counter = 0
 			const questionsById = result.data.questions.reduce((obj,questionDoc)=>{
@@ -117,7 +123,7 @@ class Questions extends React.Component {
 					...questionDoc,
 					visible: true,
 					// active: (counter === 0),
-					active: (questionDoc._id === this.state.nextQuestionIDs[0]),
+					active: (questionDoc._id === nextQuestionIDs[0]),
 					// active: false,
 					answered: false,
 				}
@@ -130,7 +136,7 @@ class Questions extends React.Component {
 				questionsById,
 				questionsAreLoaded: true,
 			}/*, ()=>{
-				this.setQuestionAsActive(this.state.nextQuestionIDs[0])
+				this.setQuestionAsActive(nextQuestionIDs[0])
 			}*/)
 		}).catch(error=>{
 			console.error(error)
@@ -185,7 +191,11 @@ class Questions extends React.Component {
 		this.setState((state, props) => { // start this while mutating
 			let questionsById = state.questionsById
 
-			let nextQuestionIDs = state.nextQuestionIDs
+
+			let nextQuestionIDs = [
+				...props.startQuestions,
+				...state.nextQuestionIDs,
+			]
 
 			questionsById[questionID].active = false
 			if (questionGotAnswered) {
@@ -515,7 +525,10 @@ class Questions extends React.Component {
 		} else if (!!this.state.questionsById && Object.keys(this.state.questionsById).length > 0) {
 			return (<>
 				<div className="questionsList">
-					{this.state.nextQuestionIDs.map(questionID => this.renderQuestion(questionID))}
+					{[
+						...this.props.startQuestions,
+						...this.state.nextQuestionIDs,
+					].map(questionID => this.renderQuestion(questionID))}
 				</div>
 
 				<div style={{textAlign:'left', margin:'32px 0 64px 0'}}>

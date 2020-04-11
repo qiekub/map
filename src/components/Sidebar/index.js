@@ -104,6 +104,7 @@ class Sidebar extends React.Component {
 		super(props)
 
 		this.state = {
+			isNewDoc: false,
 			doc: {},
 			stage: 'viewing', // viewing editing submitting
 			headerText: '',
@@ -192,6 +193,7 @@ class Sidebar extends React.Component {
 			emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
 
 			this.setState({
+				isNewDoc: true,
 				doc: emptyDoc,
 				stage: 'editing',
 				headerText: 'Add a new place'
@@ -210,6 +212,7 @@ class Sidebar extends React.Component {
 			newDoc.___color = getColorByPreset(newDoc.___preset.key,colorsByPreset) || colors.default
 
 			this.setState({
+				isNewDoc: false,
 				doc: newDoc,
 				stage: 'viewing',
 				headerText: (
@@ -582,7 +585,11 @@ class Sidebar extends React.Component {
 	renderQuestions(doc){
 		return (<React.Fragment key="editing">
 			<CardContent>
-				<Questions key="the_questions" doc={doc} onFinish={this.view}/>
+				<Questions key="the_questions" startQuestions={
+					this.state.isNewDoc
+					? ['start_improve']
+					: ['name','geo_pos','answer_more']
+				} doc={doc} onFinish={this.view}/>
 			</CardContent>
 		</React.Fragment>)
 	}
