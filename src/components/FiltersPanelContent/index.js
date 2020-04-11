@@ -118,6 +118,7 @@ class FiltersPanelContent extends React.Component {
 								vertical: 'top',
 								horizontal: 'left',
 							}}
+							className="menuBlurredPaperBackground"
 						>
 							<MenuItem value="" onClick={()=>this.setValue('category', null,popupState.close)}>
 								<div className="filterMenuDot" style={{background:'transparent'}}></div>
@@ -183,6 +184,7 @@ class FiltersPanelContent extends React.Component {
 									minWidth:'200px'
 								}
 							}}
+							className="menuBlurredPaperBackground"
 						>
 							<MenuItem value="" onClick={()=>this.setValue('age', null, popupState.close)}>Any Age</MenuItem>
 							{this.ages.map(number=>{

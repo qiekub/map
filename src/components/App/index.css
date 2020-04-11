@@ -175,14 +175,16 @@ html body .Sidebar{
 @supports (backdrop-filter: blur(16px)) {
 	.SearchBar .header,
 	.introCard,
-	.filtersPanel .MuiFab-root{
+	.filtersPanel .MuiFab-root,
+	.menuBlurredPaperBackground .MuiMenu-paper{
 		background-color: rgba(255,255,255,0.9) !important;
 		backdrop-filter: blur(16px);
 	}
 	@media (prefers-color-scheme: dark) {
 		.SearchBar .header,
 		.introCard,
-		.filtersPanel .MuiFab-root{
+		.filtersPanel .MuiFab-root,
+		.menuBlurredPaperBackground .MuiMenu-paper{
 			background-color: #202020cc !important;
 		}
 	}
