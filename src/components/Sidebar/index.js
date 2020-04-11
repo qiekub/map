@@ -587,8 +587,8 @@ class Sidebar extends React.Component {
 			<CardContent>
 				<Questions key="the_questions" startQuestions={
 					this.state.isNewDoc
-					? ['start_improve']
-					: ['name','geo_pos','answer_more']
+					? ['name','geo_pos','answer_more']
+					: ['start_improve']
 				} doc={doc} onFinish={this.view}/>
 			</CardContent>
 		</React.Fragment>)
