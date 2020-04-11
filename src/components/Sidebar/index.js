@@ -651,13 +651,13 @@ class Sidebar extends React.Component {
 				}}
 			>
 				<CardContent>
-					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900'}}>
+					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900',color:'white'}}>
 						{this.state.headerText}
 					</Typography>
 					
 					{
 						doc.___preset.key !== ''
-						? (<ListItem style={{m_argin:'0 -32px'}}>
+						? (<ListItem style={{m_argin:'0 -32px',color:'white'}}>
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
 									<div className="material-icons-round" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
