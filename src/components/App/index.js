@@ -145,7 +145,7 @@ export default class App extends React.Component {
 
 		const secondary_main = prefersDarkMode ? '#448aff' : '#2962ff' // A200_A700
 
-		const error_main = prefersDarkMode ? '#ff3333' : '#ff0000'
+		const error_main = prefersDarkMode ? '#f44' : '#e00'
 
 		const theme = createMuiTheme({
 			palette: {
