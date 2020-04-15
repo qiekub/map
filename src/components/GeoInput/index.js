@@ -128,21 +128,28 @@ export default class GeoInput extends React.Component {
 		}, ()=>{
 			this.checkIfLegal(isLegal => {
 				this.setState({isLegal})
-				if (this.props.onChange) {
-					if (isLegal) {
-						this.props.onChange({
-							lng: window.map_center.lng,
-							lat: window.map_center.lat,
-						})
-					}else{
-						this.props.onChange({
-							lng: NaN,
-							lat: NaN,
-						})
-					}
-				}
+				// if (this.props.onChange) {
+				// 	if (isLegal) {
+				// 		this.props.onChange({
+				// 			lng: window.map_center.lng,
+				// 			lat: window.map_center.lat,
+				// 		})
+				// 	}else{
+				// 		this.props.onChange({
+				// 			lng: NaN,
+				// 			lat: NaN,
+				// 		})
+				// 	}
+				// }
 			})
 		})
+
+		if (this.props.onChange) {
+			this.props.onChange({
+				lng: window.map_center.lng,
+				lat: window.map_center.lat,
+			})
+		}
 	}
 
 	render() {
@@ -152,22 +159,34 @@ export default class GeoInput extends React.Component {
 			<Typography variant="body1" gutterBottom>
 				<Localized id="instructions" />
 			</Typography>
+			<Typography variant="body1" style={{opacity:0.6}}>
+				<Localized id="lat" vars={{lat:map_center.lat+''}} />
+			</Typography>
+			<Typography variant="body1" style={{opacity:0.6}}>
+				<Localized id="lng" vars={{lng:map_center.lng+''}} />
+			</Typography>
+
 			{
-				this.state.isLegal
-				? (<>
-					<Typography variant="body1" style={{opacity:0.6}}>
-						<Localized id="lat" vars={{lat:map_center.lat+''}} />
+				!this.state.isLegal
+				? (
+					<Typography
+						key="geoInputErrorMessage_NotLegal"
+						variant="body1"
+						color="error"
+						style={{
+							marginTop: '16px'
+						}}
+					>
+						It might be illegal to be queer at this location. Don't add places that could potentially harm others by exposing them.
 					</Typography>
-					<Typography variant="body1" style={{opacity:0.6}}>
-						<Localized id="lng" vars={{lng:map_center.lng+''}} />
-					</Typography>
-				</>)
-				: <Typography variant="body1" style={{opacity:0.6,color:'red'}}>You can't use this position as it's illegal to be queer there. (Or we aren't sure.)</Typography>
+				)
+				: undefined
 			}
 		</div>)
 	}
 }
 
+// You can't use this position as it's illegal to be queer there. (Or we aren't sure.)
 
 /*
 
