@@ -117,6 +117,12 @@ export const loadQuestions = gql`
 	}
 `
 
+export const isGeoCoordinateLegal = gql`
+	query($lat: Float = 0.0, $lng: Float = 0.0) {
+		isGeoCoordinateLegal(lat: $lat, lng: $lng)
+	}
+`
+
 export const answerQuestion = gql`
 	mutation($properties: JSONObject){
 		answerQuestion(properties: $properties)

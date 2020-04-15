@@ -1,6 +1,9 @@
 import React from 'react'
 // import './index.css'
 
+import {
+	isGeoCoordinateLegal as query_isGeoCoordinateLegal,
+} from '../../queries.js'
 
 import {
 	Typography,
@@ -16,7 +19,8 @@ export default class GeoInput extends React.Component {
 		super(props)
 
 		this.state = {
-			map_center: window.map_center || [0,0],
+			map_center: window.map_center || {lng:NaN,lat:NaN},
+			isLegal: false,
 		}
 
 		this.initialMapViewport = undefined
@@ -53,6 +57,20 @@ export default class GeoInput extends React.Component {
 		setTimeout(()=>{
 			window.mainMapFunctions.useAsGeoChooser(false, undefined)
 		}, 1)
+	}
+
+	checkIfLegal(callback){
+		window.graphql.query({
+			query: query_isGeoCoordinateLegal,
+			variables: {
+				lng: this.state.map_center.lng,
+				lat: this.state.map_center.lat,
+			},
+		}).then(result => {
+			callback(result && result.data && result.data.isGeoCoordinateLegal)
+		}).catch(error=>{
+			callback(false)
+		})
 	}
 
 	markerChanged(marker){
@@ -100,29 +118,52 @@ export default class GeoInput extends React.Component {
 	}
 
 	setStateGeoPos(event){
-		this.setState({map_center: window.map_center})
+		const map_center = window.map_center.map(number => Number.parseFloat(number.toFixed(6))) // WHY: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 
-		if (this.props.onChange) {
-			this.props.onChange({
-				lat: window.map_center[0],
-				lng: window.map_center[1],
+		this.setState({
+			map_center: {
+				lng: map_center[1],
+				lat: map_center[0],
+			}
+		}, ()=>{
+			this.checkIfLegal(isLegal => {
+				this.setState({isLegal})
+				if (this.props.onChange) {
+					if (isLegal) {
+						this.props.onChange({
+							lng: window.map_center.lng,
+							lat: window.map_center.lat,
+						})
+					}else{
+						this.props.onChange({
+							lng: NaN,
+							lat: NaN,
+						})
+					}
+				}
 			})
-		}
+		})
 	}
 
 	render() {
-		const pos = this.state.map_center.map(number => Number.parseFloat(number.toFixed(6)))
+		const map_center = this.state.map_center
 		
 		return (<div {...this.props}>
 			<Typography variant="body1" gutterBottom>
 				<Localized id="instructions" />
 			</Typography>
-			<Typography variant="body1" style={{opacity:0.6}}>
-				<Localized id="lat" vars={{lat:pos[0]+''}} />
-			</Typography>
-			<Typography variant="body1" style={{opacity:0.6}}>
-				<Localized id="lng" vars={{lng:pos[1]+''}} />
-			</Typography>
+			{
+				this.state.isLegal
+				? (<>
+					<Typography variant="body1" style={{opacity:0.6}}>
+						<Localized id="lat" vars={{lat:map_center.lat+''}} />
+					</Typography>
+					<Typography variant="body1" style={{opacity:0.6}}>
+						<Localized id="lng" vars={{lng:map_center.lng+''}} />
+					</Typography>
+				</>)
+				: <Typography variant="body1" style={{opacity:0.6,color:'red'}}>You can't use this position as it's illegal to be queer there. (Or we aren't sure.)</Typography>
+			}
 		</div>)
 	}
 }
