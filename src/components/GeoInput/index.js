@@ -120,10 +120,13 @@ export default class GeoInput extends React.Component {
 	setStateGeoPos(event){
 		const map_center = window.map_center.map(number => Number.parseFloat(number.toFixed(6))) // WHY: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 
+		const lng = map_center[1]
+		const lat = map_center[0]
+
 		this.setState({
 			map_center: {
-				lng: map_center[1],
-				lat: map_center[0],
+				lng,
+				lat,
 			}
 		}, ()=>{
 			this.checkIfLegal(isLegal => {
@@ -131,8 +134,8 @@ export default class GeoInput extends React.Component {
 				// if (this.props.onChange) {
 				// 	if (isLegal) {
 				// 		this.props.onChange({
-				// 			lng: window.map_center.lng,
-				// 			lat: window.map_center.lat,
+				// 			lng,
+				// 			lat,
 				// 		})
 				// 	}else{
 				// 		this.props.onChange({
@@ -146,8 +149,8 @@ export default class GeoInput extends React.Component {
 
 		if (this.props.onChange) {
 			this.props.onChange({
-				lng: window.map_center.lng,
-				lat: window.map_center.lat,
+				lng,
+				lat,
 			})
 		}
 	}
