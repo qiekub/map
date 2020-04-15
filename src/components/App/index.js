@@ -145,6 +145,8 @@ export default class App extends React.Component {
 
 		const secondary_main = prefersDarkMode ? '#448aff' : '#2962ff' // A200_A700
 
+		const error_main = prefersDarkMode ? '#ff3333' : '#ff0000'
+
 		const theme = createMuiTheme({
 			palette: {
 				type: prefersDarkMode ? 'dark' : 'light',
@@ -160,6 +162,9 @@ export default class App extends React.Component {
 				background: {
 					paper: background_paper,
 					default: background_default,
+				},
+				error: {
+					main: error_main,
 				},
 				tonalOffset: 0.05,
 			},
