@@ -614,6 +614,12 @@ class Sidebar extends React.Component {
 			: doc.___color.bg
 		)
 
+		const headerForegroundColor = (
+			doc.___color.key === 'default'
+			? this.props.theme.palette.getContrastText(headerBackgroundColor)
+			: doc.___color.fg
+		)
+
 		return (<>
 			<Paper
 				elevation={6}
@@ -651,13 +657,13 @@ class Sidebar extends React.Component {
 				}}
 			>
 				<CardContent>
-					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900',color:'white'}}>
+					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900',color:headerForegroundColor}}>
 						{this.state.headerText}
 					</Typography>
 					
 					{
 						doc.___preset.key !== ''
-						? (<ListItem style={{m_argin:'0 -32px',color:'white'}}>
+						? (<ListItem style={{m_argin:'0 -32px',color:headerForegroundColor}}>
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
 									<div className="material-icons-round" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
