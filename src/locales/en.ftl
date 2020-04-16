@@ -40,3 +40,6 @@ improve = Improve
 instructions = Move the map to choose the location.
 lat = Latitude: {$lat}
 lng = Longitude: {$lng}
+error_message_geo_not_legal = It might be illegal to be queer at this location. Don't add places that could potentially harm others by exposing them.
+
+

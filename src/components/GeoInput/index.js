@@ -180,7 +180,7 @@ export default class GeoInput extends React.Component {
 							marginTop: '16px'
 						}}
 					>
-						It might be illegal to be queer at this location. Don't add places that could potentially harm others by exposing them.
+						<Localized id="error_message_geo_not_legal" />
 					</Typography>
 				)
 				: undefined
