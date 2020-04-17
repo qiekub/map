@@ -21,19 +21,19 @@
 			// 	"source": "/opening_hours+deps.min.js",
 			// 	"destination": "/opening_hours+deps.min.js"
 			// },
-			{
-				// Directs a request to Cloud Functions
-				"source": "/graphql/**",
-				"function": "graphql"
-			},
-			/*{
-					 // Directs a request to a Cloud Run containerized app
-					 "source": "/helloworld",
-					 "run": {
-						 "serviceId": "helloworld",
-						 "region": "us-central1"
-					 }
-				 },*/
+			// {
+			// 	// Directs a request to Cloud Functions
+			// 	"source": "/graphql/**",
+			// 	"function": "graphql"
+			// },
+			// /*{
+			// 		 // Directs a request to a Cloud Run containerized app
+			// 		 "source": "/helloworld",
+			// 		 "run": {
+			// 			 "serviceId": "helloworld",
+			// 			 "region": "us-central1"
+			// 		 }
+			// 	 },*/
 			{
 				// Shows the same content for multiple URLs
 				"source": "**",
