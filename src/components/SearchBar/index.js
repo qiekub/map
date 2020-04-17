@@ -27,7 +27,7 @@ class SearchBar extends React.Component {
 		this.state = {
 			value: '',
 			loadingSearchResult: false,
-			isMainDrawerOpen: true,
+			isMainDrawerOpen: false,
 		}
 
 		this.submitTheSearchQuery = this.submitTheSearchQuery.bind(this)
