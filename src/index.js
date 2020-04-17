@@ -35,8 +35,8 @@ window.graphql = new ApolloClient({
 	// cache,
 	uri: (
 		window.env_local_ip !== ''
-		? `http://${window.env_local_ip}:5000/queercenters/us-central1/graphql/graphql/v1`
-		: `${window.location.origin}/graphql/v1`
+		? `http://${window.env_local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
+		: `https://api.qiekub.com/graphql/v1/`
 	),
 })
 
