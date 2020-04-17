@@ -1,9 +1,13 @@
 import React from 'react'
 // import './index.css'
 
-import { withLocalization } from '../Localized/'
+import { withLocalization, Localized } from '../Localized/'
 
 import {
+	Button,
+	Link,
+	// Icon,
+
 	List,
 	ListItem,
 	// ListItemIcon,
@@ -20,6 +24,7 @@ import {
 import { withTheme } from '@material-ui/core/styles'
 
 import buymeacoffee_green from '../../images/buymeacoffee_green.webp'
+import {ReactComponent as GithubIcon} from '../../images/github_mark_black.svg'
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
@@ -49,6 +54,7 @@ class MainDrawerContent extends React.Component {
 	}
 
 	render() {
+		console.log('this.props.theme.palette', this.props.theme.palette)
 		return (<>
 			<List>
 				<ListItemLink>
@@ -58,6 +64,28 @@ class MainDrawerContent extends React.Component {
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
+				<Link target="_blank" href="https://github.com/qiekub">
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={
+							<GithubIcon style={{
+								fill: 'black',
+								marginLeft: '0px',
+								width: '1em',
+								height: '1em',
+							}}/>
+						}
+						style={{
+							margin: '0 16px',
+							width: 'calc(100% - 32px)',
+							textAlign: 'left',
+						}}
+					>
+						<Localized id="github_button" />
+					</Button>
+				</Link>
+
 			{/*<Divider />
 			<List>
 				{document.fullscreenEnabled ? (<ListItem button onClick={this.toogleFullscreen}>

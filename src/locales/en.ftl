@@ -18,6 +18,7 @@ for-age-x-and-up = For age {$age} and up
 # MainDrawerContent
 imprint_and_pp = Imprint + Privacy Policy
 contact = Contact
+github_button = Fork us on Github
 
 
 # Questions
