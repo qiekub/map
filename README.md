@@ -2,4 +2,4 @@
 
 🏳️‍🌈🗺 A map of community centers and other helpful information for queer (LGBTQ) people.
 
-![Screenshot](/readme/Screenshot_2020-04-17.png)
+![Screenshot](/readme/Screenshot 2020-04-17 at 23.54.54.png)
