@@ -54,7 +54,7 @@ class MainDrawerContent extends React.Component {
 				<ListItemLink>
 					<ListItemText primary={this.props.getString('imprint_and_pp')} />
 				</ListItemLink>
-				<ListItemLink>
+				<ListItemLink href="mailto:thomas.rosen@qiekub.com">
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
