@@ -566,18 +566,23 @@ class Sidebar extends React.Component {
 					{!!openingHoursComponent ? (<List dense subheader={<ListSubheader>Opening Hours</ListSubheader>}>
 						{openingHoursComponent}
 					</List>) : null}
-				</CardContent>
 
-			<Fab
-				variant="extended"
-				onClick={this.edit}
-				size="large"
-				color="secondary"
-				className="improveFab"
-			>
-				<EditIcon className="icon"/>
-				<Localized id="improve" />
-			</Fab>
+					<div style={{
+						marginTop: '32px',
+						textAlign: 'center',
+					}}>
+						<Fab
+							variant="extended"
+							onClick={this.edit}
+							size="large"
+							color="secondary"
+							className="improveFab"
+						>
+							<EditIcon className="icon"/>
+							<Localized id="improve" />
+						</Fab>
+					</div>
+				</CardContent>
 		</React.Fragment>)
 	}
 	renderQuestions(doc){

@@ -12,26 +12,13 @@ html body .sidebarContentCard{
 	border-bottom-left-radius: 0;
 	flex-grow: 1;
 
-	padding-bottom: 128px;
+	padding-bottom: 64px;
 
 	/*transition: background-color var(--transition-time) var(--timing-function);*/
 }
 
 
-html body .improveFab{
-	z-index: var(--z-index-fabs);
-	position: fixed;
-
-	bottom: 16px;
-	left: 16px;
-}
 html body .improveFab .icon{
 	color: var(--light-green);
 	margin-right: 8px;
-}
-@media (max-width: 500px) {
-	html body .improveFab{
-		right: 16px;
-		left: auto;
-	}
 }
