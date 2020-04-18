@@ -668,7 +668,7 @@ class Sidebar extends React.Component {
 						doc.___preset.key !== ''
 						? (<ListItem style={{m_argin:'0 -32px',color:headerForegroundColor}}>
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
-									<div className="material-icons-round" style={{color:doc.___color.fg}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+									<div className="material-icons-round" style={{color:headerForegroundColor}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
 								<ListItemText primary={doc.___preset.name.en}/>
 							</ListItem>
