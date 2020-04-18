@@ -19,6 +19,7 @@ for-age-x-and-up = Für {$age} Jahre und älter
 # MainDrawerContent
 imprint_and_pp = Impressum + Datenschutz
 contact = Kontakt
+github_button = Auf Github mitmachen
 
 
 # Questions
