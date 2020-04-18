@@ -629,11 +629,11 @@ class Sidebar extends React.Component {
 				className={this.props.className}
 				style={{
 					backgroundColor: headerBackgroundColor,
-					background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
-						this.state.stage === 'viewing'
-						? this.props.theme.palette.background.paper
-						: this.props.theme.palette.background.default
-					} 50%)`,
+					// background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
+					// 	this.state.stage === 'viewing'
+					// 	? this.props.theme.palette.background.paper
+					// 	: this.props.theme.palette.background.default
+					// } 50%)`,
 					display: 'flex',
 					alignContent: 'stretch',
 					flexDirection: 'column',
