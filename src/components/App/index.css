@@ -64,6 +64,16 @@ html body .addNewFab{
 		bottom: calc(20px + 16px);
 	}
 }
+html body .addNewFab{
+	color: white;
+	background-color: #202020 !important;
+}
+@media (prefers-color-scheme: dark) {
+	html body .addNewFab{
+		color: black;
+		background-color: white !important;
+	}
+}
 
 .introCard{
 	z-index: var(--z-index-introcard);
@@ -178,20 +188,40 @@ html body .Sidebar{
 }
 
 
-
 @supports (backdrop-filter: blur(16px)) {
-	.SearchBar .header,
-	.introCard,
-	.filtersPanel .MuiFab-root,
-	.menuBlurredPaperBackground .MuiMenu-paper{
-		background-color: rgba(255,255,255,0.9) !important;
+	.menuBlurredPaperBackground .MuiMenu-paper:before,
+	.SearchBar .header:before,
+	.introCard:before,
+	.filtersPanel .fab:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		z-index: -1;
+		border-radius: inherit;
+	}
+
+	.menuBlurredPaperBackground .MuiMenu-paper:before,
+	.SearchBar .header:before,
+	.introCard:before,
+	.filtersPanel .fab:before{
 		backdrop-filter: blur(16px);
 	}
+
+	.menuBlurredPaperBackground .MuiMenu-paper,
+	.SearchBar .header,
+	.introCard,
+	.filtersPanel .fab{
+		background-color: rgba(255,255,255,0.9) !important;
+	}
 	@media (prefers-color-scheme: dark) {
+		.menuBlurredPaperBackground .MuiMenu-paper,
 		.SearchBar .header,
 		.introCard,
-		.filtersPanel .MuiFab-root,
-		.menuBlurredPaperBackground .MuiMenu-paper{
+		.filtersPanel .fab{
 			background-color: #202020cc !important;
 		}
 	}
