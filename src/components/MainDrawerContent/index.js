@@ -23,7 +23,7 @@ import {
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
-import buymeacoffee_green from '../../images/buymeacoffee_green.webp'
+import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import {ReactComponent as GithubIcon} from '../../images/github_mark_black.svg'
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
