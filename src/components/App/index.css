@@ -173,6 +173,7 @@ html body .Sidebar{
 	top: 0;
 	margin: 16px;
 	width: calc(400px - 32px);
+	max-width: calc(100% - 32px);
 }
 
 
