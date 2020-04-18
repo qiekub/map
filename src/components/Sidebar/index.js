@@ -170,7 +170,6 @@ class Sidebar extends React.Component {
 	}
 
 	editNewDoc(typename){
-
 		window.graphql.query({
 			query: query_getID,
 		}).then(async result => {
@@ -201,7 +200,6 @@ class Sidebar extends React.Component {
 				this.props.onSetSidebarIsOpen(true)
 				this.props.onSetSearchBarValue(this.state.headerText)
 			})
-
 		}).catch(error=>{
 			console.error(error)
 		})
