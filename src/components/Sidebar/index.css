@@ -12,6 +12,8 @@ html body .sidebarContentCard{
 	border-bottom-left-radius: 0;
 	flex-grow: 1;
 
+	padding-bottom: 128px;
+
 	/*transition: background-color var(--transition-time) var(--timing-function);*/
 }
 
