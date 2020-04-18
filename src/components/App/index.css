@@ -27,6 +27,7 @@ body {
 
 
 /* START prevent scroll and zoom on mobile devices */
+html,
 body,
 #root{
 	position: fixed;
