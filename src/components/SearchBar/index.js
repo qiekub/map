@@ -30,6 +30,8 @@ class SearchBar extends React.Component {
 			isMainDrawerOpen: false,
 		}
 
+		this.searchInputRef = React.createRef()
+
 		this.submitTheSearchQuery = this.submitTheSearchQuery.bind(this)
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
@@ -56,6 +58,7 @@ class SearchBar extends React.Component {
 
 	submitTheSearchQuery(){
 		if (this.props.onStartSearch) {
+			this.searchInputRef.current.blur() // unfocus the input element
 			this.setState({loadingSearchResult:true}, ()=>{
 				this.props.onStartSearch(this.state.value, ()=>{
 					this.setState({loadingSearchResult:false})
@@ -117,6 +120,8 @@ class SearchBar extends React.Component {
 					onKeyPress={this.searchKeypressed}
 
 					disabled={this.props.sidebarIsOpen}
+
+					inputRef={this.searchInputRef}
 				/>
 				{(
 					this.props.sidebarIsOpen
