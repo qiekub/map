@@ -533,7 +533,7 @@ class Questions extends React.Component {
 					].map(questionID => this.renderQuestion(questionID))}
 				</div>
 
-				<div style={{textAlign:'left', margin:'32px 0 64px 0'}}>
+				<div style={{textAlign:'left', margin:'32px 16px 64px 16px'}}>
 					<Fab
 						variant="extended"
 						onClick={this.finish}
