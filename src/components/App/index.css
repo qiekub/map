@@ -17,8 +17,6 @@ body {
 	--transition-time: 300ms;
 	--timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
-	overflow: hidden;
-
 	background: white !important;
 }
 @media (prefers-color-scheme: dark) {
@@ -26,15 +24,22 @@ body {
 		background: black !important;
 	}
 }
-/*#root{
-	border-radius: 8px;
-	overflow: hidden;
-	position: absolute;
+
+
+/* START prevent scroll and zoom on mobile devices */
+body,
+#root{
+	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-}*/
+
+	overflow: hidden;
+	touch-action: none;
+}
+/* END prevent scroll and zoom on mobile devices */
+
 
 html body .MuiPaper-rounded,
 html body .MuiButton-root{
