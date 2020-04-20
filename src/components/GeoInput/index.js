@@ -20,7 +20,7 @@ export default class GeoInput extends React.Component {
 
 		this.state = {
 			map_center: window.map_center || {lng:NaN,lat:NaN},
-			isLegal: false,
+			isLegal: true,
 		}
 
 		this.initialMapViewport = undefined
@@ -158,15 +158,15 @@ export default class GeoInput extends React.Component {
 	render() {
 		const map_center = this.state.map_center
 		
-		return (<div {...this.props}>
-			<Typography variant="body1" gutterBottom>
+		return (<div style={this.props.style}>
+			<Typography variant="body2" gutterBottom>
 				<Localized id="instructions" />
 			</Typography>
-			<Typography variant="body1" style={{opacity:0.6}}>
-				<Localized id="lat" vars={{lat:map_center.lat+''}} />
+			<Typography variant="body2" style={{opacity:0.6}}>
+				<Localized id="lat" vars={{ lat: (map_center.lat+'' || '') }} />
 			</Typography>
-			<Typography variant="body1" style={{opacity:0.6}}>
-				<Localized id="lng" vars={{lng:map_center.lng+''}} />
+			<Typography variant="body2" style={{opacity:0.6}}>
+				<Localized id="lng" vars={{ lng: (map_center.lng+'' || '') }} />
 			</Typography>
 
 			{
@@ -174,7 +174,7 @@ export default class GeoInput extends React.Component {
 				? (
 					<Typography
 						key="geoInputErrorMessage_NotLegal"
-						variant="body1"
+						variant="body2"
 						color="error"
 						style={{
 							marginTop: '16px'
