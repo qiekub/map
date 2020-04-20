@@ -189,7 +189,7 @@ html body .Sidebar{
 
 
 @supports (backdrop-filter: blur(16px)) {
-	.menuBlurredPaperBackground .MuiMenu-paper:before,
+	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
 	.SearchBar .header:before,
 	.introCard:before,
 	.filtersPanel .fab:before {
@@ -204,21 +204,24 @@ html body .Sidebar{
 		border-radius: inherit;
 	}
 
-	.menuBlurredPaperBackground .MuiMenu-paper:before,
+	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
 	.SearchBar .header:before,
 	.introCard:before,
 	.filtersPanel .fab:before{
 		backdrop-filter: blur(16px);
 	}
 
-	.menuBlurredPaperBackground .MuiMenu-paper,
+	.menuBlurredPaperBackground .MuiMenu-paper{
+		background: none;
+	}
+	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
 	.SearchBar .header,
 	.introCard,
 	.filtersPanel .fab{
 		background-color: rgba(255,255,255,0.9) !important;
 	}
 	@media (prefers-color-scheme: dark) {
-		.menuBlurredPaperBackground .MuiMenu-paper,
+		.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
 		.SearchBar .header,
 		.introCard,
 		.filtersPanel .fab{
