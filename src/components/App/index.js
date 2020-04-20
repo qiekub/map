@@ -207,8 +207,9 @@ export default class App extends React.Component {
 					secondary: {
 						backgroundColor: defaultTheme.palette.getContrastText(background_paper),
 						color: background_paper,
-						transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+						transition: 'opacity 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
 						'&:hover': {
+							opacity: 0.8,
 							backgroundColor: defaultTheme.palette.getContrastText(background_paper),
 							color: background_default,
 						},
