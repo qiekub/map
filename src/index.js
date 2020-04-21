@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 
+import { CookiesProvider } from 'react-cookie'
+
 import 'intl-pluralrules'
 import { AppLocalizationProvider } from './l10n.js';
 
@@ -21,6 +23,13 @@ window.env_local_ip = local_ip
 window.transitionDuration = 300
 window.isSmallScreen = true
 window.sidebarIsOpen = false
+
+window.cookieOptions = {
+	path: '/',
+	expires: ( new Date().setFullYear(new Date().getFullYear()+1) ).toUTCString(), // expires in one year // these cookies doesn't exist for ever, cause they are used as a simple spam protection. Even one month would probably be enough.
+	domain: '.qiekub.com',
+	secure: true,
+}
 
 window.getTranslation = (array) => {
 	array = array || []
@@ -42,7 +51,9 @@ window.graphql = new ApolloClient({
 
 ReactDOM.render(
 	<AppLocalizationProvider userLocales={/*['de'] || */navigator.languages}>
-		<App />
+		<CookiesProvider>
+			<App />
+		</CookiesProvider>
 	</AppLocalizationProvider>,
 	document.getElementById('root')
 )
