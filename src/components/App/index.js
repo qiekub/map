@@ -3,16 +3,12 @@ import './index.css'
 
 // import {gql} from 'apollo-boost'
 import {Router,navigate} from '@reach/router'
-import {
-	loadPlace as query_loadPlace,
-	search as query_search,
-} from '../../queries.js'
+import { search as query_search } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
-import presets from '../../data/dist/presets.json'
+// import presets from '../../data/dist/presets.json'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import {getWantedTagsList} from '../../functions.js'
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
 
@@ -89,7 +85,6 @@ export default class App extends React.Component {
 		this.setSearchBarValue = this.setSearchBarValue.bind(this)
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.addPlace = this.addPlace.bind(this)
-		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
 		this.setTheme = this.setTheme.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
@@ -330,52 +325,6 @@ export default class App extends React.Component {
 		}
 	}
 
-	loadAndViewDoc(docID){
-		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
-			window.graphql.query({
-				query: query_loadPlace,
-				variables: {
-					languages: navigator.languages,
-					_id: docID,
-					wantedTags: [
-						...this.functions['Sidebar'].getWantedTagsList(),
-						...getWantedTagsList(presets),
-					],
-				},
-			}).then(async result=>{
-				const doc = result.data.getPlace
-		
-				if (doc !== null) {
-					this.functions['Sidebar'].setDoc(doc)
-		
-					let zoomLevel = this.functions['MainMap'].getZoom()
-					if (zoomLevel < 17) {
-						zoomLevel = 17
-					}
-
-					if (doc.properties.geometry) {
-						if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-							this.functions['MainMap'].setView(
-								[doc.properties.geometry.location.lat, doc.properties.geometry.location.lng],
-								zoomLevel
-							)
-						// }else{
-						// 	this.functions['MainMap'].flyTo(
-						// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-						// 		zoomLevel,
-						// 		{
-						// 			animate: true,
-						// 			duration: 1,
-						// 		}
-						// 	)
-						}
-					}
-				}
-			}).catch(error=>{
-				console.error(error)
-			})
-		}
-	}
 
 	async addPlace(){
 
@@ -490,7 +439,6 @@ export default class App extends React.Component {
 					
 					className="Sidebar"
 
-					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
 
@@ -503,7 +451,6 @@ export default class App extends React.Component {
 			
 			<MainMap
 				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
-				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
 				filters={this.state.filters}
 				mapIsResizing={this.state.mapIsResizing}
