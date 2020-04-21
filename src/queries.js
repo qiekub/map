@@ -7,7 +7,7 @@ export const getID = gql`
 `
 
 export const loadPlace = gql`
-	query($_id: String="", $wantedTags: [String], $languages: [String]){
+	query($_id: ID, $wantedTags: [String], $languages: [String]){
 		getPlace(_id: $_id){
 			_id
 			properties {
