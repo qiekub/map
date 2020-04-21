@@ -44,7 +44,6 @@ class MainMap extends React.Component {
 		this.map = null
 		this.markers = []
 
-		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
 
 		this.createPruneCluster = this.createPruneCluster.bind(this)
@@ -139,15 +138,6 @@ class MainMap extends React.Component {
 		}).catch(error=>{
 			console.error(error)
 		})
-	}
-
-	async showPlace(doc) {
-		// const center = this.map.getCenter()
-
-		await navigate(`/place/${doc._id}/`)
-		if (this.props.onViewDoc) {
-			this.props.onViewDoc(doc._id)
-		}
 	}
 
 	gotMapRef(Map){
@@ -267,7 +257,7 @@ class MainMap extends React.Component {
 				})
 			}
 		
-			leafletMarker.on('click', ()=>this.showPlace(doc))
+			leafletMarker.on('click', () => navigate(`/view/${doc._id}/`) )
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
