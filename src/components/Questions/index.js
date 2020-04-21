@@ -493,28 +493,30 @@ class Questions extends React.Component {
 	finish(){
 		const sources = this.sourcesText
 
-		if (this.answerIDs.size > 0 && sources !== '') {
-			window.graphql.mutate({
-				mutation: mutation_addSources,
-				variables: {
-					properties: {
-						forIDs: [...this.answerIDs],
-						sources: sources,
-						dataset: 'qiekub_manual_submisions',
+		if (this.answerIDs.size > 0) {
+			if (sources !== '') {
+				window.graphql.mutate({
+					mutation: mutation_addSources,
+					variables: {
+						properties: {
+							forIDs: [...this.answerIDs],
+							sources: sources,
+							dataset: 'qiekub_manual_submisions',
+						}
 					}
-				}
-			})
-			.then(result=>{
-				console.log('mutation_addSources-result', result.data.addSources)
+				})
+				.then(result=>{
+					console.log('mutation_addSources-result', result.data.addSources)
+					this.compilePlace(this.props.doc._id)
+				})
+				.catch(error=>{
+					console.error('mutation_addSources-error', error)
+					this.compilePlace(this.props.doc._id)
+				})
+				// TODO can I use .finally() ?
+			}else{
 				this.compilePlace(this.props.doc._id)
-			})
-			.catch(error=>{
-				console.error('mutation_addSources-error', error)
-				this.compilePlace(this.props.doc._id)
-			})
-			// TODO can I use .finally() ?
-		}else{
-			this.compilePlace(this.props.doc._id)
+			}
 		}
 
 		if (this.props.onFinish) {
