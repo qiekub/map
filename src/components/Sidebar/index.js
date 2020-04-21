@@ -10,6 +10,7 @@ import { Localized } from '../Localized/'
 // import {navigate/*,Router,Link*/} from '@reach/router'
 // import {gql} from 'apollo-boost'
 // import {loadPlace as query_loadPlace} from '../../queries.js'
+import { loadPlace as query_loadPlace } from '../../queries.js'
 
 import {
 	getID as query_getID,
@@ -19,7 +20,7 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import {getPreset, getColorByPreset} from '../../functions.js'
+import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
 import {
 	Typography,
@@ -104,18 +105,36 @@ class Sidebar extends React.Component {
 		super(props)
 
 		this.state = {
-			isNewDoc: false,
 			doc: {},
 			stage: 'viewing', // viewing editing submitting
+			page: 'view', // view edit
 			headerText: '',
 		}
 
+		this.wantedTagsList = [
+			'min_age',
+			'max_age',
+
+			'wheelchair',
+
+			'contact:',
+
+			'website',
+			'email',
+			'phone',
+			'fax',
+
+			'instagram',
+			'facebook',
+			'twitter',
+			'youtube',
+			'yelp',
+
+			...getWantedTagsList(presets),
+		]
 		this.editNewDoc = this.editNewDoc.bind(this)
-		this.setDoc = this.setDoc.bind(this)
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
-		// this.submit = this.submit.bind(this)
-		// this.back = this.back.bind(this)
 
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
@@ -126,124 +145,171 @@ class Sidebar extends React.Component {
 	}
 
 	componentDidMount(){
-		if (this.props.onFunctions) {
-			this.props.onFunctions({
-				editNewDoc: this.editNewDoc,
-				setDoc: (...attr)=>this.setDoc(...attr),
-				getWantedTagsList: ()=>{
-					return [
-						'min_age',
-						'max_age',
-
-						'wheelchair',
-
-						'contact:',
-
-						'website',
-						'email',
-						'phone',
-						'fax',
-
-						'instagram',
-						'facebook',
-						'twitter',
-						'youtube',
-						'yelp',
-					]
-				}
-			})
-		}
-
 		this.checkIfDocIdChanged()
 	}
 	componentDidUpdate(){
 		this.checkIfDocIdChanged()
 	}
-	async checkIfDocIdChanged(){
-		const docID = this.props.docID
-		if (!!docID && docID !== this.state.doc._id && this.props.onViewDoc) {
-			// await navigate(`/place/${doc._id}/`)
-			if (docID !== 'add') {
-				this.props.onViewDoc(docID)
+	checkIfDocIdChanged(){
+		const { action, docID } = this.props
+
+		if (
+			this.action !== action
+			||
+			!(!!docID && this.docID === docID)
+		) {
+			this.action = action
+			this.docID = docID
+
+			if (action === 'add') {
+				if (!(!!docID) || docID === '') {
+					this.navigateToUnusedID()
+				}else{
+					this.editNewDoc(docID, 'Place')
+				}
+			} else if (action === 'view') {
+				if (!!docID && docID !== '') {
+					this.loadAndViewDoc(docID)
+				}
+			} else if (action === 'edit') {
+				if (!!docID && docID !== '') {
+					this.loadAndViewDoc(docID, ()=>{
+						this.setState({page:'edit'})
+					})
+				}
 			}
 		}
 	}
 
-	editNewDoc(typename){
-		window.graphql.query({
-			query: query_getID,
-		}).then(async result => {
-			const emptyDoc = {
-				__typename: 'Doc',
-				_id: result.data.id,
-				properties: {
-					__typename: typename,
-					tags: {},
-					geometry: {
-						location: {
-							lat: 0,
-							lng: 0,
-						},
-					}
-				},
-			}
-
-			emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
-			emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
-
-			this.setState({
-				isNewDoc: true,
-				doc: emptyDoc,
-				stage: 'editing',
-				headerText: 'Add a new place'
-			}, ()=>{
-				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.headerText)
+	navigateToUnusedID(){
+		if (!this.isNavigatingToUnusedID) {
+			this.isNavigatingToUnusedID = true
+			window.graphql.query({
+				query: query_getID,
+				fetchPolicy: 'no-cache',
+			}).then(async result => {
+				navigate(`./${result.data.id}/`)
+			}).catch(error=>{
+				console.error(error)
+			}).finally(()=>{
+				// TODO can I use finally or is 90% browser support to less?
+				delete this.isNavigatingToUnusedID
 			})
-		}).catch(error=>{
-			console.error(error)
+		}
+	}
+
+	loadAndViewDoc(docID, callback){
+		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
+			window.graphql.query({
+				query: query_loadPlace,
+				variables: {
+					languages: navigator.languages,
+					_id: docID,
+					wantedTags: this.wantedTagsList,
+				},
+			}).then(async result=>{
+				console.log('loadAndViewDoc-result', result)
+
+				if (!!result && !!result.data && !!result.data.getPlace) {
+					const doc = result.data.getPlace
+
+					doc.___preset = getPreset(doc.properties.tags || {}, presets)
+					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+
+					this.setState({
+						doc: doc,
+						page: 'view',
+						headerText: (
+							doc &&
+							doc.properties &&
+							doc.properties.name &&
+							doc.properties.name.length > 0
+							? doc.properties.name[0].text
+							: ''
+						),
+					}, ()=>{
+						if (typeof callback === 'function') {
+							callback()
+						}
+		
+						let zoomLevel = window.mainMapFunctions.getZoom()
+						if (zoomLevel < 17) {
+							zoomLevel = 17
+						}
+					
+						if (doc.properties.geometry) {
+							if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+								window.mainMapFunctions.setView(
+									[doc.properties.geometry.location.lat, doc.properties.geometry.location.lng],
+									zoomLevel
+								)
+							// }else{
+							// 	window.mainMapFunctions.flyTo(
+							// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+							// 		zoomLevel,
+							// 		{
+							// 			animate: true,
+							// 			duration: 1,
+							// 		}
+							// 	)
+							}
+						}
+
+						if (!window.isSmallScreen) {
+							const docLocation = doc.properties.geometry.location
+							const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
+							if (asPixel.x < 400) {
+								window.mainMapFunctions.panTo(
+									window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // map center with sidebar offset
+								)
+							}
+						}
+
+						this.props.onSetSidebarIsOpen(true)
+						this.props.onSetSearchBarValue(this.state.headerText)
+					})
+				}
+			}).catch(error=>{
+				console.error(error)
+			})
+		}
+	}
+
+	editNewDoc(docID, typename){
+		const emptyDoc = {
+			__typename: 'Doc',
+			_id: docID,
+			properties: {
+				__typename: typename,
+				tags: {},
+				geometry: {
+					location: {
+						lat: 0,
+						lng: 0,
+					},
+				}
+			},
+		}
+
+		emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
+		emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
+
+
+		this.setState({
+			doc: emptyDoc,
+			page: 'edit',
+			headerText: 'Add a new place'
+		}, ()=>{
+			this.props.onSetSidebarIsOpen(true)
+			this.props.onSetSearchBarValue(this.state.headerText)
 		})
 	}
-	setDoc(newDoc) {
-		if (newDoc !== null && newDoc._id !== null) {
-			newDoc.___preset = getPreset(newDoc.properties.tags || {}, presets)
-			newDoc.___color = getColorByPreset(newDoc.___preset.key,colorsByPreset) || colors.default
-
-			this.setState({
-				isNewDoc: false,
-				doc: newDoc,
-				stage: 'viewing',
-				headerText: (
-					newDoc &&
-					newDoc.properties &&
-					newDoc.properties.name &&
-					newDoc.properties.name.length > 0
-					? newDoc.properties.name[0].text
-					: ''
-				),
-			}, ()=>{
-
-				if (!window.isSmallScreen) {
-					const docLocation = newDoc.properties.geometry.location
-					const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
-					if (asPixel.x < 400) {
-						window.mainMapFunctions.panTo(
-							window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // map center with sidebar offset
-						)
-					}
-				}
-
-				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.headerText)
-			})
-		}
-	}
-
 	edit(){
-		this.setState({stage:'editing'})
+		navigate(`/edit/${this.state.doc._id}/`)
 	}
 	view(){
-		this.setState({stage:'viewing'})
+		navigate(`/view/${this.state.doc._id}/`)
+	}
 	}
 
 	getAgeRangeText(min_age,max_age){
@@ -597,8 +663,6 @@ class Sidebar extends React.Component {
 		</React.Fragment>)
 	}
 
-	// this.props.theme.palette.background.default
-
 	render(){
 		const doc = this.state.doc
 
@@ -630,7 +694,7 @@ class Sidebar extends React.Component {
 				style={{
 					backgroundColor: headerBackgroundColor,
 					// background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
-					// 	this.state.stage === 'viewing'
+					// 	this.state.page === 'view'
 					// 	? this.props.theme.palette.background.paper
 					// 	: this.props.theme.palette.background.default
 					// } 50%)`,
@@ -683,14 +747,14 @@ class Sidebar extends React.Component {
 				className="sidebarContentCard"
 				style={{
 					backgroundColor: (
-						this.state.stage === 'viewing'
+						this.state.page === 'view'
 						? this.props.theme.palette.background.paper
 						: this.props.theme.palette.background.default
 					),
 				}}
 			>
 				{
-					this.state.stage === 'viewing'
+					this.state.page === 'view'
 					? this.renderView(doc)
 					: this.renderQuestions(doc)
 				}
