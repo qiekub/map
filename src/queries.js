@@ -25,7 +25,6 @@ export const loadPlace = gql`
 					osmID
 					tags(keys: $wantedTags)
 					confidences(keys: $wantedTags)
-					permanently_closed
 				}
 			}
 		}
