@@ -27,9 +27,16 @@ window.sidebarIsOpen = false
 
 window.cookieOptions = {
 	path: '/',
-	domain: '.qiekub.com',
-	secure: true,
 	maxAge: 31557600, // expires in one year // these cookies doesn't exist for ever, cause they are used as a simple spam protection. Even one month would probably be enough.
+	
+	...(
+		window.isDevEnvironment
+		? undefined
+		: {
+			domain: '.qiekub.com',
+			secure: true,
+		}
+	)
 }
 
 window.getTranslation = (array) => {
