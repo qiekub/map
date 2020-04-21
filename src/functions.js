@@ -1,3 +1,12 @@
+export function uuidv4() {
+	// source: https://stackoverflow.com/a/2117523/2387277
+	// source: https://stackoverflow.com/questions/105034/how-to-create-guid-uuid
+	return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+		(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+	)
+}
+
+
 export function getPreset(tags,presets) {
 	const tags_keys = Object.keys(tags)
 	for (const preset_key in presets) {
@@ -29,6 +38,7 @@ export function getPreset(tags,presets) {
 	// return presets[Object.keys(presets)[0]]
 }
 
+
 export function getColorByPreset(preset_key,colorsByPreset_sorted){
 	for (const pair of colorsByPreset_sorted) {
 		if (preset_key.startsWith(pair[0])) {
@@ -37,6 +47,7 @@ export function getColorByPreset(preset_key,colorsByPreset_sorted){
 		}
 	}
 }
+
 
 export function getWantedTagsList(presets){
 	return [...new Set([].concat(...Object.values(presets).map(preset=>Object.keys(preset.tags))))]
