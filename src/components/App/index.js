@@ -86,7 +86,6 @@ export default class App extends React.Component {
 		this.startSearch = this.startSearch.bind(this)
 		this.setSearchBarValue = this.setSearchBarValue.bind(this)
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
-		this.addPlace = this.addPlace.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
 		this.setTheme = this.setTheme.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
@@ -104,14 +103,12 @@ export default class App extends React.Component {
 		this.startSearch('Los Angeles',()=>{
 			setTimeout(()=>{
 				this.functions['MainMap'].zoomIn()
-				this.addPlace()
 			}, 1500)
 		})
 	}
 
 	componentDidMount(){
 		// this.pretendToSearch()
-		// this.addPlace()
 
 		if (!!window.matchMedia) {
 			// https://react-theming.github.io/create-mui-theme
@@ -333,23 +330,6 @@ export default class App extends React.Component {
 		}else{
 			callback()
 		}
-	}
-
-	async addPlace(){
-
-		await navigate(`/place/add/`)
-		setTimeout(()=>{
-			this.functions['Sidebar'].editNewDoc('Place')
-		}, 100)
-
-		// this.setState({doc:{
-		// 	_id: null,
-		// 	properties: {
-		// 		__typename: 'Place',
-		// 	},
-		// }}, async ()=>{
-		// 	await navigate(`/place/add/`)
-		// })
 	}
 
 	setView(...attr){
