@@ -2,7 +2,7 @@ import React from 'react'
 import './index.css'
 
 // import {gql} from 'apollo-boost'
-import {Router,navigate} from '@reach/router'
+import { Router, navigate } from '@reach/router'
 import { search as query_search } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -334,7 +334,6 @@ export default class App extends React.Component {
 			callback()
 		}
 	}
-
 
 	async addPlace(){
 
