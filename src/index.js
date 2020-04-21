@@ -19,6 +19,7 @@ import ApolloClient from 'apollo-boost'
 
 window.pageOpenTS = new Date()
 window.env_local_ip = local_ip
+window.isDevEnvironment = (window.env_local_ip !== '')
 
 window.transitionDuration = 300
 window.isSmallScreen = true
@@ -43,7 +44,7 @@ window.getTranslation = (array) => {
 window.graphql = new ApolloClient({
 	// cache,
 	uri: (
-		window.env_local_ip !== ''
+		window.isDevEnvironment
 		? `http://${window.env_local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
 		: `https://api.qiekub.com/graphql/v1/`
 	),
