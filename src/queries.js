@@ -127,3 +127,17 @@ export const answerQuestion = gql`
 		answerQuestion(properties: $properties)
 	}
 `
+
+export const addSources = gql`
+	mutation($properties: Sources_input){
+		addSources(properties: $properties)
+	}
+`
+
+export const compilePlace = gql`
+	mutation($_id: ID){
+		compilePlace(_id: $_id)
+	}
+`
+
+
