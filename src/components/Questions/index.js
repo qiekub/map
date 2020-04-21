@@ -4,7 +4,6 @@ import './index.css'
 import { Localized } from '../Localized/'
 
 // import {navigate/*,Router,Link*/} from '@reach/router'
-// import {gql} from 'apollo-boost'
 import {
 	loadQuestions as query_loadQuestions,
 	answerQuestion as mutation_answerQuestion,
@@ -20,38 +19,15 @@ import {
 	Typography,
 	Button,
 	Fab,
-	// Snackbar,
 	Paper,
 
-	// List,
 	ListItem,
 	ListItemIcon,
 	ListItemText,
-	// ListSubheader,
-
-	// Card,
-	// CardContent,
-	// Divider,
-	// Chip,
-
-	// Icon,
 
 	TextField,
 } from '@material-ui/core'
 import {
-	// Map as MapIcon,
-	// Link as LinkIcon,
-
-	// Phone as PhoneIcon,
-	// Print as PrintIcon,
-	// Mail as MailIcon,
-
-	// Facebook as FacebookIcon,
-	// Instagram as InstagramIcon,
-	// Twitter as TwitterIcon,
-	// YouTube as YouTubeIcon,
-
-	// Edit as EditIcon,
 	DoneRounded as DoneIcon,
 	ArrowBackRounded as ArrowBackIcon,
 	// ArrowForwardRounded as ArrowForwardIcon,
