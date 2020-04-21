@@ -77,6 +77,8 @@ export default class App extends React.Component {
 				presets: [],
 			},
 			theme: defaultTheme,
+
+			isSmallScreen: false,
 		}
 
 		this.functions = {}
@@ -225,10 +227,17 @@ export default class App extends React.Component {
 	}
 	check_small_screen(event){
 		if (event.matches) {
-			window.isSmallScreen = true
-		}else{
 			window.isSmallScreen = false
+		}else{
+			window.isSmallScreen = true
 		}
+
+		this.setState((state, props) => {
+			if (window.isSmallScreen !== state.isSmallScreen) {
+				return {isSmallScreen: window.isSmallScreen}
+			}
+			return undefined
+		})
 		
 		// const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 	}
