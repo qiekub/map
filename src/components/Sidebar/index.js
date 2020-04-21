@@ -7,9 +7,7 @@ import './index.css'
 
 import { Localized } from '../Localized/'
 
-// import {navigate/*,Router,Link*/} from '@reach/router'
-// import {gql} from 'apollo-boost'
-// import {loadPlace as query_loadPlace} from '../../queries.js'
+import { navigate } from '@reach/router'
 import { loadPlace as query_loadPlace } from '../../queries.js'
 
 import {
@@ -106,7 +104,6 @@ class Sidebar extends React.Component {
 
 		this.state = {
 			doc: {},
-			stage: 'viewing', // viewing editing submitting
 			page: 'view', // view edit
 			headerText: '',
 		}
@@ -132,6 +129,10 @@ class Sidebar extends React.Component {
 
 			...getWantedTagsList(presets),
 		]
+
+		this.action = undefined
+		this.docID = undefined
+
 		this.editNewDoc = this.editNewDoc.bind(this)
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
@@ -142,6 +143,7 @@ class Sidebar extends React.Component {
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
 
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
+		this.abortEdit = this.abortEdit.bind(this)
 	}
 
 	componentDidMount(){
@@ -310,6 +312,13 @@ class Sidebar extends React.Component {
 	view(){
 		navigate(`/view/${this.state.doc._id}/`)
 	}
+
+	abortEdit(){
+		if (this.props.action === 'add') {
+			navigate(`/`)
+		}else{
+			navigate(`/view/${this.state.doc._id}/`)
+		}
 	}
 
 	getAgeRangeText(min_age,max_age){
@@ -423,6 +432,8 @@ class Sidebar extends React.Component {
 	}*/
 
 	renderView(doc){
+		console.log('renderView-doc', doc)
+
 		const properties = doc.properties
 		const tags = properties.tags
 
@@ -652,13 +663,25 @@ class Sidebar extends React.Component {
 		</React.Fragment>)
 	}
 	renderQuestions(doc){
+		const startQuestions = (
+			this.props.action === 'add'
+			? ['geo_pos','name','answer_more']
+			: ['start_improve']
+		)
+
 		return (<React.Fragment key="editing">
 			<CardContent>
-				<Questions key="the_questions" startQuestions={
-					this.state.isNewDoc
-					? ['geo_pos','name','answer_more']
-					: ['start_improve']
-				} doc={doc} onFinish={this.view}/>
+				<Questions
+					key="the_questions"
+					startQuestions={startQuestions}
+					doc={doc}
+					onFinish={
+						this.props.action === 'add'
+						? this.abortEdit
+						: this.view
+					}
+					onAbort={this.abortEdit}
+				/>
 			</CardContent>
 		</React.Fragment>)
 	}

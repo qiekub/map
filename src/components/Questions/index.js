@@ -1,21 +1,27 @@
 import React from 'react'
 import './index.css'
 
-import { Localized } from '../Localized/'
 
-// import {navigate/*,Router,Link*/} from '@reach/router'
+
+import { withCookies } from 'react-cookie'
+import { Localized, withLocalization } from '../Localized/'
+// import { navigate } from '@reach/router'
+
 import {
 	loadQuestions as query_loadQuestions,
 	answerQuestion as mutation_answerQuestion,
+	addSources as mutation_addSources,
+	compilePlace as mutation_compilePlace,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
 // import presets from '../../data/dist/presets.json'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
-// import {getPreset, getColorByPreset} from '../../functions.js'
+import { uuidv4/*, getPreset, getColorByPreset*/ } from '../../functions.js'
 
 import {
+	Link,
 	Typography,
 	Button,
 	Fab,
@@ -30,7 +36,7 @@ import {
 import {
 	DoneRounded as DoneIcon,
 	ArrowBackRounded as ArrowBackIcon,
-	// ArrowForwardRounded as ArrowForwardIcon,
+	ArrowForwardRounded as ArrowForwardIcon,
 } from '@material-ui/icons'
 // import {
 // 	Autocomplete
@@ -56,27 +62,40 @@ class Questions extends React.Component {
 
 			questionsById: {},
 			nextQuestionIDs: [], // nextQuestionIDs_templates.create,
+
+			stageIndex: 0, // 0=privacy -> 1=questions -> 2=sources
 		}
+
+		this.answerIDs = new Set()
+		this.sourcesText = ''
 
 		this.inputValues = {}
 
+		this.renderStage = this.renderStage.bind(this)
+
 		this.answerQuestion = this.answerQuestion.bind(this)
-		this.finish = this.finish.bind(this)
 		this.loadQuestions = this.loadQuestions.bind(this)
 		this.submitInputs = this.submitInputs.bind(this)
 
 		this.setQuestionAsActive = this.setQuestionAsActive.bind(this)
 		this.saveGeoValue = this.saveGeoValue.bind(this)
+
+		this.abort = this.abort.bind(this)
+		this.acceptPrivacyPolicy = this.acceptPrivacyPolicy.bind(this)
+		this.showQuestions = this.showQuestions.bind(this)
+		this.addSources	 = this.addSources.bind(this)
+		this.finish = this.finish.bind(this)
+		this.saveSourcesText = this.saveSourcesText.bind(this)
 	}
 
 	componentDidMount(){
-		this.loadQuestions()
-	}
-
-	finish(){
-		if (this.props.onFinish) {
-			this.props.onFinish()
+		// skip privacy cosent screen when already agreed
+		const accepted_privacy_policy = this.props.cookies.get('accepted_privacy_policy')
+		if (accepted_privacy_policy === 'yes') {
+			this.setState({stageIndex: 1})
 		}
+
+		this.loadQuestions()
 	}
 
 	loadQuestions(){
@@ -92,21 +111,24 @@ class Questions extends React.Component {
 				...this.state.nextQuestionIDs,
 			]
 
-			// this.questions = result.data.questions
-			// let counter = 0
+			let firstOpenQuestionCounter = 0
 			const questionsById = result.data.questions.reduce((obj,questionDoc)=>{
+
+				const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
+
+				if (window.isSmallScreen && hasGeoInputField) {
+					firstOpenQuestionCounter += 1
+				}
+
 				obj[questionDoc._id] = {
 					...questionDoc,
 					visible: true,
-					// active: (counter === 0),
-					active: (questionDoc._id === nextQuestionIDs[0]),
-					// active: false,
+					active: (questionDoc._id === nextQuestionIDs[firstOpenQuestionCounter]),
 					answered: false,
 				}
-				// counter += 1
+
 				return obj
 			}, {})
-			// this.questionIDs = Object.keys(questionsById)
 
 			this.setState({
 				questionsById,
@@ -158,7 +180,8 @@ class Questions extends React.Component {
 					}
 				}
 			}).then(result=>{
-				// console.info('mutate-result', result)
+				console.log('mutate-result', result.data.answerQuestion)
+				this.answerIDs.add(result.data.answerQuestion)
 			}).catch(error=>{
 				console.error('mutate-error', error)
 			})
@@ -259,29 +282,29 @@ class Questions extends React.Component {
 			return null
 		}
 
-		const location = this.props.doc.properties.geometry.location
+		if (!questionDoc.visible) {
+			return null
+		}
+
 		const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
 
 		if (window.isSmallScreen && hasGeoInputField) {
 			return null
 		}
 
-		const hasInputField = questionDoc.properties.possibleAnswers.reduce((bool,possibleAnswer)=>{
+		const hasInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => {
 			return (
-				bool ||
-				(possibleAnswer.inputtype || '') === 'text' ||
-				(possibleAnswer.inputtype || '') === 'number' ||
-				(possibleAnswer.inputtype || '') === 'geo'
+				possibleAnswer.inputtype === 'text' ||
+				possibleAnswer.inputtype === 'number' ||
+				possibleAnswer.inputtype === 'geo'
 			)
-		}, false)
+		}).length > 0
 
 		const isMultiRow = hasInputField || (questionDoc.properties.possibleAnswers && questionDoc.properties.possibleAnswers.length > 2)
 
-		if (!questionDoc.visible) {
-			return null
-		}
-
 		const questionText = window.getTranslation(questionDoc.properties.question)
+
+		const location = this.props.doc.properties.geometry.location
 
 		return (
 			<Paper
@@ -293,13 +316,13 @@ class Questions extends React.Component {
 					+(hasInputField ? 'hasInputField ' : '')
 					+(isMultiRow ? 'isMultiRow ' : '')
 				}
+				variant="outlined"
 				elevation={0}
 				onClick={
 					!questionDoc.answered && !questionDoc.active
 					? ()=>this.setQuestionAsActive(questionDoc._id)
 					: null
 				}
-				variant="outlined"
 			>
 				{
 					questionText !== ''
@@ -406,32 +429,6 @@ class Questions extends React.Component {
 											/>
 										</ListItem>
 									)
-									/*return (
-										<Button
-											key={possibleAnswerKey}
-											onClick={()=>this.answerQuestion(questionDoc._id, {[possibleAnswerKey]:true})}
-											variant="outlined"
-											size="large"
-											style={{
-												flexGrow: '1',
-												border: 'none',
-												color: 'inherit',
-												margin: '4px 8px',
-												padding: (hasInputField ? '16px 8px 16px 16px' : '16px 8px'),
-												justifyContent: (hasInputField ? 'flex-start' : 'center'),
-												boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.divider}`,
-											}}
-										>
-											{
-												!!possibleAnswer.icon
-												? (<div className="material-icons-round" style={{
-													marginRight: '8px',
-												}}>{possibleAnswer.icon}</div>)
-												: null
-											}
-											{possibleAnswer.title[0].text}
-										</Button>
-									)*/
 								}
 							}
 						}))
@@ -476,6 +473,215 @@ class Questions extends React.Component {
 		)
 	}
 
+	abort(){
+		if (this.props.onAbort) {
+			this.props.onAbort()
+		}
+	}
+	acceptPrivacyPolicy(){
+		this.props.cookies.set('accepted_privacy_policy', 'yes', window.cookieOptions)
+		this.props.cookies.set('uuid', uuidv4(), window.cookieOptions)
+
+		this.showQuestions()
+	}
+	showQuestions(){
+		this.setState({stageIndex:1})
+	}
+	addSources(){
+		this.setState({stageIndex:2})
+	}
+	finish(){
+		const sources = this.sourcesText
+
+		if (this.answerIDs.size > 0 && sources !== '') {
+			window.graphql.mutate({
+				mutation: mutation_addSources,
+				variables: {
+					properties: {
+						forIDs: [...this.answerIDs],
+						sources: sources,
+						dataset: 'qiekub_manual_submisions',
+					}
+				}
+			})
+			.then(result=>{
+				console.log('mutation_addSources-result', result.data.addSources)
+				this.compilePlace(this.props.doc._id)
+			})
+			.catch(error=>{
+				console.error('mutation_addSources-error', error)
+				this.compilePlace(this.props.doc._id)
+			})
+			// TODO can I use .finally() ?
+		}else{
+			this.compilePlace(this.props.doc._id)
+		}
+
+		if (this.props.onFinish) {
+			this.props.onFinish()
+		}
+	}
+	compilePlace(docID){
+		window.graphql.mutate({
+			mutation: mutation_compilePlace,
+			variables: {
+				_id: docID
+			}
+		})
+	}
+
+	saveSourcesText(event){
+		this.sourcesText = event.target.value
+		console.log('this.sourcesText', this.sourcesText)
+	}
+
+	renderStage(){
+		const {stageIndex} = this.state
+
+		if (stageIndex === 0) { // privacy
+			return (<div style={{padding: '16px'}}>
+				<Typography variant="h6" gutterBottom>
+					<Localized id="headings_privacy_stage" />
+				</Typography>
+
+				<Typography variant="body1" gutterBottom>
+					<Localized
+						id="privacy_info"
+						elems={{
+							privacy_policy_link: <Link target="_blank" href="https://www.qiekub.com/datenschutz.html"></Link>,
+						}}
+					></Localized>
+				</Typography>
+	
+				<div style={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					margin: '32px 0 64px 0'
+				}}>
+					<Fab
+						onClick={this.abort}
+						variant="extended"
+						size="large"
+						style={{
+							boxShadow: 'none',
+						}}
+					>
+						<ArrowBackIcon style={{marginRight:'8px'}}/>
+						<Localized id="abort" />
+					</Fab>
+					<Fab
+						onClick={this.acceptPrivacyPolicy}
+						variant="extended"
+						size="large"
+						color="secondary"
+					>
+						<Localized id="agree" />
+						<ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+					</Fab>
+				</div>
+			</div>)
+		} else if (stageIndex === 1) { // questions
+			if (!this.state.questionsAreLoaded) {
+				return (<div style={{margin:'16px'}}>
+					<Typography variant="h6" gutterBottom>
+						<Localized id="headings_questions_stage" />
+					</Typography>
+
+					<Typography variant="body1" style={{margin:'0 0 32px 0'}}>
+						<Localized id="questions_are_loading" />
+					</Typography>
+	
+					<Fab
+						onClick={this.abort}
+						variant="extended"
+						size="large"
+						color="secondary"
+					>
+						<ArrowBackIcon style={{marginRight:'8px'}}/>
+						<Localized id="abort" />
+					</Fab>
+				</div>)
+			} else if (!!this.state.questionsById && Object.keys(this.state.questionsById).length > 0) {
+				return (<>
+					<Typography variant="h6" gutterBottom style={{margin:'16px 16px 32px 16px'}}>
+						<Localized id="headings_questions_stage" />
+					</Typography>
+
+					{[
+						...this.props.startQuestions,
+						...this.state.nextQuestionIDs,
+					].map(questionID => this.renderQuestion(questionID))}
+	
+					<div style={{
+						textAlign: 'right',
+						margin: '32px 16px 64px 16px'
+					}}>
+						<Fab
+							onClick={this.addSources}
+							variant="extended"
+							size="large"
+							color="secondary"
+						>
+							<Localized id="next" />
+							<ArrowForwardIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+						</Fab>
+					</div>
+				</>)
+			}
+		} else if (stageIndex === 2) { // sources
+			return (<div style={{padding: '16px'}}>
+				<Typography variant="h6" gutterBottom>
+					<Localized id="headings_sources_stage" />
+				</Typography>
+
+				<Typography variant="body1" gutterBottom>
+					<Localized id="sources_info" />
+				</Typography>
+
+				<TextField
+					style={{marginTop: '16px'}}
+					variant="outlined"
+					color="secondary"
+					fullWidth
+					multiline
+					rows={3}
+					autoFocus={false}
+					placeholder={this.props.getString('sources_placeholder')}
+					onChange={this.saveSourcesText}
+				/>
+	
+					<div style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						margin: '32px 0 64px 0'
+					}}>
+						<Fab
+							onClick={this.showQuestions}
+							variant="extended"
+							size="large"
+							style={{
+								boxShadow: 'none',
+							}}
+						>
+							<ArrowBackIcon style={{marginRight:'8px'}}/>
+							<Localized id="back" />
+						</Fab>
+						<Fab
+							onClick={this.finish}
+							variant="extended"
+							size="large"
+							color="secondary"
+						>
+							<Localized id="finish" />
+							<DoneIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+						</Fab>
+					</div>
+			</div>)
+		}
+
+		return null
+	}
+
 	render() {
 		const doc = this.props.doc
 
@@ -486,77 +692,9 @@ class Questions extends React.Component {
 			return null
 		}
 
-		if (!this.state.questionsAreLoaded) {
-			return (<div style={{textAlign:'center', margin:'16px'}}>
-				<Typography variant="body1" style={{margin:'0 0 32px 0'}}>
-					<Localized id="questions_are_loading" />
-				</Typography>
-
-				<Fab
-					variant="extended"
-					onClick={this.finish}
-					size="large"
-					color="secondary"
-					style={{
-						// color: 'white',
-						// background: 'black',
-						borderRadius: '999px',
-						padding: '8px 16px',
-					}}
-				>
-					<Localized id="stop_loading" />
-				</Fab>
-			</div>)
-		} else if (!!this.state.questionsById && Object.keys(this.state.questionsById).length > 0) {
-			return (<>
-				<div className="questionsList">
-					{[
-						...this.props.startQuestions,
-						...this.state.nextQuestionIDs,
-					].map(questionID => this.renderQuestion(questionID))}
-				</div>
-
-				<div style={{textAlign:'left', margin:'32px 16px 64px 16px'}}>
-					<Fab
-						variant="extended"
-						onClick={this.finish}
-						size="large"
-						color="secondary"
-						style={{
-							// color: 'white',
-							// background: 'black',
-							borderRadius: '999px',
-							padding: '8px 16px',
-						}}
-					>
-						<ArrowBackIcon style={{color:'var(--light-green)',marginRight:'8px'}}/>
-						<Localized id="back_to_viewing" />
-					</Fab>
-				</div>
-			</>)
-		}
-		/*else{
-			return (<div style={{textAlign:'center', margin:'16px'}}>
-				<Typography variant="body1" style={{margin:'0 0 32px 0'}}>Du hast alle Fragen beantwortet!<br />Vielen Dank!!!</Typography>
-
-				<Fab
-					variant="extended"
-					onClick={this.finish}
-					size="large"
-					color="secondary"
-					style={{
-						// color: 'white',
-						// background: 'black',
-						borderRadius: '999px',
-						padding: '8px 16px',
-					}}
-				>
-					<DoneIcon style={{color:'var(--light-green)',marginRight:'8px'}}/> Fertig
-				</Fab>
-			</div>)
-		}*/
+		return this.renderStage()
 	}
 }
 
-export default withTheme(Questions)
+export default withCookies(withLocalization(withTheme(Questions)))
 
