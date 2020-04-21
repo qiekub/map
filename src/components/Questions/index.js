@@ -397,6 +397,7 @@ class Questions extends React.Component {
 												justifyContent: (isMultiRow ? 'flex-start' : 'center'),
 												textAlign: (isMultiRow ? 'inherit' : 'center'),
 												boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.divider}`,
+												// boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.background.default}`,
 												width: 'auto',
 												borderRadius: `${this.props.theme.shape.borderRadius}px`,
 											}}
@@ -464,6 +465,7 @@ class Questions extends React.Component {
 						style={{
 							border: 'none',
 							boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.divider}`,
+							// boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.background.default}`,
 							// boxShadow: 'rgba(0, 0, 0, 0.04) 0px 0px 0px 999px inset',
 							color: 'inherit',
 							margin: '0',
