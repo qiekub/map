@@ -438,7 +438,6 @@ export default class App extends React.Component {
 					onSetView={this.setView}
 					onFlyTo={this.flyTo}
 					onGetZoom={this.getZoom}
-					onFunctions={(...attr)=>{this.saveFunctions('Sidebar',...attr)}}
 				/>
 			</Router>
 			
