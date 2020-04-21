@@ -121,6 +121,7 @@ export default class App extends React.Component {
 
 			this.matcher_small_screen = window.matchMedia('(min-width: 800px)')
 			this.matcher_small_screen.addListener(this.check_small_screen)
+			this.check_small_screen(this.matcher_small_screen)
 		}else{
 			this.setTheme(false)
 		}
