@@ -429,15 +429,19 @@ export default class App extends React.Component {
 				Mapbox, OSM, Overpass, GitHub, Firebase
 			</Card>*/}
 
-			<Fab
-				variant="extended"
-				color="secondary"
-				className="addNewFab"
-				onClick={this.addPlace}
-			>
-				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
-				<Localized id="add-place-fab" />
-			</Fab>
+			{
+				this.state.isSmallScreen
+				? undefined
+				: (<Fab
+					variant="extended"
+					color="secondary"
+					className="addNewFab"
+					onClick={()=>navigate('/add/')}
+				>
+					<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
+					<Localized id="add-place-fab" />
+				</Fab>)
+			}
 
 			<div className="filtersPanel">
 				<FiltersPanelContent onChange={this.filtersChanged}/>
