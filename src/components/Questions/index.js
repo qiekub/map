@@ -284,6 +284,11 @@ class Questions extends React.Component {
 		}
 
 		const location = this.props.doc.properties.geometry.location
+		const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
+
+		if (window.isSmallScreen && hasGeoInputField) {
+			return null
+		}
 
 		const hasInputField = questionDoc.properties.possibleAnswers.reduce((bool,possibleAnswer)=>{
 			return (
