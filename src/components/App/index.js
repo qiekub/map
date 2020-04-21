@@ -118,8 +118,8 @@ export default class App extends React.Component {
 			// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
 
 			this.matcher_color_scheme = window.matchMedia('(prefers-color-scheme: dark)')
-			this.check_color_scheme(this.matcher_color_scheme)
 			this.matcher_color_scheme.addListener(this.check_color_scheme)
+			this.check_color_scheme(this.matcher_color_scheme)
 
 			this.matcher_small_screen = window.matchMedia('(min-width: 800px)')
 			this.matcher_small_screen.addListener(this.check_small_screen)
