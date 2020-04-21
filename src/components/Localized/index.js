@@ -4,9 +4,17 @@ import {
 	withLocalization
 } from '@fluent/react'
 
-const Localized = props => (<LocalizedOriginal {...props}>
-	<React.Fragment>{props.children}</React.Fragment>
-</LocalizedOriginal>)
+const Localized = props => (
+	<LocalizedOriginal
+		{...props}
+		elems={{
+			br: <br />,
+			...props.elems,
+		}}
+	>
+		<React.Fragment>{props.children}</React.Fragment>
+	</LocalizedOriginal>
+)
 
 export {
 	withLocalization,
