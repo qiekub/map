@@ -428,7 +428,7 @@ export default class App extends React.Component {
 
 			<Router primary={false}>
 				<Sidebar
-					path="/place/:docID"
+					path="/:action/*docID"
 					
 					className="Sidebar"
 
