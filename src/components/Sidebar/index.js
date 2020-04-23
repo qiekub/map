@@ -598,7 +598,7 @@ class Sidebar extends React.Component {
 			{age_range_text === '' ? null : <Typography variant="body2" component="p">{age_range_text}</Typography>}
 		*/
 
-		return (<React.Fragment key="viewing">
+		return (<React.Fragment key="view">
 				<CardContent>
 					{
 						age_range_text === ''
@@ -718,7 +718,7 @@ class Sidebar extends React.Component {
 				style={{
 					backgroundColor: headerBackgroundColor,
 					// background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
-					// 	this.state.page === 'viewing'
+					// 	this.state.page === 'view'
 					// 	? this.props.theme.palette.background.paper
 					// 	: this.props.theme.palette.background.default
 					// } 50%)`,
@@ -771,14 +771,14 @@ class Sidebar extends React.Component {
 				className="sidebarContentCard"
 				style={{
 					backgroundColor: (
-						this.state.page === 'viewing'
+						this.state.page === 'view'
 						? this.props.theme.palette.background.paper
 						: this.props.theme.palette.background.default
 					),
 				}}
 			>
 				{
-					this.state.page === 'viewing'
+					this.state.page === 'view'
 					? this.renderView(doc)
 					: this.renderQuestions(doc)
 				}
