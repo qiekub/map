@@ -134,6 +134,12 @@ export const addSources = gql`
 	}
 `
 
+export const addChangeset = gql`
+	mutation($properties: Changeset_Input){
+		addChangeset(properties: $properties)
+	}
+`
+
 export const compilePlace = gql`
 	mutation($_id: ID){
 		compilePlace(_id: $_id)
