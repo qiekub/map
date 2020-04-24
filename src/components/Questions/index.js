@@ -94,6 +94,12 @@ class Questions extends React.Component {
 			this.setState({stageIndex: 1})
 		}
 
+		this.setState((state, props) => {
+			if (this.state.nextQuestionIDs.length === 0 && this.props.startQuestions.length > 0) {
+				return {nextQuestionIDs: this.props.startQuestions}
+			}
+		})
+
 		this.loadQuestions()
 	}
 
@@ -223,7 +229,6 @@ class Questions extends React.Component {
 		this.setState((state, props) => { // start this while mutating
 			let questionsById = state.questionsById
 
-
 			let nextQuestionIDs = [
 				...props.startQuestions,
 				...state.nextQuestionIDs,
@@ -233,18 +238,23 @@ class Questions extends React.Component {
 			if (questionGotAnswered) {
 				questionsById[questionID].answered = true
 
+				const currentQuestionPos = nextQuestionIDs.indexOf(questionID)
+				const nextQuestionIDs_start_part = nextQuestionIDs.slice(0, currentQuestionPos+1)
+				const nextQuestionIDs_end_part = nextQuestionIDs.slice(currentQuestionPos)
+
 				const allKeys = Object.keys(answerValue)
+				const newQuestionIDs = questionsById[questionID].properties.possibleAnswers
+				.filter(answer => allKeys.includes(answer.key))
+				.map(answer => answer.followUpQuestionIDs || [])
+				.reduce((result,followUpQuestionIDs) => {
+					return [...result, ...followUpQuestionIDs]
+				}, [])
+				.filter(questionID => !nextQuestionIDs_start_part.includes(questionID))
+				
 				nextQuestionIDs = [...new Set([
-					...nextQuestionIDs,
-					...(
-						questionsById[questionID].properties.possibleAnswers
-						.filter(answer => allKeys.includes(answer.key))
-						.map(answer => answer.followUpQuestionIDs || [])
-						.reduce((result,followUpQuestionIDs) => {
-							return [...result, ...followUpQuestionIDs]
-						}, [])
-						.filter(questionID => !nextQuestionIDs.includes(questionID))
-					)
+					...nextQuestionIDs_start_part,
+					...newQuestionIDs,
+					...nextQuestionIDs_end_part.filter(questionID => !newQuestionIDs.includes(questionID))
 				])]
 			}
 
@@ -257,8 +267,6 @@ class Questions extends React.Component {
 					}
 				}
 			}
-
-			nextQuestionIDs = nextQuestionIDs.filter(id => !props.startQuestions.includes(id))
 
 			if (questionGotAnswered) {
 				return {
@@ -629,10 +637,7 @@ class Questions extends React.Component {
 						<Localized id="headings_questions_stage" />
 					</Typography>
 
-					{[
-						...this.props.startQuestions,
-						...this.state.nextQuestionIDs,
-					].map(questionID => this.renderQuestion(questionID))}
+					{this.state.nextQuestionIDs.map(questionID => this.renderQuestion(questionID))}
 	
 					<div style={{
 						textAlign: 'right',
