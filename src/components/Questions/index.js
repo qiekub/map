@@ -670,7 +670,6 @@ class Questions extends React.Component {
 					color="secondary"
 					fullWidth
 					multiline
-					rows={3}
 					autoFocus={false}
 					placeholder={this.props.getString('sources_placeholder')}
 					onChange={this.saveSourcesText}
