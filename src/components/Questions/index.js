@@ -88,7 +88,7 @@ class Questions extends React.Component {
 	}
 
 	componentDidMount(){
-		// skip privacy cosent screen when already agreed
+		// skip privacy consent screen when already agreed		
 		const accepted_privacy_policy = this.props.cookies.get('accepted_privacy_policy')
 		if (accepted_privacy_policy === 'yes') {
 			this.setState({stageIndex: 1})
