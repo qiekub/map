@@ -242,7 +242,11 @@ class Sidebar extends React.Component {
 						if (doc.properties.geometry) {
 							if (new Date()*1 - window.pageOpenTS*1 < 2000) {
 								window.mainMapFunctions.setView(
-									[doc.properties.geometry.location.lat, doc.properties.geometry.location.lng],
+									(
+										window.isSmallScreen
+										? doc.properties.geometry.location
+										: window.mainMapFunctions.unproject(window.mainMapFunctions.project(doc.properties.geometry.location).add([200,0])) // add sidebar offset
+									),
 									zoomLevel
 								)
 							// }else{
