@@ -42,6 +42,7 @@ import {
 import { withTheme } from '@material-ui/core/styles'
 
 import GeoInput from '../GeoInput/'
+import PresetInput from '../PresetInput/'
 
 
 
@@ -388,6 +389,19 @@ class Questions extends React.Component {
 								possibleAnswer.inputtype = possibleAnswer.inputtype || ''
 								if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput
+										key={possibleAnswerKey}
+										marker={{
+											center: location,
+											zoom: 18,
+										}}
+										doc={this.props.doc}
+										onChange={(newValue)=>this.saveGeoValue(questionDoc._id, newValue)}
+										style={{
+											margin: '4px 8px',
+										}}
+									/>)
+								}else if (possibleAnswer.inputtype === 'preset') {
+									return (<PresetInput
 										key={possibleAnswerKey}
 										marker={{
 											center: location,
