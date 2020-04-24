@@ -9,13 +9,11 @@ import { Localized, withLocalization } from '../Localized/'
 
 import {
 	loadQuestions as query_loadQuestions,
-	answerQuestion as mutation_answerQuestion,
-	addSources as mutation_addSources,
-	compilePlace as mutation_compilePlace,
+	addChangeset as mutation_addChangeset,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
-// import presets from '../../data/dist/presets.json'
+import _presets_ from '../../data/dist/presets.json'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { uuidv4/*, getPreset, getColorByPreset*/ } from '../../functions.js'
@@ -66,8 +64,9 @@ class Questions extends React.Component {
 			stageIndex: 0, // 0=privacy -> 1=questions -> 2=sources
 		}
 
-		this.answerIDs = new Set()
+		// this.answerIDs = new Set()
 		this.sourcesText = ''
+		this.answer_tags = {}
 
 		this.inputValues = {}
 
@@ -163,6 +162,47 @@ class Questions extends React.Component {
 		})
 	}
 
+	answer2tags(questionID, answerKey, answerValue, tags = {}){
+		const question_doc = this.state.questionsById[questionID]
+
+		if (!!question_doc && !!question_doc.properties && !!question_doc.properties.possibleAnswers) {
+			for (const answer of question_doc.properties.possibleAnswers) {
+				if (
+					!!answer.tags
+					&& typeof answer.tags === "object"
+					&& answer.key === answerKey
+					&& Object.keys(answer.tags).length > 0
+				) {
+					if (typeof answerValue === "boolean") {
+						if (answerValue === true) {
+							tags = { ...tags, ...answer.tags }
+						}
+					// } else if (typeof doc.answerValue === "object") {
+					// 	for (const key in answer.tags) {
+					// 		if (doc.answerValue[key]) {
+					// 			tags[key] = doc.answerValue[key]
+					// 		}
+					// 	}
+					} else {
+						for (const key in answer.tags) {
+							tags[key] = answerValue
+						}
+					}
+
+					// add tags from the preset:
+					if (tags.preset && typeof tags.preset === 'string' && _presets_[tags.preset] && _presets_[tags.preset].tags) {
+						tags = {
+							..._presets_[tags.preset].tags,
+							...tags,
+						}
+					}
+				}
+			}
+		}
+
+		return tags
+	}
+
 	answerQuestion(questionID, answerValue){
 		let questionGotAnswered = false
 		if (Object.keys(answerValue).length > 0) {
@@ -170,21 +210,14 @@ class Questions extends React.Component {
 		}
 
 		if (questionGotAnswered) {
-			window.graphql.mutate({
-				mutation: mutation_answerQuestion,
-				variables: {
-					properties: {
-						forID: this.props.doc._id,
-						questionID: questionID,
-						answer: answerValue,
-					}
-				}
-			}).then(result=>{
-				console.log('mutate-result', result.data.answerQuestion)
-				this.answerIDs.add(result.data.answerQuestion)
-			}).catch(error=>{
-				console.error('mutate-error', error)
-			})
+			// TODO: add parsers
+
+			this.answer_tags = {
+				...this.answer_tags,
+				...(Object.entries(answerValue).reduce((tags,entry) => {
+					return this.answer2tags(questionID, entry[0], entry[1], tags)
+				}, {}))
+			}
 		}
 
 		this.setState((state, props) => { // start this while mutating
@@ -491,45 +524,32 @@ class Questions extends React.Component {
 		this.setState({stageIndex:2})
 	}
 	finish(){
-		const sources = this.sourcesText
-
-		if (this.answerIDs.size > 0) {
-			if (sources !== '') {
-				window.graphql.mutate({
-					mutation: mutation_addSources,
-					variables: {
-						properties: {
-							forIDs: [...this.answerIDs],
-							sources: sources,
-							dataset: 'qiekub_manual_submisions',
-						}
+		console.log('finish-this.answer_tags', this.answer_tags)
+		if (Object.keys(this.answer_tags).length > 0) {
+			window.graphql.mutate({
+				mutation: mutation_addChangeset,
+				variables: {
+					properties: {
+						forID: this.props.doc._id,
+						tags: this.answer_tags,
+						sources: this.sourcesText || '',
+						fromBot: false,
+						dataset: 'qiekub',
+						antiSpamUserIdentifier: this.props.cookies.get('uuid') || '',
 					}
-				})
-				.then(result=>{
-					console.log('mutation_addSources-result', result.data.addSources)
-					this.compilePlace(this.props.doc._id)
-				})
-				.catch(error=>{
-					console.error('mutation_addSources-error', error)
-					this.compilePlace(this.props.doc._id)
-				})
-				// TODO can I use .finally() ?
-			}else{
-				this.compilePlace(this.props.doc._id)
-			}
+				}
+			})
+			.then(result=>{
+				console.log('mutation_addChangeset-result', result.data.addChangeset)
+			})
+			.catch(error=>{
+				console.error('mutation_addChangeset-error', error)
+			})
 		}
 
 		if (this.props.onFinish) {
 			this.props.onFinish()
 		}
-	}
-	compilePlace(docID){
-		window.graphql.mutate({
-			mutation: mutation_compilePlace,
-			variables: {
-				_id: docID
-			}
-		})
 	}
 
 	saveSourcesText(event){
