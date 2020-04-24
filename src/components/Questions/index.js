@@ -562,7 +562,6 @@ class Questions extends React.Component {
 
 	saveSourcesText(event){
 		this.sourcesText = event.target.value
-		console.log('this.sourcesText', this.sourcesText)
 	}
 
 	renderStage(){
