@@ -229,11 +229,7 @@ class Questions extends React.Component {
 
 		this.setState((state, props) => { // start this while mutating
 			let questionsById = state.questionsById
-
-			let nextQuestionIDs = [
-				...props.startQuestions,
-				...state.nextQuestionIDs,
-			]
+			let nextQuestionIDs = state.nextQuestionIDs
 
 			questionsById[questionID].active = false
 			if (questionGotAnswered) {
@@ -271,8 +267,8 @@ class Questions extends React.Component {
 
 			if (questionGotAnswered) {
 				return {
-					nextQuestionIDs: nextQuestionIDs,
-					questionsById: questionsById,
+					nextQuestionIDs,
+					questionsById,
 					answersByQuestionId: {
 						...state.answersByQuestionId,
 						[questionID]: answerValue,
@@ -280,8 +276,8 @@ class Questions extends React.Component {
 				}
 			}else{
 				return {
-					nextQuestionIDs: nextQuestionIDs,
-					questionsById: questionsById,
+					nextQuestionIDs,
+					questionsById,
 				}
 			}
 		})
