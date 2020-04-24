@@ -95,6 +95,7 @@ export const loadQuestions = gql`
 					}
 					possibleAnswers {
 						inputtype
+						parsers
 						key
 						icon
 						title (languages: $languages){
