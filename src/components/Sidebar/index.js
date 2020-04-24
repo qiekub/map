@@ -266,7 +266,7 @@ class Sidebar extends React.Component {
 							const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
 							if (asPixel.x < 400) {
 								window.mainMapFunctions.panTo(
-									window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // map center with sidebar offset
+									window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
 								)
 							}
 						}
