@@ -22,7 +22,6 @@ export const loadPlace = gql`
 							lat
 						}
 					}
-					osmID
 					tags(keys: $wantedTags)
 					confidences(keys: $wantedTags)
 				}
