@@ -393,7 +393,7 @@ class Questions extends React.Component {
 											zoom: 18,
 										}}
 										doc={this.props.doc}
-										onChange={(newValue)=>this.saveGeoValue(questionDoc._id, newValue)}
+										onChange={newValue=>this.saveGeoValue(questionDoc._id, newValue)}
 										style={{
 											margin: '4px 8px',
 										}}
@@ -420,7 +420,7 @@ class Questions extends React.Component {
 										multiline
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
-										onChange={(event)=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
+										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
 											margin: '4px 8px',
 										}}
@@ -433,7 +433,7 @@ class Questions extends React.Component {
 										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
-										onChange={(event)=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
+										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
 											margin: '4px 8px',
 										}}
