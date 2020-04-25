@@ -54,7 +54,6 @@ class MainDrawerContent extends React.Component {
 	}
 
 	render() {
-		console.log('this.props.theme.palette', this.props.theme.palette)
 		return (<>
 			<List>
 				<ListItemLink target="_blank" href="https://www.qiekub.com/impressum.html">
