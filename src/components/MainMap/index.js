@@ -203,16 +203,19 @@ class MainMap extends React.Component {
 				const clusterBounds = this.clusterGroup.Cluster.ComputeBounds(markersArea)
 		
 				if (clusterBounds) {
-					const bounds = new L.LatLngBounds(
-						new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng),
-						new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
-					)
+					const corner1 = new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng)
+					const corner2 = new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
+					const bounds = new L.LatLngBounds(corner1, corner2)
+					const distance = corner1.distanceTo(corner2)
 		
 					const zoomLevelBefore = this.clusterGroup._map.getZoom()
 					const zoomLevelAfter = this.clusterGroup._map.getBoundsZoom(bounds, false, new L.Point(20, 20, null))
 		
 					// If the zoom level doesn't change
-					if (zoomLevelAfter === zoomLevelBefore) {
+					if (
+						distance < 3 // if distance is less than 3 meters
+						|| zoomLevelAfter === zoomLevelBefore // or if the zoom level would't change
+					) {
 						// Send an event for the LeafletSpiderfier
 						this.clusterGroup._map.fire('overlappingmarkers', {
 							cluster: this.clusterGroup,
@@ -221,12 +224,12 @@ class MainMap extends React.Component {
 							marker: marker,
 						})
 		
-						this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
-							animate: true,
-							duration: 0.75,
-							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
-							paddingbottomRight: [0, 0]
-						})
+						// this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
+						// 	animate: true,
+						// 	duration: 0.75,
+						// 	paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
+						// 	paddingbottomRight: [0, 0]
+						// })
 					}else{
 						this.clusterGroup._map.flyToBounds(bounds, {
 							animate: true,
