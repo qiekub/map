@@ -156,6 +156,14 @@ const categories = [
 	},
 ]
 
+
+// 'healthcare',
+// 'amenity/dentist',
+// 'leisure/fitness_centre/yoga',
+// 'leisure/pitch/volleyball',
+// 'amenity/place_of_worship/taoist'
+
+
 const colors = {
 	default: {
 		prideFlageMeaning: '',
