@@ -651,7 +651,9 @@ class Questions extends React.Component {
 						<Localized id="headings_questions_stage" />
 					</Typography>
 
-					{this.state.nextQuestionIDs.map(questionID => this.renderQuestion(questionID))}
+					<React.Fragment key="questions">
+						{this.state.nextQuestionIDs.map(questionID => this.renderQuestion(questionID))}
+					</React.Fragment>
 	
 					<div style={{
 						textAlign: 'right',
