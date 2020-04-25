@@ -306,7 +306,7 @@ class Sidebar extends React.Component {
 		this.setState({
 			doc: emptyDoc,
 			page: 'edit',
-			headerText: 'Add a new place'
+			headerText: this.props.getString('add_new_place_header_text'),
 		}, ()=>{
 			this.props.onSetSidebarIsOpen(true)
 			this.props.onSetSearchBarValue(this.state.headerText)
@@ -553,7 +553,7 @@ class Sidebar extends React.Component {
 			links.push({
 				type: 'yelp',
 				href: link_tags.yelp,
-				text: 'View on Yelp',
+				text: 'View on Yelp', // TODO: translate
 			})
 		}
 
@@ -561,7 +561,7 @@ class Sidebar extends React.Component {
 			links.push({
 				type: 'osm',
 				href: 'https://openstreetmap.org/'+properties.osmID,
-				text: 'View on OpenStreetMap',
+				text: 'View on OpenStreetMap', // TODO: translate
 			})
 		}
 
@@ -609,7 +609,8 @@ class Sidebar extends React.Component {
 					{
 						age_range_text === ''
 						? null
-						: (
+						: // TODO: Translate
+						(
 							<List dense>
 								<ListItem>
 									<ListItemIcon><CheckIcon /></ListItemIcon>
