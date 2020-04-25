@@ -480,8 +480,8 @@ class Questions extends React.Component {
 												: undefined
 											}
 											<ListItemText
-												primary={window.getTranslation(possibleAnswer.title)}
-												secondary={window.getTranslation(possibleAnswer.description)}
+												primary={getTranslationFromArray(possibleAnswer.title, this.props.globals.userLocales)}
+												secondary={getTranslationFromArray(possibleAnswer.description, this.props.globals.userLocales)}
 											/>
 										</ListItem>
 									)
