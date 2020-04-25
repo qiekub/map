@@ -212,8 +212,6 @@ class Sidebar extends React.Component {
 					wantedTags: this.wantedTagsList,
 				},
 			}).then(async result=>{
-				console.log('loadAndViewDoc-result', result)
-
 				if (!!result && !!result.data && !!result.data.getPlace) {
 					const doc = result.data.getPlace
 
@@ -439,8 +437,6 @@ class Sidebar extends React.Component {
 	}*/
 
 	renderView(doc){
-		console.log('renderView-doc', doc)
-
 		const properties = doc.properties
 		const tags = properties.tags
 
