@@ -130,7 +130,12 @@ class FiltersPanelContent extends React.Component {
 							}}
 							className="menuBlurredPaperBackground"
 						>
-							<MenuItem value="" onClick={()=>this.setValue('category', null,popupState.close)}>
+							<MenuItem
+								key="everything"
+								value=""
+								onClick={()=>this.setValue('category', null, popupState.close)}
+								selected={!(!!this.state.category)}
+							>
 								<div className="filterMenuDot" style={{background:'transparent'}}></div>
 								<Localized id="show-everything" />
 							</MenuItem>
