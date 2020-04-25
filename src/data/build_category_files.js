@@ -18,7 +18,10 @@ const supported_langs = ['en','de'] // ,'es','fr'
 const categories = [
 	// This is not used in the backend. It's here as a reference for the frontend. Copy it to where it's needed.
 	{
-		name: 'Community Centers',
+		name: {
+			en: 'Community Centers',
+			de: 'Gemeinde Zentren',
+		},
 		presets: [
 			'amenity/community_centre',
 			'amenity/social_facility',
@@ -36,7 +39,9 @@ const categories = [
 		},
 	},
 	{
-		name: 'Going Out',
+		name: {
+			en: 'Going Out',
+		},
 		presets: [
 			'amenity/bar',
 			'amenity/pub',
@@ -55,7 +60,10 @@ const categories = [
 		},
 	},
 	{
-		name: 'Culture',
+		name: {
+			en: 'Culture',
+			de: 'Kultur',
+		},
 		presets: [
 			'tourism/museum',
 			'amenity/theatre',
@@ -75,7 +83,10 @@ const categories = [
 		},
 	},
 	{
-		name: 'Eating',
+		name: {
+			en: 'Eating',
+			de: 'Essen',
+		},
 		presets: [
 			'amenity/cafe',
 			'amenity/restaurant',
@@ -90,7 +101,10 @@ const categories = [
 		},
 	},
 	{
-		name: 'Fun', // "Fun"
+		name: {
+			en: 'Fun', // "Fun"
+			de: 'Fun',
+		},
 		presets: [
 			'shop/erotic',
 			'amenity/swingerclub',
@@ -110,7 +124,10 @@ const categories = [
 		},
 	},
 	{
-		name: 'Tourism',
+		name: {
+			en: 'Tourism',
+			de: 'Tourismus',
+		},
 		presets: [
 			'tourism/hotel',
 			'tourism/hostel',
