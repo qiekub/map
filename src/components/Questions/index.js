@@ -18,6 +18,8 @@ import _presets_ from '../../data/dist/presets.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { uuidv4/*, getPreset, getColorByPreset*/ } from '../../functions.js'
 
+import { withGlobals } from '../Globals/'
+
 import {
 	Link,
 	Typography,
@@ -105,7 +107,7 @@ class Questions extends React.Component {
 	}
 
 	loadQuestions(){
-		window.graphql.query({
+		this.props.globals.graphql.query({
 			query: query_loadQuestions,
 			variables: {
 				languages: navigator.languages,
@@ -122,7 +124,7 @@ class Questions extends React.Component {
 
 				const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
 
-				if (window.isSmallScreen && hasGeoInputField) {
+				if (this.props.globals.isSmallScreen && hasGeoInputField) {
 					firstOpenQuestionCounter += 1
 				}
 
@@ -326,7 +328,7 @@ class Questions extends React.Component {
 
 		const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
 
-		if (window.isSmallScreen && hasGeoInputField) {
+		if (this.props.globals.isSmallScreen && hasGeoInputField) {
 			return null
 		}
 
@@ -530,8 +532,8 @@ class Questions extends React.Component {
 		}
 	}
 	acceptPrivacyPolicy(){
-		this.props.cookies.set('accepted_privacy_policy', 'yes', window.cookieOptions)
-		this.props.cookies.set('uuid', uuidv4(), window.cookieOptions)
+		this.props.cookies.set('accepted_privacy_policy', 'yes', this.props.globals.cookieOptions)
+		this.props.cookies.set('uuid', uuidv4(), this.props.globals.cookieOptions)
 
 		this.showQuestions()
 	}
@@ -544,7 +546,7 @@ class Questions extends React.Component {
 	finish(){
 		console.log('finish-this.answer_tags', this.answer_tags)
 		if (Object.keys(this.answer_tags).length > 0) {
-			window.graphql.mutate({
+			this.props.globals.graphql.mutate({
 				mutation: mutation_addChangeset,
 				variables: {
 					properties: {
@@ -731,5 +733,5 @@ class Questions extends React.Component {
 	}
 }
 
-export default withCookies(withLocalization(withTheme(Questions)))
+export default withGlobals(withCookies(withLocalization(withTheme(Questions))))
 

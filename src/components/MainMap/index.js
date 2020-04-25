@@ -16,6 +16,8 @@ import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
+import { withGlobals } from '../Globals/'
+
 // import {} from '@material-ui/core'
 import { withTheme } from '@material-ui/core/styles'
 
@@ -77,7 +79,7 @@ class MainMap extends React.Component {
 
 				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
 			}
-			window.mainMapFunctions = functions
+			this.props.globals.mainMapFunctions = functions
 			this.props.onFunctions(functions)
 		}
 
@@ -94,7 +96,7 @@ class MainMap extends React.Component {
 	}
 
 	setMapPos(event){
-		this.setState({center:window.map_center})
+		this.setState({center:this.props.globals.map_center})
 	}
 
 	useAsGeoChooser(yesOrNo, middleMarkerDoc){
@@ -114,7 +116,7 @@ class MainMap extends React.Component {
 	}
 
 	loadMarkers(){
-		window.graphql.query({
+		this.props.globals.graphql.query({
 			query: query_loadMarkers,
 			variables: {
 				languages: navigator.languages,
@@ -398,12 +400,12 @@ class MainMap extends React.Component {
 
 	viewportChanged(viewport){
 		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-			window.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
+			this.props.globals.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
 		}else{
-			window.map_center = viewport.center
+			this.props.globals.map_center = viewport.center
 		}
 
-		window.map_zoom = viewport.zoom
+		this.props.globals.map_zoom = viewport.zoom
 		window.dispatchEvent(new Event('mapViewportUpdated'))
 	}
 
@@ -521,4 +523,4 @@ class MainMap extends React.Component {
 	}
 }
 
-export default withLocalization(withTheme(MainMap))
+export default withGlobals(withLocalization(withTheme(MainMap)))
