@@ -231,11 +231,16 @@ class MainMap extends React.Component {
 						// 	paddingbottomRight: [0, 0]
 						// })
 					}else{
+						let padding = 128
+						if (this.props.globals.isSmallScreen) {
+							padding = 64
+						}
+
 						this.clusterGroup._map.flyToBounds(bounds, {
 							animate: true,
 							duration: 0.75,
-							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
-							paddingbottomRight: [0, 0]
+							paddingTopLeft: [(this.props.sidebarIsOpen ? 400+padding : padding), padding],
+							paddingBottomRight: [padding, padding]
 						})
 					}
 				}
