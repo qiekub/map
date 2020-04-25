@@ -24,9 +24,8 @@ const categories = [
 		},
 		presets: [
 			'amenity/community_centre',
-			'amenity/social_facility',
 			'amenity/social_centre',
-			'healthcare',
+			'amenity/social_facility',
 		],
 		color: {
 			key: 'purple',
@@ -47,7 +46,7 @@ const categories = [
 			'amenity/pub',
 			'amenity/nightclub',
 			'leisure/dance',
-			'club',
+			// 'club',
 		],
 		color: {
 			key: 'red',
@@ -65,12 +64,14 @@ const categories = [
 			de: 'Kultur',
 		},
 		presets: [
+			'amenity/cinema',
 			'tourism/museum',
 			'amenity/theatre',
 			'amenity/library',
 			'amenity/arts_centre',
 			'tourism/gallery',
 			'historic',
+			'tourism/artwork/statue',
 		],
 		color: {
 			key: 'cyan',
@@ -91,6 +92,7 @@ const categories = [
 			'amenity/cafe',
 			'amenity/restaurant',
 			'amenity/ice_cream',
+			'amenity/marketplace',
 		],
 		color: {
 			key: 'orange',
@@ -133,9 +135,14 @@ const categories = [
 			'tourism/hostel',
 			'tourism/apartment',
 			'tourism/camp_site',
+			'tourism/camp_pitch',
+			'tourism/caravan_site',
+
 			'tourism/picnic_site',
 			'tourism/guest_house',
 			'tourism/information',
+			// 'attraction/train',
+			// 'tourism/theme_park',
 		],
 		color: {
 			key: 'indigo',
