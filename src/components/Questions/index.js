@@ -342,7 +342,7 @@ class Questions extends React.Component {
 
 		const isMultiRow = hasInputField || (questionDoc.properties.possibleAnswers && questionDoc.properties.possibleAnswers.length > 2)
 
-		const questionText = window.getTranslation(questionDoc.properties.question)
+		const questionText = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
 
 		const location = this.props.doc.properties.geometry.location
 
