@@ -463,18 +463,14 @@ class Questions extends React.Component {
 											}}
 										>
 											{
-												isMultiRow
+												isMultiRow && !!possibleAnswer.icon
 												? (
 													<ListItemIcon style={{
 														minWidth: '24px',
 														margin: '6px 16px 0 0',
 														alignSelf: 'flex-start',
 													}}>
-														{
-															!!possibleAnswer.icon
-															? (<div className="material-icons-round">{possibleAnswer.icon}</div>)
-															: <></>
-														}
+														<div className="material-icons-round">{possibleAnswer.icon}</div>
 													</ListItemIcon>
 												)
 												: undefined
