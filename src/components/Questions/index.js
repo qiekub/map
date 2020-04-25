@@ -81,6 +81,7 @@ class Questions extends React.Component {
 
 		this.setQuestionAsActive = this.setQuestionAsActive.bind(this)
 		this.saveGeoValue = this.saveGeoValue.bind(this)
+		this.savePresetValue = this.savePresetValue.bind(this)
 
 		this.abort = this.abort.bind(this)
 		this.acceptPrivacyPolicy = this.acceptPrivacyPolicy.bind(this)
@@ -310,6 +311,9 @@ class Questions extends React.Component {
 		this.saveInputValue(questionID, 'lat', newValue.lat)
 		this.saveInputValue(questionID, 'lng', newValue.lng)
 	}
+	savePresetValue(questionID,newValue){
+		this.saveInputValue(questionID, 'preset', newValue.preset)
+	}
 
 	renderQuestion(questionID){
 		const questionDoc = this.state.questionsById[questionID]
@@ -336,7 +340,8 @@ class Questions extends React.Component {
 			return (
 				possibleAnswer.inputtype === 'text' ||
 				possibleAnswer.inputtype === 'number' ||
-				possibleAnswer.inputtype === 'geo'
+				possibleAnswer.inputtype === 'geo' ||
+				possibleAnswer.inputtype === 'preset'
 			)
 		}).length > 0
 
@@ -402,12 +407,9 @@ class Questions extends React.Component {
 									console.log('preset-defaultValue', possibleAnswerKey, this.getInputValue(questionDoc._id, possibleAnswerKey))
 									return (<PresetInput
 										key={possibleAnswerKey}
-										marker={{
-											center: location,
-											zoom: 18,
-										}}
-										doc={this.props.doc}
-										onChange={(newValue)=>this.saveGeoValue(questionDoc._id, newValue)}
+										label={possibleAnswer.title[0].text}
+										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
+										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
 										style={{
 											margin: '4px 8px',
 										}}
