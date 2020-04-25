@@ -1,3 +1,6 @@
+import { negotiateLanguages } from '@fluent/langneg'
+
+
 export function uuidv4() {
 	// source: https://stackoverflow.com/a/2117523/2387277
 	// source: https://stackoverflow.com/questions/105034/how-to-create-guid-uuid
@@ -6,6 +9,46 @@ export function uuidv4() {
 		(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
 	)
 }
+
+
+
+export function getTranslation(texts, userLocales = []) {
+	// texts = {
+	// 	en: 'hello world'
+	// }
+
+	if (typeof texts === 'object') {
+		const keys = Object.keys(texts)
+		if (keys.length > 0) {
+			const currentLocales = negotiateLanguages(
+				userLocales,
+				keys,
+				{}
+			)
+
+			if (currentLocales.length > 0) {
+				return texts[currentLocales[0]]
+			}
+			return texts[keys[0]]
+		}
+	}
+
+	return ''
+}
+export function getTranslationFromArray(texts_array, ...attrs) {
+	// texts_array = [
+	// 	language: 'en',
+	// 	text: 'hello world',
+	// ]
+
+	const text_object = {}
+	for (const text of texts_array) {
+		text_object[text.language || ''] = text.text
+	}
+
+	return getTranslation(text_object, ...attrs)
+}
+
 
 
 export function getPreset(tags,presets) {

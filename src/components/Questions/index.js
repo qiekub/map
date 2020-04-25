@@ -16,7 +16,7 @@ import {
 import _presets_ from '../../data/dist/presets.json'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { uuidv4/*, getPreset, getColorByPreset*/ } from '../../functions.js'
+import { uuidv4, getTranslationFromArray/*, getPreset, getColorByPreset*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -399,6 +399,7 @@ class Questions extends React.Component {
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
+									console.log('preset-defaultValue', possibleAnswerKey, this.getInputValue(questionDoc._id, possibleAnswerKey))
 									return (<PresetInput
 										key={possibleAnswerKey}
 										marker={{

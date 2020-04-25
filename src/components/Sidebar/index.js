@@ -5,7 +5,7 @@ Wheelchair accessible / Not wheelchair accessible
 import React from 'react'
 import './index.css'
 
-import { Localized } from '../Localized/'
+import { Localized, withLocalization } from '../Localized/'
 
 import { navigate } from '@reach/router'
 import { loadPlace as query_loadPlace } from '../../queries.js'
@@ -18,7 +18,7 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
+import { getTranslation, getTranslationFromArray, getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -228,7 +228,7 @@ class Sidebar extends React.Component {
 							doc.properties &&
 							doc.properties.name &&
 							doc.properties.name.length > 0
-							? doc.properties.name[0].text
+							? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
 							: ''
 						),
 					}, ()=>{
@@ -764,7 +764,7 @@ class Sidebar extends React.Component {
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
 									<div className="material-icons-round" style={{color:headerForegroundColor}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
-								<ListItemText primary={doc.___preset.name.en}/>
+								<ListItemText primary={getTranslation(doc.___preset.name,this.props.globals.userLocales)}/>
 							</ListItem>
 						)
 						: null
