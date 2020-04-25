@@ -487,7 +487,10 @@ const preset_overwrites = {
 		icon: 'hotel',
 	},
 	'tourism/camp_site': {
-		icon: 'fireplace',
+		icon: 'outdoor_grill', // 'fireplace',
+	},
+	'amenity/bbq': {
+		icon: 'outdoor_grill',
 	},
 	'tourism/picnic_site': {
 		icon: 'deck',
