@@ -477,7 +477,7 @@ class MainMap extends React.Component {
 							attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
 							url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
 						/>
@@ -491,7 +491,7 @@ class MainMap extends React.Component {
 							attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
 							url="https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
 						/>
