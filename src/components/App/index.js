@@ -12,6 +12,8 @@ import { search as query_search } from '../../queries.js'
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
 
+import { withGlobals } from '../Globals/'
+
 import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 // import { CssBaseline } from '@material-ui/core'
 
@@ -61,7 +63,7 @@ const defaultTheme = createMuiTheme({
 	},
 })
 
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -133,7 +135,7 @@ export default class App extends React.Component {
 	}
 
 	setTheme(prefersDarkMode){
-		// prefersDarkMode = window.env_local_ip !== '' ? false : prefersDarkMode
+		// prefersDarkMode = this.props.globals.env_local_ip !== '' ? false : prefersDarkMode
 
 		const background_paper = prefersDarkMode ? '#202020' : '#ffffff'
 		const background_default = prefersDarkMode ? '#181818' : '#f9f9f9'
@@ -224,14 +226,14 @@ export default class App extends React.Component {
 	}
 	check_small_screen(event){
 		if (event.matches) {
-			window.isSmallScreen = false
+			this.props.globals.isSmallScreen = false
 		}else{
-			window.isSmallScreen = true
+			this.props.globals.isSmallScreen = true
 		}
 
 		this.setState((state, props) => {
-			if (window.isSmallScreen !== state.isSmallScreen) {
-				return {isSmallScreen: window.isSmallScreen}
+			if (this.props.globals.isSmallScreen !== state.isSmallScreen) {
+				return {isSmallScreen: this.props.globals.isSmallScreen}
 			}
 			return undefined
 		})
@@ -255,7 +257,7 @@ export default class App extends React.Component {
 		// const center = this.functions['MainMap'].getCenter()
 		// const zoom = this.functions['MainMap'].getZoom()
 
-		window.sidebarIsOpen = value
+		this.props.globals.sidebarIsOpen = value
 
 		this.setState({
 			mapIsResizing: true,
@@ -266,7 +268,7 @@ export default class App extends React.Component {
 			}, 300)
 			// this.check_small_screen()
 
-			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
+			// if (new Date()*1 - this.props.globals.pageOpenTS*1 > 2000) {
 			// 	// this.functions['MainMap'].invalidateSize()
 			// 	setTimeout(()=>{
 			// 		// const center2 = this.functions['MainMap'].getCenter()
@@ -278,7 +280,7 @@ export default class App extends React.Component {
 			// 	}, 500)
 			// }
 
-			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+			// if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
 			// 	this.functions['MainMap'].panTo(center, {
 			// 		animate: true,
 			// 		duration: 5,
@@ -295,7 +297,7 @@ export default class App extends React.Component {
 
 	startSearch(queryString,callback){
 		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
-			window.graphql.query({
+			this.props.globals.graphql.query({
 				query: query_search,
 				variables: {
 					// languages: navigator.languages,
@@ -454,3 +456,5 @@ export default class App extends React.Component {
 		</>)
 	}
 }
+
+export default withGlobals(App)

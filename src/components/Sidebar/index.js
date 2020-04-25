@@ -20,6 +20,8 @@ import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
+import { withGlobals } from '../Globals/'
+
 import {
 	Typography,
 	Fab,
@@ -186,7 +188,7 @@ class Sidebar extends React.Component {
 	navigateToUnusedID(){
 		if (!this.isNavigatingToUnusedID) {
 			this.isNavigatingToUnusedID = true
-			window.graphql.query({
+			this.props.globals.graphql.query({
 				query: query_getID,
 				fetchPolicy: 'no-cache',
 			}).then(async result => {
@@ -202,7 +204,7 @@ class Sidebar extends React.Component {
 
 	loadAndViewDoc(docID, callback){
 		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
-			window.graphql.query({
+			this.props.globals.graphql.query({
 				query: query_loadPlace,
 				variables: {
 					languages: navigator.languages,
@@ -234,23 +236,23 @@ class Sidebar extends React.Component {
 							callback()
 						}
 		
-						let zoomLevel = window.mainMapFunctions.getZoom()
+						let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
 						if (zoomLevel < 17) {
 							zoomLevel = 17
 						}
 
 						if (doc.properties.geometry) {
-							if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-								window.mainMapFunctions.setView(
+							if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
+								this.props.globals.mainMapFunctions.setView(
 									(
-										window.isSmallScreen
+										this.props.globals.isSmallScreen
 										? doc.properties.geometry.location
-										: window.mainMapFunctions.unproject(window.mainMapFunctions.project(doc.properties.geometry.location).add([200,0])) // add sidebar offset
+										: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location).add([200,0])) // add sidebar offset
 									),
 									zoomLevel
 								)
 							// }else{
-							// 	window.mainMapFunctions.flyTo(
+							// 	this.props.globals.mainMapFunctions.flyTo(
 							// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
 							// 		zoomLevel,
 							// 		{
@@ -261,12 +263,12 @@ class Sidebar extends React.Component {
 							}
 						}
 
-						if (!window.isSmallScreen) {
+						if (!this.props.globals.isSmallScreen) {
 							const docLocation = doc.properties.geometry.location
-							const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
+							const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
 							if (asPixel.x < 400) {
-								window.mainMapFunctions.panTo(
-									window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+								this.props.globals.mainMapFunctions.panTo(
+									this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
 								)
 							}
 						}
@@ -793,4 +795,4 @@ class Sidebar extends React.Component {
 	}
 }
 
-export default withTheme(Sidebar)
+export default withGlobals(withLocalization(withTheme(Sidebar)))

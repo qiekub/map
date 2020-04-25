@@ -34,6 +34,10 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
 
 import _categories_ from '../../data/dist/categories.json'
 
+import { withGlobals } from '../Globals/'
+
+
+
 class FiltersPanelContent extends React.Component {
 	constructor(props) {
 		super(props)
@@ -249,5 +253,5 @@ class FiltersPanelContent extends React.Component {
 	}
 }
 
-export default withTheme(FiltersPanelContent)
+export default withGlobals(withTheme(FiltersPanelContent))
 
