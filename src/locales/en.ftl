@@ -8,6 +8,7 @@ close-button = close
 
 
 # FiltersPanelContent
+any_age = Any age
 what-to-show = What to show?
 show-everything = Everything
 for-which-age = For which age?
@@ -20,6 +21,10 @@ imprint = Imprint
 privacy_policy = Privacy Policy
 contact = Contact
 github_button = Contribute on Github
+
+
+# MainMap
+improve_this_map = Improve this map
 
 
 # Questions
@@ -50,6 +55,7 @@ search-for-qeerness = Search For Queerness!
 
 # Sidebar
 improve = Improve
+add_new_place_header_text = Add a new place
 
 
 # GeoInput
