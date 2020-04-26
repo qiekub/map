@@ -8,6 +8,7 @@ close-button = close
 
 
 # FiltersPanelContent
+any_age = Any age
 what-to-show = What to show?
 show-everything = Everything
 for-which-age = For which age?
@@ -16,17 +17,36 @@ for-age-x-and-up = For age {$age} and up
 
 
 # MainDrawerContent
-imprint_and_pp = Imprint + Privacy Policy
+imprint = Imprint
+privacy_policy = Privacy Policy
 contact = Contact
 github_button = Contribute on Github
 
 
+# MainMap
+improve_this_map = Improve this map
+
+
 # Questions
-save = Save
+abort = Abort
+agree = Agree
+back = Back
 next = Next
+save = Save
+finish = Finish
 questions_are_loading = The questions are loading…
-stop_loading = Abbort
-back_to_viewing = Finish
+
+headings_privacy_stage = Privacy
+headings_questions_stage = Questions about the place
+headings_sources_stage = Quellen Angaben
+
+privacy_info = 
+    Um qualitativ hochwertige Daten zu gewährleisten, speichern wir einen Cookie und senden ein paar Informationen über Dich an unseren Server. Diese Informationen sind anonym und können nicht auf dich zurück geführt werden.<br />
+    <br />
+    Details dazu findest du in unserer <privacy_policy_link>Datenschutzerklärung</privacy_policy_link>.
+
+sources_info = Gib an woher du die Infos hast.
+sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
 
 
 # SearchBar
@@ -35,6 +55,7 @@ search-for-qeerness = Search For Queerness!
 
 # Sidebar
 improve = Improve
+add_new_place_header_text = Add a new place
 
 
 # GeoInput

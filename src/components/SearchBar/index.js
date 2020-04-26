@@ -177,4 +177,3 @@ class SearchBar extends React.Component {
 export default withLocalization(SearchBar)
 
 
-// <a className="infoLink" rel="noopener noreferrer" href="https://github.com/thomasrosen/queer-centers" target="_blank">Infos / Ort hinzufügen</a>

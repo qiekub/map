@@ -54,11 +54,13 @@ class MainDrawerContent extends React.Component {
 	}
 
 	render() {
-		console.log('this.props.theme.palette', this.props.theme.palette)
 		return (<>
 			<List>
-				<ListItemLink>
-					<ListItemText primary={this.props.getString('imprint_and_pp')} />
+				<ListItemLink target="_blank" href="https://www.qiekub.com/impressum.html">
+					<ListItemText primary={this.props.getString('imprint')} />
+				</ListItemLink>
+				<ListItemLink target="_blank" href="https://www.qiekub.com/datenschutz.html">
+					<ListItemText primary={this.props.getString('privacy_policy')} />
 				</ListItemLink>
 				<ListItemLink href="mailto:thomas.rosen@qiekub.com">
 					<ListItemText primary={this.props.getString('contact')} />

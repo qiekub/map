@@ -2,48 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 
-import 'intl-pluralrules'
-import { AppLocalizationProvider } from './l10n.js';
-
-import local_ip from './.env.local_ip.json'
-
 // import * as serviceWorker from './serviceWorker'
 
 import App from './components/App/'
-
-import ApolloClient from 'apollo-boost'
-// import { InMemoryCache } from 'apollo-cache-inmemory';
-// const cache = new InMemoryCache()
-
-window.pageOpenTS = new Date()
-window.env_local_ip = local_ip
-
-window.transitionDuration = 300
-window.isSmallScreen = true
-window.sidebarIsOpen = false
-
-window.getTranslation = (array) => {
-	array = array || []
-	return (
-		array.length > 0
-		? (!!array[0].text ? array[0].text : '')
-		: ''
-	)
-}
-
-window.graphql = new ApolloClient({
-	// cache,
-	uri: (
-		window.env_local_ip !== ''
-		? `http://${window.env_local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
-		: `https://api.qiekub.com/graphql/v1/`
-	),
-})
+import { GlobalsProvider } from './components/Globals/'
 
 ReactDOM.render(
-	<AppLocalizationProvider userLocales={/*['de'] || */navigator.languages}>
+	<GlobalsProvider>
 		<App />
-	</AppLocalizationProvider>,
+	</GlobalsProvider>,
 	document.getElementById('root')
 )
 

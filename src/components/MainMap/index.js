@@ -16,6 +16,8 @@ import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
 
+import { withGlobals } from '../Globals/'
+
 // import {} from '@material-ui/core'
 import { withTheme } from '@material-ui/core/styles'
 
@@ -44,7 +46,6 @@ class MainMap extends React.Component {
 		this.map = null
 		this.markers = []
 
-		this.showPlace = this.showPlace.bind(this)
 		this.gotMapRef = this.gotMapRef.bind(this)
 
 		this.createPruneCluster = this.createPruneCluster.bind(this)
@@ -78,7 +79,7 @@ class MainMap extends React.Component {
 
 				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
 			}
-			window.mainMapFunctions = functions
+			this.props.globals.mainMapFunctions = functions
 			this.props.onFunctions(functions)
 		}
 
@@ -95,7 +96,7 @@ class MainMap extends React.Component {
 	}
 
 	setMapPos(event){
-		this.setState({center:window.map_center})
+		this.setState({center:this.props.globals.map_center})
 	}
 
 	useAsGeoChooser(yesOrNo, middleMarkerDoc){
@@ -115,7 +116,7 @@ class MainMap extends React.Component {
 	}
 
 	loadMarkers(){
-		window.graphql.query({
+		this.props.globals.graphql.query({
 			query: query_loadMarkers,
 			variables: {
 				languages: navigator.languages,
@@ -139,15 +140,6 @@ class MainMap extends React.Component {
 		}).catch(error=>{
 			console.error(error)
 		})
-	}
-
-	async showPlace(doc) {
-		// const center = this.map.getCenter()
-
-		await navigate(`/place/${doc._id}/`)
-		if (this.props.onViewDoc) {
-			this.props.onViewDoc(doc._id)
-		}
 	}
 
 	gotMapRef(Map){
@@ -211,16 +203,19 @@ class MainMap extends React.Component {
 				const clusterBounds = this.clusterGroup.Cluster.ComputeBounds(markersArea)
 		
 				if (clusterBounds) {
-					const bounds = new L.LatLngBounds(
-						new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng),
-						new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
-					)
+					const corner1 = new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng)
+					const corner2 = new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
+					const bounds = new L.LatLngBounds(corner1, corner2)
+					const distance = corner1.distanceTo(corner2)
 		
 					const zoomLevelBefore = this.clusterGroup._map.getZoom()
 					const zoomLevelAfter = this.clusterGroup._map.getBoundsZoom(bounds, false, new L.Point(20, 20, null))
 		
 					// If the zoom level doesn't change
-					if (zoomLevelAfter === zoomLevelBefore) {
+					if (
+						distance < 3 // if distance is less than 3 meters
+						|| zoomLevelAfter === zoomLevelBefore // or if the zoom level would't change
+					) {
 						// Send an event for the LeafletSpiderfier
 						this.clusterGroup._map.fire('overlappingmarkers', {
 							cluster: this.clusterGroup,
@@ -229,18 +224,23 @@ class MainMap extends React.Component {
 							marker: marker,
 						})
 		
-						this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
-							animate: true,
-							duration: 0.75,
-							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
-							paddingbottomRight: [0, 0]
-						})
+						// this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
+						// 	animate: true,
+						// 	duration: 0.75,
+						// 	paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
+						// 	paddingbottomRight: [0, 0]
+						// })
 					}else{
+						let padding = 128
+						if (this.props.globals.isSmallScreen) {
+							padding = 64
+						}
+
 						this.clusterGroup._map.flyToBounds(bounds, {
 							animate: true,
 							duration: 0.75,
-							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
-							paddingbottomRight: [0, 0]
+							paddingTopLeft: [(this.props.sidebarIsOpen ? 400+padding : padding), padding],
+							paddingBottomRight: [padding, padding]
 						})
 					}
 				}
@@ -267,7 +267,7 @@ class MainMap extends React.Component {
 				})
 			}
 		
-			leafletMarker.on('click', ()=>this.showPlace(doc))
+			leafletMarker.on('click', () => navigate(`/view/${doc._id}/`) )
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
@@ -408,12 +408,12 @@ class MainMap extends React.Component {
 
 	viewportChanged(viewport){
 		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-			window.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
+			this.props.globals.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
 		}else{
-			window.map_center = viewport.center
+			this.props.globals.map_center = viewport.center
 		}
 
-		window.map_zoom = viewport.zoom
+		this.props.globals.map_zoom = viewport.zoom
 		window.dispatchEvent(new Event('mapViewportUpdated'))
 	}
 
@@ -477,7 +477,7 @@ class MainMap extends React.Component {
 							attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
 							url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
 						/>
@@ -491,7 +491,7 @@ class MainMap extends React.Component {
 							attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">Improve this map</a>
+								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
 							url="https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
 						/>
@@ -531,4 +531,4 @@ class MainMap extends React.Component {
 	}
 }
 
-export default withLocalization(withTheme(MainMap))
+export default withGlobals(withLocalization(withTheme(MainMap)))

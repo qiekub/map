@@ -7,7 +7,7 @@ export const getID = gql`
 `
 
 export const loadPlace = gql`
-	query($_id: String="", $wantedTags: [String], $languages: [String]){
+	query($_id: ID, $wantedTags: [String], $languages: [String]){
 		getPlace(_id: $_id){
 			_id
 			properties {
@@ -22,10 +22,8 @@ export const loadPlace = gql`
 							lat
 						}
 					}
-					osmID
 					tags(keys: $wantedTags)
 					confidences(keys: $wantedTags)
-					permanently_closed
 				}
 			}
 		}
@@ -97,6 +95,7 @@ export const loadQuestions = gql`
 					}
 					possibleAnswers {
 						inputtype
+						parsers
 						key
 						icon
 						title (languages: $languages){
@@ -128,3 +127,23 @@ export const answerQuestion = gql`
 		answerQuestion(properties: $properties)
 	}
 `
+
+export const addSources = gql`
+	mutation($properties: Sources_input){
+		addSources(properties: $properties)
+	}
+`
+
+export const addChangeset = gql`
+	mutation($properties: Changeset_Input){
+		addChangeset(properties: $properties)
+	}
+`
+
+export const compilePlace = gql`
+	mutation($_id: ID){
+		compilePlace(_id: $_id)
+	}
+`
+
+

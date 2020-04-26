@@ -5,11 +5,10 @@ Wheelchair accessible / Not wheelchair accessible
 import React from 'react'
 import './index.css'
 
-import { Localized } from '../Localized/'
+import { Localized, withLocalization } from '../Localized/'
 
-// import {navigate/*,Router,Link*/} from '@reach/router'
-// import {gql} from 'apollo-boost'
-// import {loadPlace as query_loadPlace} from '../../queries.js'
+import { navigate } from '@reach/router'
+import { loadPlace as query_loadPlace } from '../../queries.js'
 
 import {
 	getID as query_getID,
@@ -19,7 +18,9 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import {getPreset, getColorByPreset} from '../../functions.js'
+import { getTranslation, getTranslationFromArray, getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
+
+import { withGlobals } from '../Globals/'
 
 import {
 	Typography,
@@ -104,18 +105,39 @@ class Sidebar extends React.Component {
 		super(props)
 
 		this.state = {
-			isNewDoc: false,
 			doc: {},
-			stage: 'viewing', // viewing editing submitting
+			page: 'view', // view edit
 			headerText: '',
 		}
 
+		this.wantedTagsList = [
+			'min_age',
+			'max_age',
+
+			'wheelchair',
+
+			'contact:',
+
+			'website',
+			'email',
+			'phone',
+			'fax',
+
+			'instagram',
+			'facebook',
+			'twitter',
+			'youtube',
+			'yelp',
+
+			...getWantedTagsList(presets),
+		]
+
+		this.action = undefined
+		this.docID = undefined
+
 		this.editNewDoc = this.editNewDoc.bind(this)
-		this.setDoc = this.setDoc.bind(this)
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
-		// this.submit = this.submit.bind(this)
-		// this.back = this.back.bind(this)
 
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
@@ -123,127 +145,185 @@ class Sidebar extends React.Component {
 		this.getAgeRangeText = this.getAgeRangeText.bind(this)
 
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
+		this.abortEdit = this.abortEdit.bind(this)
 	}
 
 	componentDidMount(){
-		if (this.props.onFunctions) {
-			this.props.onFunctions({
-				editNewDoc: this.editNewDoc,
-				setDoc: (...attr)=>this.setDoc(...attr),
-				getWantedTagsList: ()=>{
-					return [
-						'min_age',
-						'max_age',
-
-						'wheelchair',
-
-						'contact:',
-
-						'website',
-						'email',
-						'phone',
-						'fax',
-
-						'instagram',
-						'facebook',
-						'twitter',
-						'youtube',
-						'yelp',
-					]
-				}
-			})
-		}
-
 		this.checkIfDocIdChanged()
 	}
 	componentDidUpdate(){
 		this.checkIfDocIdChanged()
 	}
-	async checkIfDocIdChanged(){
-		const docID = this.props.docID
-		if (!!docID && docID !== this.state.doc._id && this.props.onViewDoc) {
-			// await navigate(`/place/${doc._id}/`)
-			if (docID !== 'add') {
-				this.props.onViewDoc(docID)
-			}
-		}
-	}
+	checkIfDocIdChanged(){
+		const { action, docID } = this.props
 
-	editNewDoc(typename){
-		window.graphql.query({
-			query: query_getID,
-		}).then(async result => {
-			const emptyDoc = {
-				__typename: 'Doc',
-				_id: result.data.id,
-				properties: {
-					__typename: typename,
-					tags: {},
-					geometry: {
-						location: {
-							lat: 0,
-							lng: 0,
-						},
-					}
-				},
-			}
+		if (
+			this.action !== action
+			||
+			!(!!docID && this.docID === docID)
+		) {
+			this.action = action
+			this.docID = docID
 
-			emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
-			emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
-
-			this.setState({
-				isNewDoc: true,
-				doc: emptyDoc,
-				stage: 'editing',
-				headerText: 'Add a new place'
-			}, ()=>{
-				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.headerText)
-			})
-		}).catch(error=>{
-			console.error(error)
-		})
-	}
-	setDoc(newDoc) {
-		if (newDoc !== null && newDoc._id !== null) {
-			newDoc.___preset = getPreset(newDoc.properties.tags || {}, presets)
-			newDoc.___color = getColorByPreset(newDoc.___preset.key,colorsByPreset) || colors.default
-
-			this.setState({
-				isNewDoc: false,
-				doc: newDoc,
-				stage: 'viewing',
-				headerText: (
-					newDoc &&
-					newDoc.properties &&
-					newDoc.properties.name &&
-					newDoc.properties.name.length > 0
-					? newDoc.properties.name[0].text
-					: ''
-				),
-			}, ()=>{
-
-				if (!window.isSmallScreen) {
-					const docLocation = newDoc.properties.geometry.location
-					const asPixel = window.mainMapFunctions.latLngToContainerPoint(docLocation)
-					if (asPixel.x < 400) {
-						window.mainMapFunctions.panTo(
-							window.mainMapFunctions.unproject(window.mainMapFunctions.project(docLocation).add([-200,0])) // map center with sidebar offset
-						)
-					}
+			if (action === 'add') {
+				if (!(!!docID) || docID === '') {
+					this.navigateToUnusedID()
+				}else{
+					this.editNewDoc(docID, 'Place')
 				}
-
-				this.props.onSetSidebarIsOpen(true)
-				this.props.onSetSearchBarValue(this.state.headerText)
+			} else if (action === 'view') {
+				if (!!docID && docID !== '') {
+					this.loadAndViewDoc(docID)
+				}
+			} else if (action === 'edit') {
+				if (!!docID && docID !== '') {
+					this.loadAndViewDoc(docID, ()=>{
+						this.setState({page:'edit'})
+					})
+				}
+			}
+		}
+	}
+	
+	navigateToUnusedID(){
+		if (!this.isNavigatingToUnusedID) {
+			this.isNavigatingToUnusedID = true
+			this.props.globals.graphql.query({
+				query: query_getID,
+				fetchPolicy: 'no-cache',
+			}).then(async result => {
+				navigate(`./${result.data.id}/`)
+			}).catch(error=>{
+				console.error(error)
+			}).finally(()=>{
+				// TODO can I use finally or is 90% browser support to less?
+				delete this.isNavigatingToUnusedID
 			})
 		}
+	}
+
+	loadAndViewDoc(docID, callback){
+		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
+			this.props.globals.graphql.query({
+				query: query_loadPlace,
+				variables: {
+					languages: navigator.languages,
+					_id: docID,
+					wantedTags: this.wantedTagsList,
+				},
+			}).then(async result=>{
+				if (!!result && !!result.data && !!result.data.getPlace) {
+					const doc = result.data.getPlace
+
+					doc.___preset = getPreset(doc.properties.tags || {}, presets)
+					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+
+					this.setState({
+						doc: doc,
+						page: 'view',
+						headerText: (
+							doc &&
+							doc.properties &&
+							doc.properties.name &&
+							doc.properties.name.length > 0
+							? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
+							: ''
+						),
+					}, ()=>{
+						if (typeof callback === 'function') {
+							callback()
+						}
+		
+						let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
+						if (zoomLevel < 17) {
+							zoomLevel = 17
+						}
+
+						if (doc.properties.geometry) {
+							if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
+								this.props.globals.mainMapFunctions.setView(
+									(
+										this.props.globals.isSmallScreen
+										? doc.properties.geometry.location
+										: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location).add([200,0])) // add sidebar offset
+									),
+									zoomLevel
+								)
+							// }else{
+							// 	this.props.globals.mainMapFunctions.flyTo(
+							// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+							// 		zoomLevel,
+							// 		{
+							// 			animate: true,
+							// 			duration: 1,
+							// 		}
+							// 	)
+							}
+						}
+
+						if (!this.props.globals.isSmallScreen) {
+							const docLocation = doc.properties.geometry.location
+							const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
+							if (asPixel.x < 400) {
+								this.props.globals.mainMapFunctions.panTo(
+									this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+								)
+							}
+						}
+
+						this.props.onSetSidebarIsOpen(true)
+						this.props.onSetSearchBarValue(this.state.headerText)
+					})
+				}
+			}).catch(error=>{
+				console.error(error)
+			})
+		}
+	}
+
+	editNewDoc(docID, typename){
+		const emptyDoc = {
+			__typename: 'Doc',
+			_id: docID,
+			properties: {
+				__typename: typename,
+				tags: {},
+				geometry: {
+					location: {
+						lat: 0,
+						lng: 0,
+					},
+				}
+			},
+		}
+
+		emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
+		emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
+
+
+		this.setState({
+			doc: emptyDoc,
+			page: 'edit',
+			headerText: this.props.getString('add_new_place_header_text'),
+		}, ()=>{
+			this.props.onSetSidebarIsOpen(true)
+			this.props.onSetSearchBarValue(this.state.headerText)
+		})
 	}
 
 	edit(){
-		this.setState({stage:'editing'})
+		navigate(`/edit/${this.state.doc._id}/`)
 	}
 	view(){
-		this.setState({stage:'viewing'})
+		navigate(`/view/${this.state.doc._id}/`)
+	}
+
+	abortEdit(){
+		if (this.props.action === 'add') {
+			navigate(`/`)
+		}else{
+			navigate(`/view/${this.state.doc._id}/`)
+		}
 	}
 
 	getAgeRangeText(min_age,max_age){
@@ -469,7 +549,7 @@ class Sidebar extends React.Component {
 			links.push({
 				type: 'yelp',
 				href: link_tags.yelp,
-				text: 'View on Yelp',
+				text: 'View on Yelp', // TODO: translate
 			})
 		}
 
@@ -477,7 +557,7 @@ class Sidebar extends React.Component {
 			links.push({
 				type: 'osm',
 				href: 'https://openstreetmap.org/'+properties.osmID,
-				text: 'View on OpenStreetMap',
+				text: 'View on OpenStreetMap', // TODO: translate
 			})
 		}
 
@@ -520,12 +600,13 @@ class Sidebar extends React.Component {
 			{age_range_text === '' ? null : <Typography variant="body2" component="p">{age_range_text}</Typography>}
 		*/
 
-		return (<React.Fragment key="viewing">
+		return (<React.Fragment key="view">
 				<CardContent>
 					{
 						age_range_text === ''
 						? null
-						: (
+						: // TODO: Translate
+						(
 							<List dense>
 								<ListItem>
 									<ListItemIcon><CheckIcon /></ListItemIcon>
@@ -586,18 +667,28 @@ class Sidebar extends React.Component {
 		</React.Fragment>)
 	}
 	renderQuestions(doc){
+		const startQuestions = (
+			this.props.action === 'add'
+			? ['preset','geo_pos','name','answer_more']
+			: ['start_improve']
+		)
+
 		return (<React.Fragment key="editing">
 			<CardContent>
-				<Questions key="the_questions" startQuestions={
-					this.state.isNewDoc
-					? ['geo_pos','name','answer_more']
-					: ['start_improve']
-				} doc={doc} onFinish={this.view}/>
+				<Questions
+					key="the_questions"
+					startQuestions={startQuestions}
+					doc={doc}
+					onFinish={
+						this.props.action === 'add'
+						? this.abortEdit
+						: this.view
+					}
+					onAbort={this.abortEdit}
+				/>
 			</CardContent>
 		</React.Fragment>)
 	}
-
-	// this.props.theme.palette.background.default
 
 	render(){
 		const doc = this.state.doc
@@ -630,7 +721,7 @@ class Sidebar extends React.Component {
 				style={{
 					backgroundColor: headerBackgroundColor,
 					// background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
-					// 	this.state.stage === 'viewing'
+					// 	this.state.page === 'view'
 					// 	? this.props.theme.palette.background.paper
 					// 	: this.props.theme.palette.background.default
 					// } 50%)`,
@@ -670,7 +761,7 @@ class Sidebar extends React.Component {
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
 									<div className="material-icons-round" style={{color:headerForegroundColor}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
 								</ListItemIcon>
-								<ListItemText primary={doc.___preset.name.en}/>
+								<ListItemText primary={getTranslation(doc.___preset.name,this.props.globals.userLocales)}/>
 							</ListItem>
 						)
 						: null
@@ -683,14 +774,14 @@ class Sidebar extends React.Component {
 				className="sidebarContentCard"
 				style={{
 					backgroundColor: (
-						this.state.stage === 'viewing'
+						this.state.page === 'view'
 						? this.props.theme.palette.background.paper
 						: this.props.theme.palette.background.default
 					),
 				}}
 			>
 				{
-					this.state.stage === 'viewing'
+					this.state.page === 'view'
 					? this.renderView(doc)
 					: this.renderQuestions(doc)
 				}
@@ -701,4 +792,4 @@ class Sidebar extends React.Component {
 	}
 }
 
-export default withTheme(Sidebar)
+export default withGlobals(withLocalization(withTheme(Sidebar)))

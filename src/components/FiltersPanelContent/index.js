@@ -32,7 +32,12 @@ import { withTheme } from '@material-ui/core/styles'
 
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
 
+import { getTranslation } from '../../functions.js'
 import _categories_ from '../../data/dist/categories.json'
+
+import { withGlobals } from '../Globals/'
+
+
 
 class FiltersPanelContent extends React.Component {
 	constructor(props) {
@@ -42,6 +47,11 @@ class FiltersPanelContent extends React.Component {
 			category: null,
 			age: null,
 		}
+
+		this.categories = _categories_.map(category => ({
+			...category,
+			name_translated: getTranslation(category.name, this.props.globals.userLocales),
+		}))
 
 		this.ages = Array.apply(null, Array(15)).map((v,i)=>i+14)
 		this.highest_ages_entry = this.ages[this.ages.length-1]
@@ -105,7 +115,7 @@ class FiltersPanelContent extends React.Component {
 								!!this.state.category
 								? (<>
 									<div className="filterMenuDot" style={{margin:'0 8px 0 -4px',background:this.state.category.color.bg}}></div>
-									{this.state.category.name}
+									{this.state.category.name_translated}
 								</>)
 								: <Localized id="what-to-show" />
 							}
@@ -120,16 +130,21 @@ class FiltersPanelContent extends React.Component {
 							}}
 							className="menuBlurredPaperBackground"
 						>
-							<MenuItem value="" onClick={()=>this.setValue('category', null,popupState.close)}>
+							<MenuItem
+								key="everything"
+								value=""
+								onClick={()=>this.setValue('category', null, popupState.close)}
+								selected={!(!!this.state.category)}
+							>
 								<div className="filterMenuDot" style={{background:'transparent'}}></div>
 								<Localized id="show-everything" />
 							</MenuItem>
-							{_categories_.map(category=>{
-								const isSelected = (!!this.state.category && category.name === this.state.category.name)
+							{this.categories.map(category=>{
+								const isSelected = (!!this.state.category && category.name_translated === this.state.category.name_translated)
 								return (
 								<MenuItem
-									key={category.name}
-									value={category.name}
+									key={category.name_translated}
+									value={category.name_translated}
 									onClick={()=>this.setValue('category', category,popupState.close)}
 									selected={isSelected}
 									style={{
@@ -143,7 +158,7 @@ class FiltersPanelContent extends React.Component {
 									}}
 								>
 									<div className="filterMenuDot" style={{background:(isSelected ? category.color.fg : category.color.bg)}}></div>
-									{category.name}
+									{category.name_translated}
 								</MenuItem>
 								)
 							})}
@@ -186,7 +201,14 @@ class FiltersPanelContent extends React.Component {
 							}}
 							className="menuBlurredPaperBackground"
 						>
-							<MenuItem value="" onClick={()=>this.setValue('age', null, popupState.close)}>Any Age</MenuItem>
+							<MenuItem
+								key="any_age"
+								value=""
+								onClick={()=>this.setValue('age', null, popupState.close)}
+								selected={!(!!this.state.age)}
+							>
+								<Localized id="any_age" />
+							</MenuItem>
 							{this.ages.map(number=>{
 								return (
 								<MenuItem
@@ -249,5 +271,5 @@ class FiltersPanelContent extends React.Component {
 	}
 }
 
-export default withTheme(FiltersPanelContent)
+export default withGlobals(withTheme(FiltersPanelContent))
 

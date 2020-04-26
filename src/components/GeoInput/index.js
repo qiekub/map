@@ -14,12 +14,14 @@ import {
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
 
-export default class GeoInput extends React.Component {
+import { withGlobals } from '../Globals/'
+
+class GeoInput extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			map_center: window.map_center || {lng:NaN,lat:NaN},
+			map_center: this.props.globals.map_center || {lng:NaN,lat:NaN},
 			isLegal: true,
 		}
 
@@ -48,19 +50,19 @@ export default class GeoInput extends React.Component {
 			this.initialMapViewport.center &&
 			this.initialMapViewport.zoom
 		) {
-			window.mainMapFunctions.flyTo(this.initialMapViewport.center, this.initialMapViewport.zoom, {
-				duration: window.transitionDuration * 0.001
+			this.props.globals.mainMapFunctions.flyTo(this.initialMapViewport.center, this.initialMapViewport.zoom, {
+				duration: this.props.globals.transitionDuration * 0.001
 			})
 		}
 
 		window.removeEventListener('mapViewportUpdated', this.setStateGeoPos)
 		setTimeout(()=>{
-			window.mainMapFunctions.useAsGeoChooser(false, undefined)
+			this.props.globals.mainMapFunctions.useAsGeoChooser(false, undefined)
 		}, 1)
 	}
 
 	checkIfLegal(callback){
-		window.graphql.query({
+		this.props.globals.graphql.query({
 			query: query_isGeoCoordinateLegal,
 			variables: {
 				lng: this.state.map_center.lng,
@@ -81,8 +83,8 @@ export default class GeoInput extends React.Component {
 		) {
 			this.usedMarker = marker
 
-			const currentCenter = window.mainMapFunctions.getCenter()
-			const currentZoom = window.mainMapFunctions.getZoom()
+			const currentCenter = this.props.globals.mainMapFunctions.getCenter()
+			const currentZoom = this.props.globals.mainMapFunctions.getZoom()
 
 			this.initialMapViewport = {
 				center: currentCenter,
@@ -105,20 +107,20 @@ export default class GeoInput extends React.Component {
 			}
 
 
-			if (window.sidebarIsOpen) { // TODO window.sidebarIsOpen isn't enough on small screens
-				markerPos = window.mainMapFunctions.unproject(window.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
+			if (this.props.globals.sidebarIsOpen) { // TODO this.props.globals.sidebarIsOpen isn't enough on small screens
+				markerPos = this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
 			}
-			window.mainMapFunctions.flyTo(markerPos, newZoom, {
-				duration: window.transitionDuration * 0.001,
+			this.props.globals.mainMapFunctions.flyTo(markerPos, newZoom, {
+				duration: this.props.globals.transitionDuration * 0.001,
 			})
 			setTimeout(()=>{
-				window.mainMapFunctions.useAsGeoChooser(true, this.props.doc)
-			}, window.transitionDuration)
+				this.props.globals.mainMapFunctions.useAsGeoChooser(true, this.props.doc)
+			}, this.props.globals.transitionDuration)
 		}
 	}
 
 	setStateGeoPos(event){
-		const map_center = window.map_center.map(number => Number.parseFloat(number.toFixed(6))) // WHY: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+		const map_center = this.props.globals.map_center.map(number => Number.parseFloat(number.toFixed(6))) // WHY: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 
 		const lng = map_center[1]
 		const lat = map_center[0]
@@ -188,6 +190,8 @@ export default class GeoInput extends React.Component {
 		</div>)
 	}
 }
+
+export default withGlobals(GeoInput)
 
 // You can't use this position as it's illegal to be queer there. (Or we aren't sure.)
 

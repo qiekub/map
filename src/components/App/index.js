@@ -2,19 +2,17 @@ import React from 'react'
 import './index.css'
 
 // import {gql} from 'apollo-boost'
-import {Router,navigate} from '@reach/router'
-import {
-	loadPlace as query_loadPlace,
-	search as query_search,
-} from '../../queries.js'
+import { Router, navigate } from '@reach/router'
+import { search as query_search } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
-import presets from '../../data/dist/presets.json'
+// import presets from '../../data/dist/presets.json'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import {getWantedTagsList} from '../../functions.js'
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
+
+import { withGlobals } from '../Globals/'
 
 import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 // import { CssBaseline } from '@material-ui/core'
@@ -65,7 +63,7 @@ const defaultTheme = createMuiTheme({
 	},
 })
 
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props)
 
@@ -81,6 +79,8 @@ export default class App extends React.Component {
 				presets: [],
 			},
 			theme: defaultTheme,
+
+			isSmallScreen: false,
 		}
 
 		this.functions = {}
@@ -88,8 +88,6 @@ export default class App extends React.Component {
 		this.startSearch = this.startSearch.bind(this)
 		this.setSearchBarValue = this.setSearchBarValue.bind(this)
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
-		this.addPlace = this.addPlace.bind(this)
-		this.loadAndViewDoc = this.loadAndViewDoc.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
 		this.setTheme = this.setTheme.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
@@ -107,25 +105,24 @@ export default class App extends React.Component {
 		this.startSearch('Los Angeles',()=>{
 			setTimeout(()=>{
 				this.functions['MainMap'].zoomIn()
-				this.addPlace()
 			}, 1500)
 		})
 	}
 
 	componentDidMount(){
 		// this.pretendToSearch()
-		// this.addPlace()
 
 		if (!!window.matchMedia) {
 			// https://react-theming.github.io/create-mui-theme
 			// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
 
 			this.matcher_color_scheme = window.matchMedia('(prefers-color-scheme: dark)')
-			this.check_color_scheme(this.matcher_color_scheme)
 			this.matcher_color_scheme.addListener(this.check_color_scheme)
+			this.check_color_scheme(this.matcher_color_scheme)
 
 			this.matcher_small_screen = window.matchMedia('(min-width: 800px)')
 			this.matcher_small_screen.addListener(this.check_small_screen)
+			this.check_small_screen(this.matcher_small_screen)
 		}else{
 			this.setTheme(false)
 		}
@@ -138,7 +135,7 @@ export default class App extends React.Component {
 	}
 
 	setTheme(prefersDarkMode){
-		// prefersDarkMode = window.env_local_ip !== '' ? false : prefersDarkMode
+		// prefersDarkMode = this.props.globals.env_local_ip !== '' ? false : prefersDarkMode
 
 		const background_paper = prefersDarkMode ? '#202020' : '#ffffff'
 		const background_default = prefersDarkMode ? '#181818' : '#f9f9f9'
@@ -229,10 +226,17 @@ export default class App extends React.Component {
 	}
 	check_small_screen(event){
 		if (event.matches) {
-			window.isSmallScreen = true
+			this.props.globals.isSmallScreen = false
 		}else{
-			window.isSmallScreen = false
+			this.props.globals.isSmallScreen = true
 		}
+
+		this.setState((state, props) => {
+			if (this.props.globals.isSmallScreen !== state.isSmallScreen) {
+				return {isSmallScreen: this.props.globals.isSmallScreen}
+			}
+			return undefined
+		})
 		
 		// const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 	}
@@ -253,7 +257,7 @@ export default class App extends React.Component {
 		// const center = this.functions['MainMap'].getCenter()
 		// const zoom = this.functions['MainMap'].getZoom()
 
-		window.sidebarIsOpen = value
+		this.props.globals.sidebarIsOpen = value
 
 		this.setState({
 			mapIsResizing: true,
@@ -264,7 +268,7 @@ export default class App extends React.Component {
 			}, 300)
 			// this.check_small_screen()
 
-			// if (new Date()*1 - window.pageOpenTS*1 > 2000) {
+			// if (new Date()*1 - this.props.globals.pageOpenTS*1 > 2000) {
 			// 	// this.functions['MainMap'].invalidateSize()
 			// 	setTimeout(()=>{
 			// 		// const center2 = this.functions['MainMap'].getCenter()
@@ -276,7 +280,7 @@ export default class App extends React.Component {
 			// 	}, 500)
 			// }
 
-			// if (new Date()*1 - window.pageOpenTS*1 < 2000) {
+			// if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
 			// 	this.functions['MainMap'].panTo(center, {
 			// 		animate: true,
 			// 		duration: 5,
@@ -293,7 +297,7 @@ export default class App extends React.Component {
 
 	startSearch(queryString,callback){
 		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
-			window.graphql.query({
+			this.props.globals.graphql.query({
 				query: query_search,
 				variables: {
 					// languages: navigator.languages,
@@ -328,70 +332,6 @@ export default class App extends React.Component {
 		}else{
 			callback()
 		}
-	}
-
-	loadAndViewDoc(docID){
-		if (docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
-			window.graphql.query({
-				query: query_loadPlace,
-				variables: {
-					languages: navigator.languages,
-					_id: docID,
-					wantedTags: [
-						...this.functions['Sidebar'].getWantedTagsList(),
-						...getWantedTagsList(presets),
-					],
-				},
-			}).then(async result=>{
-				const doc = result.data.getPlace
-		
-				if (doc !== null) {
-					this.functions['Sidebar'].setDoc(doc)
-		
-					let zoomLevel = this.functions['MainMap'].getZoom()
-					if (zoomLevel < 17) {
-						zoomLevel = 17
-					}
-
-					if (doc.properties.geometry) {
-						if (new Date()*1 - window.pageOpenTS*1 < 2000) {
-							this.functions['MainMap'].setView(
-								[doc.properties.geometry.location.lat, doc.properties.geometry.location.lng],
-								zoomLevel
-							)
-						// }else{
-						// 	this.functions['MainMap'].flyTo(
-						// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-						// 		zoomLevel,
-						// 		{
-						// 			animate: true,
-						// 			duration: 1,
-						// 		}
-						// 	)
-						}
-					}
-				}
-			}).catch(error=>{
-				console.error(error)
-			})
-		}
-	}
-
-	async addPlace(){
-
-		await navigate(`/place/add/`)
-		setTimeout(()=>{
-			this.functions['Sidebar'].editNewDoc('Place')
-		}, 100)
-
-		// this.setState({doc:{
-		// 	_id: null,
-		// 	properties: {
-		// 		__typename: 'Place',
-		// 	},
-		// }}, async ()=>{
-		// 	await navigate(`/place/add/`)
-		// })
 	}
 
 	setView(...attr){
@@ -470,15 +410,19 @@ export default class App extends React.Component {
 				Mapbox, OSM, Overpass, GitHub, Firebase
 			</Card>*/}
 
-			<Fab
-				variant="extended"
-				color="secondary"
-				className="addNewFab"
-				onClick={this.addPlace}
-			>
-				<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
-				<Localized id="add-place-fab" />
-			</Fab>
+			{
+				this.state.isSmallScreen
+				? undefined
+				: (<Fab
+					variant="extended"
+					color="secondary"
+					className="addNewFab"
+					onClick={()=>navigate('/add/')}
+				>
+					<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
+					<Localized id="add-place-fab" />
+				</Fab>)
+			}
 
 			<div className="filtersPanel">
 				<FiltersPanelContent onChange={this.filtersChanged}/>
@@ -486,24 +430,21 @@ export default class App extends React.Component {
 
 			<Router primary={false}>
 				<Sidebar
-					path="/place/:docID"
+					path="/:action/*docID"
 					
 					className="Sidebar"
 
-					onViewDoc={this.loadAndViewDoc}
 					onSetSearchBarValue={this.setSearchBarValue}
 					onSetSidebarIsOpen={this.setSidebarIsOpen}
 
 					onSetView={this.setView}
 					onFlyTo={this.flyTo}
 					onGetZoom={this.getZoom}
-					onFunctions={(...attr)=>{this.saveFunctions('Sidebar',...attr)}}
 				/>
 			</Router>
 			
 			<MainMap
 				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
-				onViewDoc={this.loadAndViewDoc}
 				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
 				filters={this.state.filters}
 				mapIsResizing={this.state.mapIsResizing}
@@ -515,3 +456,5 @@ export default class App extends React.Component {
 		</>)
 	}
 }
+
+export default withGlobals(App)
