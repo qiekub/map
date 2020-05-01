@@ -14,7 +14,7 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset, getWantedTagsList } from '../../functions.js'
+import { getColorByPreset/*, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
