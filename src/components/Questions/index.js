@@ -129,11 +129,25 @@ class Questions extends React.Component {
 					firstOpenQuestionCounter += 1
 				}
 
+				questionDoc.properties.question_translated = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
+
+				questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
+					...answer,
+					title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
+					description_translated: getTranslationFromArray(answer.description, this.props.globals.userLocales),
+				}))
+
 				obj[questionDoc._id] = {
 					...questionDoc,
+					
 					visible: true,
 					active: (questionDoc._id === nextQuestionIDs[firstOpenQuestionCounter]),
 					answered: false,
+
+					possibleAnswersByKey: questionDoc.properties.possibleAnswers.reduce((possibleAnswersByKey,possibleAnswer) => {
+						possibleAnswersByKey[possibleAnswer.key] = possibleAnswer
+						return possibleAnswersByKey
+					}, {}),
 				}
 
 				return obj
@@ -347,8 +361,6 @@ class Questions extends React.Component {
 
 		const isMultiRow = hasInputField || (questionDoc.properties.possibleAnswers && questionDoc.properties.possibleAnswers.length > 2)
 
-		const questionText = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
-
 		const location = this.props.doc.properties.geometry.location
 
 		return (
@@ -370,8 +382,8 @@ class Questions extends React.Component {
 				}
 			>
 				{
-					questionText !== ''
-					? <Typography variant="body1" className="questionText">{questionText}</Typography>
+					questionDoc.properties.question_translated !== ''
+					? <Typography variant="body1" className="questionText">{questionDoc.properties.question_translated}</Typography>
 					: undefined
 				}
 	
@@ -407,7 +419,7 @@ class Questions extends React.Component {
 									console.log('preset-defaultValue', possibleAnswerKey, this.getInputValue(questionDoc._id, possibleAnswerKey))
 									return (<PresetInput
 										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
+										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
 										style={{
@@ -431,7 +443,7 @@ class Questions extends React.Component {
 									return (<TextField
 										type="number"
 										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
+										label={possibleAnswer.title_translated}
 										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
@@ -476,8 +488,8 @@ class Questions extends React.Component {
 												: undefined
 											}
 											<ListItemText
-												primary={getTranslationFromArray(possibleAnswer.title, this.props.globals.userLocales)}
-												secondary={getTranslationFromArray(possibleAnswer.description, this.props.globals.userLocales)}
+												primary={possibleAnswer.title_translated}
+												secondary={possibleAnswer.description_translated}
 											/>
 										</ListItem>
 									)
