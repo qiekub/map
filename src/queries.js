@@ -50,7 +50,7 @@ export const loadPlaces = gql`
 `
 
 export const loadMarkers = gql`
-	query($wantedTags: [String], $languages: [String]){
+	query($languages: [String]){
 		getMarkers{
 			_id
 			name (languages: $languages){
@@ -59,7 +59,7 @@ export const loadMarkers = gql`
 			}
 			lng
 			lat
-			tags(keys: $wantedTags)
+			preset
 		}
 	}
 `
