@@ -30,25 +30,6 @@ export const loadPlace = gql`
 	}
 `
 
-// export const loadPlaces = gql`
-// 	query($wantedTags: [String]){
-// 		getPlaces{
-// 			_id
-// 			properties {
-// 				... on Place {
-// 					geometry {
-// 						location {
-// 							lng
-// 							lat
-// 						}
-// 					}
-// 					tags(keys: $wantedTags)
-// 				}
-// 			}
-// 		}
-// 	}
-// `
-
 export const loadMarkers = gql`
 	query($languages: [String]){
 		getMarkers{
@@ -122,27 +103,9 @@ export const isGeoCoordinateLegal = gql`
 	}
 `
 
-export const answerQuestion = gql`
-	mutation($properties: JSONObject){
-		answerQuestion(properties: $properties)
-	}
-`
-
-export const addSources = gql`
-	mutation($properties: Sources_input){
-		addSources(properties: $properties)
-	}
-`
-
 export const addChangeset = gql`
 	mutation($properties: Changeset_Input){
 		addChangeset(properties: $properties)
-	}
-`
-
-export const compilePlace = gql`
-	mutation($_id: ID){
-		compilePlace(_id: $_id)
 	}
 `
 
