@@ -53,6 +53,7 @@ import PresetInput from '../PresetInput/'
 // 	create: ['name','geo_pos','answer_more'],
 // }
 
+/*
 const _parsers_ = {
 	urls: function(value){
 		let urls = value.match(/[^\s]+(?:\.|:|\/).+(?=\s|$)/iumg)
@@ -153,7 +154,7 @@ const _parsers_ = {
 		return undefined
 	},
 }
-
+*/
 
 // console.log(
 // 	_parsers_.socialmedia(`
