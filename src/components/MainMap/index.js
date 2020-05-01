@@ -126,31 +126,34 @@ class MainMap extends React.Component {
 			},
 		})
 		.subscribe(({data}) => {
-			markerQuerySubscription.unsubscribe()
+			if (!!data && !!data.getMarkers) {
+				// markerQuerySubscription.unsubscribe()
 
-			const docs = data.getMarkers.map(doc=>{
-				doc.___preset = (
-					!!doc.preset && !!presets[doc.preset]
-					? {
-						key: doc.preset,
-						...presets[doc.preset],
-					}
-					: {
-						key: '',
-						tags_length: 0,
-						max_tag_value_length: 0,
-						tags: {},
-						name: {},
-						terms: {}
-					}
-				)
-				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
-				return doc
-			})
-			console.timeEnd('loading markers')
+				const docs = data.getMarkers.map(doc=>{
+					doc.___preset = (
+						!!doc.preset && !!presets[doc.preset]
+						? {
+							key: doc.preset,
+							...presets[doc.preset],
+						}
+						: {
+							key: '',
+							tags_length: 0,
+							max_tag_value_length: 0,
+							tags: {},
+							name: {},
+							terms: {}
+						}
+					)
+					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 
-			this.docs = docs
-			this.addMarkersToPruneCluster(docs)
+					return doc
+				})
+				console.timeEnd('loading markers')
+
+				this.docs = docs
+				this.addMarkersToPruneCluster(docs)
+			}
 		})
 	}
 
