@@ -298,36 +298,40 @@ class Questions extends React.Component {
 	answer2tags(questionID, answerKey, answerValue, tags = {}){
 		const question_doc = this.state.questionsById[questionID]
 
-		if (!!question_doc && !!question_doc.properties && !!question_doc.properties.possibleAnswers) {
-			for (const answer of question_doc.properties.possibleAnswers) {
+		if (!!question_doc && !!question_doc.possibleAnswersByKey) {
+			const possibleAnswer = question_doc.possibleAnswersByKey[answerKey]
+
+			if (!!possibleAnswer) {
 				if (
-					!!answer.tags
-					&& typeof answer.tags === "object"
-					&& answer.key === answerKey
-					&& Object.keys(answer.tags).length > 0
+					!!possibleAnswer.tags
+					&& typeof possibleAnswer.tags === "object"
+					&& Object.keys(possibleAnswer.tags).length > 0
 				) {
 					if (typeof answerValue === "boolean") {
 						if (answerValue === true) {
-							tags = { ...tags, ...answer.tags }
+							tags = {
+								...tags,
+								...possibleAnswer.tags,
+							}
 						}
 					// } else if (typeof doc.answerValue === "object") {
-					// 	for (const key in answer.tags) {
+					// 	for (const key in possibleAnswer.tags) {
 					// 		if (doc.answerValue[key]) {
 					// 			tags[key] = doc.answerValue[key]
 					// 		}
 					// 	}
 					} else {
-						for (const key in answer.tags) {
+						for (const key in possibleAnswer.tags) {
 							tags[key] = answerValue
 						}
 					}
-
-					// add tags from the preset:
-					if (tags.preset && typeof tags.preset === 'string' && _presets_[tags.preset] && _presets_[tags.preset].tags) {
-						tags = {
-							..._presets_[tags.preset].tags,
-							...tags,
-						}
+				}
+	
+				// add tags from the preset:
+				if (tags.preset && typeof tags.preset === 'string' && _presets_[tags.preset] && _presets_[tags.preset].tags) {
+					tags = {
+						...tags,
+						..._presets_[tags.preset].tags,
 					}
 				}
 
