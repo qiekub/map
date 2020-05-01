@@ -416,7 +416,6 @@ class Questions extends React.Component {
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
-									console.log('preset-defaultValue', possibleAnswerKey, this.getInputValue(questionDoc._id, possibleAnswerKey))
 									return (<PresetInput
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
