@@ -72,6 +72,14 @@
 					"key": "Cache-Control",
 					"value": "max-age=7200"
 				}]
+			},
+			{
+				// 31557600 seconds = one year
+				"source": "**/*.@(woff2)",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=31557600"
+				}]
 			}
 		]
 
