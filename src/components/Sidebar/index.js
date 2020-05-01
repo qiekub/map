@@ -154,6 +154,11 @@ class Sidebar extends React.Component {
 	componentDidUpdate(){
 		this.checkIfDocIdChanged()
 	}
+	componentWillUnmount(){
+		if (this.placeQuerySubscription) {
+			this.placeQuerySubscription.unsubscribe()
+		}
+	}
 	checkIfDocIdChanged(){
 		const { action, docID } = this.props
 
@@ -204,16 +209,18 @@ class Sidebar extends React.Component {
 
 	loadAndViewDoc(docID, callback){
 		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
-			this.props.globals.graphql.query({
+			this.placeQuerySubscription = this.props.globals.graphql.watchQuery({
+				fetchPolicy: 'cache-and-network',
 				query: query_loadPlace,
 				variables: {
 					languages: navigator.languages,
 					_id: docID,
 					wantedTags: this.wantedTagsList,
 				},
-			}).then(async result=>{
-				if (!!result && !!result.data && !!result.data.getPlace) {
-					const doc = result.data.getPlace
+			})
+			.subscribe(({data}) => {
+				if (!!data && !!data.getPlace) {
+					const doc = data.getPlace
 
 					doc.___preset = getPreset(doc.properties.tags || {}, presets)
 					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
@@ -275,8 +282,6 @@ class Sidebar extends React.Component {
 						this.props.onSetSearchBarValue(this.state.headerText)
 					})
 				}
-			}).catch(error=>{
-				console.error(error)
 			})
 		}
 	}
