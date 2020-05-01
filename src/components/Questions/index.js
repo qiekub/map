@@ -428,10 +428,30 @@ class Questions extends React.Component {
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
-										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
-										variant="outlined"
+										type="text"
 										multiline
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										variant="outlined"
+										color="secondary"
+										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
+										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
+										style={{
+											margin: '4px 8px',
+										}}
+									/>)
+								}else if (possibleAnswer.inputtype === 'date') {
+									return (<TextField
+										type="date"
+										pattern="\d{4}-\d{2}-\d{2}"
+										fullWidth
+										InputLabelProps={{
+											shrink: true,
+										}}
+
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
