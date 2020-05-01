@@ -93,6 +93,10 @@ class MainMap extends React.Component {
 	}
 	componentWillUnmount(){
 		window.removeEventListener('updateMainMapView', this.setMapPos)
+	
+		if (this.markerQuerySubscription) {
+			this.markerQuerySubscription.unsubscribe()
+		}
 	}
 
 	setMapPos(event){
@@ -117,7 +121,7 @@ class MainMap extends React.Component {
 
 	loadMarkers(){
 		console.time('loading markers')
-		const markerQuerySubscription = this.props.globals.graphql.watchQuery({
+		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
 			query: query_loadMarkers,
 			variables: {
@@ -127,8 +131,6 @@ class MainMap extends React.Component {
 		})
 		.subscribe(({data}) => {
 			if (!!data && !!data.getMarkers) {
-				// markerQuerySubscription.unsubscribe()
-
 				const docs = data.getMarkers.map(doc=>{
 					doc.___preset = (
 						!!doc.preset && !!presets[doc.preset]
