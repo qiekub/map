@@ -30,24 +30,24 @@ export const loadPlace = gql`
 	}
 `
 
-export const loadPlaces = gql`
-	query($wantedTags: [String]){
-		getPlaces{
-			_id
-			properties {
-				... on Place {
-					geometry {
-						location {
-							lng
-							lat
-						}
-					}
-					tags(keys: $wantedTags)
-				}
-			}
-		}
-	}
-`
+// export const loadPlaces = gql`
+// 	query($wantedTags: [String]){
+// 		getPlaces{
+// 			_id
+// 			properties {
+// 				... on Place {
+// 					geometry {
+// 						location {
+// 							lng
+// 							lat
+// 						}
+// 					}
+// 					tags(keys: $wantedTags)
+// 				}
+// 			}
+// 		}
+// 	}
+// `
 
 export const loadMarkers = gql`
 	query($languages: [String]){
