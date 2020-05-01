@@ -117,15 +117,18 @@ class MainMap extends React.Component {
 
 	loadMarkers(){
 		console.time('loading markers')
-
-		this.props.globals.graphql.query({
+		const markerQuerySubscription = this.props.globals.graphql.watchQuery({
+			fetchPolicy: 'cache-and-network',
 			query: query_loadMarkers,
 			variables: {
 				languages: navigator.languages,
 				// wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
-		}).then(result => {
-			const docs = result.data.getMarkers.map(doc=>{
+		})
+		.subscribe(({data}) => {
+			markerQuerySubscription.unsubscribe()
+
+			const docs = data.getMarkers.map(doc=>{
 				doc.___preset = (
 					!!doc.preset && !!presets[doc.preset]
 					? {
@@ -144,14 +147,10 @@ class MainMap extends React.Component {
 				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 				return doc
 			})
+			console.timeEnd('loading markers')
 
 			this.docs = docs
 			this.addMarkersToPruneCluster(docs)
-
-			console.timeEnd('loading markers')
-
-		}).catch(error=>{
-			console.error(error)
 		})
 	}
 
