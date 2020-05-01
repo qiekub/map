@@ -355,7 +355,8 @@ class Questions extends React.Component {
 				possibleAnswer.inputtype === 'text' ||
 				possibleAnswer.inputtype === 'number' ||
 				possibleAnswer.inputtype === 'geo' ||
-				possibleAnswer.inputtype === 'preset'
+				possibleAnswer.inputtype === 'preset' ||
+				possibleAnswer.inputtype === 'date'
 			)
 		}).length > 0
 
@@ -443,7 +444,6 @@ class Questions extends React.Component {
 									return (<TextField
 										type="date"
 										pattern="\d{4}-\d{2}-\d{2}"
-										fullWidth
 										InputLabelProps={{
 											shrink: true,
 										}}
