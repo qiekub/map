@@ -14,7 +14,7 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
+import { getColorByPreset/*, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -116,15 +116,31 @@ class MainMap extends React.Component {
 	}
 
 	loadMarkers(){
+		console.time('loading markers')
+
 		this.props.globals.graphql.query({
 			query: query_loadMarkers,
 			variables: {
 				languages: navigator.languages,
-				wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
+				// wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		}).then(result => {
 			const docs = result.data.getMarkers.map(doc=>{
-				doc.___preset = getPreset(doc.tags || {}, presets)
+				doc.___preset = (
+					!!doc.preset && !!presets[doc.preset]
+					? {
+						key: doc.preset,
+						...presets[doc.preset],
+					}
+					: {
+						key: '',
+						tags_length: 0,
+						max_tag_value_length: 0,
+						tags: {},
+						name: {},
+						terms: {}
+					}
+				)
 				doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 				return doc
 			})
@@ -132,10 +148,7 @@ class MainMap extends React.Component {
 			this.docs = docs
 			this.addMarkersToPruneCluster(docs)
 
-			// 1756241 100%
-			// 1556529  80%
-			//  679779  40%
-			//   69580   4%
+			console.timeEnd('loading markers')
 
 		}).catch(error=>{
 			console.error(error)

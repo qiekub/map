@@ -53,6 +53,115 @@ import PresetInput from '../PresetInput/'
 // 	create: ['name','geo_pos','answer_more'],
 // }
 
+const _parsers_ = {
+	urls: function(value){
+		let urls = value.match(/[^\s]+(?:\.|:|\/).+(?=\s|$)/iumg)
+		// This is not a good regexp but it work okayish.
+		// A comment on url matching: https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python/827621#827621
+
+		urls = [...new Set(urls.filter(v=>v))]
+
+		if (urls.length === 1) {
+			return {urls: urls[0]}
+		} else if (urls.length > 1) {
+			return {urls: urls}
+		}
+
+		return undefined
+	},
+	socialmedia: function(value){
+		// https://wiki.openstreetmap.org/wiki/Key:contact
+
+		let keys = {
+			'instagram.com': 'instagram',
+			'facebook.com': 'facebook',
+			'twitter.com': 'twitter',
+			'youtube.com': 'youtube',
+			't.me': 'telegram',
+			'foursquare.com': 'foursquare',
+		}
+
+		let tags = Array.from(value.matchAll(
+			/[^\s]*?([^.\s]+\.[^.\s/]+)\/[^\s]+/iumg
+		), match => match)
+		.reduce((tags,match) => {
+			const key = keys[match[1]]
+			if (key) {
+				if (!tags[key]) {
+					tags[key] = []
+				}
+				tags[key].push(match[0])
+			}
+			return tags
+		}, {})
+
+		for (const key in tags) {
+			if (tags[key].length === 1) {
+				tags[key] = tags[key][0]
+			}
+			tags['contact:'+key] = tags[key]
+		}
+
+		console.log('tags', tags)
+
+		// usernames = [...new Set(usernames.filter(v=>v))]
+
+		// if (usernames.length === 1) {
+		// 	return {
+		// 		instagram: usernames[0],
+		// 		'contact:instagram': usernames[0],
+		// 	}
+		// } else if (usernames.length > 1) {
+		// 	return {
+		// 		instagram: usernames,
+		// 		'contact:instagram': usernames,
+		// 	}
+		// }
+
+		return undefined
+	},
+	wikidata: function(value){
+		// http://www.wikidata.org/wiki/Q9141
+
+		let ids = Array.from(value.matchAll(
+			/wikidata\.org\/wiki\/([A-Z0-9]+)(?=\s|$)/gmiu
+		), m => m[1])
+
+		ids = [...new Set(ids.filter(v=>v))]
+
+		if (ids.length === 1) {
+			return {wikidata: ids[0]}
+		} else if (ids.length > 1) {
+			return {wikidata: ids}
+		}
+
+		return undefined
+	},
+	wikipedia: function(value){
+		let ids = Array.from(value.matchAll(
+			/(?:([a-z]+)\.)?wikipedia\.org\/wiki\/([^/\s]+)(?=\s|$)/iugm
+		), m => (!!m[1] ? m[1]+':' : '')+m[2])
+
+		ids = [...new Set(ids.filter(v=>v))]
+
+		if (ids.length === 1) {
+			return {wikidata: ids[0]}
+		} else if (ids.length > 1) {
+			return {wikidata: ids}
+		}
+
+		return undefined
+	},
+}
+
+
+// console.log(
+// 	_parsers_.socialmedia(`
+// 		instagram.com/thomasrosen
+// 		https://www.instagram.com/thomasrosen/
+// 	`)
+// )
+
 class Questions extends React.Component {
 	constructor(props) {
 		super(props)
@@ -129,11 +238,25 @@ class Questions extends React.Component {
 					firstOpenQuestionCounter += 1
 				}
 
+				questionDoc.properties.question_translated = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
+
+				questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
+					...answer,
+					title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
+					description_translated: getTranslationFromArray(answer.description, this.props.globals.userLocales),
+				}))
+
 				obj[questionDoc._id] = {
 					...questionDoc,
+					
 					visible: true,
 					active: (questionDoc._id === nextQuestionIDs[firstOpenQuestionCounter]),
 					answered: false,
+
+					possibleAnswersByKey: questionDoc.properties.possibleAnswers.reduce((possibleAnswersByKey,possibleAnswer) => {
+						possibleAnswersByKey[possibleAnswer.key] = possibleAnswer
+						return possibleAnswersByKey
+					}, {}),
 				}
 
 				return obj
@@ -175,38 +298,66 @@ class Questions extends React.Component {
 	answer2tags(questionID, answerKey, answerValue, tags = {}){
 		const question_doc = this.state.questionsById[questionID]
 
-		if (!!question_doc && !!question_doc.properties && !!question_doc.properties.possibleAnswers) {
-			for (const answer of question_doc.properties.possibleAnswers) {
+		if (!!question_doc && !!question_doc.possibleAnswersByKey) {
+			const possibleAnswer = question_doc.possibleAnswersByKey[answerKey]
+
+			if (!!possibleAnswer) {
 				if (
-					!!answer.tags
-					&& typeof answer.tags === "object"
-					&& answer.key === answerKey
-					&& Object.keys(answer.tags).length > 0
+					!!possibleAnswer.tags
+					&& typeof possibleAnswer.tags === "object"
+					&& Object.keys(possibleAnswer.tags).length > 0
 				) {
 					if (typeof answerValue === "boolean") {
 						if (answerValue === true) {
-							tags = { ...tags, ...answer.tags }
+							tags = {
+								...tags,
+								...possibleAnswer.tags,
+							}
 						}
 					// } else if (typeof doc.answerValue === "object") {
-					// 	for (const key in answer.tags) {
+					// 	for (const key in possibleAnswer.tags) {
 					// 		if (doc.answerValue[key]) {
 					// 			tags[key] = doc.answerValue[key]
 					// 		}
 					// 	}
 					} else {
-						for (const key in answer.tags) {
+						for (const key in possibleAnswer.tags) {
 							tags[key] = answerValue
 						}
 					}
-
-					// add tags from the preset:
-					if (tags.preset && typeof tags.preset === 'string' && _presets_[tags.preset] && _presets_[tags.preset].tags) {
-						tags = {
-							..._presets_[tags.preset].tags,
-							...tags,
-						}
+				}
+	
+				// add tags from the preset:
+				if (tags.preset && typeof tags.preset === 'string' && _presets_[tags.preset] && _presets_[tags.preset].tags) {
+					tags = {
+						...tags,
+						..._presets_[tags.preset].tags,
 					}
 				}
+
+
+				// console.log()
+				// console.log('- parser -----------------------------')
+				// console.log()
+
+				// if (
+				// 	!!possibleAnswer.parsers
+				// 	&& possibleAnswer.parsers.length > 0
+				// ) {
+				// 	console.log('possibleAnswer.parsers', possibleAnswer.parsers)
+
+				// 	for (const parserKey of possibleAnswer.parsers) {
+				// 		if (_parsers_[parserKey]) {
+				// 			tags = {
+				// 				...tags,
+				// 				..._parsers_[parserKey](answerValue),
+				// 			}
+				// 		}
+				// 	}
+				// 	console.log('tags', tags)
+				// }
+
+
 			}
 		}
 
@@ -220,8 +371,6 @@ class Questions extends React.Component {
 		}
 
 		if (questionGotAnswered) {
-			// TODO: add parsers
-
 			this.answer_tags = {
 				...this.answer_tags,
 				...(Object.entries(answerValue).reduce((tags,entry) => {
@@ -341,13 +490,12 @@ class Questions extends React.Component {
 				possibleAnswer.inputtype === 'text' ||
 				possibleAnswer.inputtype === 'number' ||
 				possibleAnswer.inputtype === 'geo' ||
-				possibleAnswer.inputtype === 'preset'
+				possibleAnswer.inputtype === 'preset' ||
+				possibleAnswer.inputtype === 'date'
 			)
 		}).length > 0
 
 		const isMultiRow = hasInputField || (questionDoc.properties.possibleAnswers && questionDoc.properties.possibleAnswers.length > 2)
-
-		const questionText = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
 
 		const location = this.props.doc.properties.geometry.location
 
@@ -370,8 +518,8 @@ class Questions extends React.Component {
 				}
 			>
 				{
-					questionText !== ''
-					? <Typography variant="body1" className="questionText">{questionText}</Typography>
+					questionDoc.properties.question_translated !== ''
+					? <Typography variant="body1" className="questionText">{questionDoc.properties.question_translated}</Typography>
 					: undefined
 				}
 	
@@ -404,10 +552,9 @@ class Questions extends React.Component {
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
-									console.log('preset-defaultValue', possibleAnswerKey, this.getInputValue(questionDoc._id, possibleAnswerKey))
 									return (<PresetInput
 										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
+										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
 										style={{
@@ -416,10 +563,29 @@ class Questions extends React.Component {
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
-										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
-										variant="outlined"
+										type="text"
 										multiline
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										variant="outlined"
+										color="secondary"
+										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
+										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
+										style={{
+											margin: '4px 8px',
+										}}
+									/>)
+								}else if (possibleAnswer.inputtype === 'date') {
+									return (<TextField
+										type="date"
+										pattern="\d{4}-\d{2}-\d{2}"
+										InputLabelProps={{
+											shrink: true,
+										}}
+
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
@@ -431,7 +597,7 @@ class Questions extends React.Component {
 									return (<TextField
 										type="number"
 										key={possibleAnswerKey}
-										label={possibleAnswer.title[0].text}
+										label={possibleAnswer.title_translated}
 										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
@@ -476,8 +642,8 @@ class Questions extends React.Component {
 												: undefined
 											}
 											<ListItemText
-												primary={getTranslationFromArray(possibleAnswer.title, this.props.globals.userLocales)}
-												secondary={getTranslationFromArray(possibleAnswer.description, this.props.globals.userLocales)}
+												primary={possibleAnswer.title_translated}
+												secondary={possibleAnswer.description_translated}
 											/>
 										</ListItem>
 									)
