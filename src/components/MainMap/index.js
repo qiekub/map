@@ -120,7 +120,6 @@ class MainMap extends React.Component {
 	}
 
 	loadMarkers(){
-		console.time('loading markers')
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
 			query: query_loadMarkers,
@@ -144,7 +143,6 @@ class MainMap extends React.Component {
 
 					return doc
 				})
-				console.timeEnd('loading markers')
 
 				this.docs = docs
 				this.addMarkersToPruneCluster(docs)
