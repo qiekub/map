@@ -34,7 +34,7 @@ async function getInitialGlobalState(callback){
 	
 	const globalState = {}
 
-	globalState.globalStateLoaded = true
+	globalState.globalStateFinishedLoading = true
 
 	globalState.graphql = new ApolloClient({
 		cache,
@@ -62,7 +62,7 @@ class GlobalsProvider extends React.Component {
 		super(props)
 
 		this.state = {
-			globalStateLoaded: false
+			globalStateFinishedLoading: false,
 
 			pageOpenTS: new Date(),
 	
@@ -111,7 +111,7 @@ class GlobalsProvider extends React.Component {
 				<AppLocalizationProvider key="AppLocalizationProvider" userLocales={this.state.userLocales}>
 					<CookiesProvider key="CookiesProvider">
 						{
-							this.state.globalStateLoaded
+							this.state.globalStateFinishedLoading
 							? this.props.children
 							: <>...</>
 						}
