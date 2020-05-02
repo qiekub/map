@@ -63,7 +63,7 @@ export class AppLocalizationProvider extends React.Component {
 
 		if (!bundles) {
 			// Show a loader.
-			return <div>…</div>
+			return <div>Loading texts…</div>
 		}
 
 		return (

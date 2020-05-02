@@ -112,7 +112,7 @@ class GlobalsProvider extends React.Component {
 						{
 							this.state.globalStateFinishedLoading
 							? this.props.children
-							: <>...</>
+							: <>Loading cache data…</>
 						}
 					</CookiesProvider>
 				</AppLocalizationProvider>
