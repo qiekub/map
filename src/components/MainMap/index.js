@@ -321,7 +321,7 @@ class MainMap extends React.Component {
 				className: 'marker-cluster-custom-icon',
 				iconSize: L.point(48, 48, true),
 			})
-		}		
+		}
 
 		this.map.addLayer(this.clusterGroup)
 	}
