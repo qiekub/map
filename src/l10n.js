@@ -20,6 +20,12 @@ async function fetchMessages(locale) {
 	return { [locale]: new FluentResource(messages) }
 }
 
+function getDefaultBundles(){
+	const bundle = new FluentBundle('')
+	bundle.addResource(new FluentResource(''))
+	return new ReactLocalization([bundle])
+}
+
 async function createMessagesGenerator(currentLocales) {
 	const fetched = await Promise.all(
 		currentLocales.map(fetchMessages)
@@ -40,7 +46,9 @@ async function createMessagesGenerator(currentLocales) {
 export class AppLocalizationProvider extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {}
+		this.state = {
+			bundles: getDefaultBundles(),
+		}
 	}
 
 	async componentDidMount() {
