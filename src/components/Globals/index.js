@@ -66,7 +66,6 @@ class GlobalsProvider extends React.Component {
 
 			pageOpenTS: new Date(),
 	
-			env_local_ip: local_ip,
 			isDevEnvironment,
 	
 			transitionDuration: 300,

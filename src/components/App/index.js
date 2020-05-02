@@ -135,8 +135,6 @@ class App extends React.Component {
 	}
 
 	setTheme(prefersDarkMode){
-		// prefersDarkMode = this.props.globals.env_local_ip !== '' ? false : prefersDarkMode
-
 		const background_paper = prefersDarkMode ? '#202020' : '#ffffff'
 		const background_default = prefersDarkMode ? '#181818' : '#f9f9f9'
 
