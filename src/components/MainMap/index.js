@@ -14,11 +14,17 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset/*, getWantedTagsList*/ } from '../../functions.js'
+import { getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
-// import {} from '@material-ui/core'
+import {
+	Fab,
+} from '@material-ui/core'
+import {
+	AddRounded as ZoomInIcon, // ZoomInRounded
+	RemoveRounded as ZoomOutIcon, // ZoomOutRounded
+} from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
 import { Map, TileLayer } from 'react-leaflet'
@@ -40,6 +46,8 @@ class MainMap extends React.Component {
 			middleMarkerDoc: undefined,
 		}
 
+		this.defaultClusterSize = 120
+
 		this.filters = null
 
 		// this.MarkerLayerRef = React.createRef()
@@ -55,10 +63,16 @@ class MainMap extends React.Component {
 
 		this.setMapPos = this.setMapPos.bind(this)
 		this.viewportChanged = this.viewportChanged.bind(this)
+		this.zoomIn = this.zoomIn.bind(this)
+		this.zoomOut = this.zoomOut.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadMarkers()
+
+		this.props.globals.updateOnConicGradient(()=>{
+			this.clusterGroup.RedrawIcons()
+		})
 
 		if (this.props.onFunctions) {
 			const functions = {
@@ -120,7 +134,6 @@ class MainMap extends React.Component {
 	}
 
 	loadMarkers(){
-		console.time('loading markers')
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
 			query: query_loadMarkers,
@@ -138,20 +151,12 @@ class MainMap extends React.Component {
 							key: doc.preset,
 							...presets[doc.preset],
 						}
-						: {
-							key: '',
-							tags_length: 0,
-							max_tag_value_length: 0,
-							tags: {},
-							name: {},
-							terms: {}
-						}
+						: presets.default
 					)
 					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 
 					return doc
 				})
-				console.timeEnd('loading markers')
 
 				this.docs = docs
 				this.addMarkersToPruneCluster(docs)
@@ -167,6 +172,10 @@ class MainMap extends React.Component {
 	}
 
 	getConicGradient(values){
+		if (!(!!this.props.globals.ConicGradient)) {
+			return ''
+		}
+
 		let stops = []
 
 		const gapColor = 'transparent' // this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
@@ -196,7 +205,7 @@ class MainMap extends React.Component {
 		}
 		stops = stops.join(', ')
 
-		var gradient = new window.ConicGradient({
+		var gradient = new this.props.globals.ConicGradient({
 		    stops: stops, // "gold 40%, #f06 0", // required
 		    repeating: false, // Default: false
 		    size: 100, // Default: Math.max(innerWidth, innerHeight)
@@ -207,7 +216,7 @@ class MainMap extends React.Component {
 
 	createPruneCluster(){
 		this.clusterGroup = new PruneClusterForLeaflet()
-		this.clusterGroup.Cluster.Size = 120
+		this.clusterGroup.Cluster.Size = this.defaultClusterSize
 
 		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
 			const marker = new L.Marker(position, {
@@ -314,7 +323,7 @@ class MainMap extends React.Component {
 				className: 'marker-cluster-custom-icon',
 				iconSize: L.point(48, 48, true),
 			})
-		}		
+		}
 
 		this.map.addLayer(this.clusterGroup)
 	}
@@ -432,6 +441,25 @@ class MainMap extends React.Component {
 
 		this.props.globals.map_zoom = viewport.zoom
 		window.dispatchEvent(new Event('mapViewportUpdated'))
+
+		if (viewport.zoom >= 18) {
+			this.clusterGroup.Cluster.Size = 10
+		} else if (viewport.zoom >= 16) {
+			this.clusterGroup.Cluster.Size = 20
+		} else if (viewport.zoom >= 14) {
+			this.clusterGroup.Cluster.Size = 60
+		} else if (viewport.zoom >= 8) {
+			this.clusterGroup.Cluster.Size = 80
+		} else {
+			this.clusterGroup.Cluster.Size = this.defaultClusterSize
+		}
+	}
+
+	zoomIn(){
+		this.map.setZoom(this.map.getZoom()+1)
+	}
+	zoomOut(){
+		this.map.setZoom(this.map.getZoom()-1)
 	}
 
 	render() {
@@ -450,6 +478,38 @@ class MainMap extends React.Component {
 						: <div className="wrapper material-icons-round">not_listed_location</div>
 					}
 				</div>
+			</div>
+
+			<div style={{
+				position: 'fixed',
+				zIndex: '99999999',
+				bottom: '28px',
+				right: '4px',
+				// margin: '0 8px 8px 0',
+				pointerEvents: 'none',
+			}}>
+				<Fab style={{
+					pointerEvents: 'auto',
+					padding: '0',
+					width: '32px',
+					height: '32px',
+					minHeight: '32px',
+					borderRadius: '8px',
+					// borderBottomRightRadius: '2px',
+					// borderBottomLeftRadius: '2px',
+					marginBottom: '4px',
+				}} size="small" onClick={this.zoomIn}><ZoomInIcon /></Fab>
+				<br />
+				<Fab style={{
+					pointerEvents: 'auto',
+					padding: '0',
+					width: '32px',
+					height: '32px',
+					minHeight: '32px',
+					borderRadius: '8px',
+					// borderTopLeftRadius: '2px',
+					// borderTopRightRadius: '2px',
+				}} size="small" onClick={this.zoomOut}><ZoomOutIcon /></Fab>
 			</div>
 
 			<Map

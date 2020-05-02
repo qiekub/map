@@ -589,6 +589,16 @@ for (const preset_key in preset_overwrites) {
 	}
 }
 
+presets.default = {
+	key: 'default',
+	tags_length: 0,
+	max_tag_value_length: 0,
+	tags: {},
+	name: {},
+	terms: {},
+	icon: '',
+}
+
 const presets_sorted = Object.entries(presets).map(pair=>{
 	return {
     	key: pair[0],

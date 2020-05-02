@@ -38,15 +38,15 @@ questions_are_loading = The questions are loading…
 
 headings_privacy_stage = Privacy
 headings_questions_stage = Questions about the place
-headings_sources_stage = Quellen Angaben
+headings_sources_stage = Sources
 
 privacy_info = 
-    Um qualitativ hochwertige Daten zu gewährleisten, speichern wir einen Cookie und senden ein paar Informationen über Dich an unseren Server. Diese Informationen sind anonym und können nicht auf dich zurück geführt werden.<br />
+    To ensure high quality data, we store a cookie and send some information about you to our server. This information is anonymous and cannot be traced back to you.<br />
     <br />
-    Details dazu findest du in unserer <privacy_policy_link>Datenschutzerklärung</privacy_policy_link>.
+    You can find details on this in our <privacy_policy_link>Privacy Policy</privacy_policy_link>.
 
-sources_info = Gib an woher du die Infos hast.
-sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
+sources_info = Name the source of your info.
+sources_placeholder = "Personal knowledge", links to websites...
 
 
 # SearchBar

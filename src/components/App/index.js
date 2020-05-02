@@ -135,8 +135,6 @@ class App extends React.Component {
 	}
 
 	setTheme(prefersDarkMode){
-		// prefersDarkMode = this.props.globals.env_local_ip !== '' ? false : prefersDarkMode
-
 		const background_paper = prefersDarkMode ? '#202020' : '#ffffff'
 		const background_default = prefersDarkMode ? '#181818' : '#f9f9f9'
 
@@ -383,6 +381,10 @@ class App extends React.Component {
 							}}
 						></Localized>
 					</Typography>
+
+					{/*
+						We're saving some data on your computer. This only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
+					*/}
 				</CardContent>
 				<CardActions>
 					<Button onClick={this.closeIntro}>

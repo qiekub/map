@@ -71,15 +71,7 @@ export function getPreset(tags,presets) {
 	}
 
 
-	return {
-		"key": "",
-		"tags_length": 0,
-		"max_tag_value_length": 0,
-		"tags": {},
-		"name": {},
-		"terms": {}
-	}
-	// return presets[Object.keys(presets)[0]]
+	return presets.default
 }
 
 
