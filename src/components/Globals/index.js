@@ -13,6 +13,11 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { persistCache } from 'apollo-cache-persist'
 
 
+
+const isDevEnvironment = (local_ip !== '')
+
+
+
 async function getInitialGlobalState(callback){
 	const cache = new InMemoryCache()
 
@@ -30,81 +35,23 @@ async function getInitialGlobalState(callback){
 	const globalState = {}
 
 	globalState.globalStateLoaded = true
-	
-	globalState.pageOpenTS = new Date()
-	
-	globalState.env_local_ip = local_ip
-	globalState.isDevEnvironment = (local_ip !== '')
-	
-	globalState.transitionDuration = 300
-	globalState.isSmallScreen = true
-	globalState.sidebarIsOpen = false
-	
-	globalState.cookieOptions = {
-		path: '/',
-		maxAge: 31557600, // expires in one year // these cookies doesn't exist for ever, cause they are used as a simple spam protection. Even one month would probably be enough.
-		...(
-			globalState.isDevEnvironment
-			? undefined
-			: {
-				domain: '.qiekub.com',
-				secure: true,
-			}
-		)
-	}
-	
+
 	globalState.graphql = new ApolloClient({
 		cache,
 		uri: (
-			globalState.isDevEnvironment
+			isDevEnvironment
 			? `http://${globalState.env_local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
 			: `https://api.qiekub.com/graphql/v1/`
 		),
 		// uri: 'https://us-central1-qiekub.cloudfunctions.net/graphql/graphql/v1',
 	})
-	
-	globalState.mainMapFunctions = undefined
-	
-	globalState.userLocales = /*['de'] ||*/ navigator.languages
-	
-	
 
 	callback(globalState)
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // ----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -116,6 +63,32 @@ class GlobalsProvider extends React.Component {
 
 		this.state = {
 			globalStateLoaded: false
+
+			pageOpenTS: new Date(),
+	
+			env_local_ip: local_ip,
+			isDevEnvironment,
+	
+			transitionDuration: 300,
+			isSmallScreen: true,
+			sidebarIsOpen: false,
+
+			mainMapFunctions: undefined,
+
+			cookieOptions: {
+				path: '/',
+				maxAge: 31557600, // expires in one year // these cookies doesn't exist for ever, cause they are used as a simple spam protection. Even one month would probably be enough.
+				...(
+					isDevEnvironment
+					? undefined
+					: {
+						domain: '.qiekub.com',
+						secure: true,
+					}
+				)
+			},
+
+			userLocales: /*['de'] ||*/ navigator.languages,
 		}
 		// this.state = {
 		// 	...globalState,
