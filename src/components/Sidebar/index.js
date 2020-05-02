@@ -18,7 +18,7 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getTranslation, getTranslationFromArray, getPreset, getColorByPreset, getWantedTagsList } from '../../functions.js'
+import { getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -111,6 +111,8 @@ class Sidebar extends React.Component {
 		}
 
 		this.wantedTagsList = [
+			'preset',
+
 			'min_age',
 			'max_age',
 
@@ -129,7 +131,7 @@ class Sidebar extends React.Component {
 			'youtube',
 			'yelp',
 
-			...getWantedTagsList(presets),
+			// ...getWantedTagsList(presets),
 		]
 
 		this.action = undefined
@@ -222,7 +224,16 @@ class Sidebar extends React.Component {
 				if (!!data && !!data.getPlace) {
 					const doc = data.getPlace
 
-					doc.___preset = getPreset(doc.properties.tags || {}, presets)
+					const preset = doc.properties.tags.preset
+
+					doc.___preset = (
+						!!preset && !!presets[preset]
+						? {
+							key: preset,
+							...presets[preset],
+						}
+						: presets.default
+					)
 					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 
 					this.setState({
