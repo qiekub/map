@@ -138,14 +138,7 @@ class MainMap extends React.Component {
 							key: doc.preset,
 							...presets[doc.preset],
 						}
-						: {
-							key: '',
-							tags_length: 0,
-							max_tag_value_length: 0,
-							tags: {},
-							name: {},
-							terms: {}
-						}
+						: presets.default
 					)
 					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 

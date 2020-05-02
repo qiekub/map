@@ -313,7 +313,7 @@ class Sidebar extends React.Component {
 			},
 		}
 
-		emptyDoc.___preset = getPreset(emptyDoc.properties.tags || {}, presets)
+		emptyDoc.___preset = presets.default
 		emptyDoc.___color = getColorByPreset(emptyDoc.___preset.key,colorsByPreset) || colors.default
 
 
