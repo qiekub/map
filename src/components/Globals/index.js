@@ -40,7 +40,7 @@ async function getInitialGlobalState(callback){
 		cache,
 		uri: (
 			isDevEnvironment
-			? `http://${globalState.env_local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
+			? `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
 			: `https://api.qiekub.com/graphql/v1/`
 		),
 		// uri: 'https://us-central1-qiekub.cloudfunctions.net/graphql/graphql/v1',
