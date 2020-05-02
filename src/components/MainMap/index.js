@@ -46,6 +46,8 @@ class MainMap extends React.Component {
 			middleMarkerDoc: undefined,
 		}
 
+		this.defaultClusterSize = 120
+
 		this.filters = null
 
 		// this.MarkerLayerRef = React.createRef()
@@ -214,7 +216,7 @@ class MainMap extends React.Component {
 
 	createPruneCluster(){
 		this.clusterGroup = new PruneClusterForLeaflet()
-		this.clusterGroup.Cluster.Size = 120
+		this.clusterGroup.Cluster.Size = this.defaultClusterSize
 
 		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
 			const marker = new L.Marker(position, {
@@ -439,6 +441,19 @@ class MainMap extends React.Component {
 
 		this.props.globals.map_zoom = viewport.zoom
 		window.dispatchEvent(new Event('mapViewportUpdated'))
+
+		if (viewport.zoom >= 18) {
+			this.clusterGroup.Cluster.Size = 10
+		} else if (viewport.zoom >= 16) {
+			this.clusterGroup.Cluster.Size = 20
+		} else if (viewport.zoom >= 14) {
+			this.clusterGroup.Cluster.Size = 60
+		} else if (viewport.zoom >= 8) {
+			this.clusterGroup.Cluster.Size = 80
+		} else {
+			this.clusterGroup.Cluster.Size = this.defaultClusterSize
+		}
+	}
 
 	zoomIn(){
 		this.map.setZoom(this.map.getZoom()+1)
