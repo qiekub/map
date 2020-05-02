@@ -18,7 +18,13 @@ import { getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functi
 
 import { withGlobals } from '../Globals/'
 
-// import {} from '@material-ui/core'
+import {
+	Fab,
+} from '@material-ui/core'
+import {
+	AddRounded as ZoomInIcon, // ZoomInRounded
+	RemoveRounded as ZoomOutIcon, // ZoomOutRounded
+} from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
 import { Map, TileLayer } from 'react-leaflet'
@@ -55,6 +61,8 @@ class MainMap extends React.Component {
 
 		this.setMapPos = this.setMapPos.bind(this)
 		this.viewportChanged = this.viewportChanged.bind(this)
+		this.zoomIn = this.zoomIn.bind(this)
+		this.zoomOut = this.zoomOut.bind(this)
 	}
 
 	componentDidMount(){
@@ -423,6 +431,12 @@ class MainMap extends React.Component {
 
 		this.props.globals.map_zoom = viewport.zoom
 		window.dispatchEvent(new Event('mapViewportUpdated'))
+
+	zoomIn(){
+		this.map.setZoom(this.map.getZoom()+1)
+	}
+	zoomOut(){
+		this.map.setZoom(this.map.getZoom()-1)
 	}
 
 	render() {
@@ -441,6 +455,38 @@ class MainMap extends React.Component {
 						: <div className="wrapper material-icons-round">not_listed_location</div>
 					}
 				</div>
+			</div>
+
+			<div style={{
+				position: 'fixed',
+				zIndex: '99999999',
+				bottom: '28px',
+				right: '4px',
+				// margin: '0 8px 8px 0',
+				pointerEvents: 'none',
+			}}>
+				<Fab style={{
+					pointerEvents: 'auto',
+					padding: '0',
+					width: '32px',
+					height: '32px',
+					minHeight: '32px',
+					borderRadius: '8px',
+					// borderBottomRightRadius: '2px',
+					// borderBottomLeftRadius: '2px',
+					marginBottom: '4px',
+				}} size="small" onClick={this.zoomIn}><ZoomInIcon /></Fab>
+				<br />
+				<Fab style={{
+					pointerEvents: 'auto',
+					padding: '0',
+					width: '32px',
+					height: '32px',
+					minHeight: '32px',
+					borderRadius: '8px',
+					// borderTopLeftRadius: '2px',
+					// borderTopRightRadius: '2px',
+				}} size="small" onClick={this.zoomOut}><ZoomOutIcon /></Fab>
 			</div>
 
 			<Map
