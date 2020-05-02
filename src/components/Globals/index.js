@@ -53,7 +53,7 @@ async function getInitialGlobalState(callback){
 
 // ----------------------------------------------------------------
 
-
+const waitingForConicGradient = []
 
 const GlobalsContext = React.createContext()
 
@@ -88,6 +88,10 @@ class GlobalsProvider extends React.Component {
 			},
 
 			userLocales: /*['de'] ||*/ navigator.languages,
+
+			ConicGradient: undefined,
+			updateOnConicGradient: this.updateOnConicGradient,
+
 		}
 		// this.state = {
 		// 	...globalState,
@@ -99,6 +103,38 @@ class GlobalsProvider extends React.Component {
 		getInitialGlobalState(globalState=>{
 			this.setState(globalState)
 		})
+
+		this.checkForConicGradient()
+
+		this.updateOnConicGradient = this.updateOnConicGradient.bind(this)
+		this.checkForConicGradient = this.checkForConicGradient.bind(this)
+	}
+
+	updateOnConicGradient(callback){
+		if (!!callback) {
+			if (!!this.state && !!this.state.ConicGradient) {
+				callback()
+			}else{
+				waitingForConicGradient.push(callback)
+			}
+		}
+	}
+	checkForConicGradient(){
+		if (false && !!window.ConicGradient) {
+			this.setState({ConicGradient: window.ConicGradient})
+		} else {
+			this.checkForConicGradient_interval = setInterval(()=>{
+				if (!!window.ConicGradient) {
+					clearInterval(this.checkForConicGradient_interval)
+
+					this.setState({ConicGradient: window.ConicGradient}, ()=>{
+						for (const callback of waitingForConicGradient) {
+							callback()
+						}
+					})
+				}
+			}, 10)
+		}
 	}
 
 	render() {

@@ -68,6 +68,10 @@ class MainMap extends React.Component {
 	componentDidMount(){
 		this.loadMarkers()
 
+		this.props.globals.updateOnConicGradient(()=>{
+			this.clusterGroup.RedrawIcons()
+		})
+
 		if (this.props.onFunctions) {
 			const functions = {
 				setZoom: (...attr) => this.map.setZoom(...attr),
@@ -166,6 +170,10 @@ class MainMap extends React.Component {
 	}
 
 	getConicGradient(values){
+		if (!(!!this.props.globals.ConicGradient)) {
+			return ''
+		}
+
 		let stops = []
 
 		const gapColor = 'transparent' // this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
@@ -195,7 +203,7 @@ class MainMap extends React.Component {
 		}
 		stops = stops.join(', ')
 
-		var gradient = new window.ConicGradient({
+		var gradient = new this.props.globals.ConicGradient({
 		    stops: stops, // "gold 40%, #f06 0", // required
 		    repeating: false, // Default: false
 		    size: 100, // Default: Math.max(innerWidth, innerHeight)
