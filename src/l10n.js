@@ -10,11 +10,8 @@ import { negotiateLanguages } from '@fluent/langneg'
 const _supportedLocales_ = ['de','en']
 const _defaultLocale_ = 'en'
 
-async function fetchMessages(locale) {
-	// import('./locales/en.ftl').then(Text => {
-	// 	console.log('Text', Text)
-	// })
 
+async function fetchMessages(locale) {
 	const path = await import('./locales/'+locale+'.ftl')
 
 	const response = await fetch(path.default)
