@@ -41,6 +41,7 @@ export const loadMarkers = gql`
 			lng
 			lat
 			preset
+			tags
 		}
 	}
 `
