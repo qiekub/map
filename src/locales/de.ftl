@@ -51,7 +51,7 @@ sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
 
 
 # SearchBar
-search-for-qeerness = Such nach Queerness!
+search-for-queerness = Such nach Queerness!
 
 
 # Sidebar
