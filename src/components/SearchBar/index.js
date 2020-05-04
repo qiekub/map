@@ -9,6 +9,12 @@ import {
 	InputBase,
 	IconButton,
 	Drawer,
+
+	CardContent,
+	CardActions,
+	Button,
+	Typography,
+	Link,
 } from '@material-ui/core'
 
 import {
@@ -28,6 +34,7 @@ class SearchBar extends React.Component {
 			value: '',
 			loadingSearchResult: false,
 			isMainDrawerOpen: false,
+			showWebsiteIntro: true,
 		}
 
 		this.searchInputRef = React.createRef()
@@ -37,6 +44,8 @@ class SearchBar extends React.Component {
 		this.searchKeypressed = this.searchKeypressed.bind(this)
 		this.closeSidebar = this.closeSidebar.bind(this)
 		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
+
+		this.closeIntro = this.closeIntro.bind(this)
 	}
 
 	componentDidMount() {
@@ -89,6 +98,10 @@ class SearchBar extends React.Component {
 		this.setState((state,props)=>{
 			return {isMainDrawerOpen:!state.isMainDrawerOpen}
 		})
+	}
+
+	closeIntro(){
+		this.setState({showWebsiteIntro: false})
 	}
 
 	render() {
@@ -170,10 +183,63 @@ class SearchBar extends React.Component {
 					<Button size="small">Learn More</Button>
 				</CardActions>
 			</Card>*/}
+				<div className="websiteIntro">
+					<CardContent>
+						<Typography variant="h6" component="h1" gutterBottom>
+							<Localized id="welcome-heading" />
+						</Typography>
+
+						<Typography variant="body2" color="textSecondary" gutterBottom>
+							<Localized id="project-summary" />
+						</Typography>
+
+						<Typography variant="body2" color="textSecondary" style={{marginTop:'8px'}}>
+							<Localized
+								id="tiny-thanks"
+								elems={{
+									mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
+								}}
+							></Localized>
+						</Typography>
+
+						{/*
+							We're saving some data on your computer. This only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
+						*/}
+					</CardContent>
+					<CardActions>
+						<Button onClick={this.closeIntro}>
+							<Localized id="close-button" />
+						</Button>
+					</CardActions>
+					{/*<CardActions>
+						<Button>Learn more</Button> <Button>Add a Place</Button>
+					</CardActions>*/}
+				</div>
+			</Paper>
 		</div>)
 	}
 }
 
 export default withLocalization(SearchBar)
+
+
+
+/*
+	<Card>
+	Start Info:
+
+	Where can I meet queer people in my town?
+	Where is the next queer-youth-center?
+	
+	Help us answer these questions!
+
+	Add queer-infos about places around you.
+
+	-----
+
+	Info about who supports the project or which services/libraries/tools are used:
+	Mapbox, OSM, Overpass, GitHub, Firebase
+	</Card>
+*/
 
 

@@ -18,17 +18,7 @@ import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core
 // import { CssBaseline } from '@material-ui/core'
 
 import {
-	Link,
 	Fab,
-	// Drawer,
-	Typography,
-
-	Card,
-	CardActions,
-	// CardActionArea,
-	CardContent,
-	// Divider,
-	Button,
 } from '@material-ui/core'
 import {
 	AddRounded as AddIcon,
@@ -90,7 +80,6 @@ class App extends React.Component {
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
 		this.setTheme = this.setTheme.bind(this)
-		this.closeIntro = this.closeIntro.bind(this)
 
 		this.check_color_scheme = this.check_color_scheme.bind(this)
 		this.check_small_screen = this.check_small_screen.bind(this)
@@ -239,10 +228,6 @@ class App extends React.Component {
 		// const viewport_width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 	}
 
-	closeIntro(){
-		this.setState({introIsOpen: false})
-	}
-
 	saveFunctions(componentName, functionsObject){
 		this.functions[componentName] = functionsObject
 	}
@@ -359,58 +344,6 @@ class App extends React.Component {
 				onSetSidebarIsOpen={this.setSidebarIsOpen}
 				onSetSearchBarValue={this.setSearchBarValue}
 			/>
-
-			<Card
-				className={`introCard ${this.state.introIsOpen ? 'open' : 'closed'}`}
-				elevation={6}
-			>
-				<CardContent>
-					<Typography variant="h6" component="h1" gutterBottom>
-						<Localized id="welcome-heading" />
-					</Typography>
-
-					<Typography variant="body2" color="textSecondary" gutterBottom>
-						<Localized id="project-summary" />
-					</Typography>
-
-					<Typography variant="body2" color="textSecondary" style={{marginTop:'8px'}}>
-						<Localized
-							id="tiny-thanks"
-							elems={{
-								mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
-							}}
-						></Localized>
-					</Typography>
-
-					{/*
-						We're saving some data on your computer. This only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
-					*/}
-				</CardContent>
-				<CardActions>
-					<Button onClick={this.closeIntro}>
-						<Localized id="close-button" />
-					</Button>
-				</CardActions>
-				{/*<CardActions>
-					<Button>Learn more</Button> <Button>Add a Place</Button>
-				</CardActions>*/}
-			</Card>
-
-			{/*<Card>
-				Start Info:
-
-				Where can I meet queer people in my town?
-				Where is the next queer-youth-center?
-				
-				Help us answer these questions!
-
-				Add queer-infos about places around you.
-
-				-----
-
-				Info about who supports the project or which services/libraries/tools are used:
-				Mapbox, OSM, Overpass, GitHub, Firebase
-			</Card>*/}
 
 			{
 				this.state.isSmallScreen

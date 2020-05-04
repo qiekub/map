@@ -75,31 +75,6 @@ html body .addNewFab{
 	}
 }
 
-.introCard{
-	z-index: var(--z-index-introcard);
-    position: absolute;
-    top: calc(52px + 32px);
-    left: 16px;
-    width: calc(400px - 32px);
-    max-width: calc(100% - 32px);
-
-    opacity: 1;
-    transform: translate3d(0,0,0);
-    transition:
-    	transform var(--transition-time) var(--timing-function),
-    	opacity var(--transition-time) var(--timing-function);
-}
-.introCard.closed{
-	opacity: 0;
-	transform: translate3d(0,-50%,0);
-	pointer-events: none;
-}
-@media (max-width: 800px) {
-	.introCard{
-		top: calc(calc(52px + 32px) + calc(34px + 16px));
-	}
-}
-
 .filtersPanel{
 	z-index: var(--z-index-fabs);
 	position: absolute;
@@ -191,7 +166,6 @@ html body .Sidebar{
 @supports (backdrop-filter: blur(16px)) {
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
 	.SearchBar .header:before,
-	.introCard:before,
 	.filtersPanel .fab:before {
 		content: '';
 		position: absolute;
@@ -206,9 +180,8 @@ html body .Sidebar{
 
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
 	.SearchBar .header:before,
-	.introCard:before,
 	.filtersPanel .fab:before{
-		backdrop-filter: blur(16px);
+		backdrop-filter: blur(16px); /* blur(32px) saturate(2); */
 	}
 
 	.menuBlurredPaperBackground .MuiMenu-paper{
@@ -216,14 +189,12 @@ html body .Sidebar{
 	}
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
 	.SearchBar .header,
-	.introCard,
 	.filtersPanel .fab{
 		background-color: rgba(255,255,255,0.9) !important;
 	}
 	@media (prefers-color-scheme: dark) {
 		.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
 		.SearchBar .header,
-		.introCard,
 		.filtersPanel .fab{
 			background-color: #202020cc !important;
 		}

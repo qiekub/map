@@ -13,4 +13,9 @@
 	/*border-radius: 0 !important;*/
 
 	/*box-shadow: 0 0 0 1px rgba(0,0,0,0.12) !important;*/
+}.header .websiteIntro {
+	display: none;
+}
+.header.showingWebsiteIntro .websiteIntro {
+	display: block;
 }
