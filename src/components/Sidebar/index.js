@@ -223,6 +223,10 @@ class Sidebar extends React.Component {
 			.subscribe(({data}) => {
 				if (!!data && !!data.getPlace) {
 					const doc = data.getPlace
+					
+					if (this.props.onDontFilterTheseIds) {
+						this.props.onDontFilterTheseIds([doc._id])
+					}
 
 					const preset = doc.properties.tags.preset
 
