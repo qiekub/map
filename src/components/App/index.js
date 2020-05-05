@@ -277,7 +277,13 @@ class App extends React.Component {
 	}
 
 	filtersChanged(newFilters){
-		this.setState({filters:newFilters})
+		this.setState((state, props) => ({
+			filters:{
+				...state.filters,
+				...newFilters,
+			}
+		}))
+	}
 
 	dontFilterTheseIds(ids){
 		this.setState((state, props) => ({
