@@ -79,7 +79,10 @@ class SearchBar extends React.Component {
 		}
 	}
 	saveSearchQueryText(event){
-		this.setState({value: event.target.value})
+		this.setState({value: event.target.value}, ()=>{
+			this.loadSearchResults(this.state.value)
+		})
+	}
 
 	openSearchResult(searchResult){
 		this.setState({showSearchResults: false})
