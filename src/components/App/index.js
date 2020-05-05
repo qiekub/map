@@ -84,7 +84,6 @@ class App extends React.Component {
 		this.setView = this.setView.bind(this)
 		this.flyTo = this.flyTo.bind(this)
 		this.getZoom = this.getZoom.bind(this)
-	}
 
 		this.dontFilterTheseIds = this.dontFilterTheseIds.bind(this)
 	}
