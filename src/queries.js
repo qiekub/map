@@ -47,9 +47,20 @@ export const loadMarkers = gql`
 `
 
 export const search = gql`
-	query($query: String=""){
-		search(query: $query){	
+	query($query: String="", $languages: [String]){
+		search(query: $query, languages: $languages){
+			placeID
+			preset
+			name {
+				text
+				language
+			}
+			address
 			geometry {
+				location {
+					lng
+					lat
+				}
 				boundingbox {
 					northeast {
 						lng

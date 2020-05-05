@@ -2,7 +2,7 @@ import React from 'react'
 
 import { withLocalization } from '../Localized/'
 
-import {navigate} from '@reach/router'
+import { navigate } from '@reach/router'
 import {
 	loadMarkers as query_loadMarkers,
 } from '../../queries.js'
@@ -362,6 +362,8 @@ class MainMap extends React.Component {
 		if (this.state.isGeoChooser) {
 			this.hideAllMarkers()
 		} else if (!!this.filters) {
+			const ids = this.filters.ids || []
+
 			const presets = this.filters.presets || []
 			// const presets = ['amenity/community_centre']
 			const presets_length = presets.length
@@ -374,36 +376,41 @@ class MainMap extends React.Component {
 				for (let i = markers_length - 1; i >= 0; i--) {
 					const marker = this.markers[i]
 
-					let isInPresets = true
-					if (presets_length > 0) {
-						isInPresets = presets.map(preset_key=>{
-							return marker.data.___preset.key.startsWith(preset_key)
-						}).reduce((bool,value) => (value ? true : bool), false)
-					}
+					if (ids.includes(marker.data._id)) {
+						this.markers[i].filtered = false
+					}else{
+						
+						let isInPresets = true
+						if (presets_length > 0) {
+							isInPresets = presets.map(preset_key=>{
+								return marker.data.___preset.key.startsWith(preset_key)
+							}).reduce((bool,value) => (value ? true : bool), false)
+						}
 
-					let isInAgeRange = true
-					if (!!selectedAge) {
-						isInAgeRange = false
-						if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
-							const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-							const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-							isInAgeRange = (
-								   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-								&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
-							)
-						}else{
-							if (!!marker.data.tags.min_age) {
+						let isInAgeRange = true
+						if (!!selectedAge) {
+							isInAgeRange = false
+							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
 								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-								isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-							}
-							if (isInAgeRange && !!marker.data.tags.max_age) {
 								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-								isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								isInAgeRange = (
+									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								)
+							}else{
+								if (!!marker.data.tags.min_age) {
+									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+								}
+								if (isInAgeRange && !!marker.data.tags.max_age) {
+									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+								}
 							}
 						}
-					}
 
-					this.markers[i].filtered = !(isInPresets && isInAgeRange)
+						this.markers[i].filtered = !(isInPresets && isInAgeRange)
+					}
 				}
 				this.clusterGroup.ProcessView()
 			}else{

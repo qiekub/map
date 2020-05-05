@@ -37,40 +37,39 @@ const presetSorter = (a, b) => {
 }
 
 const _options_ = [].concat(
-			...(
-				categories
-				.map(category =>
-					Object.values(_presets_)
-					.filter(preset => category.presets.some(
-						presetKey => preset.key === presetKey || preset.key.startsWith(presetKey+'/')
-					))
-					.map(preset => preset4options({
-						...preset,
-
-						category_name_translated: getTranslation(category.name),
-						color: category.color,
-					}))
-					.sort(presetSorter)
-				)
-			),
-			...(
-				Object.values(_presets_)
-				.filter(preset => !categories.some(
-					category => category.presets.some(
-						presetKey => (
-							preset.key === presetKey
-							|| preset.key.startsWith(presetKey+'/')
-						)
-					)
-				))
-				.map(preset => preset4options({
-					...preset,
-					category_name_translated: 'Weitere',
-					color: colors.default,
-				}))
-				.sort(presetSorter)
-			)
+	...(
+		categories
+		.map(category =>
+			Object.values(_presets_)
+			.filter(preset => category.presets.some(
+				presetKey => preset.key === presetKey || preset.key.startsWith(presetKey+'/')
+			))
+			.map(preset => preset4options({
+				...preset,
+				category_name_translated: getTranslation(category.name),
+				color: category.color,
+			}))
+			.sort(presetSorter)
 		)
+	),
+	...(
+		Object.values(_presets_)
+		.filter(preset => !categories.some(
+			category => category.presets.some(
+				presetKey => (
+					preset.key === presetKey
+					|| preset.key.startsWith(presetKey+'/')
+				)
+			)
+		))
+		.map(preset => preset4options({
+			...preset,
+			category_name_translated: 'Weitere',
+			color: colors.default,
+		}))
+		.sort(presetSorter)
+	)
+)
 
 export default class PresetInput extends React.Component {
 	constructor(props) {
