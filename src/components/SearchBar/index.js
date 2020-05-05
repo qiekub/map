@@ -63,6 +63,7 @@ class SearchBar extends React.Component {
 		this.loadSearchResults = this.loadSearchResults.bind(this)
 		this.openSearchResult = this.openSearchResult.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
+		this.hideSearchResults = this.hideSearchResults.bind(this)
 	}
 
 	componentDidMount() {
@@ -221,6 +222,10 @@ class SearchBar extends React.Component {
 
 	closeIntro(){
 		this.setState({showWebsiteIntro: false})
+	}
+
+	hideSearchResults(){
+		this.setState({showSearchResults: false})
 	}
 
 	render() {
