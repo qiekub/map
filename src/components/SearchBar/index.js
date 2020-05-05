@@ -154,35 +154,6 @@ class SearchBar extends React.Component {
 					</IconButton>
 				)}
 			</Paper>
-
-			{/*<Card className="header">
-				<CardContent>
-
-					<div style={{
-						margin: '-16px -16px 0 -16px',
-						padding: '2px 4px',
-						display: 'flex',
-						alignItems: 'center',
-					}}>
-						<IconButton style={{padding:'10px'}} aria-label="menu">
-							<MenuIcon />
-						</IconButton>
-						<InputBase
-							style={{flex: 1}}
-							placeholder="Search Google Maps"
-							inputProps={{'aria-label': 'search google maps'}}
-						/>
-						<IconButton type="submit" style={{padding:'10px'}} aria-label="search" onClick={this.submitTheSearchQuery}>
-							<SearchIcon />
-						</IconButton>
-					</div>
-
-					<Typography variant="h4" component="h1" gutterBottom>QueerCenters</Typography>
-				</CardContent>
-				<CardActions>
-					<Button size="small">Learn More</Button>
-				</CardActions>
-			</Card>*/}
 				<div className="websiteIntro">
 					<CardContent>
 						<Typography variant="h6" component="h1" gutterBottom>

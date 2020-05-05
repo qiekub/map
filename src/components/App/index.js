@@ -89,18 +89,10 @@ class App extends React.Component {
 		this.getZoom = this.getZoom.bind(this)
 	}
 
-	pretendToSearch(){
-		this.setSearchBarValue('Los Angeles')
-		this.startSearch('Los Angeles',()=>{
-			setTimeout(()=>{
-				this.functions['MainMap'].zoomIn()
-			}, 1500)
-		})
+		this.dontFilterTheseIds = this.dontFilterTheseIds.bind(this)
 	}
 
 	componentDidMount(){
-		// this.pretendToSearch()
-
 		if (!!window.matchMedia) {
 			// https://react-theming.github.io/create-mui-theme
 			// https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=FAFAFA&secondary.color=263238
