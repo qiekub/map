@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 
-import { withLocalization } from '../Localized/'
+import { Localized, withLocalization } from '../Localized/'
 import {navigate} from '@reach/router'
 import { withGlobals } from '../Globals/'
 import { search as query_search } from '../../queries.js'
