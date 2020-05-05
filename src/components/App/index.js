@@ -1,7 +1,6 @@
 import React from 'react'
 import './index.css'
 
-// import {gql} from 'apollo-boost'
 import { Router, navigate } from '@reach/router'
 
 // import categories from '../../data/dist/categories.json'
