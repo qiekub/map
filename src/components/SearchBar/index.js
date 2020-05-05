@@ -206,6 +206,10 @@ class SearchBar extends React.Component {
 	async closeSidebar(){
 		await navigate(`/`)
 
+		if (this.props.onDontFilterTheseIds) {
+			this.props.onDontFilterTheseIds([])
+		}
+
 		this.setState({value: ''}, ()=>{
 			if (this.props.onSetSidebarIsOpen) {
 				this.props.onSetSidebarIsOpen(false)
