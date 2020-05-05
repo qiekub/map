@@ -268,24 +268,23 @@ class SearchBar extends React.Component {
 				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
 				variant="elevation"
 			>
-				<InputBase
-					style={{
-						height: '52px',
-						padding: '', // '0 4px 0 16px', // '0 4px',
-						flex: 1,
-					}}
-					value={this.state.value}
-					placeholder={this.props.getString('search-for-qeerness')}
-					onChange={this.saveSearchQueryText}
-					onKeyPress={this.searchKeypressed}
-
-					disabled={this.props.sidebarIsOpen}
-
-					inputRef={this.searchInputRef}
-				/>
-			</Paper>
+				<div className="searchBar">
 					{leftIcon}
+					<InputBase
+						className="searchInput"
+						value={this.state.value}
+						placeholder={this.props.getString('search-for-queerness')}
+						onFocus={this.saveSearchQueryText}
+
+						onChange={this.saveSearchQueryText}
+						onKeyPress={this.searchKeypressed}
+
+						disabled={this.props.sidebarIsOpen}
+
+						inputRef={this.searchInputRef}
+					/>
 					{rightIcon}
+				</div>
 				<div className="searchResults">
 					<List>
 					{
