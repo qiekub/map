@@ -3,6 +3,14 @@ import './index.css'
 
 import { withLocalization } from '../Localized/'
 import {navigate} from '@reach/router'
+import { withGlobals } from '../Globals/'
+import { search as query_search } from '../../queries.js'
+
+// import categories from '../../data/dist/categories.json'
+import presets from '../../data/dist/presets.json'
+import colors from '../../data/dist/colors.json'
+import colorsByPreset from '../../data/dist/colorsByPreset.json'
+import { getTranslationFromArray, getColorByPreset } from '../../functions.js'
 
 import {
 	Paper,
@@ -34,6 +42,8 @@ class SearchBar extends React.Component {
 			value: '',
 			loadingSearchResult: false,
 			isMainDrawerOpen: false,
+			searchResults: [],
+			showSearchResults: false,
 			showWebsiteIntro: true,
 		}
 
@@ -45,6 +55,8 @@ class SearchBar extends React.Component {
 		this.closeSidebar = this.closeSidebar.bind(this)
 		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
 
+		this.loadSearchResults = this.loadSearchResults.bind(this)
+		this.openSearchResult = this.openSearchResult.bind(this)
 		this.closeIntro = this.closeIntro.bind(this)
 	}
 
@@ -63,15 +75,114 @@ class SearchBar extends React.Component {
 	}
 	saveSearchQueryText(event){
 		this.setState({value: event.target.value})
+
+	openSearchResult(searchResult){
+		this.setState({showSearchResults: false})
+
+		if (!!searchResult.placeID) {
+			navigate(`/view/${searchResult.placeID}/`)
+		}
+
+		if (!!searchResult.geometry.boundingbox) {
+			this.props.globals.mainMapFunctions.flyToBounds([
+				[
+					searchResult.geometry.boundingbox.southwest.lat,
+					searchResult.geometry.boundingbox.southwest.lng,
+				],
+				[
+					searchResult.geometry.boundingbox.northeast.lat,
+					searchResult.geometry.boundingbox.northeast.lng,
+				]
+			], {
+				animate: true,
+				duration: 1.5,
+			})
+			
+			// this.props.globals.mainMapFunctions.setBounds([
+			// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
+			// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
+			// ])
+		}else if (!!searchResult.geometry.location) {
+			const location = searchResult.geometry.location
+
+			let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
+			if (zoomLevel < 17) {
+				zoomLevel = 17
+			}
+
+			this.props.globals.mainMapFunctions.flyTo(
+				(
+					this.props.globals.isSmallScreen
+					? location
+					: this.props.globals.mainMapFunctions.unproject( this.props.globals.mainMapFunctions.project(location,zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
+				),
+				zoomLevel,
+				{
+					animate: true,
+					duration: 1.5,
+				}
+			)
+		}
+	}
+
+	loadSearchResults(queryString){
+		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
+			this.props.globals.graphql.query({
+				// fetchPolicy: 'no-cache',
+				query: query_search,
+				variables: {
+					query: queryString,
+					languages: navigator.languages,
+				},
+			}).then(async result => {
+
+				const searchResults = result.data.search.map(result => {
+					const preset = result.preset
+					return {
+						...result,
+						name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
+						
+						___preset: (
+							!!preset && !!presets[preset]
+							? {
+								key: preset,
+								...presets[preset],
+							}
+							: presets.default
+						),
+						___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
+
+						key: JSON.stringify(result),
+					}
+				})
+
+				this.setState({
+					showSearchResults: true,
+					loadingSearchResult: false,
+					searchResults,
+				})
+			}).catch(error=>{
+				this.setState({
+					showSearchResults: false,
+					loadingSearchResult: false,
+					searchResults: [],
+				})
+				console.error(error)
+			})
+		}else{
+			this.setState({
+				showSearchResults: false,
+				loadingSearchResult: false,
+				searchResults: [],
+			})
+		}
 	}
 
 	submitTheSearchQuery(){
 		if (this.props.onStartSearch) {
 			this.searchInputRef.current.blur() // unfocus the input element
-			this.setState({loadingSearchResult:true}, ()=>{
-				this.props.onStartSearch(this.state.value, ()=>{
-					this.setState({loadingSearchResult:false})
-				})
+			this.setState({loadingSearchResult: true}, ()=>{
+				this.loadSearchResults(this.state.value)
 			})
 		}
 	}
@@ -191,7 +302,7 @@ class SearchBar extends React.Component {
 	}
 }
 
-export default withLocalization(SearchBar)
+export default withGlobals(withLocalization(SearchBar))
 
 
 

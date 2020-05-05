@@ -3,7 +3,6 @@ import './index.css'
 
 // import {gql} from 'apollo-boost'
 import { Router, navigate } from '@reach/router'
-import { search as query_search } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
 // import presets from '../../data/dist/presets.json'
@@ -75,7 +74,6 @@ class App extends React.Component {
 
 		this.functions = {}
 
-		this.startSearch = this.startSearch.bind(this)
 		this.setSearchBarValue = this.setSearchBarValue.bind(this)
 		this.setSidebarIsOpen = this.setSidebarIsOpen.bind(this)
 		this.filtersChanged = this.filtersChanged.bind(this)
@@ -270,45 +268,6 @@ class App extends React.Component {
 		})
 	}
 
-	startSearch(queryString,callback){
-		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
-			this.props.globals.graphql.query({
-				query: query_search,
-				variables: {
-					// languages: navigator.languages,
-					query: queryString,
-				},
-			}).then(async result => {
-				await navigate(`/`)
-
-				this.functions['MainMap'].flyToBounds([
-					[
-						result.data.search.geometry.boundingbox.southwest.lat,
-						result.data.search.geometry.boundingbox.southwest.lng,
-					],
-					[
-						result.data.search.geometry.boundingbox.northeast.lat,
-						result.data.search.geometry.boundingbox.northeast.lng,
-					]
-				], {
-					animate: true,
-					duration: 1.5,
-				})
-
-				// this.functions['MainMap'].setBounds([
-				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
-				// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
-				// ])
-				callback()
-			}).catch(error=>{
-				console.error(error)
-				callback()
-			})
-		}else{
-			callback()
-		}
-	}
-
 	setView(...attr){
 		return this.functions['MainMap'].setView(...attr)
 	}
@@ -330,7 +289,6 @@ class App extends React.Component {
 			
 			<SearchBar
 				className="SearchBar"
-				onStartSearch={this.startSearch}
 				value={this.state.searchBarValue}
 				sidebarIsOpen={this.state.sidebarIsOpen}
 				onSetSidebarIsOpen={this.setSidebarIsOpen}
