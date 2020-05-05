@@ -264,7 +264,12 @@ class SearchBar extends React.Component {
 			</Drawer>
 
 			<Paper
-				className={'header '+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')}
+				className={
+					'header '
+					+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')
+					+(this.state.showSearchResults && this.state.searchResults.length > 0 ? 'showingSearchResults' : '')
+					+(!this.state.showSearchResults && this.state.showWebsiteIntro ? 'showingWebsiteIntro' : '')
+				}
 				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
 				variant="elevation"
 			>
