@@ -2,7 +2,7 @@ import React from 'react'
 
 import { withLocalization } from '../Localized/'
 
-import {navigate} from '@reach/router'
+import { navigate } from '@reach/router'
 import {
 	loadMarkers as query_loadMarkers,
 } from '../../queries.js'
