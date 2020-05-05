@@ -31,9 +31,10 @@ import {
 } from '@material-ui/core'
 
 import {
-	SearchRounded as SearchIcon,
+	// SearchRounded as SearchIcon,
 	HourglassEmptyRounded as HourglassEmptyIcon,
 	CloseRounded as CloseIcon,
+	ArrowBackRounded as ArrowBackIcon,
 	MenuRounded as MenuIcon,
 } from '@material-ui/icons'
 
