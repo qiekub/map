@@ -224,6 +224,20 @@ class SearchBar extends React.Component {
 	}
 
 	render() {
+		let leftIcon = undefined
+		if (this.state.showSearchResults) {
+			leftIcon = (
+				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.hideSearchResults}>
+					<ArrowBackIcon />
+				</IconButton>
+			)
+		} else {
+			leftIcon = (
+				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
+					<MenuIcon />
+				</IconButton>
+			)
+		}
 		return (<div className={this.props.className}>
 			<Drawer
 				open={this.state.isMainDrawerOpen}
@@ -237,9 +251,6 @@ class SearchBar extends React.Component {
 				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
 				variant="elevation"
 			>
-				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
-					<MenuIcon />
-				</IconButton>
 				<InputBase
 					style={{
 						height: '52px',
@@ -273,6 +284,7 @@ class SearchBar extends React.Component {
 					</IconButton>
 				)}
 			</Paper>
+					{leftIcon}
 				<div className="searchResults">
 					<List>
 					{
