@@ -278,6 +278,14 @@ class App extends React.Component {
 
 	filtersChanged(newFilters){
 		this.setState({filters:newFilters})
+
+	dontFilterTheseIds(ids){
+		this.setState((state, props) => ({
+			filters:{
+				...state.filters,
+				ids,
+			}
+		}))
 	}
 
 	render() {
@@ -291,6 +299,7 @@ class App extends React.Component {
 				sidebarIsOpen={this.state.sidebarIsOpen}
 				onSetSidebarIsOpen={this.setSidebarIsOpen}
 				onSetSearchBarValue={this.setSearchBarValue}
+				onDontFilterTheseIds={this.dontFilterTheseIds}
 			/>
 
 			{
@@ -323,6 +332,8 @@ class App extends React.Component {
 					onSetView={this.setView}
 					onFlyTo={this.flyTo}
 					onGetZoom={this.getZoom}
+
+					onDontFilterTheseIds={this.dontFilterTheseIds}
 				/>
 			</Router>
 			
