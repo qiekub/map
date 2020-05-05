@@ -238,6 +238,23 @@ class SearchBar extends React.Component {
 				</IconButton>
 			)
 		}
+
+
+		let rightIcon = undefined
+		if (this.props.sidebarIsOpen) {
+			rightIcon = (
+				<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
+					<CloseIcon />
+				</IconButton>
+			)
+		} else if (this.state.loadingSearchResult) {
+			rightIcon = (
+				<IconButton type="submit" style={{margin:'4px',padding:'10px'}}>
+					<HourglassEmptyIcon />
+				</IconButton>
+			)
+		}
+
 		return (<div className={this.props.className}>
 			<Drawer
 				open={this.state.isMainDrawerOpen}
@@ -266,25 +283,9 @@ class SearchBar extends React.Component {
 
 					inputRef={this.searchInputRef}
 				/>
-				{(
-					this.props.sidebarIsOpen
-					?
-					<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
-						<CloseIcon />
-					</IconButton>
-					:
-					<IconButton type="submit" style={{margin:'4px',padding:'10px'}} aria-label="search" onClick={this.submitTheSearchQuery}>
-						{(
-							this.state.loadingSearchResult
-							?
-							<HourglassEmptyIcon />
-							:
-							<SearchIcon />
-						)}
-					</IconButton>
-				)}
 			</Paper>
 					{leftIcon}
+					{rightIcon}
 				<div className="searchResults">
 					<List>
 					{
