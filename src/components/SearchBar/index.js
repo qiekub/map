@@ -18,6 +18,11 @@ import {
 	IconButton,
 	Drawer,
 
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+
 	CardContent,
 	CardActions,
 	Button,
@@ -265,6 +270,31 @@ class SearchBar extends React.Component {
 					</IconButton>
 				)}
 			</Paper>
+				<div className="searchResults">
+					<List>
+					{
+						this.state.searchResults.map(result => {
+							return (<ListItem button key={result.key} onClick={()=>this.openSearchResult(result)}>
+								<ListItemIcon>
+									<div
+										className="material-icons-round"
+										style={{
+											color: (result.___preset.icon ? result.___color.fg : ''),
+											backgroundColor: (result.___preset.icon ? result.___color.bg : ''),
+											borderRadius: '100%',
+											width: '40px',
+											height: '40px',
+											lineHeight: '40px',
+											textAlign: 'center',
+										}}
+									>{result.___preset.icon}</div>
+								</ListItemIcon>
+								<ListItemText primary={result.name_translated} secondary={result.address}/>
+							</ListItem>)
+						})
+					}
+					</List>
+				</div>
 				<div className="websiteIntro">
 					<CardContent>
 						<Typography variant="h6" component="h1" gutterBottom>
