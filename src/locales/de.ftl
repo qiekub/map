@@ -42,8 +42,8 @@ headings_questions_stage = Fragen zum Ort
 headings_sources_stage = Quellen Angaben
 
 privacy_info = 
-    <p>Um qualitativ hochwertige Daten zu gewährleisten, speichern wir einen Cookie und senden ein paar Informationen über Dich an unseren Server. Diese Informationen sind anonym und können nicht auf dich zurück geführt werden.</p>
-    <p>Details dazu findest du in unserer <privacy_policy_link>Datenschutzerklärung</privacy_policy_link>.</p>
+    Um qualitativ hochwertige Daten zu gewährleisten, speichern wir einen Cookie und senden ein paar Informationen über Dich an unseren Server. Diese Informationen sind anonym und können nicht auf dich zurück geführt werden.br />
+    Details dazu findest du in unserer <privacy_policy_link>Datenschutzerklärung</privacy_policy_link>.
 
 sources_info = Gib an woher du die Infos hast.
 sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
