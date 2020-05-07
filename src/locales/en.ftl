@@ -41,9 +41,8 @@ headings_questions_stage = Questions about the place
 headings_sources_stage = Sources
 
 privacy_info = 
-    To ensure high quality data, we store a cookie and send some information about you to our server. This information is anonymous and cannot be traced back to you.<br />
-    <br />
-    You can find details on this in our <privacy_policy_link>Privacy Policy</privacy_policy_link>.
+    <p>To ensure high quality data, we store a cookie and send some information about you to our server. This information is anonymous and cannot be traced back to you.</p>
+    <p>You can find details on this in our <privacy_policy_link>Privacy Policy</privacy_policy_link>.</p>
 
 sources_info = Name the source of your info.
 sources_placeholder = "Personal knowledge", links to websites...

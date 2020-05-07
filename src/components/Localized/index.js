@@ -4,11 +4,16 @@ import {
 	withLocalization
 } from '@fluent/react'
 
+import {
+	Typography,
+} from '@material-ui/core'
+
 const Localized = props => (
 	<LocalizedOriginal
 		{...props}
 		elems={{
 			br: <br />,
+			p: <Typography variant="body2" color="textSecondary" gutterBottom></Typography>,
 			...props.elems,
 		}}
 	>
