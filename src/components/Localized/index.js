@@ -13,7 +13,6 @@ const Localized = props => (
 		{...props}
 		elems={{
 			br: <br />,
-			p: <Typography variant="body2" color="textSecondary" gutterBottom></Typography>,
 			...props.elems,
 		}}
 	>
