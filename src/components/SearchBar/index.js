@@ -346,7 +346,7 @@ class SearchBar extends React.Component {
 						</Typography>
 
 						{/*
-							We're saving some data on your computer. This only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
+							We're saving some data on your computer. This is only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
 						*/}
 					</CardContent>
 					<CardActions>
