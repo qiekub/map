@@ -301,7 +301,7 @@ class SearchBar extends React.Component {
 					/>
 					{rightIcon}
 				</div>
-				<div className="searchResults">
+				<div className="scrollWrapper searchResults">
 					<List>
 					{
 						this.state.searchResults.map(result => {
@@ -326,7 +326,7 @@ class SearchBar extends React.Component {
 					}
 					</List>
 				</div>
-				<div className="websiteIntro">
+				<div className="scrollWrapper websiteIntro">
 					<CardContent>
 						<Typography variant="h6" component="h1" gutterBottom>
 							<Localized id="welcome-heading" />

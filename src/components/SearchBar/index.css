@@ -30,10 +30,11 @@
 	flex: 1;
 }
 
-.header .searchResults {
+.header .scrollWrapper {
 	overflow: auto;
 	max-height: calc(calc(100vh - 56px) - 32px);
-
+}
+.header .searchResults {
 	display: none;
 }
 .header.showingSearchResults .searchResults {
