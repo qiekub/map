@@ -1,9 +1,6 @@
 
 # App
 add-place-fab = Ort hinzufügen
-welcome-heading = Willkommen bei der QueerMap!
-project-summary = Eine Karte mit LGBTQ-Orten, gesammelt von Menschen wie dir.
-tiny-thanks = Die Karte wird vom <mapbox_link>Mapbox Community-Team</mapbox_link> gesponsert.
 close-button = schließen
 
 

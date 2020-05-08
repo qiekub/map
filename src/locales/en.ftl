@@ -1,9 +1,6 @@
 
 # App
 add-place-fab = Add a Place
-welcome-heading = Welcome to the QueerMap!
-project-summary = A map of LGBTQ places, collected by people like you.
-tiny-thanks = The map is sponsored by the <mapbox_link>Mapbox Community team</mapbox_link>.
 close-button = close
 
 
