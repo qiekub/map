@@ -7,6 +7,7 @@ tiny-thanks = The map is sponsored by the <mapbox_link>Mapbox Community team</ma
 close-button = close
 
 
+
 # FiltersPanelContent
 any_age = Any age
 what-to-show = What to show?
@@ -16,6 +17,7 @@ for-age-x = For age {$age}
 for-age-x-and-up = For age {$age} and up
 
 
+
 # MainDrawerContent
 imprint = Imprint
 privacy_policy = Privacy Policy
@@ -23,8 +25,10 @@ contact = Contact
 github_button = Contribute on Github
 
 
+
 # MainMap
 improve_this_map = Improve this map
+
 
 
 # Questions
@@ -48,6 +52,7 @@ sources_info = Name the source of your info.
 sources_placeholder = "Personal knowledge", links to websites...
 
 
+
 # SearchBar
 search-for-queerness = Search For Queerness!
 
@@ -55,6 +60,7 @@ search-for-queerness = Search For Queerness!
 # Sidebar
 improve = Improve
 add_new_place_header_text = Add a new place
+
 
 
 # GeoInput

@@ -1,11 +1,11 @@
 
-
 # App
 add-place-fab = Ort hinzufügen
 welcome-heading = Willkommen bei der QueerMap!
 project-summary = Eine Karte mit LGBTQ-Orten, gesammelt von Menschen wie dir.
 tiny-thanks = Die Karte wird vom <mapbox_link>Mapbox Community-Team</mapbox_link> gesponsert.
 close-button = schließen
+
 
 
 # FiltersPanelContent
@@ -17,6 +17,7 @@ for-age-x = Für {$age} Jahre
 for-age-x-and-up = Für {$age} Jahre und älter
 
 
+
 # MainDrawerContent
 imprint = Impressum
 privacy_policy = Datenschutzerklärung
@@ -24,8 +25,10 @@ contact = Kontakt
 github_button = Auf Github mitmachen
 
 
+
 # MainMap
 improve_this_map = Karte verbessern
+
 
 
 # Questions
@@ -49,6 +52,7 @@ sources_info = Gib an woher du die Infos hast.
 sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
 
 
+
 # SearchBar
 search-for-queerness = Such nach Queerness!
 
@@ -56,6 +60,7 @@ search-for-queerness = Such nach Queerness!
 # Sidebar
 improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
+
 
 
 # GeoInput
