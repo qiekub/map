@@ -2,7 +2,7 @@
   "short_name": "QueerMap",
   "name": "QueerMap by Qiekub",
   "start_url": ".",
-  "display": "browser",
+  "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#000000",
   "orientation": "portrait-primary",
