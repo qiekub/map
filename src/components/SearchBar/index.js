@@ -23,7 +23,6 @@ import {
 	ListItemIcon,
 	ListItemText,
 
-	CardContent,
 	CardActions,
 	Button,
 	Typography,
@@ -327,32 +326,52 @@ class SearchBar extends React.Component {
 					</List>
 				</div>
 				<div className="scrollWrapper websiteIntro">
-					<CardContent>
-						<Typography variant="h6" component="h1" gutterBottom>
-							<Localized id="welcome-heading" />
-						</Typography>
+					<List>
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">👋</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('welcome_heading')}
+								secondary={this.props.getString('project-summary')}
+							/>
+						</ListItem>
 
-						<Typography variant="body2" color="textSecondary" gutterBottom>
-							<Localized id="project-summary" />
-						</Typography>
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">🙏</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('thanks_heading')}
+								secondary={
+									<Localized
+										id="thanks_text"
+										elems={{
+											mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
+										}}
+									/>
+								}
+							/>
+						</ListItem>
 
-						<Typography variant="body2" color="textSecondary" style={{marginTop:'8px'}}>
-							<Localized
-								id="tiny-thanks"
-								elems={{
-									mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
-								}}
-							></Localized>
-						</Typography>
-
-						{/*
-							We're saving some data on your computer. This is only data like the map position or your language choice.
-							We will ask you again before saving data that can identify you.
-
-							We're saving some data on your computer. This is only data like the map position. We're gonna ask you for permission before saving identifying data that is send to our servers.
-						*/}
-					</CardContent>
-					<CardActions>
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">🍪</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('privacy_essential_data_heading')}
+								secondary={
+									<Localized
+										id="privacy_essential_data_info"
+										elems={{
+											p: <Typography variant="body2" color="textSecondary" gutterBottom />,
+										}}
+									/>
+								}
+							/>
+						</ListItem>
+					</List>
+					<CardActions style={{justifyContent: 'flex-end'}}>
 						<Button onClick={this.closeIntro}>
 							<Localized id="close-button" />
 						</Button>
