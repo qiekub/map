@@ -5,10 +5,6 @@
 	display: flex;
 	align-items: center;
 }
-.header.showingSearchResults .searchBar,
-.header.showingWebsiteIntro .searchBar{
-	border-bottom: 1px solid rgba(0,0,0,0.12);
-}
 
 .header .searchInput{
 	height: 52px;
