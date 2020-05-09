@@ -357,9 +357,6 @@ class SearchBar extends React.Component {
 							<Localized id="close-button" />
 						</Button>
 					</CardActions>
-					{/*<CardActions>
-						<Button>Learn more</Button> <Button>Add a Place</Button>
-					</CardActions>*/}
 				</div>
 			</Paper>
 		</div>)
