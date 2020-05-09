@@ -1,8 +1,10 @@
 import React from 'react'
 import {
 	Localized as LocalizedOriginal,
-	withLocalization
+	// withLocalization,
 } from '@fluent/react'
+
+import { FluentContext } from "../../../node_modules/@fluent/react/esm/context.js";
 
 const Localized = props => (
 	<LocalizedOriginal
@@ -15,6 +17,19 @@ const Localized = props => (
 		<React.Fragment>{props.children}</React.Fragment>
 	</LocalizedOriginal>
 )
+
+// A custom withLocalization to have an empty fallback.
+// It is nearly identical to the original.
+function withLocalization(Inner) {
+    function WithLocalization(props) {
+        const l10n = React.useContext(FluentContext)
+
+        const getString = (id, args, fallback) => l10n.getString(id, args, fallback || ' ')
+
+        return React.createElement(Inner, { getString, ...props })
+    }
+    return WithLocalization
+}
 
 export {
 	withLocalization,
