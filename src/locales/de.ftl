@@ -53,14 +53,17 @@ sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
 # SearchBar
 search-for-queerness = Such nach Queerness!
 
-welcome_heading = Willkommen bei der QueerMap! 👋
+welcome_emoji_icon = 👋
+welcome_heading = Willkommen bei der QueerMap!
 project-summary = Eine Karte mit LGBTQ-Orten, gesammelt von Menschen wie dir.
 
-thanks_heading = Danke 🙏
+thanks_emoji_icon = 🙏
+thanks_heading = Danke
 thanks_text = ... an das <mapbox_link>Mapbox Community Team</mapbox_link> für's Sponsoring der Karte.
 
+privacy_emoji_icon = 🍪
 # privacy_essential_data_heading should be a funny phrase related to cookies or data. Don't use a plain literal translation.
-privacy_essential_data_heading = Wer hat den Keks aus der Dose geklaut? 🍪
+privacy_essential_data_heading = Wer hat den Keks aus der Dose geklaut?
 privacy_essential_data_info =
     <p>Wir speichern ein paar Daten auf deinem Computer. Allerdings nur Daten wie die Kartenposition oder Deine Sprachauswahl.</p>
     <p>Wir fragen dich noch einmal, bevor wir Daten speichern, die dich identifizieren könnten.</p>

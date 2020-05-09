@@ -329,7 +329,7 @@ class SearchBar extends React.Component {
 					<List>
 						<ListItem alignItems="flex-start">
 							<ListItemIcon>
-								<div className="emojiIcon">👋</div>
+								<div className="emojiIcon">{this.props.getString('welcome_emoji_icon')}</div>
 							</ListItemIcon>
 							<ListItemText
 								primary={this.props.getString('welcome_heading')}
@@ -339,7 +339,7 @@ class SearchBar extends React.Component {
 
 						<ListItem alignItems="flex-start">
 							<ListItemIcon>
-								<div className="emojiIcon">🙏</div>
+								<div className="emojiIcon">{this.props.getString('thanks_emoji_icon')}</div>
 							</ListItemIcon>
 							<ListItemText
 								primary={this.props.getString('thanks_heading')}
@@ -356,7 +356,7 @@ class SearchBar extends React.Component {
 
 						<ListItem alignItems="flex-start">
 							<ListItemIcon>
-								<div className="emojiIcon">🍪</div>
+								<div className="emojiIcon">{this.props.getString('privacy_emoji_icon')}</div>
 							</ListItemIcon>
 							<ListItemText
 								primary={this.props.getString('privacy_essential_data_heading')}
@@ -368,6 +368,9 @@ class SearchBar extends React.Component {
 										}}
 									/>
 								}
+								secondaryTypographyProps={{
+									component: 'div',
+								}}
 							/>
 						</ListItem>
 					</List>

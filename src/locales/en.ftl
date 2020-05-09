@@ -53,12 +53,15 @@ sources_placeholder = "Personal knowledge", links to websites...
 # SearchBar
 search-for-queerness = Search For Queerness!
 
+welcome_emoji_icon = 👋
 welcome_heading = Welcome to the QueerMap!
 project-summary = A map of LGBTQ places, collected by people like you.
 
+thanks_emoji_icon = 🙏
 thanks_heading = Thanks
 thanks_text = ... to the <mapbox_link>Mapbox Community Team</mapbox_link> for sponsoring the map.
 
+privacy_emoji_icon = 🍪
 # privacy_essential_data_heading should be a funny phrase related to cookies or data. Don't use a plain literal translation.
 privacy_essential_data_heading = Cookie Talk
 privacy_essential_data_info =
