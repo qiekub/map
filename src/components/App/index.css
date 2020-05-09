@@ -196,7 +196,7 @@ html body .Sidebar{
 		.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
 		.SearchBar .header,
 		.filtersPanel .fab{
-			background-color: #202020cc !important;
+			background-color: rgba(32,32,32,0.9) !important;
 		}
 	}
 }
