@@ -267,7 +267,7 @@ class Sidebar extends React.Component {
 									(
 										this.props.globals.isSmallScreen
 										? doc.properties.geometry.location
-										: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location).add([200,0])) // add sidebar offset
+										: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
 									),
 									zoomLevel
 								)
