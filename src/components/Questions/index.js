@@ -3,7 +3,6 @@ import './index.css'
 
 
 
-import { withCookies } from 'react-cookie'
 import { Localized, withLocalization } from '../Localized/'
 // import { navigate } from '@reach/router'
 
@@ -203,7 +202,7 @@ class Questions extends React.Component {
 
 	componentDidMount(){
 		// skip privacy consent screen when already agreed		
-		const accepted_privacy_policy = this.props.cookies.get('accepted_privacy_policy')
+		const accepted_privacy_policy = this.props.store.get('accepted_privacy_policy')
 		if (accepted_privacy_policy === 'yes') {
 			this.setState({stageIndex: 1})
 		}
@@ -698,8 +697,8 @@ class Questions extends React.Component {
 		}
 	}
 	acceptPrivacyPolicy(){
-		this.props.cookies.set('accepted_privacy_policy', 'yes', this.props.globals.cookieOptions)
-		this.props.cookies.set('uuid', uuidv4(), this.props.globals.cookieOptions)
+		this.props.store.set('accepted_privacy_policy', 'yes')
+		this.props.store.set('uuid', uuidv4())
 
 		this.showQuestions()
 	}
@@ -721,7 +720,7 @@ class Questions extends React.Component {
 						sources: this.sourcesText || '',
 						fromBot: false,
 						dataset: 'qiekub',
-						antiSpamUserIdentifier: this.props.cookies.get('uuid') || '',
+						antiSpamUserIdentifier: this.props.store.get('uuid') || '',
 					}
 				}
 			})
@@ -901,5 +900,5 @@ class Questions extends React.Component {
 	}
 }
 
-export default withGlobals(withCookies(withLocalization(withTheme(Questions))))
+export default withGlobals(withLocalization(withTheme(Questions)))
 
