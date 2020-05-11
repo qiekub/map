@@ -12,6 +12,7 @@
     font-display: fallback;
 }
 
+/*
 @font-face {
     font-family: 'Roboto';
     src: url('./Roboto-Italic.ttf') format('truetype');
@@ -19,6 +20,7 @@
     font-style: italic;
     font-display: fallback;
 }
+*/
 
 @font-face {
     font-family: 'Roboto';
@@ -28,6 +30,7 @@
     font-display: fallback;
 }
 
+/*
 @font-face {
     font-family: 'Roboto';
     src: url('./Roboto-BoldItalic.ttf') format('truetype');
@@ -83,3 +86,4 @@
     font-style: italic;
     font-display: fallback;
 }
+*/
