@@ -285,9 +285,9 @@ class Questions extends React.Component {
 			for (const questionID of questionIDs) {
 				questionsById[questionID].active = false
 			}
-			if (!questionsById[questionID].answered) {
+			// if (!questionsById[questionID].answered) {
 				questionsById[questionID].active = true
-			}
+			// }
 
 			return {
 				questionsById: questionsById,

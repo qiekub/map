@@ -29,10 +29,10 @@ html body .questionCard:not(.active) {
 html body .questionCard:hover {
 	cursor: pointer;
 }
-html body .questionCard.answered {
-	cursor: auto !important;
+html body .questionCard.answered:not(.active):not(:hover) {
+	/*cursor: auto !important;*/
 	opacity: 0.2 !important;
-	pointer-events: none !important;
+	/*pointer-events: none !important;*/
 }
 html body .questionCard.active{
 	cursor: auto;
