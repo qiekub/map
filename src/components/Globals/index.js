@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { CookiesProvider } from 'react-cookie'
-
 import 'intl-pluralrules'
 import { AppLocalizationProvider } from '../../l10n.js'
 
@@ -145,13 +143,11 @@ class GlobalsProvider extends React.Component {
 				value={this.state}
 			>
 				<AppLocalizationProvider key="AppLocalizationProvider" userLocales={this.state.userLocales}>
-					<CookiesProvider key="CookiesProvider">
-						{
-							this.state.globalStateFinishedLoading
-							? this.props.children
-							: <>Loading cache data…</>
-						}
-					</CookiesProvider>
+					{
+						this.state.globalStateFinishedLoading
+						? this.props.children
+						: <>Loading cache data…</>
+					}
 				</AppLocalizationProvider>
 			</GlobalsContext.Provider>
 		)
