@@ -24,6 +24,7 @@
     "react-dom": "^16.13.0",
     "react-leaflet": "^2.6.1",
     "react-scripts": "3.4.0",
+    "store": "^2.0.12",
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
