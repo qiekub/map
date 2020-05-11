@@ -281,12 +281,13 @@ class MainMap extends React.Component {
 					<div
 						class="wrapper material-icons-round"
 						style="${
-							doc.___color.key !== 'default'
-							? `
+							// doc.___color.key !== 'default'
+							// ?
+							`
 								--bg-color:${doc.___color.bg};
 								--fg-color:${doc.___color.fg};
 							`
-							: ''
+							// : ''
 						}"
 					>
 						${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}
@@ -312,7 +313,12 @@ class MainMap extends React.Component {
 			const colors = Object.entries(
 				cluster.GetClusterMarkers()
 				.filter(m=>!!m.data.___color.key && m.data.___color.key !== 'white')
-				.map(m => m.data.___color.key === 'default' ? 'transparent' : m.data.___color.bg)
+				.map(m => 
+					// m.data.___color.key === 'default'
+					// ? 'transparent'
+					// :
+					m.data.___color.bg
+				)
 				.reduce((obj,preset_key)=>{
 					if (!(!!obj[preset_key])) {
 						obj[preset_key] = 0
