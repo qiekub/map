@@ -65,7 +65,7 @@ privacy_emoji_icon = 🍪
 # privacy_essential_data_heading should be a funny phrase related to cookies or data. Don't use a plain literal translation.
 privacy_essential_data_heading = Cookie Talk
 privacy_essential_data_info =
-    <p>We're saving some data on your computer. This is only data like the map position or your language choice.</p>
+    <p>We're saving some data on your computer. This is only basic data such as the map position.</p>
     <p>We will ask you again before saving data that could identify you.</p>
 
 okay-button = Okay
