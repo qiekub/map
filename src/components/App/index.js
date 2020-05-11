@@ -61,8 +61,6 @@ class App extends React.Component {
 			doc: null,
 			prefersDarkMode: false,
 
-			introIsOpen: true,
-
 			filters: {
 				presets: [],
 			},
