@@ -47,14 +47,6 @@
 				}]
 			},
 			{
-				// Overrides the default 1 hour browser cache
-				"source": "manifest.json",
-				"headers": [{
-					"key": "Cache-Control",
-					"value": "max-age=2629800"
-				}]
-			},
-			{
 				"source": "**",
 				"headers": [{
 					"key": "Access-Control-Allow-Origin",
@@ -62,19 +54,52 @@
 				}]
 			},
 			{
-				// Overrides the default 1 hour browser cache with a 2 hour cache for all image files
-				"source": "**/*.@(jpg|jpeg|gif|png|webp)",
+				"source": "/static/**",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=7200"
+					"value": "max-age=604800" // 604800 seconds = 1 week
 				}]
 			},
 			{
-				// 31557600 seconds = one year
+				"source": "manifest.json",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=2629800" // 2629800 seconds = 1 month
+				}]
+			},
+			{
+				"source": "conic-gradient-polyfill.js",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=31557600" // 2629800 seconds = 1 month
+				}]
+			},
+			{
+				"source": "/materialicons/index.css",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=31557600" // 31557600 seconds = 1 year
+				}]
+			},
+			{
+				"source": "/roboto-font/index.css",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=31557600" // 31557600 seconds = 1 year
+				}]
+			},
+			{
+				"source": "**/*.@(jpg|jpeg|gif|png|webp)",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=2629800" // 2629800 seconds = 1 month
+				}]
+			},
+			{
 				"source": "**/*.@(ttf|woff|woff2)",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=31557600"
+					"value": "max-age=31557600" // 31557600 seconds = 1 year
 				}]
 			}
 		]
