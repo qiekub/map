@@ -513,7 +513,7 @@ class Questions extends React.Component {
 				variant="outlined"
 				elevation={0}
 				onClick={
-					!questionDoc.answered && !questionDoc.active
+					/*!questionDoc.answered &&*/ !questionDoc.active
 					? ()=>this.setQuestionAsActive(questionDoc._id)
 					: null
 				}
