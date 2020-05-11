@@ -459,6 +459,10 @@ class MainMap extends React.Component {
 		} else {
 			this.clusterGroup.Cluster.Size = this.defaultClusterSize
 		}
+
+		this.props.store.set('map_center_fake', this.props.globals.map_center)
+		this.props.store.set('map_center_real', viewport.center)
+		this.props.store.set('map_zoom', this.props.globals.map_zoom)
 	}
 
 	zoomIn(){
@@ -526,9 +530,9 @@ class MainMap extends React.Component {
 
 				preferCanvas={true}
 				useFlyTo={true}
-				center={[51,10]}
+				center={this.props.store.get('map_center_real') || [51,10]}
 				minZoom={2}
-				zoom={3}
+				zoom={this.props.store.get('map_zoom') || 3}
 				maxZoom={22}
 				zoomSnap={1}
 				zoomControl={false}
