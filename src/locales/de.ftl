@@ -72,6 +72,10 @@ privacy_essential_data_info =
 
 okay-button = Okay
 
+close_search_results_aria_label = Stop searching
+open_menu_aria_label = Open menu
+close_sidebar_aria_label = Close info panel
+
 
 # Sidebar
 improve = Verbessern

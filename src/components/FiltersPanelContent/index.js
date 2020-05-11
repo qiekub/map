@@ -111,6 +111,7 @@ class FiltersPanelContent extends React.Component {
 							variant="extended"
 							className="fab"
 							aria-label={this.props.getString('what-to-show')}
+							title={this.props.getString('what-to-show')}
 						>
 							{
 								!!this.state.category
@@ -177,6 +178,7 @@ class FiltersPanelContent extends React.Component {
 							variant="extended"
 							className="fab"
 							aria-label={this.props.getString('for-which-age')}
+							title={this.props.getString('for-which-age')}
 						>
 							{
 								!!this.state.age

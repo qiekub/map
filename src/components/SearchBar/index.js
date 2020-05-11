@@ -13,6 +13,7 @@ import colorsByPreset from '../../data/dist/colorsByPreset.json'
 import { getTranslationFromArray, getColorByPreset } from '../../functions.js'
 
 import {
+	Icon,
 	Paper,
 	InputBase,
 	IconButton,
@@ -246,13 +247,13 @@ class SearchBar extends React.Component {
 		let leftIcon = undefined
 		if (this.state.showSearchResults) {
 			leftIcon = (
-				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.hideSearchResults}>
+				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} onClick={this.hideSearchResults} aria-label={this.props.getString('close_search_results_aria_label')} title={this.props.getString('close_search_results_aria_label')}>
 					<ArrowBackIcon />
 				</IconButton>
 			)
 		} else {
 			leftIcon = (
-				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} aria-label="menu" onClick={this.toggleMainDrawer}>
+				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} onClick={this.toggleMainDrawer} aria-label={this.props.getString('open_menu_aria_label')} title={this.props.getString('open_menu_aria_label')}>
 					<MenuIcon />
 				</IconButton>
 			)
@@ -262,15 +263,15 @@ class SearchBar extends React.Component {
 		let rightIcon = undefined
 		if (this.props.sidebarIsOpen) {
 			rightIcon = (
-				<IconButton style={{margin:'4px',padding:'10px'}} aria-label="close" onClick={this.closeSidebar}>
+				<IconButton style={{margin:'4px',padding:'10px'}} onClick={this.closeSidebar} aria-label={this.props.getString('close_sidebar_aria_label')} title={this.props.getString('close_sidebar_aria_label')}>
 					<CloseIcon />
 				</IconButton>
 			)
 		} else if (this.state.loadingSearchResult) {
 			rightIcon = (
-				<IconButton type="submit" style={{margin:'4px',padding:'10px'}}>
+				<Icon style={{margin:'4px',padding:'10px'}}>
 					<HourglassEmptyIcon />
-				</IconButton>
+				</Icon>
 			)
 		}
 
@@ -306,6 +307,11 @@ class SearchBar extends React.Component {
 						disabled={this.props.sidebarIsOpen}
 
 						inputRef={this.searchInputRef}
+
+						inputProps={{
+							title: this.props.getString('search-for-queerness'),
+							'aria-label': this.props.getString('search-for-queerness')
+						}}
 					/>
 					{rightIcon}
 				</div>

@@ -502,6 +502,7 @@ class MainMap extends React.Component {
 			}}>
 				<Fab
 					aria-label={this.props.getString('zoom_in_aria_label')}
+					title={this.props.getString('zoom_in_aria_label')}
 					style={{
 						pointerEvents: 'auto',
 						padding: '0',
@@ -521,6 +522,7 @@ class MainMap extends React.Component {
 				<br />
 				<Fab
 					aria-label={this.props.getString('zoom_out_aria_label')}
+					title={this.props.getString('zoom_out_aria_label')}
 					style={{
 						pointerEvents: 'auto',
 						padding: '0',

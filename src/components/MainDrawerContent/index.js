@@ -56,19 +56,20 @@ class MainDrawerContent extends React.Component {
 	render() {
 		return (<>
 			<List>
-				<ListItemLink target="_blank" href="https://www.qiekub.org/impressum.html">
+				<ListItemLink target="_blank" href="https://www.qiekub.org/impressum.html" aria-label={this.props.getString('imprint')} title={this.props.getString('imprint')}>
 					<ListItemText primary={this.props.getString('imprint')} />
 				</ListItemLink>
-				<ListItemLink target="_blank" href="https://www.qiekub.org/datenschutz.html">
+				<ListItemLink target="_blank" href="https://www.qiekub.org/datenschutz.html" aria-label={this.props.getString('privacy_policy')} title={this.props.getString('privacy_policy')}>
 					<ListItemText primary={this.props.getString('privacy_policy')} />
 				</ListItemLink>
-				<ListItemLink href="mailto:thomas.rosen@qiekub.org">
+				<ListItemLink href="mailto:thomas.rosen@qiekub.org" aria-label={this.props.getString('contact')} title={this.props.getString('contact')}>
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
 				<Link target="_blank" href="https://github.org/qiekub">
 					<Button
 						aria-label={this.props.getString('github_button')}
+						title={this.props.getString('github_button')}
 						variant="contained"
 						color="primary"
 						startIcon={
@@ -100,6 +101,8 @@ class MainDrawerContent extends React.Component {
 			</List>*/}
 
 			<a
+				aria-label="Buy me a coffee"
+				title="Buy me a coffee"
 				href="https://www.buymeacoffee.com/thomasrosen"
 				target="_blank"
 				rel="noopener noreferrer"

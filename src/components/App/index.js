@@ -311,6 +311,7 @@ class App extends React.Component {
 				? undefined
 				: (<Fab
 					aria-label={this.props.getString('add-place-fab')}
+					title={this.props.getString('add-place-fab')}
 					variant="extended"
 					color="secondary"
 					className="addNewFab"
