@@ -41,7 +41,6 @@ class MainMap extends React.Component {
 
 		this.state = {
 			docs: [],
-			bounds: null,
 			isGeoChooser: false,
 			middleMarkerDoc: undefined,
 		}
@@ -527,7 +526,6 @@ class MainMap extends React.Component {
 
 				preferCanvas={true}
 				useFlyTo={true}
-				bounds={this.state.bounds}
 				center={[51,10]}
 				minZoom={2}
 				zoom={3}
