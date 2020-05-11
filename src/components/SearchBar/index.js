@@ -63,13 +63,19 @@ class SearchBar extends React.Component {
 		this.loadSearchResults = this.loadSearchResults.bind(this)
 		this.openSearchResult = this.openSearchResult.bind(this)
 
-		this.closeIntro = this.closeIntro.bind(this)
+		this.acceptEssentialPrivacyAndCloseIntro = this.acceptEssentialPrivacyAndCloseIntro.bind(this)
 		this.hideSearchResults = this.hideSearchResults.bind(this)
 	}
 
 	componentDidMount() {
 		if (this.props.value !== this.state.value) {
 			this.setState({value: this.props.value})
+		}
+
+		const privacy_consent_essentials = this.props.store.getPrivacy(null)
+		const showWebsiteIntro = this.props.store.get('showWebsiteIntro')
+		if (privacy_consent_essentials && !showWebsiteIntro) {
+			this.setState({showWebsiteIntro: false})
 		}
 	}
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -225,8 +231,11 @@ class SearchBar extends React.Component {
 		})
 	}
 
-	closeIntro(){
-		this.setState({showWebsiteIntro: false})
+	acceptEssentialPrivacyAndCloseIntro(){
+		this.props.store.setPrivacy(null, true).finally(()=>{
+			this.props.store.set('showWebsiteIntro', false)
+			this.setState({showWebsiteIntro: false})
+		})
 	}
 
 	hideSearchResults(){
@@ -375,7 +384,7 @@ class SearchBar extends React.Component {
 						</ListItem>
 					</List>
 					<CardActions style={{justifyContent: 'flex-end'}}>
-						<Button onClick={this.closeIntro}>
+						<Button onClick={this.acceptEssentialPrivacyAndCloseIntro}>
 							<Localized id="close-button" />
 						</Button>
 					</CardActions>
