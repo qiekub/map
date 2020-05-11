@@ -312,7 +312,7 @@ class MainMap extends React.Component {
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
 			const colors = Object.entries(
 				cluster.GetClusterMarkers()
-				.filter(m=>!!m.data.___color.key && m.data.___color.key !== 'white')
+				.filter(m => !!m.data.___color.key)
 				.map(m => 
 					// m.data.___color.key === 'default'
 					// ? 'transparent'
