@@ -68,6 +68,7 @@ privacy_essential_data_info =
     <p>Wir speichern ein paar Daten auf deinem Computer. Allerdings nur Daten wie die Kartenposition oder Deine Sprachauswahl.</p>
     <p>Wir fragen dich noch einmal, bevor wir Daten speichern, die dich identifizieren könnten.</p>
 
+okay-button = Okay
 
 
 # Sidebar

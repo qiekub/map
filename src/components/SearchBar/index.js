@@ -385,7 +385,7 @@ class SearchBar extends React.Component {
 					</List>
 					<CardActions style={{justifyContent: 'flex-end'}}>
 						<Button onClick={this.acceptEssentialPrivacyAndCloseIntro}>
-							<Localized id="close-button" />
+							<Localized id="okay-button" />
 						</Button>
 					</CardActions>
 				</div>

@@ -68,6 +68,8 @@ privacy_essential_data_info =
     <p>We're saving some data on your computer. This is only data like the map position or your language choice.</p>
     <p>We will ask you again before saving data that could identify you.</p>
 
+okay-button = Okay
+
 
 
 # Sidebar
