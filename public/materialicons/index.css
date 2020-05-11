@@ -24,7 +24,7 @@
 
 
 
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -32,7 +32,7 @@
   src: url(./materialicons_v50.woff2) format('woff2');
   font-display: fallback;
 }
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons Outlined';
   font-style: normal;
@@ -40,7 +40,7 @@
   src: url(./materialicons_outlined_v18.woff2) format('woff2');
   font-display: fallback;
 }
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons Round';
   font-style: normal;
@@ -48,7 +48,7 @@
   src: url(./materialicons_rounded_v18.woff2) format('woff2');
   font-display: fallback;
 }
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons Sharp';
   font-style: normal;
@@ -56,7 +56,7 @@
   src: url(./materialicons_sharp_v19.woff2) format('woff2');
   font-display: fallback;
 }
-/* fallback */
+
 @font-face {
   font-family: 'Material Icons Two Tone';
   font-style: normal;
