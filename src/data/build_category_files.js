@@ -633,7 +633,7 @@ fs.writeFileSync(distPath+'categories.json', JSON.stringify(categories))
 	
 	https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&lang=de&page=1&rp=10&sortname=count_ways&sortorder=desc
 	
-	Categories for queer.qiekub.com
+	Categories for map.qiekub.org
 		Food & Drink
 			Bars					(amenity=bar)
 			Restaurants				(amenity=restaurant)

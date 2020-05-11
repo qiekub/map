@@ -756,7 +756,7 @@ class Questions extends React.Component {
 					<Localized
 						id="privacy_info"
 						elems={{
-							privacy_policy_link: <Link target="_blank" href="https://www.qiekub.com/datenschutz.html"></Link>,
+							privacy_policy_link: <Link target="_blank" href="https://www.qiekub.org/datenschutz.html"></Link>,
 						}}
 					></Localized>
 				</Typography>

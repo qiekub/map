@@ -56,17 +56,17 @@ class MainDrawerContent extends React.Component {
 	render() {
 		return (<>
 			<List>
-				<ListItemLink target="_blank" href="https://www.qiekub.com/impressum.html">
+				<ListItemLink target="_blank" href="https://www.qiekub.org/impressum.html">
 					<ListItemText primary={this.props.getString('imprint')} />
 				</ListItemLink>
-				<ListItemLink target="_blank" href="https://www.qiekub.com/datenschutz.html">
+				<ListItemLink target="_blank" href="https://www.qiekub.org/datenschutz.html">
 					<ListItemText primary={this.props.getString('privacy_policy')} />
 				</ListItemLink>
-				<ListItemLink href="mailto:thomas.rosen@qiekub.com">
+				<ListItemLink href="mailto:thomas.rosen@qiekub.org">
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
-				<Link target="_blank" href="https://github.com/qiekub">
+				<Link target="_blank" href="https://github.org/qiekub">
 					<Button
 						variant="contained"
 						color="primary"

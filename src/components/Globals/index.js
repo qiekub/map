@@ -80,7 +80,7 @@ class GlobalsProvider extends React.Component {
 					isDevEnvironment
 					? undefined
 					: {
-						domain: '.qiekub.com',
+						domain: '.qiekub.org',
 						secure: true,
 					}
 				)
