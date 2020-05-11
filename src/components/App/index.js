@@ -29,7 +29,7 @@ import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
 import FiltersPanelContent from '../FiltersPanelContent/'
 
-import 'typeface-roboto'
+// import 'typeface-roboto'
 
 const defaultTheme = createMuiTheme({
 	palette: {
