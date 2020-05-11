@@ -30,6 +30,7 @@
   font-style: normal;
   font-weight: 400;
   src: url(./materialicons_v50.woff2) format('woff2');
+  font-display: fallback;
 }
 /* fallback */
 @font-face {
@@ -37,6 +38,7 @@
   font-style: normal;
   font-weight: 400;
   src: url(./materialicons_outlined_v18.woff2) format('woff2');
+  font-display: fallback;
 }
 /* fallback */
 @font-face {
@@ -44,6 +46,7 @@
   font-style: normal;
   font-weight: 400;
   src: url(./materialicons_rounded_v18.woff2) format('woff2');
+  font-display: fallback;
 }
 /* fallback */
 @font-face {
@@ -51,6 +54,7 @@
   font-style: normal;
   font-weight: 400;
   src: url(./materialicons_sharp_v19.woff2) format('woff2');
+  font-display: fallback;
 }
 /* fallback */
 @font-face {
@@ -58,6 +62,7 @@
   font-style: normal;
   font-weight: 400;
   src: url(./materialicons_twotone_v17.woff2) format('woff2');
+  font-display: fallback;
 }
 
 .material-icons {

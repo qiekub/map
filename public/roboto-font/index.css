@@ -9,6 +9,7 @@
     src: url('./Roboto-Regular-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: fallback;
 }
 
 @font-face {
@@ -16,6 +17,7 @@
     src: url('./Roboto-Italic-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
+    font-display: fallback;
 }
 
 @font-face {
@@ -23,6 +25,7 @@
     src: url('./Roboto-Bold-webfont.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
+    font-display: fallback;
 }
 
 @font-face {
@@ -30,6 +33,7 @@
     src: url('./Roboto-BoldItalic-webfont.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
+    font-display: fallback;
 }
 
 @font-face {
@@ -37,6 +41,7 @@
     src: url('./Roboto-Thin-webfont.ttf') format('truetype');
     font-weight: 200;
     font-style: normal;
+    font-display: fallback;
 }
 
 @font-face {
@@ -44,6 +49,7 @@
     src: url('./Roboto-ThinItalic-webfont.ttf') format('truetype');
     font-weight: 200;
     font-style: italic;
+    font-display: fallback;
 }
 
 @font-face {
@@ -51,6 +57,7 @@
     src: url('./Roboto-Light-webfont.ttf') format('truetype');
     font-weight: 100;
     font-style: normal;
+    font-display: fallback;
 }
 
 @font-face {
@@ -58,6 +65,7 @@
     src: url('./Roboto-LightItalic-webfont.ttf') format('truetype');
     font-weight: 100;
     font-style: italic;
+    font-display: fallback;
 }
 
 @font-face {
@@ -65,6 +73,7 @@
     src: url('./Roboto-Medium-webfont.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
+    font-display: fallback;
 }
 
 @font-face {
@@ -72,4 +81,5 @@
     src: url('./Roboto-MediumItalic-webfont.ttf') format('truetype');
     font-weight: 300;
     font-style: italic;
+    font-display: fallback;
 }
