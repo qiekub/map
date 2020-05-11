@@ -439,30 +439,32 @@ class MainMap extends React.Component {
 	// }
 
 	viewportChanged(viewport){
-		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-			this.props.globals.map_center = Object.values( this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
-		}else{
-			this.props.globals.map_center = viewport.center
+		if (viewport.center && viewport.zoom) {
+			if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
+				this.props.globals.map_center = Object.values(this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
+			}else{
+				this.props.globals.map_center = viewport.center
+			}
+	
+			this.props.globals.map_zoom = viewport.zoom
+			window.dispatchEvent(new Event('mapViewportUpdated'))
+	
+			if (viewport.zoom >= 18) {
+				this.clusterGroup.Cluster.Size = 10
+			} else if (viewport.zoom >= 16) {
+				this.clusterGroup.Cluster.Size = 20
+			} else if (viewport.zoom >= 14) {
+				this.clusterGroup.Cluster.Size = 60
+			} else if (viewport.zoom >= 8) {
+				this.clusterGroup.Cluster.Size = 80
+			} else {
+				this.clusterGroup.Cluster.Size = this.defaultClusterSize
+			}
+
+			this.props.store.set('map_center_fake', this.props.globals.map_center)
+			this.props.store.set('map_center_real', viewport.center)
+			this.props.store.set('map_zoom', this.props.globals.map_zoom)
 		}
-
-		this.props.globals.map_zoom = viewport.zoom
-		window.dispatchEvent(new Event('mapViewportUpdated'))
-
-		if (viewport.zoom >= 18) {
-			this.clusterGroup.Cluster.Size = 10
-		} else if (viewport.zoom >= 16) {
-			this.clusterGroup.Cluster.Size = 20
-		} else if (viewport.zoom >= 14) {
-			this.clusterGroup.Cluster.Size = 60
-		} else if (viewport.zoom >= 8) {
-			this.clusterGroup.Cluster.Size = 80
-		} else {
-			this.clusterGroup.Cluster.Size = this.defaultClusterSize
-		}
-
-		this.props.store.set('map_center_fake', this.props.globals.map_center)
-		this.props.store.set('map_center_real', viewport.center)
-		this.props.store.set('map_zoom', this.props.globals.map_zoom)
 	}
 
 	zoomIn(){
