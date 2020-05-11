@@ -169,8 +169,8 @@
 	margin-top: -45px !important;
 }
 .marker-custom-icon .wrapper{
-	--bg-color: #607d8b;
-	--fg-color: white;
+	--bg-color: #f9f9f9; /* #607d8b; */
+	--fg-color: rgba(0, 0, 0, 0.87); /* white; */
 
 	z-index: 1;
 
@@ -182,6 +182,13 @@
 
 	color: var(--fg-color);
 }
+@media (prefers-color-scheme: dark) {
+	.marker-custom-icon .wrapper{
+		--bg-color: #181818;
+		--fg-color: #fff;
+	}
+}
+
 .marker-custom-icon .wrapper.material-icons,
 .marker-custom-icon .wrapper.material-icons-outlined,
 .marker-custom-icon .wrapper.material-icons-sharp,

@@ -274,10 +274,23 @@ class MainMap extends React.Component {
 			return marker
 		}
 
+
 		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
 			leafletMarker.setIcon(L.divIcon({
 				html: `
-					<div class="wrapper material-icons-round" style="--bg-color:${doc.___color.bg};--fg-color:${doc.___color.fg};">${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}</div>
+					<div
+						class="wrapper material-icons-round"
+						style="${
+							doc.___color.key !== 'default'
+							? `
+								--bg-color:${doc.___color.bg};
+								--fg-color:${doc.___color.fg};
+							`
+							: ''
+						}"
+					>
+						${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}
+					</div>
 				`,
 				className: 'marker-custom-icon',
 				iconSize: L.point(40, 40, true),
@@ -296,9 +309,10 @@ class MainMap extends React.Component {
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
-			const colors = Object.entries(cluster.GetClusterMarkers()
+			const colors = Object.entries(
+				cluster.GetClusterMarkers()
 				.filter(m=>!!m.data.___color.key && m.data.___color.key !== 'white')
-				.map(m=>m.data.___color.bg)
+				.map(m => m.data.___color.key === 'default' ? 'transparent' : m.data.___color.bg)
 				.reduce((obj,preset_key)=>{
 					if (!(!!obj[preset_key])) {
 						obj[preset_key] = 0
