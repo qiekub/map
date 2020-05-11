@@ -68,6 +68,7 @@ class MainDrawerContent extends React.Component {
 			</List>
 				<Link target="_blank" href="https://github.org/qiekub">
 					<Button
+						aria-label={this.props.getString('github_button')}
 						variant="contained"
 						color="primary"
 						startIcon={

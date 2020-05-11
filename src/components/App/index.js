@@ -8,7 +8,7 @@ import { Router, navigate } from '@reach/router'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 
-import { Localized/*, withLocalization*/ } from '../Localized/'
+import { Localized, withLocalization } from '../Localized/'
 
 import { withGlobals } from '../Globals/'
 
@@ -310,6 +310,7 @@ class App extends React.Component {
 				this.state.isSmallScreen
 				? undefined
 				: (<Fab
+					aria-label={this.props.getString('add-place-fab')}
 					variant="extended"
 					color="secondary"
 					className="addNewFab"
@@ -355,4 +356,4 @@ class App extends React.Component {
 	}
 }
 
-export default withGlobals(App)
+export default withGlobals(withLocalization(App))

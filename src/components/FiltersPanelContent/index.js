@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 
-import { Localized } from '../Localized/'
+import { Localized, withLocalization} from '../Localized/'
 
 import {
 	// ListSubheader,
@@ -110,6 +110,7 @@ class FiltersPanelContent extends React.Component {
 							size="small"
 							variant="extended"
 							className="fab"
+							aria-label={this.props.getString('what-to-show')}
 						>
 							{
 								!!this.state.category
@@ -175,6 +176,7 @@ class FiltersPanelContent extends React.Component {
 							size="small"
 							variant="extended"
 							className="fab"
+							aria-label={this.props.getString('for-which-age')}
 						>
 							{
 								!!this.state.age
@@ -271,5 +273,5 @@ class FiltersPanelContent extends React.Component {
 	}
 }
 
-export default withGlobals(withTheme(FiltersPanelContent))
+export default withGlobals(withTheme(withLocalization(FiltersPanelContent)))
 

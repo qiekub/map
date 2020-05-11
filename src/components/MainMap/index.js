@@ -500,28 +500,42 @@ class MainMap extends React.Component {
 				// margin: '0 8px 8px 0',
 				pointerEvents: 'none',
 			}}>
-				<Fab style={{
-					pointerEvents: 'auto',
-					padding: '0',
-					width: '32px',
-					height: '32px',
-					minHeight: '32px',
-					borderRadius: '8px',
-					// borderBottomRightRadius: '2px',
-					// borderBottomLeftRadius: '2px',
-					marginBottom: '4px',
-				}} size="small" onClick={this.zoomIn}><ZoomInIcon /></Fab>
+				<Fab
+					aria-label={this.props.getString('zoom_in_aria_label')}
+					style={{
+						pointerEvents: 'auto',
+						padding: '0',
+						width: '32px',
+						height: '32px',
+						minHeight: '32px',
+						borderRadius: '8px',
+						// borderBottomRightRadius: '2px',
+						// borderBottomLeftRadius: '2px',
+						marginBottom: '4px',
+					}}
+					size="small"
+					onClick={this.zoomIn}
+				>
+					<ZoomInIcon />
+				</Fab>
 				<br />
-				<Fab style={{
-					pointerEvents: 'auto',
-					padding: '0',
-					width: '32px',
-					height: '32px',
-					minHeight: '32px',
-					borderRadius: '8px',
-					// borderTopLeftRadius: '2px',
-					// borderTopRightRadius: '2px',
-				}} size="small" onClick={this.zoomOut}><ZoomOutIcon /></Fab>
+				<Fab
+					aria-label={this.props.getString('zoom_out_aria_label')}
+					style={{
+						pointerEvents: 'auto',
+						padding: '0',
+						width: '32px',
+						height: '32px',
+						minHeight: '32px',
+						borderRadius: '8px',
+						// borderTopLeftRadius: '2px',
+						// borderTopRightRadius: '2px',
+					}}
+					size="small"
+					onClick={this.zoomOut}
+				>
+					<ZoomOutIcon />
+				</Fab>
 			</div>
 
 			<Map
