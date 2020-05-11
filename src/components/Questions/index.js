@@ -201,9 +201,9 @@ class Questions extends React.Component {
 	}
 
 	componentDidMount(){
-		// skip privacy consent screen when already agreed		
-		const accepted_privacy_policy = this.props.store.get('accepted_privacy_policy')
-		if (accepted_privacy_policy === 'yes') {
+		// skip privacy consent screen when already agreed
+		const privacy_contented_to_tracking = this.props.store.getPrivacy('tracking')
+		if (privacy_contented_to_tracking) {
 			this.setState({stageIndex: 1})
 		}
 
@@ -697,10 +697,12 @@ class Questions extends React.Component {
 		}
 	}
 	acceptPrivacyPolicy(){
-		this.props.store.set('accepted_privacy_policy', 'yes')
-		this.props.store.set('uuid', uuidv4())
-
-		this.showQuestions()
+		this.props.store.setPrivacy('tracking', true).finally(()=>{
+			this.props.store.setPrivacy(null, true).finally(()=>{
+				this.props.store.set('uuid', uuidv4(), 'tracking')
+				this.showQuestions()
+			})
+		})
 	}
 	showQuestions(){
 		this.setState({stageIndex:1})
