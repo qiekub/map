@@ -12,6 +12,7 @@ import ApolloClient from 'apollo-boost'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { persistCache } from 'apollo-cache-persist'
 
+import { withLocalStorage } from '../LocalStorage/'
 
 
 const isDevEnvironment = (local_ip !== '')
@@ -162,9 +163,11 @@ function useGlobals() {
 }
 
 function withGlobals(Component) {
+	const ComponentWrapped = withLocalStorage(Component)
+	
 	return React.forwardRef(function(props, ref){
 		const globals = useGlobals()
-		return <Component globals={globals} ref={ref} {...props} />
+		return <ComponentWrapped globals={globals} ref={ref} {...props} />
 	})
 }
 
