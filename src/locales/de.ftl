@@ -57,7 +57,7 @@ search-for-queerness = Such nach Queerness!
 
 welcome_emoji_icon = 👋
 welcome_heading = Willkommen bei der QueerMap!
-project-summary = Eine Karte mit LGBTQ-Orten, gesammelt von Menschen wie dir.
+project-summary = Eine Karte mit LGBTQ-Orten, gesammelt von Menschen wie Dir für Dich.
 
 thanks_emoji_icon = 🙏
 thanks_heading = Danke
