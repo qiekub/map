@@ -189,8 +189,8 @@ class Questions extends React.Component {
 		this.submitInputs = this.submitInputs.bind(this)
 
 		this.setQuestionAsActive = this.setQuestionAsActive.bind(this)
-		this.saveGeoValue = this.saveGeoValue.bind(this)
 		this.savePresetValue = this.savePresetValue.bind(this)
+		this.saveValueByKey = this.saveValueByKey.bind(this)
 
 		this.abort = this.abort.bind(this)
 		this.acceptPrivacyPolicy = this.acceptPrivacyPolicy.bind(this)
@@ -456,12 +456,34 @@ class Questions extends React.Component {
 		return (this.inputValues[questionID] || {})[key] || ''
 	}
 
-	saveGeoValue(questionID,newValue){
-		this.saveInputValue(questionID, 'lat', newValue.lat)
-		this.saveInputValue(questionID, 'lng', newValue.lng)
+		for (const key of tagKeys) {
+			if (this.answer_tags.hasOwnProperty(key)) {
+				return this.answer_tags[key]
+			}
+		}
+
+		// get a value from the documents tags
+		for (const key of tagKeys) {
+			if (this.tagsFromTheDoc.hasOwnProperty(key)) {
+				return this.tagsFromTheDoc[key]
+			}
+		}
+
+		return ''
 	}
+
 	savePresetValue(questionID,newValue){
 		this.saveInputValue(questionID, 'preset', newValue.preset)
+	}
+	saveValueByKey(questionID,newValue,namespace){
+		const keys = Object.keys(newValue)
+		for (const key of keys) {
+			this.saveInputValue(questionID, (
+				!!namespace
+				? (key === '' ? namespace : namespace+':'+key)
+				: key
+			), newValue[key])
+		}
 	}
 
 	renderQuestion(questionID){
@@ -546,7 +568,7 @@ class Questions extends React.Component {
 											zoom: 18,
 										}}
 										doc={this.props.doc}
-										onChange={newValue=>this.saveGeoValue(questionDoc._id, newValue)}
+										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, null)}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
 									return (<PresetInput
