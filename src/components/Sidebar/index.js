@@ -1052,7 +1052,7 @@ class Sidebar extends React.Component {
 					</Typography>
 					
 					{
-						doc.___preset.key !== ''
+						doc.___preset.key !== '' && doc.___preset.key !== 'default'
 						? (<ListItem style={{m_argin:'0 -32px',color:headerForegroundColor}}>
 								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
 									<div className="material-icons-round" style={{color:headerForegroundColor}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : 'place'}</div>
