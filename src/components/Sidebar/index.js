@@ -213,7 +213,7 @@ class Sidebar extends React.Component {
 			this.action = action
 			this.docID = docID
 
-			if (!(!!action) || !(!!docID)) {
+			if (!(!!action) /*|| !(!!docID)*/) {
 				this.docCache = null
 				this.setState({
 					doc: {},
