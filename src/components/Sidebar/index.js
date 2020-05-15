@@ -34,13 +34,14 @@ import {
 	Paper,
 	Card,
 	CardContent,
+	Divider,
 
 	Icon,
 } from '@material-ui/core'
 import {
 	// Block as BlockIcon,
 	// Announcement as AnnouncementIcon,
-	CheckRounded as CheckIcon,
+	// CheckRounded as CheckIcon,
 	// ChildFriendly as ChildFriendlyIcon,
 	// Explicit as ExplicitIcon,
 
@@ -48,7 +49,7 @@ import {
 	LinkRounded as LinkIcon,
 
 	PhoneRounded as PhoneIcon,
-	PrintRounded as PrintIcon,
+	// PrintRounded as PrintIcon,
 	MailRounded as MailIcon,
 
 	// Facebook as FacebookIcon,
@@ -116,20 +117,18 @@ class Sidebar extends React.Component {
 			'min_age',
 			'max_age',
 
-			'wheelchair',
+			// 'wheelchair',
 
-			'contact:',
-
-			'website',
-			'email',
-			'phone',
-			'fax',
+			'contact:website',
+			'contact:email',
+			'contact:phone',
 
 			'instagram',
 			'facebook',
 			'twitter',
 			'youtube',
 			'yelp',
+			'osm_id',
 
 			// ...getWantedTagsList(presets),
 		]
@@ -474,12 +473,71 @@ class Sidebar extends React.Component {
 		return null
 	}*/
 
-	renderView(doc){
-		const properties = doc.properties
-		const tags = properties.tags
+	renderAudience(tags){
 
 		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
 
+		return (
+			<List key="Audience" dense>
+				{
+					age_range_text === ''
+					? null
+					: (
+						<ListItem>
+							<ListItemText
+								style={{marginLeft: '56px'}}
+								primary={this.props.getString('age_restriction')}
+								secondary={age_range_text}
+								primaryTypographyProps={{
+									style: {
+										display: 'inline-block',
+										marginRight: '8px',
+									},
+								}}
+								secondaryTypographyProps={{
+									style: {
+										display: 'inline-block',
+									},
+								}}
+							/>
+						</ListItem>
+					)
+				}
+			</List>
+		)
+	}
+
+	renderGeneral(tags){
+
+		const rows = []
+		const email = tags['contact:email'] || tags['email']
+		if (!!email) {
+			rows.push(
+				<ListItemLink target="_blank" key="Email" href={'mailto:'+email}>
+					<ListItemIcon><MailIcon /></ListItemIcon>
+					<ListItemText primary={email} />
+				</ListItemLink>
+			)
+		}
+
+		const phonenumber = tags['contact:phone'] || tags['phone']
+		if (!!phonenumber) {
+			rows.push(
+				<ListItemLink target="_blank" key="Phonenumber" href={'tel:'+phonenumber}>
+					<ListItemIcon><PhoneIcon /></ListItemIcon>
+					<ListItemText primary={phonenumber} />
+				</ListItemLink>
+			)
+		}
+
+		return (
+			rows.length === 0
+			? null
+			: (<List key="General" dense>{rows}</List>)
+		)
+	}
+
+	renderLinks(tags){
 		// https://wiki.openstreetmap.org/wiki/Key:contact
 		//
 		// properties.links = `
@@ -492,189 +550,114 @@ class Sidebar extends React.Component {
 		// 	mailto:kjqhgr@sadf.asdf
 		// `
 
-		// const links = this.parseLinks(properties.links && properties.links.length > 0 ? properties.links : [])
-		
-
-		const link_tags = {
-			website: tags['contact:website'] || tags['website'],
-			yelp: tags['contact:yelp'] || tags['yelp'],
-
-			facebook: tags['contact:facebook'] || tags['facebook'],
-			instagram: tags['contact:instagram'] || tags['instagram'],
-			twitter: tags['contact:twitter'] || tags['twitter'],
-			youtube: tags['contact:youtube'] || tags['youtube'],
-
-			email: tags['contact:email'] || tags['email'],
-			phonenumber: tags['contact:phone'] || tags['phone'],
-			faxnumber: tags['contact:fax'] || tags['fax'],
-		}
-
 		// eslint-disable-next-line
 		const get_username_regexp = /.*\/([^\/]+)\/?/
 
 		const links = []
 
-		if (!!link_tags.website) {
-			const matches = link_tags.website.match(/(?:.*?:\/\/)?(?:www\.)?(?:(.+)\/|(.+))/)
+		const website = tags['contact:website'] || tags['website']
+		if (!!website) {
+			const matches = website.match(/(?:.*?:\/\/)?(?:www\.)?(?:(.+)\/|(.+))/)
 			links.push({
-				type: 'website',
-				href: link_tags.website,
-				text: !!matches ? matches[1] || matches[2] : link_tags.website,
+				href: website,
+				text: !!matches ? matches[1] || matches[2] : website,
+				icon: <LinkIcon />,
 			})
 		}
 
-		if (!!link_tags.email) {
+		const facebook = tags['contact:facebook'] || tags['facebook']
+		if (!!facebook) {
+			const matches = facebook.match(get_username_regexp)
 			links.push({
-				type: 'email',
-				href: 'mailto:'+link_tags.email,
-				text: link_tags.email,
+				href: !!matches ? facebook : 'https://facebook.com/'+facebook,
+				text: !!matches ? '@'+matches[1] : '@'+facebook,
+				icon: <FacebookIcon />
 			})
 		}
 
-		if (!!link_tags.phonenumber) {
+		const instagram = tags['contact:instagram'] || tags['instagram']
+		if (!!instagram) {
+			const matches = instagram.match(get_username_regexp)
 			links.push({
-				type: 'phonenumber',
-				href: 'tel:'+link_tags.phonenumber,
-				text: link_tags.phonenumber,
+				href: !!matches ? instagram : 'https://instagram.com/'+instagram,
+				text: !!matches ? '@'+matches[1] : '@'+instagram,
+				icon: <InstagramIcon />
 			})
 		}
 
-		if (!!link_tags.faxnumber) {
+		const youtube = tags['contact:youtube'] || tags['youtube']
+		if (!!youtube) {
+			const matches = youtube.match(get_username_regexp)
 			links.push({
-				type: 'faxnumber',
-				href: 'fax:'+link_tags.faxnumber,
-				text: link_tags.faxnumber,
+				href: !!matches ? youtube : 'https://youtube.com/user/'+youtube,
+				text: !!matches ? '@'+matches[1] : '@'+youtube,
+				icon: <YouTubeIcon />,
 			})
 		}
 
-		if (!!link_tags.facebook) {
-			const matches = link_tags.facebook.match(get_username_regexp)
+		const twitter = tags['contact:twitter'] || tags['twitter']
+		if (!!twitter) {
+			const matches = twitter.match(get_username_regexp)
 			links.push({
-				type: 'facebook',
-				href: !!matches ? link_tags.facebook : 'https://facebook.com/'+link_tags.facebook,
-				text: !!matches ? '@'+matches[1] : '@'+link_tags.facebook,
+				href: !!matches ? twitter : 'https://twitter.com/'+twitter,
+				text: !!matches ? '@'+matches[1] : '@'+twitter,
+				icon: <TwitterIcon />,
 			})
 		}
 
-		if (!!link_tags.instagram) {
-			const matches = link_tags.instagram.match(get_username_regexp)
+		const yelp = tags['contact:yelp'] || tags['yelp']
+		if (!!yelp) {
 			links.push({
-				type: 'instagram',
-				href: !!matches ? link_tags.instagram : 'https://instagram.com/'+link_tags.instagram,
-				text: !!matches ? '@'+matches[1] : '@'+link_tags.instagram,
-			})
-		}
-
-		if (!!link_tags.youtube) {
-			const matches = link_tags.youtube.match(get_username_regexp)
-			links.push({
-				type: 'youtube',
-				href: !!matches ? link_tags.youtube : 'https://youtube.com/user/'+link_tags.youtube,
-				text: !!matches ? '@'+matches[1] : '@'+link_tags.youtube,
-			})
-		}
-
-		if (!!link_tags.twitter) {
-			const matches = link_tags.twitter.match(get_username_regexp)
-			links.push({
-				type: 'twitter',
-				href: !!matches ? link_tags.twitter : 'https://twitter.com/'+link_tags.twitter,
-				text: !!matches ? '@'+matches[1] : '@'+link_tags.twitter,
-			})
-		}
-
-		if (!!link_tags.yelp) {
-			links.push({
-				type: 'yelp',
-				href: link_tags.yelp,
+				href: yelp,
 				text: 'View on Yelp', // TODO: translate
+				icon: <YelpIcon />,
 			})
 		}
 
-		if (!!properties.osmID) {
+		const osm_id = tags['osm_id']
+		if (!!osm_id) {
 			links.push({
-				type: 'osm',
-				href: 'https://openstreetmap.org/'+properties.osmID,
+				href: 'https://openstreetmap.org/'+osm_id,
 				text: 'View on OpenStreetMap', // TODO: translate
+				icon: <OpenstreetmapIcon />, // <MapIcon />,
 			})
 		}
 
-
-		const linkIcons = {
-			default: (<LinkIcon />),
-
-			osm: <OpenstreetmapIcon />, // (<MapIcon />),
-			yelp: <YelpIcon />,
-
-			phonenumber: (<PhoneIcon />),
-			faxnumber: (<PrintIcon />),
-			email: (<MailIcon />),
-
-			youtube: <YouTubeIcon />,
-			twitter: <TwitterIcon />,
-			facebook: <FacebookIcon />,
-			instagram: <InstagramIcon />,
-		}
-		const contact = links.filter(link=>
-			link.type==='website' ||
-			link.type==='phonenumber' ||
-			link.type==='faxnumber' ||
-			link.type==='email'
+		return (
+			links.length === 0
+			? null
+			: (<List key="Links" dense>
+				{links.map(link => (
+					<ListItemLink target="_blank" key={link.href} href={link.href}>
+						<ListItemIcon>{link.icon}</ListItemIcon>
+						<ListItemText primary={link.text} />
+					</ListItemLink>
+				))}
+			</List>)
 		)
-		const socialMedia = links.filter(link=>
-			link.type==='youtube' ||
-			link.type==='twitter' ||
-			link.type==='facebook' ||
-			link.type==='instagram' ||
-			link.type==='yelp' ||
-			link.type==='osm'
-		)
+	}
 
+	renderView(doc){
+		const properties = doc.properties
+		const tags = properties.tags	
 
 		return (<React.Fragment key="view">
 				<CardContent>
-					{
-						age_range_text === ''
-						? null
-						: // TODO: Translate
-						(
-							<List dense>
-								<ListItem>
-									<ListItemIcon><CheckIcon /></ListItemIcon>
-									<ListItemText primary={'Altersbeschränkung: '+age_range_text} />
-								</ListItem>
-							</List>
-						)
-					}
 
 					{
-						//  subheader={<ListSubheader>Contact</ListSubheader>}
-						contact.length === 0
-						? null
-						: (<List dense>
-							{contact.map(link => (
-								<ListItemLink target="_blank" key={link.href} href={link.href}>
-									<ListItemIcon>{(!!linkIcons[link.type] ? linkIcons[link.type] : linkIcons.default)}</ListItemIcon>
-									<ListItemText primary={link.text} />
-								</ListItemLink>
-							))}
-						</List>)
+						[
+							{key:'Audience', component:this.renderAudience(tags)},
+							{key:'General', component:this.renderGeneral(tags)},
+							{key:'Links', component:this.renderLinks(tags)},
+						]
+						.filter(v=>!!v.component)
+						.reduce((parts,value) => {
+							parts.push(value.component)
+							parts.push(<Divider key={"divider_"+value.key} style={{margin:'8px -16px'}} />)
+							return parts
+						}, [])
 					}
 
-					{
-						// subheader={<ListSubheader>Social Media</ListSubheader>}
-						socialMedia.length === 0
-						? null
-						: (<List dense>
-							{socialMedia.map(link => (
-								<ListItemLink target="_blank" key={link.href} href={link.href}>
-									<ListItemIcon>{(!!linkIcons[link.type] ? linkIcons[link.type] : linkIcons.default)}</ListItemIcon>
-									<ListItemText primary={link.text} />
-								</ListItemLink>
-							))}
-						</List>)
-					}
-				
 					<div key="improveButtonWrapper" style={{
 						marginTop: '32px',
 						textAlign: 'center',
