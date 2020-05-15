@@ -727,7 +727,6 @@ class Questions extends React.Component {
 		this.setState({stageIndex:2})
 	}
 	finish(){
-		console.log('finish-this.answer_tags', this.answer_tags)
 		if (Object.keys(this.answer_tags).length > 0) {
 			this.props.globals.graphql.mutate({
 				mutation: mutation_addChangeset,
@@ -741,9 +740,6 @@ class Questions extends React.Component {
 						antiSpamUserIdentifier: this.props.store.get('uuid') || '',
 					}
 				}
-			})
-			.then(result=>{
-				console.log('mutation_addChangeset-result', result.data.addChangeset)
 			})
 			.catch(error=>{
 				console.error('mutation_addChangeset-error', error)
