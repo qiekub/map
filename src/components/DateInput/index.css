@@ -1,0 +1,16 @@
+.DateInput .TextFields {
+	display: flex;
+	margin: 8px 8px 0 8px;
+}
+.DateInput .TextFields .TextField{
+	margin: 0 8px 0 0;
+}
+.DateInput .TextFields .TextField:last-child{
+	margin: 0 0 0 0;
+}
+
+.DateInput .helperText {
+	display: block;
+	padding: 4px 22px 0;
+	/*opacity: 0.54;*/
+}

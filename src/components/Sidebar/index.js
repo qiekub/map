@@ -124,6 +124,11 @@ class Sidebar extends React.Component {
 			'name:en',
 			// 'name:',
 
+			'start_date',
+			'start_date:',
+			'end_date',
+			'end_date:',
+
 			'min_age',
 			'max_age',
 

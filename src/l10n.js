@@ -7,7 +7,7 @@ import { ReactLocalization, LocalizationProvider } from '@fluent/react'
 import { FluentBundle, FluentResource } from '@fluent/bundle'
 import { negotiateLanguages } from '@fluent/langneg'
 
-const _supportedLocales_ = ['de','en']
+const _supportedLocales_ = ['de','en_GB','en_US','en']
 const _defaultLocale_ = 'en'
 
 

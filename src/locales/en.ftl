@@ -5,6 +5,14 @@ close-button = close
 
 
 
+# DateInput
+date-input-order = year-month-day
+year-label = Year
+month-label = Month
+day-label = Day
+
+
+
 # FiltersPanelContent
 any_age = Any age
 what-to-show = What to show?

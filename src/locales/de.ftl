@@ -5,6 +5,14 @@ close-button = schließen
 
 
 
+# DateInput
+date-input-order = day-month-year
+year-label = Jahr
+month-label = Monat
+day-label = Tag
+
+
+
 # FiltersPanelContent
 any_age = Jedes Alter
 what-to-show = Was soll angezeigt werden?

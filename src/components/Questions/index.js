@@ -44,6 +44,7 @@ import { withTheme } from '@material-ui/core/styles'
 
 import GeoInput from '../GeoInput/'
 import PresetInput from '../PresetInput/'
+import DateInput from '../DateInput/'
 
 
 
@@ -634,7 +635,15 @@ class Questions extends React.Component {
 								const possibleAnswerKey = possibleAnswer.key
 								const possibleAnswerNamespace = possibleAnswer.namespace
 								possibleAnswer.inputtype = possibleAnswer.inputtype || ''
-								if (possibleAnswer.inputtype === 'geo') {
+								if (possibleAnswer.inputtype === 'date') {
+									return (<DateInput
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										helperText={possibleAnswer.description_translated}
+										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
+										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerKey)}
+									/>)
+								}else if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput
 										key={possibleAnswerKey}
 										marker={{
@@ -655,24 +664,6 @@ class Questions extends React.Component {
 									return (<TextField
 										type="text"
 										multiline
-										key={possibleAnswerKey}
-										label={possibleAnswer.title_translated}
-										variant="outlined"
-										color="secondary"
-										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
-										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
-										style={{
-											margin: '4px 8px',
-										}}
-									/>)
-								}else if (possibleAnswer.inputtype === 'date') {
-									return (<TextField
-										type="date"
-										pattern="\d{4}-\d{2}-\d{2}"
-										InputLabelProps={{
-											shrink: true,
-										}}
-
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
 										variant="outlined"
