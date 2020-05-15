@@ -370,11 +370,11 @@ class Sidebar extends React.Component {
 			min_age === null && max_age === null
 			? '' // 'Für jedes Alter!'
 			: (min_age === null && max_age !== null
-			? 'Bis '+max_age+' Jahre'
+			? this.props.getString('max_age_text', {age:max_age}) // 'Bis '+max_age+' Jahre'
 			: (min_age !== null && max_age === null
-			? 'Ab '+min_age+' Jahre'
+			? this.props.getString('min_age_text', {age:min_age}) // 'Ab '+min_age+' Jahre'
 			: (min_age !== null && max_age !== null
-			? min_age+' bis '+max_age+' Jahre'
+			? this.props.getString('age_range_text', {min_age,max_age}) // min_age+' bis '+max_age+' Jahre'
 			: ''
 		))))
 	}

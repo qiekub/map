@@ -82,6 +82,12 @@ improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
 
 
+age_restriction = Altersbeschränkung:
+max_age_text = Bis {$age} Jahre.
+min_age_text = Ab {$age} Jahre.
+age_range_text = {$min_age} bis {$max_age} Jahre.
+
+
 
 # GeoInput
 instructions = Verschiebe die Karte, um den Standort auszuwählen.

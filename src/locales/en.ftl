@@ -79,6 +79,12 @@ improve = Improve
 add_new_place_header_text = Add a new place
 
 
+age_restriction = Age restriction:
+max_age_text = Till age {$age}.
+min_age_text = Age {$age} and up.
+age_range_text = Ages {$min_age} to {$max_age}.
+
+
 
 # GeoInput
 instructions = Move the map to choose the location.
