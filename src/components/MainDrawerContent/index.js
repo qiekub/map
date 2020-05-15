@@ -66,7 +66,7 @@ class MainDrawerContent extends React.Component {
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
-				<Link target="_blank" href="https://github.org/qiekub">
+				<Link target="_blank" href="https://github.com/qiekub">
 					<Button
 						aria-label={this.props.getString('github_button')}
 						title={this.props.getString('github_button')}
