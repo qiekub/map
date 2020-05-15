@@ -119,6 +119,11 @@ class Sidebar extends React.Component {
 			'preset',
 
 			'addr:',
+
+			'name',
+			'name:en',
+			// 'name:',
+
 			'min_age',
 			'max_age',
 
