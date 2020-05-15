@@ -431,7 +431,7 @@ const preset_overwrites = {
 	// 	},
 	// },
 	'amenity/ice_cream': {
-		icon: 'storefront',
+		icon: 'restaurant',
 	},
 
 	'leisure/sauna': {
