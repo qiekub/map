@@ -613,12 +613,6 @@ class Sidebar extends React.Component {
 		)
 
 
-		/*
-			<Typography gutterBottom variant="body2" component="p">{properties.address}</Typography>			
-			{altName.length === 0 ? null : <Typography gutterBottom variant="body2" component="p">{altName}</Typography>}
-			{age_range_text === '' ? null : <Typography variant="body2" component="p">{age_range_text}</Typography>}
-		*/
-
 		return (<React.Fragment key="view">
 				<CardContent>
 					{
