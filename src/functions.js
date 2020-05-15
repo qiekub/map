@@ -1,4 +1,9 @@
 import { negotiateLanguages } from '@fluent/langneg'
+import address_formats from './data/dist/address_formats.json'
+const addressFormats = address_formats.map(item => ({
+	...item,
+	keys: [].concat(...item.format),
+}))
 
 
 export function uuidv4() {
@@ -82,6 +87,48 @@ export function getColorByPreset(preset_key,colorsByPreset_sorted){
 			// break
 		}
 	}
+}
+
+
+export function getAddressFormat(tags) {
+
+	// if (!!tags['addr:format']) {
+	// 	const format_country_code = tags['addr:format'].toUpperCase()
+	// 	for (const addressFormat of addressFormats) {
+	// 		if (addressFormat.countryCodes.includes(format_country_code)) {
+	// 			return addressFormat
+	// 		}
+	// 	}
+	// }
+
+	// TODO: The following code is not getting the correct address format.
+
+	const addr_keys = Object.keys(tags)
+	.filter(key => key.startsWith('addr:'))
+	.map(key => key.split('addr:')[1])
+	
+	// const addr_keys_length = addr_keys.length
+	
+	let lastMatchCount = 0 // 99999
+	let lastAddressFormat = null
+	for (const addressFormat of addressFormats) {
+		const thisMatchCount = addr_keys.filter(value => addressFormat.keys.includes(value)).length
+		// const length_difference = Math.abs(addressFormat.keys.length - addr_keys_length) / addr_keys_length
+		// const existing_keys_difference = Math.ceil((1 - (thisMatchCount / addr_keys_length))*100)*0.01
+		// const sum_difference = length_difference + existing_keys_difference
+		
+		if (thisMatchCount >= lastMatchCount) { // if (sum_difference <= lastMatchCount) {
+			lastMatchCount = thisMatchCount // sum_difference
+			lastAddressFormat = addressFormat
+		}
+	}
+
+	if (!!lastAddressFormat) {
+		return lastAddressFormat
+	}
+
+
+	return address_formats[0]
 }
 
 

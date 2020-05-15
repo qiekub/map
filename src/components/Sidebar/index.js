@@ -18,7 +18,7 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getAddressFormat, getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -114,6 +114,7 @@ class Sidebar extends React.Component {
 		this.wantedTagsList = [
 			'preset',
 
+			'addr:',
 			'min_age',
 			'max_age',
 
@@ -510,6 +511,24 @@ class Sidebar extends React.Component {
 	renderGeneral(tags){
 
 		const rows = []
+
+		const address_format = getAddressFormat(tags)
+		if (!!address_format) {
+			const address = address_format.format.map(part => {
+				const mappedParts = part.map(key => !!tags['addr:'+key] ? tags['addr:'+key] : null).filter(v=>v)
+				return mappedParts.length > 0 ? mappedParts.join(' ') : null
+			}).filter(v=>v).join(', ')
+
+			if (address !== '') {
+				rows.push(
+					<ListItem target="_blank" key="Address">
+						<ListItemIcon><PlaceIcon /></ListItemIcon>
+						<ListItemText primary={address} />
+					</ListItem>
+				)
+			}
+		}
+
 		const email = tags['contact:email'] || tags['email']
 		if (!!email) {
 			rows.push(
