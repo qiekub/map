@@ -105,9 +105,10 @@ class Sidebar extends React.Component {
 
 		this.state = {
 			doc: {},
-			page: 'view', // view edit
+			page: '', // view edit
 			headerText: '',
 		}
+		this.docCache = null
 
 		this.wantedTagsList = [
 			'preset',
@@ -164,28 +165,38 @@ class Sidebar extends React.Component {
 		const { action, docID } = this.props
 
 		if (
-			this.action !== action
-			||
-			!(!!docID && this.docID === docID)
+			this.action !== action ||
+			this.docID !== docID
 		) {
 			this.action = action
 			this.docID = docID
 
-			if (action === 'add') {
-				if (!(!!docID) || docID === '') {
-					this.navigateToUnusedID()
-				}else{
-					this.editNewDoc(docID, 'Place')
-				}
-			} else if (action === 'view') {
-				if (!!docID && docID !== '') {
-					this.loadAndViewDoc(docID)
-				}
-			} else if (action === 'edit') {
-				if (!!docID && docID !== '') {
-					this.loadAndViewDoc(docID, ()=>{
-						this.setState({page:'edit'})
-					})
+			if (!(!!action) || !(!!docID)) {
+				this.docCache = null
+				this.setState({
+					doc: {},
+					page: '',
+					headerText: '',
+				})
+			}else{
+				if (action === 'add') {
+					if (!(!!docID) || docID === '') {
+						this.navigateToUnusedID()
+					}else{
+						this.editNewDoc(docID, 'Place')
+					}
+				} else if (action === 'view') {
+					if (!!docID && docID !== '') {
+						this.loadAndViewDoc(docID, ()=>{
+							this.setState({page:'view'})
+						})
+					}
+				} else if (action === 'edit') {
+					if (!!docID && docID !== '') {
+						this.loadAndViewDoc(docID, ()=>{
+							this.setState({page:'edit'})
+						})
+					}
 				}
 			}
 		}
@@ -222,79 +233,87 @@ class Sidebar extends React.Component {
 			.subscribe(({data}) => {
 				if (!!data && !!data.getPlace) {
 					const doc = data.getPlace
+
+					if (doc !== this.docCache) {
+						this.docCache = doc
 					
-					if (this.props.onDontFilterTheseIds) {
-						this.props.onDontFilterTheseIds([doc._id])
-					}
-
-					const preset = doc.properties.tags.preset
-
-					doc.___preset = (
-						!!preset && !!presets[preset]
-						? {
-							key: preset,
-							...presets[preset],
+						if (this.props.onDontFilterTheseIds) {
+							this.props.onDontFilterTheseIds([doc._id])
 						}
-						: presets.default
-					)
-					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
 
-					this.setState({
-						doc: doc,
-						page: 'view',
-						headerText: (
-							doc &&
-							doc.properties &&
-							doc.properties.name &&
-							doc.properties.name.length > 0
-							? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
-							: ''
-						),
-					}, ()=>{
+						const preset = doc.properties.tags.preset
+
+						doc.___preset = (
+							!!preset && !!presets[preset]
+							? {
+								key: preset,
+								...presets[preset],
+							}
+							: presets.default
+						)
+						doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+	
+						this.setState({
+							doc: doc,
+							page: 'view',
+							headerText: (
+								doc &&
+								doc.properties &&
+								doc.properties.name &&
+								doc.properties.name.length > 0
+								? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
+								: ''
+							),
+						}, ()=>{
+							if (typeof callback === 'function') {
+								callback()
+							}
+			
+							let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
+							if (zoomLevel < 17) {
+								zoomLevel = 17
+							}
+	
+							if (doc.properties.geometry) {
+								if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
+									this.props.globals.mainMapFunctions.setView(
+										(
+											this.props.globals.isSmallScreen
+											? doc.properties.geometry.location
+											: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
+										),
+										zoomLevel
+									)
+								// }else{
+								// 	this.props.globals.mainMapFunctions.flyTo(
+								// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+								// 		zoomLevel,
+								// 		{
+								// 			animate: true,
+								// 			duration: 1,
+								// 		}
+								// 	)
+								}
+							}
+	
+							if (!this.props.globals.isSmallScreen) {
+								const docLocation = doc.properties.geometry.location
+								const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
+								if (asPixel.x < 400) {
+									this.props.globals.mainMapFunctions.panTo(
+										this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+									)
+								}
+							}
+	
+							this.props.onSetSidebarIsOpen(true)
+							this.props.onSetSearchBarValue(this.state.headerText)
+						})
+					}else{
 						if (typeof callback === 'function') {
 							callback()
 						}
-		
-						let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
-						if (zoomLevel < 17) {
-							zoomLevel = 17
-						}
-
-						if (doc.properties.geometry) {
-							if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
-								this.props.globals.mainMapFunctions.setView(
-									(
-										this.props.globals.isSmallScreen
-										? doc.properties.geometry.location
-										: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
-									),
-									zoomLevel
-								)
-							// }else{
-							// 	this.props.globals.mainMapFunctions.flyTo(
-							// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-							// 		zoomLevel,
-							// 		{
-							// 			animate: true,
-							// 			duration: 1,
-							// 		}
-							// 	)
-							}
-						}
-
-						if (!this.props.globals.isSmallScreen) {
-							const docLocation = doc.properties.geometry.location
-							const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
-							if (asPixel.x < 400) {
-								this.props.globals.mainMapFunctions.panTo(
-									this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
-								)
-							}
-						}
-
-						this.props.onSetSidebarIsOpen(true)
-						this.props.onSetSearchBarValue(this.state.headerText)
-					})
+					}
 				}
 			})
 		}
