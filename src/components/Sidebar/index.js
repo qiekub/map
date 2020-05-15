@@ -814,3 +814,5 @@ class Sidebar extends React.Component {
 }
 
 export default withGlobals(withLocalization(withTheme(Sidebar)))
+
+
