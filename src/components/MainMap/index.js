@@ -169,10 +169,12 @@ class MainMap extends React.Component {
 	}
 
 	gotMapRef(Map){
-		this.mapRef = Map
-		this.map = Map.leafletElement
+		if (!!Map && !!Map.leafletElement) {
+			this.mapRef = Map
+			this.map = Map.leafletElement
 
-		this.createPruneCluster()
+			this.createPruneCluster()
+		}
 	}
 
 	getConicGradient(values){
