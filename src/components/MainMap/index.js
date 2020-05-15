@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { withLocalization } from '../Localized/'
+import { withConicGradient } from '../ConicGradient/'
 
 import { navigate } from '@reach/router'
 import {
@@ -8,7 +9,6 @@ import {
 } from '../../queries.js'
 
 import './index.css'
-// import '../../conic-gradient-polyfill.js'
 
 // import categories from '../../data/dist/categories.json'
 import presets from '../../data/dist/presets.json'
@@ -53,6 +53,8 @@ class MainMap extends React.Component {
 		this.map = null
 		this.markers = []
 
+		this.ConicGradient = null
+
 		this.gotMapRef = this.gotMapRef.bind(this)
 
 		this.createPruneCluster = this.createPruneCluster.bind(this)
@@ -69,9 +71,12 @@ class MainMap extends React.Component {
 	componentDidMount(){
 		this.loadMarkers()
 
-		this.props.globals.updateOnConicGradient(()=>{
-			this.clusterGroup.RedrawIcons()
-		})
+		if (this.props.conic_gradient) {
+			this.props.conic_gradient.onReady(()=>{
+				this.ConicGradient = this.props.conic_gradient.getConicGradient()
+				this.clusterGroup.RedrawIcons()
+			})
+		}
 
 		if (this.props.onFunctions) {
 			const functions = {
@@ -171,7 +176,7 @@ class MainMap extends React.Component {
 	}
 
 	getConicGradient(values){
-		if (!(!!this.props.globals.ConicGradient)) {
+		if (!(!!this.ConicGradient)) {
 			return ''
 		}
 
@@ -204,7 +209,7 @@ class MainMap extends React.Component {
 		}
 		stops = stops.join(', ')
 
-		var gradient = new this.props.globals.ConicGradient({
+		var gradient = new this.ConicGradient({
 		    stops: stops, // "gold 40%, #f06 0", // required
 		    repeating: false, // Default: false
 		    size: 100, // Default: Math.max(innerWidth, innerHeight)
@@ -290,7 +295,7 @@ class MainMap extends React.Component {
 							// : ''
 						}"
 					>
-						${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : ''}
+						${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : 'place'}
 					</div>
 				`,
 				className: 'marker-custom-icon',
@@ -655,4 +660,4 @@ class MainMap extends React.Component {
 	}
 }
 
-export default withGlobals(withLocalization(withTheme(MainMap)))
+export default withConicGradient(withGlobals(withLocalization(withTheme(MainMap))))
