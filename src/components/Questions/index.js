@@ -179,6 +179,7 @@ class Questions extends React.Component {
 		// this.answerIDs = new Set()
 		this.sourcesText = ''
 		this.answer_tags = {}
+		this.tagsFromTheDoc = {}
 
 		this.inputValues = {}
 
@@ -214,6 +215,17 @@ class Questions extends React.Component {
 		})
 
 		this.loadQuestions()
+	}
+	componentDidUpdate(){
+		if (
+			!!this.props.doc &&
+			// !!this.props.doc._id &&
+			!!this.props.doc.properties &&
+			!!this.props.doc.properties.tags &&
+			this.props.doc.properties.tags !== this.tagsFromTheDoc
+		) {
+			this.tagsFromTheDoc = this.props.doc.properties.tags
+		}
 	}
 
 	loadQuestions(){
@@ -446,9 +458,76 @@ class Questions extends React.Component {
 		this.inputValues[questionID] = {}
 		this.answerQuestion(questionID, tmp_inputValues)
 	}
-	getInputValue(questionID,key){
-		return (this.inputValues[questionID] || {})[key] || ''
+	getInputValueByNamespace(questionID,namespace){
+		let toReturn = {}
+		const namespaceWithColon = namespace+':'
+		const namespaceWithColonLenght = namespaceWithColon.length
+
+
+		// get the unsaved value  
+		if (this.inputValues[questionID]) {
+			const tags = this.inputValues[questionID]
+			const tagKeys = Object.keys(tags)
+			for (const key of tagKeys) {
+				if (key === namespace) {
+					toReturn[''] = tags[key]
+				} else if (key.startsWith(namespaceWithColon)) {
+					toReturn[key.substring(namespaceWithColonLenght)] = tags[key]
+				}
+			}
+			if (Object.keys(toReturn).lenght > 0) {
+				return toReturn
+			}
+		}
+
+
+		// get a value from the documents tags
+		if (this.answer_tags) {
+			const tags = this.answer_tags
+			const tagKeys = Object.keys(tags)
+			for (const key of tagKeys) {
+				if (key === namespace) {
+					toReturn[''] = tags[key]
+				} else if (key.startsWith(namespaceWithColon)) {
+					toReturn[key.substring(namespaceWithColonLenght)] = tags[key]
+				}
+			}
+			if (Object.keys(toReturn).lenght > 0) {
+				return toReturn
+			}
+		}
+
+
+		// get a value from the documents tags
+		if (this.tagsFromTheDoc) {
+			const tags = this.tagsFromTheDoc
+			const tagKeys = Object.keys(tags)
+			for (const key of tagKeys) {
+				if (key === namespace) {
+					toReturn[''] = tags[key]
+				} else if (key.startsWith(namespaceWithColon)) {
+					toReturn[key.substring(namespaceWithColonLenght)] = tags[key]
+				}
+			}
+			if (Object.keys(toReturn).lenght > 0) {
+				return toReturn
+			}
+		}
+
+
+		return toReturn
 	}
+	getInputValue(questionID,answerKey){
+
+		// get the unsaved value  
+		if (this.inputValues[questionID] && this.inputValues[questionID][answerKey]) {
+			return this.inputValues[questionID][answerKey]
+		}
+
+		// get a value from the given answers
+		const question_doc = this.state.questionsById[questionID]
+		const possibleAnswer = question_doc.possibleAnswersByKey[answerKey]
+		const tagKeys = Object.keys(possibleAnswer.tags || {})
 
 		for (const key of tagKeys) {
 			if (this.answer_tags.hasOwnProperty(key)) {
