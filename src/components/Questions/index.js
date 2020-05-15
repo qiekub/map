@@ -436,16 +436,10 @@ class Questions extends React.Component {
 	}
 
 	saveInputValue(questionID, key, value){
-		if (!!value && value !== '') {
-			if (!this.inputValues[questionID]) {
-				this.inputValues[questionID] = {}
-			}
-			this.inputValues[questionID][key] = value
-		}else{
-			if (!!this.inputValues[questionID]) {
-				delete this.inputValues[questionID][key]
-			}
+		if (!this.inputValues[questionID]) {
+			this.inputValues[questionID] = {}
 		}
+		this.inputValues[questionID][key] = value
 	}
 	submitInputs(questionID){
 		const tmp_inputValues = this.inputValues[questionID] || {}
