@@ -78,6 +78,26 @@ okay-button = Okay
 improve = Improve
 add_new_place_header_text = Add a new place
 
+queer = Queer People
+men = Men
+women = Women
+trans = Trans*
+youth = Young People
+sexuality_gay = Gay
+sexuality_bi = Bi
+allies = Allies
+
+audience_heading_queer_primary = This place is made for queer people!
+audience_text_queer_primary = Be who you are!
+
+audience_heading_queer_welcome = Queer people are welcome here!
+
+audience_heading_be_cautios = Please be cautios!
+audience_text_be_cautios = We don't yet know if this place is a safe space.
+
+only_heading = Only for:
+primary_heading = Primary for:
+welcome_heading = Welcome are:
 
 age_restriction = Age restriction:
 max_age_text = Till age {$age}.

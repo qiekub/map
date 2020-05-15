@@ -23,6 +23,7 @@ import { getAddressFormat, getTranslation, getTranslationFromArray, getColorByPr
 import { withGlobals } from '../Globals/'
 
 import {
+	Chip,
 	Typography,
 	Fab,
 
@@ -39,6 +40,8 @@ import {
 	Icon,
 } from '@material-ui/core'
 import {
+	WarningRounded as WarningIcon,
+	PlaceRounded as PlaceIcon,
 	// Block as BlockIcon,
 	// Announcement as AnnouncementIcon,
 	// CheckRounded as CheckIcon,
@@ -68,6 +71,7 @@ import {
 import { withTheme } from '@material-ui/core/styles'
 
 import Questions from '../Questions/'
+import EmojiIcon from '../EmojiIcon/'
 
 import yelp_icon from '../../images/yelp.png'
 import facebook_icon from '../../images/facebook.png'
@@ -132,6 +136,34 @@ class Sidebar extends React.Component {
 			'osm_id',
 
 			// ...getWantedTagsList(presets),
+
+
+			'lgbtq',
+			'gay',
+			'gay:women',
+			'lgbtq:female',
+			'gay:men',
+			'lgbtq:men',
+			'lgbtq:male',
+			'gay:transgender',
+			'homosexual',
+			'bisexual',
+			'juvenile',
+			'youth_centre',
+			
+			// 'lgbtq:bears',
+			// 'lgbtq:cruising',
+
+			'community_centre:for',
+			'community_centre',
+			'social_facility:for',
+			'type',
+			'sauna',
+			'club',
+			'audience',
+			'gayfriendly',
+			'gay',
+			'gay:only',
 		]
 
 		this.action = undefined
@@ -474,12 +506,235 @@ class Sidebar extends React.Component {
 		return null
 	}*/
 
+	getAudience(tags){
+		// queer:ally
+
+		const audience_values_synonyms = {
+			only			: 'only',
+			primary			: 'primary',
+			lgbtq			: 'primary',
+			gay				: 'primary',
+			majority		: 'primary',
+			gay_and_friends	: 'primary',
+			welcome			: 'welcome',
+			yes				: 'welcome',
+			friendly		: 'welcome',
+		}
+
+		const audience_sub_keys_synonyms = {
+			'lgbtq'					: 'queer',
+			'gay'					: 'queer',
+			'gay:women'				: 'women',
+			'lgbtq:female'			: 'women',
+			'gay:men'				: 'men',
+			'lgbtq:men'				: 'men',
+			'lgbtq:male'			: 'men',
+			'gay:transgender'		: 'trans',
+			'homosexual'			: 'sexuality:gay',
+			'bisexual'				: 'sexuality:bi',
+			'juvenile'				: 'youth',
+			'youth_centre'			: 'youth',
+			// 'lgbtq:bears'			: 'bears',
+			// 'lgbtq:cruising'		: 'queer:cruising',
+		}
+
+		const specialTag_synonyms = {
+			'community_centre:for': {
+				homosexual:		{'queer': 'primary', 'sexuality:gay': 'primary'},
+				bisexual:		{'queer': 'primary', 'sexuality:bi': 'primary'},
+				transgender:	{'queer': 'primary', 'trans': 'primary'},
+				lgbtq:			{'queer': 'primary'},
+				juvenile:		{'youth': 'primary'},
+			},
+			'community_centre': {
+				youth_centre:	{'youth': 'primary'},
+				lgbtq:			{'queer': 'primary'},
+			},
+			'social_facility:for': {
+				lgbtq:			{'queer': 'primary'},
+			},
+			'type': {
+				gay:			{'queer': 'primary'},
+			},
+			'sauna': {
+				gay:			{'queer': 'primary'},
+			},
+			'club': {
+				gay:			{'queer': 'primary'},
+				lgbtq:			{'queer': 'primary'},
+			},
+			'audience': {
+				gay:			{'queer': 'primary'},
+				gay_and_friends:{'queer': 'primary', 'allies': 'primary'},
+			},
+			'gayfriendly': {
+				yes:			{'queer': 'welcome'},
+			},
+			'gay': {
+				men:			{'queer': 'welcome', 'men': 'primary'},
+			},
+			'gay:men': {
+				yes:			{'queer': 'welcome', 'men': 'welcome'},
+				only:			{'queer': 'welcome', 'men': 'only'},
+			},
+			'lgbtq': {
+				yes:			{'queer': 'primary'},
+			},
+			'gay:only': {
+				no:				{'allies': 'welcome'},
+			}
+		}
+
+		const value_levels = {
+			only: 4,
+			primary: 3,
+			welcome: 2,
+			no: 1,
+		}
+
+
+		const audienceTags = {}
+
+		for (const entry of Object.entries(tags)) {
+			const key = entry[0]
+			const value = entry[1]
+
+			if (audience_sub_keys_synonyms[key] && audience_values_synonyms[value]) {
+				const currentValue = audienceTags[audience_sub_keys_synonyms[key]]
+				const newValue = audience_values_synonyms[value]
+				if (!(!!value_levels[currentValue]) || value_levels[currentValue] <= value_levels[newValue]) {
+					audienceTags[audience_sub_keys_synonyms[key]] = newValue
+				}
+			}
+
+			if (specialTag_synonyms[key]) {
+				const values = entry[1].split(';')
+				const specialTags_values = Object.keys(specialTag_synonyms[key]).filter(value => values.includes(value))
+				for (const value of specialTags_values) {
+					const newTags = specialTag_synonyms[key][value]
+					for (const key of Object.keys(newTags)) {
+						const currentValue = audienceTags[key]
+						const newValue = newTags[key]
+						if (!(!!value_levels[currentValue]) || value_levels[currentValue] <= value_levels[newValue]) {
+							audienceTags[key] = newValue
+						}
+					}
+				}
+			}
+		}
+
+		return {
+			tags: audienceTags,
+			only: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'only').map(entry => entry[0]),
+			primary: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'primary').map(entry => entry[0]),
+			welcome: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'welcome').map(entry => entry[0]),
+		}
+	}
+
 	renderAudience(tags){
+		const audience = this.getAudience(tags)
+
+		let audienceHeading = null
+		let audienceText = null
+		let audienceIcon = null
+		if (audience.tags.queer && (audience.tags.queer === 'only' || audience.tags.queer === 'primary')) {
+			audienceHeading = this.props.getString('audience_heading_queer_primary')
+			audienceText = this.props.getString('audience_text_queer_primary')
+			audienceIcon = <EmojiIcon icon="🏳️‍🌈" />
+		} else if (audience.tags.queer && audience.tags.queer === 'welcome') {
+			audienceHeading = this.props.getString('audience_heading_queer_welcome')
+			audienceIcon = <EmojiIcon icon="✨" />
+		} else {
+			audienceHeading = this.props.getString('audience_heading_be_cautios')
+			audienceText = this.props.getString('audience_text_be_cautios')
+			audienceIcon = <WarningIcon />
+		}
+
 
 		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
 
+		const chipFunction = label => (<Chip
+			size="small"
+			style={{
+				margin: '0 4px 4px 0',
+			}}
+			key={label}
+			label={this.props.getString(label.replace(/:/g, '_'), null, label)}
+		/>)
+
 		return (
 			<List key="Audience" dense>
+				<ListItem>
+					<ListItemIcon style={
+						!!audienceText
+						? {
+							alignSelf: 'flex-start',
+							paddingTop: '12px',
+						}
+						: {}
+					}>
+						{audienceIcon}
+					</ListItemIcon>
+					<ListItemText
+						primary={audienceHeading}
+						secondary={audienceText}
+					/>
+				</ListItem>
+				
+				{
+					audience.only.length > 0
+					? (
+						<ListItem>
+							<ListItemText
+								style={{marginLeft: '56px'}}
+								primaryTypographyProps={{
+									component: 'div',
+								}}
+								primary={<>
+									{this.props.getString('only_heading')}&nbsp; {audience.only.map(chipFunction)}
+								</>}
+							/>
+						</ListItem>
+					)
+					: null
+				}
+				
+				{
+					audience.primary.length > 0
+					? (
+						<ListItem>
+							<ListItemText
+								style={{marginLeft: '56px'}}
+								primaryTypographyProps={{
+									component: 'div',
+								}}
+								primary={<>
+									{this.props.getString('primary_heading')}&nbsp; {audience.primary.map(chipFunction)}
+								</>}
+							/>
+						</ListItem>
+					)
+					: null
+				}
+
+				{
+					audience.welcome.length > 0
+					? (
+						<ListItem>
+							<ListItemText
+								style={{marginLeft: '56px'}}
+								primaryTypographyProps={{
+									component: 'div',
+								}}
+								primary={<>
+									{this.props.getString('welcome_heading')}&nbsp; {audience.welcome.map(chipFunction)}
+								</>}
+							/>
+						</ListItem>
+					)
+					: null
+				}
+
 				{
 					age_range_text === ''
 					? null

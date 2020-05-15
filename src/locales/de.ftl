@@ -81,6 +81,26 @@ close_sidebar_aria_label = Close info panel
 improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
 
+queer = Queere Menschen
+men = Männer
+women = Frauen
+trans = Trans*
+youth = Junge Leute
+sexuality_gay = Homosexuelle
+sexuality_bi = Bi
+allies = Freunde
+
+audience_heading_queer_primary = Dieser Ort existiert für queere Menschen!
+audience_text_queer_primary = Sei du selbst!
+
+audience_heading_queer_welcome =  Queere Menschen sind hier willkommen!
+
+audience_heading_be_cautios = Sei vorsichtig!
+audience_text_be_cautios = Wir wissen noch nicht, ob dieser Ort sicher ist.
+
+only_heading = Nur für:
+primary_heading = Primär für:
+welcome_heading = Willkommen sind:
 
 age_restriction = Altersbeschränkung:
 max_age_text = Bis {$age} Jahre.
