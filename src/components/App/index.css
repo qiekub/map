@@ -100,14 +100,21 @@ html body .addNewFab{
 		max-width: none;
 		overflow: auto;
 		white-space: nowrap;
-
-		pointer-events: auto;
 	}
 	.filtersPanel .filterMenuInner{
 		display: inline-block;
 		padding-right: 16px;
-
+	}
+	
+	.filtersPanel,
+	.filtersPanel .filterMenuInner {
 		pointer-events: auto;
+		-ms-overflow-style: none;
+		-webkit-overflow-scrolling: touch;
+	}
+	.filtersPanel::-webkit-scrollbar 
+	.filtersPanel .filterMenuInner::-webkit-scrollbar {
+		display: none;
 	}
 }
 
