@@ -612,7 +612,6 @@ class Sidebar extends React.Component {
 			link.type==='osm'
 		)
 
-		const openingHoursComponent = null // this.renderOpeningHours(doc)
 
 		/*
 			<Typography gutterBottom variant="body2" component="p">{properties.address}</Typography>			
@@ -664,10 +663,6 @@ class Sidebar extends React.Component {
 						</List>)
 					}
 				
-					{!!openingHoursComponent ? (<List dense subheader={<ListSubheader>Opening Hours</ListSubheader>}>
-						{openingHoursComponent}
-					</List>) : null}
-
 					<div key="improveButtonWrapper" style={{
 						marginTop: '32px',
 						textAlign: 'center',
