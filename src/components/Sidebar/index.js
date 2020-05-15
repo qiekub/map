@@ -668,19 +668,20 @@ class Sidebar extends React.Component {
 						{openingHoursComponent}
 					</List>) : null}
 
-					<div style={{
+					<div key="improveButtonWrapper" style={{
 						marginTop: '32px',
 						textAlign: 'center',
 					}}>
 						<Fab
+							key="improveButton"
 							variant="extended"
 							onClick={this.edit}
 							size="large"
 							color="secondary"
 							className="improveFab"
 						>
-							<EditIcon className="icon"/>
-							<Localized id="improve" />
+							<EditIcon className="icon" key="improveButtonIcon"/>
+							<Localized id="improve" key="improveButtonLocalized" />
 						</Fab>
 					</div>
 				</CardContent>
@@ -791,6 +792,7 @@ class Sidebar extends React.Component {
 			</Card>
 
 			<Card
+				key="sidebarContentCard"
 				elevation={6}
 				className="sidebarContentCard"
 				style={{
