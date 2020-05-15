@@ -547,9 +547,6 @@ class Questions extends React.Component {
 										}}
 										doc={this.props.doc}
 										onChange={newValue=>this.saveGeoValue(questionDoc._id, newValue)}
-										style={{
-											margin: '4px 8px',
-										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
 									return (<PresetInput
@@ -557,9 +554,6 @@ class Questions extends React.Component {
 										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
-										style={{
-											margin: '4px 8px',
-										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
