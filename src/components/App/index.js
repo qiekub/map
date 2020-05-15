@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './index.css'
 
 import { Router, navigate } from '@reach/router'
@@ -51,6 +51,23 @@ const defaultTheme = createMuiTheme({
 	},
 })
 
+function HandlePath(props) {
+	const action = props.action || ''
+	const docID = props.docID || ''
+	const onPathChanged = props.onPathChanged
+
+	useEffect(function(){
+		if (!!onPathChanged) {
+			onPathChanged({
+				action,
+				docID,
+			})
+		}
+	}, [action, docID, onPathChanged])
+
+	return null
+}
+
 class App extends React.Component {
 	constructor(props) {
 		super(props)
@@ -67,6 +84,9 @@ class App extends React.Component {
 			theme: defaultTheme,
 
 			isSmallScreen: false,
+
+			action: '',
+			docID: '',
 		}
 
 		this.functions = {}
@@ -84,6 +104,7 @@ class App extends React.Component {
 		this.getZoom = this.getZoom.bind(this)
 
 		this.dontFilterTheseIds = this.dontFilterTheseIds.bind(this)
+		this.onPathChanged = this.onPathChanged.bind(this)
 	}
 
 	componentDidMount(){
@@ -292,11 +313,27 @@ class App extends React.Component {
 		}))
 	}
 
+	onPathChanged(pathVars){
+		this.setState(pathVars)
+	}
+
 	render() {
 		return (<>
 			<ThemeProvider theme={this.state.theme}>
 			<StylesProvider injectFirst>
+
+			<Router primary={false}>
+				<HandlePath
+					path="/:action/*docID"
+					onPathChanged={this.onPathChanged}
+				/>
+				<HandlePath
+					path="/"
+					onPathChanged={this.onPathChanged}
+				/>
+			</Router>
 			
+
 			<SearchBar
 				className="SearchBar"
 				value={this.state.searchBarValue}
@@ -326,22 +363,21 @@ class App extends React.Component {
 				<FiltersPanelContent onChange={this.filtersChanged}/>
 			</div>
 
-			<Router primary={false}>
-				<Sidebar
-					path="/:action/*docID"
-					
-					className="Sidebar"
+			<Sidebar
+				action={this.state.action}
+				docID={this.state.docID}
 
-					onSetSearchBarValue={this.setSearchBarValue}
-					onSetSidebarIsOpen={this.setSidebarIsOpen}
+				className="Sidebar"
 
-					onSetView={this.setView}
-					onFlyTo={this.flyTo}
-					onGetZoom={this.getZoom}
+				onSetSearchBarValue={this.setSearchBarValue}
+				onSetSidebarIsOpen={this.setSidebarIsOpen}
 
-					onDontFilterTheseIds={this.dontFilterTheseIds}
-				/>
-			</Router>
+				onSetView={this.setView}
+				onFlyTo={this.flyTo}
+				onGetZoom={this.getZoom}
+
+				onDontFilterTheseIds={this.dontFilterTheseIds}
+			/>
 			
 			<MainMap
 				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
