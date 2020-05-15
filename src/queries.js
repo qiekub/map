@@ -88,6 +88,7 @@ export const loadQuestions = gql`
 					}
 					possibleAnswers {
 						inputtype
+						namespace
 						parsers
 						key
 						icon

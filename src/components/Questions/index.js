@@ -632,6 +632,7 @@ class Questions extends React.Component {
 								return undefined
 							}else{
 								const possibleAnswerKey = possibleAnswer.key
+								const possibleAnswerNamespace = possibleAnswer.namespace
 								possibleAnswer.inputtype = possibleAnswer.inputtype || ''
 								if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput
