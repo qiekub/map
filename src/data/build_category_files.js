@@ -180,6 +180,7 @@ const colors = {
 			'shop',
 			'office',
 			'amenity/place_of_worship',
+			'address',
 		]
 	},
 
@@ -333,6 +334,10 @@ for (const filename of files) {
 }
 
 const preset_overwrites = {
+	'address': {
+		icon: 'place',
+	},
+
 	'office': {
 		icon: 'business_center',
 	},
@@ -543,6 +548,7 @@ for (const preset_key in id_presets) {
 
 	if (
 		(
+			preset_key.includes('address') ||
 			preset_key.includes('amenity') ||
 			preset_key.includes('attraction') ||
 			preset_key.includes('club') ||
