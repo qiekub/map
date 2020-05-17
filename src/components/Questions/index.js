@@ -253,6 +253,8 @@ class Questions extends React.Component {
 
 				questionDoc.properties.question_translated = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
 
+				questionDoc.properties.in_one_word_translated = getTranslationFromArray(questionDoc.properties.in_one_word, this.props.globals.userLocales)
+
 				questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
 					...answer,
 					title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
@@ -595,6 +597,21 @@ class Questions extends React.Component {
 
 		const location = this.props.doc.properties.geometry.location
 
+		let heading = ''
+		if (questionDoc.active) {
+			if (questionDoc.properties.question_translated !== '') {
+				heading = questionDoc.properties.question_translated
+			} else if (questionDoc.properties.in_one_word_translated !== '') {
+				heading = questionDoc.properties.in_one_word_translated
+			}
+		}else{
+			if (questionDoc.properties.in_one_word_translated !== '') {
+				heading = questionDoc.properties.in_one_word_translated
+			} else if (questionDoc.properties.question_translated !== '') {
+				heading = questionDoc.properties.question_translated
+			}
+		}
+
 		return (
 			<Paper
 				key={`question_${questionDoc._id}`}
@@ -613,12 +630,31 @@ class Questions extends React.Component {
 					: null
 				}
 			>
-				{
-					questionDoc.properties.question_translated !== ''
-					? <Typography variant="body1" className="questionText">{questionDoc.properties.question_translated}</Typography>
-					: undefined
-				}
-	
+				<ListItem dense disableGutters className="questionText">
+					{
+						questionDoc.properties.icon
+						? (
+							<ListItemIcon>
+								<div
+									className="material-icons-round"
+									style={{
+										color: 'inherit',
+										width: '40px',
+										height: '40px',
+										lineHeight: '40px',
+										textAlign: 'center',
+									}}
+								>{questionDoc.properties.icon}</div>
+							</ListItemIcon>
+						)
+						: null
+					}
+					<ListItemText primary={heading} primaryTypographyProps={{
+						variant: 'body1',
+						// className: 'questionText',
+					}}/>
+				</ListItem>				
+
 				<div
 					className="possibleAnswers"
 					style={{

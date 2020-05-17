@@ -2,7 +2,7 @@
 
 
 html body .questionCard{
-	padding: 12px 32px;
+	padding: 0 24px;
 	margin: 0 -16px;
 	border-radius: 0;
 	opacity: 1;
@@ -37,7 +37,7 @@ html body .questionCard.answered:not(.active):not(:hover) {
 html body .questionCard.active{
 	cursor: auto;
 
-	padding: 32px 32px;
+	padding: 16px 24px;
 	margin: 16px -16px;
 }
 html body .questionCard.active:first-child{
@@ -65,7 +65,7 @@ html body .questionCard .possibleAnswers{
 	overflow: hidden;
 	opacity: 0;
 	height: 0;
-	margin: 0 -8px 0 -8px;
+	margin: 0;
 	transition:
 		opacity var(--transition-time) var(--timing-function) 0ms,
 		height  var(--transition-time) var(--timing-function) 0ms,
@@ -74,7 +74,7 @@ html body .questionCard .possibleAnswers{
 html body .questionCard.active .possibleAnswers{
 	opacity: 1;
 	/*margin: 24px -8px -8px -8px;*/
-	margin: 0px -8px;
+	margin: 12px 0;
 	height: 66.25px;
 }
 html body .questionCard.isMultiRow.active .possibleAnswers{
@@ -88,5 +88,5 @@ html body .questionCard .saveButton{
 html body .questionCard.hasInputField.active .saveButton{
 	display: flex;
 	justify-content: flex-end;
-	margin: 32px 0 0 -16px;
+	margin: 24px 0 8px -16px;
 }

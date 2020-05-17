@@ -86,6 +86,11 @@ export const loadQuestions = gql`
 						text
 						language
 					}
+					in_one_word (languages: $languages){
+						text
+						language
+					}
+					icon
 					possibleAnswers {
 						inputtype
 						namespace
