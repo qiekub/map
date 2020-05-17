@@ -48,7 +48,7 @@ finish = Finish
 questions_are_loading = The questions are loading…
 
 headings_privacy_stage = Privacy
-headings_questions_stage = Questions about the place
+headings_questions_stage = Questions about this place
 headings_sources_stage = Sources
 
 privacy_info = 
