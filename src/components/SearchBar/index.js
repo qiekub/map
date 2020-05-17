@@ -23,6 +23,7 @@ import {
 	ListItem,
 	ListItemIcon,
 	ListItemText,
+	ListSubheader,
 
 	CardActions,
 	Button,
@@ -48,7 +49,8 @@ class SearchBar extends React.Component {
 			value: '',
 			loadingSearchResult: false,
 			isMainDrawerOpen: false,
-			searchResults: [],
+			searchResults_poi: [],
+			searchResults_address: [],
 			showSearchResults: false,
 			showWebsiteIntro: true,
 		}
@@ -173,16 +175,21 @@ class SearchBar extends React.Component {
 					}
 				})
 
+				const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
+				const searchResults_address = searchResults.filter(result => result.preset === 'address')
+
 				this.setState({
 					showSearchResults: true,
 					loadingSearchResult: false,
-					searchResults,
+					searchResults_poi,
+					searchResults_address,
 				})
 			}).catch(error=>{
 				this.setState({
 					showSearchResults: false,
 					loadingSearchResult: false,
-					searchResults: [],
+					searchResults_poi: [],
+					searchResults_address: [],
 				})
 				console.error(error)
 			})
@@ -190,7 +197,8 @@ class SearchBar extends React.Component {
 			this.setState({
 				showSearchResults: false,
 				loadingSearchResult: false,
-				searchResults: [],
+				searchResults_poi: [],
+				searchResults_address: [],
 			})
 		}
 	}
@@ -287,7 +295,7 @@ class SearchBar extends React.Component {
 				className={
 					'header '
 					+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')
-					+(this.state.showSearchResults && this.state.searchResults.length > 0 ? 'showingSearchResults' : '')
+					+(this.state.showSearchResults && (this.state.searchResults_poi.length > 0 || this.state.searchResults_address.length > 0) ? 'showingSearchResults' : '')
 					+(!this.state.showSearchResults && this.state.showWebsiteIntro ? 'showingWebsiteIntro' : '')
 				}
 				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
@@ -316,29 +324,126 @@ class SearchBar extends React.Component {
 					{rightIcon}
 				</div>
 				<div className="scrollWrapper searchResults">
-					<List>
 					{
-						this.state.searchResults.map(result => {
-							return (<ListItem button key={result.key} onClick={()=>this.openSearchResult(result)}>
-								<ListItemIcon>
-									<div
-										className="material-icons-round"
-										style={{
-											color: (result.___preset.icon ? result.___color.fg : ''),
-											backgroundColor: (result.___preset.icon ? result.___color.bg : ''),
-											borderRadius: '100%',
-											width: '40px',
-											height: '40px',
-											lineHeight: '40px',
-											textAlign: 'center',
-										}}
-									>{result.___preset.icon}</div>
-								</ListItemIcon>
-								<ListItemText primary={result.name_translated} secondary={result.address}/>
-							</ListItem>)
-						})
+						this.state.searchResults_poi.length === 0
+						? null
+						: (
+							<List
+								subheader={
+									<ListSubheader disableSticky>
+										<Localized id="places_listheading" />
+									</ListSubheader>
+								}
+							>
+							{
+								this.state.searchResults_poi.map(result => {
+									return (<ListItem
+											button
+											alignItems={
+												result.name_translated !== '' && result.address !== ''
+												? 'flex-start'
+												: 'center'
+											}
+											key={result.key}
+											onClick={()=>this.openSearchResult(result)}
+										>
+										<ListItemIcon>
+											<div
+												className="material-icons-round"
+												style={{
+													color: (
+														result.___preset.icon
+														? (
+															result.___color.key === 'default'
+															? result.___color.bg
+															: result.___color.fg
+														)
+														: ''
+													),
+													backgroundColor: (
+														result.___preset.icon
+														? (
+															result.___color.key === 'default'
+															? ''
+															: result.___color.bg
+														)
+														: ''
+													),
+													borderRadius: '100%',
+													width: '40px',
+													height: '40px',
+													lineHeight: '40px',
+													textAlign: 'center',
+												}}
+											>{result.___preset.icon}</div>
+										</ListItemIcon>
+										<ListItemText primary={result.name_translated} secondary={result.address}/>
+									</ListItem>)
+								})
+							}
+							</List>
+						)
 					}
-					</List>
+					{
+						this.state.searchResults_address.length === 0
+						? null
+						: (
+							<List
+								subheader={
+									<ListSubheader disableSticky>
+										<Localized id="addresses_listheading" />
+									</ListSubheader>
+								}
+							>
+							{
+								this.state.searchResults_address.map(result => {
+									return (<ListItem
+											button
+											alignItems={
+												result.name_translated !== '' && result.address !== ''
+												? 'flex-start'
+												: 'center'
+											}
+											key={result.key}
+											onClick={()=>this.openSearchResult(result)}
+										>
+										<ListItemIcon>
+											<div
+												className="material-icons-round"
+												style={{
+													color: (
+														result.___preset.icon
+														? (
+															result.___color.key === 'default'
+															? result.___color.bg
+															: result.___color.fg
+														)
+														: ''
+													),
+													backgroundColor: (
+														result.___preset.icon
+														? (
+															result.___color.key === 'default'
+															? ''
+															: result.___color.bg
+														)
+														: ''
+													),
+													borderRadius: '100%',
+													width: '40px',
+													height: '40px',
+													lineHeight: '40px',
+													textAlign: 'center',
+												}}
+											>{result.___preset.icon}</div>
+										</ListItemIcon>
+										<ListItemText primary={result.name_translated} secondary={result.address}/>
+									</ListItem>)
+								})
+							}
+							</List>
+						)
+					}
 				</div>
 				<div className="scrollWrapper websiteIntro">
 					<List>
