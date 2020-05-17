@@ -211,7 +211,7 @@ class SearchBar extends React.Component {
 			})
 		}
 	}
-	searchKeypressed(event){		
+	searchKeypressed(event){
 		if (event.key === 'Enter') {
 			this.submitTheSearchQuery()
 		}
