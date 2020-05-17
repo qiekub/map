@@ -84,6 +84,9 @@ close_search_results_aria_label = Stop searching
 open_menu_aria_label = Open menu
 close_sidebar_aria_label = Close info panel
 
+places_listheading = Orte
+addresses_listheading = Adressen
+
 
 # Sidebar
 improve = Verbessern

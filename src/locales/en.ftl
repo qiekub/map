@@ -80,6 +80,9 @@ privacy_essential_data_info =
 
 okay-button = Okay
 
+places_listheading = Places
+addresses_listheading = Addresses
+
 
 
 # Sidebar
