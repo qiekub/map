@@ -112,8 +112,24 @@ export default class PresetInput extends React.Component {
 						<div
 							className="material-icons-round"
 							style={{
-								color: (preset.icon ? preset.color.fg : ''),
-								backgroundColor: (preset.icon ? preset.color.bg : ''),
+								color: (
+									preset.icon
+									? (
+										preset.color.key === 'default'
+										? preset.color.bg
+										: preset.color.fg
+									)
+									: ''
+								),
+								backgroundColor: (
+									preset.icon
+									? (
+										preset.color.key === 'default'
+										? ''
+										: preset.color.bg
+									)
+									: ''
+								),
 								borderRadius: '100%',
 								width: '40px',
 								height: '40px',
