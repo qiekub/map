@@ -46,6 +46,10 @@ export function getTranslationFromArray(texts_array, ...attrs) {
 	// 	text: 'hello world',
 	// ]
 
+	if (!Array.isArray(texts_array)) {
+		return ''
+	}
+
 	const text_object = {}
 	for (const text of texts_array) {
 		text_object[text.language || ''] = text.text
