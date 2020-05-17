@@ -154,7 +154,7 @@ class SearchBar extends React.Component {
 					languages: navigator.languages,
 				},
 			}).then(async result => {
-				if (result.data.search.query === queryString) {
+				if (result.data.search.query === this.state.value) {
 					const searchResults = result.data.search.results.map(result => {
 						const preset = result.preset
 						return {
