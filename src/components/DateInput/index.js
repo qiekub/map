@@ -168,8 +168,6 @@ class DateInput extends React.Component {
 	}
 
 	render() {
-		console.log('this.props', this.props)
-
 		const dateInputOrder = this.props.getString('date-input-order', null, '').split('-').filter(v=>!!v && v !== ' ') // year-month-day
 
 		return (<div
