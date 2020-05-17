@@ -154,36 +154,39 @@ class SearchBar extends React.Component {
 					languages: navigator.languages,
 				},
 			}).then(async result => {
-
-				const searchResults = result.data.search.map(result => {
-					const preset = result.preset
-					return {
-						...result,
-						name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
-						
-						___preset: (
-							!!preset && !!presets[preset]
-							? {
-								key: preset,
-								...presets[preset],
-							}
-							: presets.default
-						),
-						___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
-
-						key: JSON.stringify(result),
-					}
-				})
-
-				const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
-				const searchResults_address = searchResults.filter(result => result.preset === 'address')
-
-				this.setState({
-					showSearchResults: true,
-					loadingSearchResult: false,
-					searchResults_poi,
-					searchResults_address,
-				})
+				if (result.data.search.query === queryString) {
+					const searchResults = result.data.search.results.map(result => {
+						const preset = result.preset
+						return {
+							...result,
+							name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
+							
+							___preset: (
+								!!preset && !!presets[preset]
+								? {
+									key: preset,
+									...presets[preset],
+								}
+								: presets.default
+							),
+							___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
+	
+							key: JSON.stringify(result),
+						}
+					})
+	
+					const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
+					const searchResults_address = searchResults.filter(result => result.preset === 'address')
+	
+					this.setState({
+						showSearchResults: true,
+						loadingSearchResult: false,
+						searchResults_poi,
+						searchResults_address,
+					})
+				}else{
+					console.error('The search was too slow!')
+				}
 			}).catch(error=>{
 				this.setState({
 					showSearchResults: false,
