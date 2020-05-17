@@ -707,7 +707,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '4px 8px',
+											margin: '8px 8px 4px 8px',
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'number') {
@@ -720,7 +720,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '4px 8px',
+											margin: '8px 8px 4px 8px',
 										}}
 									/>)
 								}else{
