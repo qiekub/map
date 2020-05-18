@@ -90,8 +90,8 @@ improve = Improve
 add_new_place_header_text = Add a new place
 
 queer = Queer People
-men = Men
-women = Women
+men = Men*
+women = Women*
 trans = Trans*
 youth = Young People
 sexuality_gay = Gay
