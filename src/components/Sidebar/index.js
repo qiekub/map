@@ -487,127 +487,17 @@ class Sidebar extends React.Component {
 	}*/
 
 	getAudience(tags){
-		// queer:ally
+		const audience_namespace = 'audience'
+		const audience_namespace_length = (audience_namespace+':').length
 
-		const audience_values_synonyms = {
-			only			: 'only',
-			primary			: 'primary',
-			lgbtq			: 'primary',
-			gay				: 'primary',
-			majority		: 'primary',
-			gay_and_friends	: 'primary',
-			welcome			: 'welcome',
-			yes				: 'welcome',
-			friendly		: 'welcome',
-		}
-
-		const audience_sub_keys_synonyms = {
-			'lgbtq'					: 'queer',
-			'gay'					: 'queer',
-			'gay:women'				: 'women',
-			'lgbtq:female'			: 'women',
-			'gay:men'				: 'men',
-			'lgbtq:men'				: 'men',
-			'lgbtq:male'			: 'men',
-			'gay:transgender'		: 'trans',
-			'homosexual'			: 'sexuality:gay',
-			'bisexual'				: 'sexuality:bi',
-			'juvenile'				: 'youth',
-			'youth_centre'			: 'youth',
-			// 'lgbtq:bears'			: 'bears',
-			// 'lgbtq:cruising'		: 'queer:cruising',
-		}
-
-		const specialTag_synonyms = {
-			'community_centre:for': {
-				homosexual:		{'queer': 'primary', 'sexuality:gay': 'primary'},
-				bisexual:		{'queer': 'primary', 'sexuality:bi': 'primary'},
-				transgender:	{'queer': 'primary', 'trans': 'primary'},
-				lgbtq:			{'queer': 'primary'},
-				juvenile:		{'youth': 'primary'},
-			},
-			'community_centre': {
-				youth_centre:	{'youth': 'primary'},
-				lgbtq:			{'queer': 'primary'},
-			},
-			'social_facility:for': {
-				lgbtq:			{'queer': 'primary'},
-			},
-			'type': {
-				gay:			{'queer': 'primary'},
-			},
-			'sauna': {
-				gay:			{'queer': 'primary'},
-			},
-			'club': {
-				gay:			{'queer': 'primary'},
-				lgbtq:			{'queer': 'primary'},
-			},
-			'audience': {
-				gay:			{'queer': 'primary'},
-				gay_and_friends:{'queer': 'primary', 'allies': 'primary'},
-			},
-			'gayfriendly': {
-				yes:			{'queer': 'welcome'},
-			},
-			'gay': {
-				men:			{'queer': 'welcome', 'men': 'primary'},
-			},
-			'gay:men': {
-				yes:			{'queer': 'welcome', 'men': 'welcome'},
-				only:			{'queer': 'welcome', 'men': 'only'},
-			},
-			'lgbtq': {
-				yes:			{'queer': 'primary'},
-			},
-			'gay:only': {
-				no:				{'allies': 'welcome'},
-			}
-		}
-
-		const value_levels = {
-			only: 4,
-			primary: 3,
-			welcome: 2,
-			no: 1,
-		}
-
-
-		const audienceTags = {}
-
-		for (const entry of Object.entries(tags)) {
-			const key = entry[0]
-			const value = entry[1]
-
-			if (audience_sub_keys_synonyms[key] && audience_values_synonyms[value]) {
-				const currentValue = audienceTags[audience_sub_keys_synonyms[key]]
-				const newValue = audience_values_synonyms[value]
-				if (!(!!value_levels[currentValue]) || value_levels[currentValue] <= value_levels[newValue]) {
-					audienceTags[audience_sub_keys_synonyms[key]] = newValue
-				}
-			}
-
-			if (specialTag_synonyms[key]) {
-				const values = entry[1].split(';')
-				const specialTags_values = Object.keys(specialTag_synonyms[key]).filter(value => values.includes(value))
-				for (const value of specialTags_values) {
-					const newTags = specialTag_synonyms[key][value]
-					for (const key of Object.keys(newTags)) {
-						const currentValue = audienceTags[key]
-						const newValue = newTags[key]
-						if (!(!!value_levels[currentValue]) || value_levels[currentValue] <= value_levels[newValue]) {
-							audienceTags[key] = newValue
-						}
-					}
-				}
-			}
-		}
+		const audienceTags = Object.entries(tags)
+		.filter(entry => entry[0].startsWith(audience_namespace+':'))
+		.map(entry => [entry[0].substring(audience_namespace_length), entry[1]])
 
 		return {
-			tags: audienceTags,
-			only: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'only').map(entry => entry[0]),
-			primary: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'primary').map(entry => entry[0]),
-			welcome: Object.entries(audienceTags).filter(entry => entry[0] !== 'queer' && entry[1] === 'welcome').map(entry => entry[0]),
+			only: audienceTags.filter(entry => entry[0] !== 'queer' && entry[1] === 'only').map(entry => entry[0]),
+			primary: audienceTags.filter(entry => entry[0] !== 'queer' && entry[1] === 'primary').map(entry => entry[0]),
+			welcome: audienceTags.filter(entry => entry[0] !== 'queer' && entry[1] === 'welcome').map(entry => entry[0]),
 		}
 	}
 
