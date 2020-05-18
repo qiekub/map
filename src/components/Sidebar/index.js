@@ -139,11 +139,11 @@ class Sidebar extends React.Component {
 			'contact:email',
 			'contact:phone',
 
-			'instagram',
-			'facebook',
-			'twitter',
-			'youtube',
-			'yelp',
+			'contact:instagram',
+			'contact:facebook',
+			'contact:twitter',
+			'contact:youtube',
+			'contact:yelp',
 			'osm_id',
 
 			// ...getWantedTagsList(presets),
