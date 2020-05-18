@@ -140,9 +140,6 @@ class Sidebar extends React.Component {
 			'contact:yelp',
 			'osm_id',
 
-			// ...getWantedTagsList(presets),
-
-
 			'opening_date',
 			'opening_date:',
 			'closing_date',
