@@ -109,9 +109,9 @@ audience_heading_queer_welcome =  Queere Menschen sind hier willkommen!
 audience_heading_be_cautios = Sei vorsichtig!
 audience_text_be_cautios = Wir wissen noch nicht, ob dieser Ort sicher ist.
 
-only_heading = Nur für:
-primary_heading = Primär für:
-welcome_heading = Willkommen sind:
+audience_only_heading = Nur für:
+audience_primary_heading = Primär für:
+audience_welcome_heading = Willkommen sind:
 
 age_restriction = Altersbeschränkung:
 max_age_text = Bis {$age} Jahre.

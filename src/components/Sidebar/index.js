@@ -671,7 +671,7 @@ class Sidebar extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('only_heading')}&nbsp; {audience.only.map(chipFunction)}
+									{this.props.getString('audience_only_heading')}&nbsp; {audience.only.map(chipFunction)}
 								</>}
 							/>
 						</ListItem>
@@ -689,7 +689,7 @@ class Sidebar extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('primary_heading')}&nbsp; {audience.primary.map(chipFunction)}
+									{this.props.getString('audience_primary_heading')}&nbsp; {audience.primary.map(chipFunction)}
 								</>}
 							/>
 						</ListItem>
@@ -707,7 +707,7 @@ class Sidebar extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('welcome_heading')}&nbsp; {audience.welcome.map(chipFunction)}
+									{this.props.getString('audience_welcome_heading')}&nbsp; {audience.welcome.map(chipFunction)}
 								</>}
 							/>
 						</ListItem>
