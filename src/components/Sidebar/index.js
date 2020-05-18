@@ -129,6 +129,7 @@ class Sidebar extends React.Component {
 			'closing_date',
 			'closing_date:',
 
+			'audience:',
 			'min_age',
 			'max_age',
 
@@ -148,32 +149,6 @@ class Sidebar extends React.Component {
 			// ...getWantedTagsList(presets),
 
 
-			'lgbtq',
-			'gay',
-			'gay:women',
-			'lgbtq:female',
-			'gay:men',
-			'lgbtq:men',
-			'lgbtq:male',
-			'gay:transgender',
-			'homosexual',
-			'bisexual',
-			'juvenile',
-			'youth_centre',
-			
-			// 'lgbtq:bears',
-			// 'lgbtq:cruising',
-
-			'community_centre:for',
-			'community_centre',
-			'social_facility:for',
-			'type',
-			'sauna',
-			'club',
-			'audience',
-			'gayfriendly',
-			'gay',
-			'gay:only',
 		]
 
 		this.action = undefined
