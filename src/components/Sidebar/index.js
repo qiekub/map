@@ -614,14 +614,16 @@ class Sidebar extends React.Component {
 	renderAudience(tags){
 		const audience = this.getAudience(tags)
 
+		const audience_queer = tags['audience:queer']
+
 		let audienceHeading = null
 		let audienceText = null
 		let audienceIcon = null
-		if (audience.tags.queer && (audience.tags.queer === 'only' || audience.tags.queer === 'primary')) {
+		if (audience_queer && (audience_queer === 'only' || audience_queer === 'primary')) {
 			audienceHeading = this.props.getString('audience_heading_queer_primary')
 			audienceText = this.props.getString('audience_text_queer_primary')
 			audienceIcon = <EmojiIcon icon="🏳️‍🌈" />
-		} else if (audience.tags.queer && audience.tags.queer === 'welcome') {
+		} else if (audience_queer && audience_queer === 'welcome') {
 			audienceHeading = this.props.getString('audience_heading_queer_welcome')
 			audienceIcon = <EmojiIcon icon="✨" />
 		} else {
