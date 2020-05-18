@@ -116,18 +116,11 @@ class Sidebar extends React.Component {
 		this.docCache = null
 
 		this.wantedTagsList = [
-			'preset',
-
-			'addr:',
-
 			'name',
 			'name:en',
 			// 'name:',
 
-			'opening_date'
-			'opening_date:',
-			'closing_date',
-			'closing_date:',
+			'preset',
 
 			'audience:',
 			'min_age',
@@ -135,10 +128,11 @@ class Sidebar extends React.Component {
 
 			// 'wheelchair',
 
-			'contact:website',
+			'addr:',
 			'contact:email',
 			'contact:phone',
 
+			'contact:website',
 			'contact:instagram',
 			'contact:facebook',
 			'contact:twitter',
@@ -149,6 +143,10 @@ class Sidebar extends React.Component {
 			// ...getWantedTagsList(presets),
 
 
+			'opening_date',
+			'opening_date:',
+			'closing_date',
+			'closing_date:',
 		]
 
 		this.action = undefined
