@@ -12,6 +12,7 @@ export default class EmojiIcon extends React.Component {
 					fontSize: '1.5rem',
 					lineHeight: '1em',
 					textAlign: 'center',
+					...this.props.style,
 				}}
 			>
 				{this.props.icon}
