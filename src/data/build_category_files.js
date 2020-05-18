@@ -370,6 +370,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 	'amenity/brothel': {
@@ -379,10 +380,11 @@ const preset_overwrites = {
 		},
 		name: {
 			"en": "Brothel",
-			"en": "Bordel",
+			"de": "Bordel",
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 	'amenity/cruising_area': {
@@ -392,14 +394,20 @@ const preset_overwrites = {
 		},
 		name: {
 			"en": "Cruising Area",
+			"de": "Cruising Gebiet",
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 
 	'amenity/community_centre': {
 		icon: 'people',
+		name: {
+			"en": "Community Centre",
+			"de": "Gemeinschaftszentrum",
+		},
 	},
 	'amenity/social_facility': {
 		icon: 'people',
@@ -460,6 +468,7 @@ const preset_overwrites = {
 		},
 		terms: {
 			"en": "",
+			'de': '',
 		},
 	},
 
@@ -605,7 +614,15 @@ presets.default = {
 	icon: '',
 }
 
-const presets_sorted = Object.entries(presets).map(pair=>{
+const presets_sorted = Object.entries(presets)
+.filter(pair => !pair[0].endsWith('/lgbtq'))
+// Filter out lgbtq specific tags. The frontend should show this information based on "audience:queer". 
+// amenity/community_centre/lgbtq
+// amenity/nightclub/lgbtq
+// amenity/pub/lgbtq
+// shop/erotic/lgbtq
+// amenity/bar/lgbtq
+.map(pair=>{
 	return {
     	key: pair[0],
         tags_length: Object.keys(pair[1].tags).length,
