@@ -8,6 +8,7 @@ import { FluentContext } from "../../../node_modules/@fluent/react/esm/context.j
 
 const Localized = props => (
 	<LocalizedOriginal
+		key={props.id}
 		{...props}
 		elems={{
 			br: <br />,
