@@ -258,8 +258,10 @@ class FiltersPanelContent extends React.Component {
 							<MenuItem
 								key="any_age"
 								onClick={()=>this.setValue('age', null, popupState.close)}
-								selected={!(!!this.state.age)}
 							>
+								<div className="filterMenuDot hasIcon material-icons-round">
+									{(!(!!this.state.age) ? 'check' : '')}
+								</div>
 								<Localized id="any_age" />
 							</MenuItem>
 							{this.ages.map(number=>{
@@ -267,8 +269,10 @@ class FiltersPanelContent extends React.Component {
 								<MenuItem
 									key={number}
 									onClick={()=>this.setValue('age', number, popupState.close)}
-									selected={!!this.state.age && number === this.state.age}
 								>
+									<div className="filterMenuDot hasIcon material-icons-round">
+										{(!!this.state.age && number === this.state.age ? 'check' : '')}
+									</div>
 									{number===this.highest_ages_entry ? '≥ '+number : number}
 								</MenuItem>
 								)
