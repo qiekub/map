@@ -5,6 +5,14 @@ close-button = close
 
 
 
+# AudienceInput
+audience_input_label_only = Only for…
+audience_input_label_primary = Primary for…
+audience_input_label_welcome = Welcome are…
+audience_input_label_no = Not welcome are…
+
+
+
 # DateInput
 date-input-order = year-month-day
 year-label = Year

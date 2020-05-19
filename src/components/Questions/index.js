@@ -45,6 +45,7 @@ import { withTheme } from '@material-ui/core/styles'
 import GeoInput from '../GeoInput/'
 import PresetInput from '../PresetInput/'
 import DateInput from '../DateInput/'
+import AudienceInput from '../AudienceInput/'
 
 
 
@@ -592,6 +593,7 @@ class Questions extends React.Component {
 				|| possibleAnswer.inputtype === 'geo'
 				|| possibleAnswer.inputtype === 'preset'
 				|| possibleAnswer.inputtype === 'date'
+				|| possibleAnswer.inputtype === 'audience'
 			)
 		}).length > 0
 
@@ -697,6 +699,14 @@ class Questions extends React.Component {
 										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
+									/>)
+								}else if (possibleAnswer.inputtype === 'audience') {
+									return (<AudienceInput
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										helperText={possibleAnswer.description_translated}
+										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
+										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
