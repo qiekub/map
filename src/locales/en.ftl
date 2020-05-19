@@ -102,13 +102,16 @@ improve = Improve
 add_new_place_header_text = Add a new place
 
 queer = Queer People
-men = Men*
-women = Women*
-trans = Trans*
 youth = Young People
-sexuality_gay = Gay
-sexuality_bi = Bi
+trans = Trans*
+inter = Inter*
+sexuality_bi = Bi / Bi+ / Pan
+sexuality_lesbian = Lesbians
+sexuality_gay = Gays
 allies = Allies
+cis = Cisgender
+women = Women
+men = Men
 
 audience_heading_queer_only = This place is only for queer people!
 audience_text_queer_only = Be who you are!
