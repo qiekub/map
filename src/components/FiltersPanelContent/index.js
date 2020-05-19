@@ -119,7 +119,9 @@ class FiltersPanelContent extends React.Component {
 
 	setValue(stateKeyName, value, closeMenuCallback){
 		this.setState({[stateKeyName]: (!!value ? value : null)}, ()=>{
-			closeMenuCallback()
+			if (typeof closeMenuCallback === 'function') {
+				closeMenuCallback()
+			}
 
 			if (this.props.onChange) {
 				this.props.onChange(this.getFilterObj())
