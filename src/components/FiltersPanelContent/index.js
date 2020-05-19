@@ -4,19 +4,7 @@ import './index.css'
 import { Localized, withLocalization} from '../Localized/'
 
 import {
-	// ListSubheader,
-	// List,
-	// ListItem,
-	// ListItemText,
-	// ListItemIcon,
-	// ListItemSecondaryAction,
-
-	// Checkbox,
-
 	Fab,
-	// Paper,
-	// Button,
-
 	Menu,
 	MenuItem,
 } from '@material-ui/core'
@@ -24,10 +12,6 @@ import {
 import {
 	ArrowDropDownRounded as ArrowDropDownIcon,
 } from '@material-ui/icons'
-// import {
-// 	ToggleButton,
-// 	ToggleButtonGroup,
-// } from '@material-ui/lab'
 import { withTheme } from '@material-ui/core/styles'
 
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
@@ -350,48 +334,6 @@ class FiltersPanelContent extends React.Component {
 					</React.Fragment>
 				)}
 			</PopupState>
-
-			{/*<List dense>
-				{this.presetCategories.map(item=>{
-					const thisValue = !!this.state.values.hasOwnProperty(item.title) ? this.state.values[item.title] : true
-					return (<ListItem button key={item.title}>
-						<ListItemIcon style={{minWidth:'0px'}}>
-							<Checkbox
-								checked={thisValue}
-								edge="start"
-								onChange={()=>this.handleClick(item)}
-							/>
-						</ListItemIcon>
-						<ListItemText primary={item.title} />
-					</ListItem>)
-				})}
-			</List>*/}
-
-			{/*<List subheader={<ListSubheader>For Whom?</ListSubheader>}>
-				{this.forWhom.map(item=>{
-					return (<ListItem button key={item.title}>
-					<ListItemText primary={item.title} />
-
-					<ListItemSecondaryAction>
-						<ToggleButtonGroup
-							value={this.state.value}
-
-							onChange={(event,value)=>this.handleGroup(item,value)}
-							className="myToggleButtonGroup"
-							size="small"
-							exclusive
-						>
-							<ToggleButton value="only">
-								Only
-							</ToggleButton>
-							<ToggleButton value="primary">
-								Primary
-							</ToggleButton>
-						</ToggleButtonGroup>
-					</ListItemSecondaryAction>
-					</ListItem>)
-				})}
-			</List>*/}
 		</div>)
 	}
 }
