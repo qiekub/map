@@ -488,6 +488,21 @@ const preset_overwrites = {
 	'historic': {
 		icon: 'local_see', // local_see | place | museum
 	},
+	'historic/memorial/statue': {
+		icon: 'local_see',
+		tags: {
+			'historic': 'memorial',
+			'memorial': 'statue',
+		},
+		name: {
+			'de': 'Statue',
+			'en': 'Statue',
+		},
+		terms: {
+			'de': 'Statue, Standbild',
+			'en': 'sculpture, figure, carving',
+		},
+	},
 
 	'tourism/information': {
 		icon: 'info',
