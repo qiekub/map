@@ -85,6 +85,12 @@ class GlobalsProvider extends React.Component {
 			},
 
 			userLocales: /*['de'] ||*/ navigator.languages,
+
+			emojis: {
+				audience_queer_only: '🏳️‍🌈',
+				audience_queer_primary: '🌈',
+				audience_queer_welcome: '✨',
+			},
 		}
 		// this.state = {
 		// 	...globalState,
