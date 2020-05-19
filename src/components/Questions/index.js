@@ -782,7 +782,7 @@ class Questions extends React.Component {
 							// boxShadow: `inset 0 0 0 999px ${this.props.theme.palette.background.default}`,
 							// boxShadow: 'rgba(0, 0, 0, 0.04) 0px 0px 0px 999px inset',
 							color: 'inherit',
-							margin: '0',
+							margin: '0 8px',
 							padding: '8px 16px 8px 12px',
 						}}
 					>
