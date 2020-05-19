@@ -93,6 +93,7 @@ const categories = [
 			'amenity/restaurant',
 			'amenity/ice_cream',
 			'amenity/marketplace',
+			'amenity/fast_food',
 		],
 		color: {
 			key: 'orange',
@@ -417,6 +418,9 @@ const preset_overwrites = {
 	},
 
 	'amenity/restaurant': {
+		icon: 'restaurant',
+	},
+	'amenity/fast_food': {
 		icon: 'restaurant',
 	},
 	'amenity/cafe': {
