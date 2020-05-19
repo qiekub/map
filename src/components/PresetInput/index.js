@@ -11,6 +11,7 @@ import {
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
 // import { Localized/*, withLocalization*/ } from '../Localized/'
+import { withGlobals } from '../Globals/'
 
 import { getTranslation } from '../../functions.js'
 
@@ -18,64 +19,68 @@ import categories from '../../data/dist/categories.json'
 import _presets_ from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 
-const filterOptions = createFilterOptions({
-  matchFrom: 'start',
-  stringify: option => option.name_translated+' | '+option.category_name_translated,
-});
 
 
-
-const preset4options = preset => ({
-	...preset,
-	name_translated: getTranslation(preset.name),
-	icon: preset.icon ? preset.icon.toLowerCase() : '',
-})
-const presetSorter = (a, b) => {
-	const icon_compare = b.icon.localeCompare(a.icon)
-	const name_compare = -b.name_translated.localeCompare(a.name_translated)
-	return icon_compare === 0 ? name_compare : icon_compare
-}
-
-const _options_ = [].concat(
-	...(
-		categories
-		.map(category =>
-			Object.values(_presets_)
-			.filter(preset => category.presets.some(
-				presetKey => preset.key === presetKey || preset.key.startsWith(presetKey+'/')
-			))
-			.map(preset => preset4options({
-				...preset,
-				category_name_translated: getTranslation(category.name),
-				color: category.color,
-			}))
-			.sort(presetSorter)
-		)
-	),
-	...(
-		Object.values(_presets_)
-		.filter(preset => !categories.some(
-			category => category.presets.some(
-				presetKey => (
-					preset.key === presetKey
-					|| preset.key.startsWith(presetKey+'/')
-				)
-			)
-		))
-		.map(preset => preset4options({
-			...preset,
-			category_name_translated: 'Weitere',
-			color: colors.default,
-		}))
-		.sort(presetSorter)
-	)
-)
-
-export default class PresetInput extends React.Component {
+class PresetInput extends React.Component {
 	constructor(props) {
 		super(props)
 
+		this.filterOptions = createFilterOptions({
+			matchFrom: 'start',
+			stringify: option => option.name_translated+' | '+option.category_name_translated,
+		})
+
+		this._options_ = [].concat(
+			...(
+				categories
+				.map(category =>
+					Object.values(_presets_)
+					.filter(preset => category.presets.some(
+						presetKey => preset.key === presetKey || preset.key.startsWith(presetKey+'/')
+					))
+					.map(preset => this.preset4options({
+						...preset,
+						category_name_translated: getTranslation(category.name, this.props.globals.userLocales),
+						color: category.color,
+					}))
+					.sort(this.presetSorter)
+				)
+			),
+			...(
+				Object.values(_presets_)
+				.filter(preset => !categories.some(
+					category => category.presets.some(
+						presetKey => (
+							preset.key === presetKey
+							|| preset.key.startsWith(presetKey+'/')
+						)
+					)
+				))
+				.map(preset => this.preset4options({
+					...preset,
+					category_name_translated: 'Weitere',
+					color: colors.default,
+				}))
+				.sort(this.presetSorter)
+			)
+		)
+
 		this.presetChanged = this.presetChanged.bind(this)
+	}
+
+
+	presetSorter(a, b){
+		const icon_compare = b.icon.localeCompare(a.icon)
+		const name_compare = -b.name_translated.localeCompare(a.name_translated)
+		return icon_compare === 0 ? name_compare : icon_compare
+	}
+
+	preset4options(preset){
+		return {
+			...preset,
+			name_translated: getTranslation(preset.name, this.props.globals.userLocales),
+			icon: preset.icon ? preset.icon.toLowerCase() : '',
+		}
 	}
 
 	presetChanged(event, value){
@@ -88,7 +93,7 @@ export default class PresetInput extends React.Component {
 
 		let defaultValue = undefined
 		if (this.props.defaultValue && _presets_[this.props.defaultValue]) {
-			defaultValue = preset4options({
+			defaultValue = this.preset4options({
 				..._presets_[this.props.defaultValue],
 				category_name_translated: '', // isn't really needed
 				color: colors.default, // isn't really needed
@@ -97,7 +102,7 @@ export default class PresetInput extends React.Component {
 
 		return (<div style={{margin:'8px 8px 4px 8px'}}>
 			<Autocomplete
-				options={_options_}
+				options={this._options_}
 				groupBy={preset => preset.category_name_translated || ''}
 				getOptionLabel={preset => preset.name_translated}
 				getOptionSelected={(preset, value) => !!value && value.key === preset.key}
@@ -149,7 +154,7 @@ export default class PresetInput extends React.Component {
 				noOptionsText="No options"
 				openText="Open"
 			
-				filterOptions={filterOptions}
+				filterOptions={this.filterOptions}
 				defaultValue={defaultValue}
 				onChange={this.presetChanged}
 			
@@ -164,3 +169,8 @@ export default class PresetInput extends React.Component {
 		</div>)
 	}
 }
+
+export default withGlobals(PresetInput)
+
+
+
