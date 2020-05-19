@@ -36,6 +36,8 @@ import { getTranslation } from '../../functions.js'
 import _categories_ from '../../data/dist/categories.json'
 
 import { withGlobals } from '../Globals/'
+import EmojiIcon from '../EmojiIcon/'
+// <EmojiIcon icon={audience.emoji}/>
 
 
 
@@ -46,12 +48,36 @@ class FiltersPanelContent extends React.Component {
 		this.state = {
 			category: null,
 			age: null,
+			audience_queer: new Set(),
 		}
 
 		this.categories = _categories_.map(category => ({
 			...category,
 			name_translated: getTranslation(category.name, this.props.globals.userLocales),
 		}))
+
+		this.audience_queer_values = [
+			{
+				key: 'everything',
+				translation_key: 'menu_text_audience_queer_everything',
+				emoji: null,
+			},
+			{
+				key: 'only',
+				translation_key: 'menu_text_audience_queer_only',
+				emoji: this.props.globals.emojis.audience_queer_only,
+			},
+			{
+				key: 'primary',
+				translation_key: 'menu_text_audience_queer_primary',
+				emoji: this.props.globals.emojis.audience_queer_primary,
+			},
+			{
+				key: 'welcome',
+				translation_key: 'menu_text_audience_queer_welcome',
+				emoji: this.props.globals.emojis.audience_queer_welcome,
+			},
+		]
 
 		this.ages = Array.apply(null, Array(15)).map((v,i)=>i+14)
 		this.highest_ages_entry = this.ages[this.ages.length-1]
@@ -85,6 +111,7 @@ class FiltersPanelContent extends React.Component {
 		return {
 			presets: (!!this.state.category ? this.state.category.presets : []),
 			
+			audienceQueerOptions: this.state.audience_queer.has('eveything') ? [] : [...this.state.audience_queer],
 			selectedAge: this.state.age,
 			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : '')
 		}
@@ -94,6 +121,32 @@ class FiltersPanelContent extends React.Component {
 		this.setState({[stateKeyName]: (!!value ? value : null)}, ()=>{
 			closeMenuCallback()
 
+			if (this.props.onChange) {
+				this.props.onChange(this.getFilterObj())
+			}
+		})
+	}
+
+	toogleAudienceQueer(audienceKey){
+		this.setState((state, props) => {
+			let audience_queer = state.audience_queer
+
+			if (audienceKey === 'everything') {
+				if (audience_queer.size === 0) {
+					audience_queer = new Set(['only','primary','welcome'])
+				}else{
+					audience_queer = new Set()
+				}
+			}else{
+				if (audience_queer.has(audienceKey)) {
+					audience_queer.delete(audienceKey)
+				}else{
+					audience_queer.add(audienceKey)
+				}
+			}
+
+			return {audience_queer}
+		}, ()=>{
 			if (this.props.onChange) {
 				this.props.onChange(this.getFilterObj())
 			}
@@ -222,6 +275,77 @@ class FiltersPanelContent extends React.Component {
 									selected={!!this.state.age && number === this.state.age}
 								>
 									{number===this.highest_ages_entry ? '≥ '+number : number}
+								</MenuItem>
+								)
+							})}
+						</Menu>
+					</React.Fragment>
+				)}
+			</PopupState>
+
+			<PopupState variant="popover">
+				{popupState => (
+					<React.Fragment>
+						<Fab
+							{...bindTrigger(popupState)}
+							size="small"
+							variant="extended"
+							className="fab"
+							aria-label={this.props.getString('what-to-show')}
+							title={this.props.getString('button_audience_queer_default_text')}
+						>
+							{
+								this.state.audience_queer.size > 0
+								? (<>
+									<Localized id="button_audience_queer_default_text" />
+									{
+										this.audience_queer_values
+										.filter(audience => this.state.audience_queer.has(audience.key))
+										.map(audience => {
+											return <div key={audience.emoji} style={{margin:'0 -4px 0 8px'}}>{audience.emoji}</div>
+										})
+									}
+								</>)
+								: <Localized id="button_audience_queer_default_text" />
+							}
+							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
+						</Fab>
+						<Menu
+							{...bindMenu(popupState)}
+							transitionDuration={0}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+							}}
+							className="menuBlurredPaperBackground"
+						>
+							{this.audience_queer_values.map(audience => {
+								const isSelected = (
+									audience.key === 'everything'
+									? this.state.audience_queer.size === 0
+									: this.state.audience_queer.has(audience.key)
+								)
+
+								return (
+								<MenuItem
+									key={audience.key}
+									onClick={()=>this.toogleAudienceQueer(audience.key)}
+								>
+									<div className={'filterMenuDot hasIcon '+(audience.emoji ? '' : 'material-icons-round')}>
+										{
+											isSelected
+											? (audience.emoji ? audience.emoji : 'check')
+											: ''
+										}
+									</div>
+									<div>
+										<Localized
+											id={audience.translation_key}
+											elems={{
+												strong: <strong />,
+											}}
+										/>
+									</div>
 								</MenuItem>
 								)
 							})}

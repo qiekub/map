@@ -21,6 +21,12 @@ for-which-age = Für welches Alter?
 for-age-x = Für {$age} Jahre
 for-age-x-and-up = Für {$age} Jahre und älter
 
+button_audience_queer_default_text = Queerness Level
+menu_text_audience_queer_everything = <strong>Alle Orte</strong>
+menu_text_audience_queer_only = <strong>Nur</strong> für queere Menschen
+menu_text_audience_queer_primary = <strong>Primär</strong> für queere Menschen
+menu_text_audience_queer_welcome = Queere Menschen sind <strong>willkommen</strong>
+
 
 
 # MainDrawerContent
