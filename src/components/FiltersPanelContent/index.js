@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 
-import { Localized, withLocalization} from '../Localized/'
+import { Localized, withLocalization } from '../Localized/'
 
 import {
 	Fab,
