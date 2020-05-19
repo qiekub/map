@@ -27,6 +27,7 @@ menu_text_audience_queer_everything = <strong>Alle Orte</strong>
 menu_text_audience_queer_only = <strong>Nur</strong> für queere Menschen
 menu_text_audience_queer_primary = <strong>Primär</strong> für queere Menschen
 menu_text_audience_queer_welcome = Queere Menschen sind <strong>willkommen</strong>
+menu_text_audience_queer_no = <strong>Nicht</strong> für queere Menschen
 
 
 
