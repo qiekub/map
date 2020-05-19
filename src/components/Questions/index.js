@@ -232,7 +232,7 @@ class Questions extends React.Component {
 
 	loadQuestions(){
 		this.props.globals.graphql.query({
-			fetchPolicy: 'network-only',
+			fetchPolicy: 'cache-first', // 'network-only',
 			query: query_loadQuestions,
 			variables: {
 				languages: navigator.languages,
