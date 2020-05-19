@@ -509,7 +509,11 @@ class Sidebar extends React.Component {
 		let audienceHeading = null
 		let audienceText = null
 		let audienceIcon = null
-		if (audience_queer && (audience_queer === 'only' || audience_queer === 'primary')) {
+		if (audience_queer && audience_queer === 'only') {
+			audienceHeading = this.props.getString('audience_heading_queer_only')
+			audienceText = this.props.getString('audience_text_queer_only')
+			audienceIcon = <EmojiIcon icon={this.props.globals.emojis.audience_queer_only} />
+		} else if (audience_queer && audience_queer === 'primary') {
 			audienceHeading = this.props.getString('audience_heading_queer_primary')
 			audienceText = this.props.getString('audience_text_queer_primary')
 			audienceIcon = <EmojiIcon icon={this.props.globals.emojis.audience_queer_primary} />

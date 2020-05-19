@@ -101,6 +101,9 @@ sexuality_gay = Homosexuelle
 sexuality_bi = Bi
 allies = Freunde
 
+audience_heading_queer_only = Dieser Ort ist nur für queere Menschen!
+audience_text_queer_only = Sei du selbst!
+
 audience_heading_queer_primary = Dieser Ort existiert für queere Menschen!
 audience_text_queer_primary = Sei du selbst!
 

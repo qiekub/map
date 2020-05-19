@@ -98,6 +98,9 @@ sexuality_gay = Gay
 sexuality_bi = Bi
 allies = Allies
 
+audience_heading_queer_only = This place is only for queer people!
+audience_text_queer_only = Be who you are!
+
 audience_heading_queer_primary = This place is made for queer people!
 audience_text_queer_primary = Be who you are!
 
