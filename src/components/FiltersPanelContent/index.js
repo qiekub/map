@@ -36,8 +36,6 @@ import { getTranslation } from '../../functions.js'
 import _categories_ from '../../data/dist/categories.json'
 
 import { withGlobals } from '../Globals/'
-import EmojiIcon from '../EmojiIcon/'
-// <EmojiIcon icon={audience.emoji}/>
 
 
 
