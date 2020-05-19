@@ -830,7 +830,7 @@ class Sidebar extends React.Component {
 	renderQuestions(doc){
 		const startQuestions = (
 			this.props.action === 'add'
-			? ['preset','geo_pos','name','answer_more']
+			? ['preset','geo_pos','name','audience','answer_more']
 			: ['start_improve']
 		)
 		// const startQuestions = ['find_out_more_links']
