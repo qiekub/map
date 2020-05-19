@@ -678,7 +678,7 @@ class Questions extends React.Component {
 										label={possibleAnswer.title_translated}
 										helperText={possibleAnswer.description_translated}
 										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
-										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerKey)}
+										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
 									/>)
 								}else if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput
