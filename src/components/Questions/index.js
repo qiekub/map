@@ -586,11 +586,11 @@ class Questions extends React.Component {
 
 		const hasInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => {
 			return (
-				possibleAnswer.inputtype === 'text' ||
-				possibleAnswer.inputtype === 'number' ||
-				possibleAnswer.inputtype === 'geo' ||
-				possibleAnswer.inputtype === 'preset' ||
-				possibleAnswer.inputtype === 'date'
+				   possibleAnswer.inputtype === 'text'
+				|| possibleAnswer.inputtype === 'number'
+				|| possibleAnswer.inputtype === 'geo'
+				|| possibleAnswer.inputtype === 'preset'
+				|| possibleAnswer.inputtype === 'date'
 			)
 		}).length > 0
 
