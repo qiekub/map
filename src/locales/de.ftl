@@ -95,6 +95,7 @@ places_listheading = Orte
 addresses_listheading = Adressen
 
 
+
 # Sidebar
 improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
