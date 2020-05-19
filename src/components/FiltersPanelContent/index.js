@@ -253,16 +253,10 @@ class FiltersPanelContent extends React.Component {
 								vertical: 'top',
 								horizontal: 'left',
 							}}
-							MenuListProps={{
-								style:{
-									minWidth:'200px'
-								}
-							}}
 							className="menuBlurredPaperBackground"
 						>
 							<MenuItem
 								key="any_age"
-								value=""
 								onClick={()=>this.setValue('age', null, popupState.close)}
 								selected={!(!!this.state.age)}
 							>
@@ -272,7 +266,6 @@ class FiltersPanelContent extends React.Component {
 								return (
 								<MenuItem
 									key={number}
-									value={number}
 									onClick={()=>this.setValue('age', number, popupState.close)}
 									selected={!!this.state.age && number === this.state.age}
 								>
