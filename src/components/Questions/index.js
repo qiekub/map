@@ -389,6 +389,7 @@ class Questions extends React.Component {
 		if (questionGotAnswered) {
 			this.answer_tags = {
 				...this.answer_tags,
+				...answerValue,
 				...(Object.entries(answerValue).reduce((tags,entry) => {
 					return this.answer2tags(questionID, entry[0], entry[1], tags)
 				}, {}))
