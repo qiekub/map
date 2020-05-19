@@ -14,9 +14,10 @@ day-label = Day
 
 
 # FiltersPanelContent
-any_age = Any age
 what-to-show = What to show?
 show-everything = Everything
+
+any_age = Any age
 for-which-age = For which age?
 for-age-x = For age {$age}
 for-age-x-and-up = For age {$age} and up
