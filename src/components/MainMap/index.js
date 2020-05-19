@@ -396,8 +396,10 @@ class MainMap extends React.Component {
 
 			const selectedAge = this.filters.selectedAge
 			const ageOption = this.filters.ageOption
+			const audienceQueerOptions = this.filters.audienceQueerOptions || []
+			const checkAudienceQueerOptions = audienceQueerOptions.length > 0
 
-			if (presets_length > 0 || !!selectedAge) {
+			if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge) {
 				const markers_length = this.markers.length
 				for (let i = markers_length - 1; i >= 0; i--) {
 					const marker = this.markers[i]
@@ -411,6 +413,13 @@ class MainMap extends React.Component {
 							isInPresets = presets.map(preset_key=>{
 								return marker.data.___preset.key.startsWith(preset_key)
 							}).reduce((bool,value) => (value ? true : bool), false)
+						}
+
+						let matchesAudienceQueer = true
+						if (checkAudienceQueerOptions) {
+							if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
+								matchesAudienceQueer = false
+							}
 						}
 
 						let isInAgeRange = true
@@ -435,7 +444,7 @@ class MainMap extends React.Component {
 							}
 						}
 
-						this.markers[i].filtered = !(isInPresets && isInAgeRange)
+						this.markers[i].filtered = !(isInPresets && matchesAudienceQueer && isInAgeRange)
 					}
 				}
 				this.clusterGroup.ProcessView()
