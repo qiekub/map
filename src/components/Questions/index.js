@@ -244,8 +244,7 @@ class Questions extends React.Component {
 			},
 		})
 		.subscribe(({data}) => {
-			this.loadQuestionsQuerySubscription.unsubscribe()
-
+			if (!this.state.questionsAreLoaded) {
 			const nextQuestionIDs = [
 				...this.props.startQuestions,
 				...this.state.nextQuestionIDs,
@@ -292,6 +291,7 @@ class Questions extends React.Component {
 			}/*, ()=>{
 				this.setQuestionAsActive(nextQuestionIDs[0])
 			}*/)
+			}
 		})
 	}
 
