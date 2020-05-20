@@ -229,15 +229,22 @@ class Questions extends React.Component {
 			this.tagsFromTheDoc = this.props.doc.properties.tags
 		}
 	}
+	componentWillUnmount(){
+		if (!!this.loadQuestionsQuerySubscription) {
+			this.loadQuestionsQuerySubscription.unsubscribe()
+		}
+	}
 
 	loadQuestions(){
-		this.props.globals.graphql.query({
-			fetchPolicy: 'cache-first', // 'network-only',
+		this.loadQuestionsQuerySubscription = this.props.globals.graphql.watchQuery({
+			fetchPolicy: 'cache-and-network',
 			query: query_loadQuestions,
 			variables: {
 				languages: navigator.languages,
 			},
-		}).then(result => {
+		})
+		.subscribe(({data}) => {
+			this.loadQuestionsQuerySubscription.unsubscribe()
 
 			const nextQuestionIDs = [
 				...this.props.startQuestions,
@@ -245,7 +252,7 @@ class Questions extends React.Component {
 			]
 
 			let firstOpenQuestionCounter = 0
-			const questionsById = result.data.questions.reduce((obj,questionDoc)=>{
+			const questionsById = data.questions.reduce((obj,questionDoc)=>{
 
 				const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
 
@@ -285,8 +292,6 @@ class Questions extends React.Component {
 			}/*, ()=>{
 				this.setQuestionAsActive(nextQuestionIDs[0])
 			}*/)
-		}).catch(error=>{
-			console.error(error)
 		})
 	}
 
