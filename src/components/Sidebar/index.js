@@ -837,7 +837,6 @@ class Sidebar extends React.Component {
 			? ['preset','geo_pos','name','audience','answer_more']
 			: ['start_improve']
 		)
-		// const startQuestions = ['find_out_more_links']
 
 		return (<React.Fragment key="editing">
 			<CardContent>
