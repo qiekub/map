@@ -19,7 +19,6 @@ const Box = ({ index, type, label, onDelete }) => {
 		<Chip
 			ref={drag}
 			label={label}
-			clickable={!isDragging}
 			style={{
 				cursor: 'move',
 				margin: '0 2px 4px 2px',
