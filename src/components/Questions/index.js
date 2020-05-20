@@ -245,52 +245,52 @@ class Questions extends React.Component {
 		})
 		.subscribe(({data}) => {
 			if (!this.state.questionsAreLoaded) {
-			const nextQuestionIDs = [
-				...this.props.startQuestions,
-				...this.state.nextQuestionIDs,
-			]
-
-			let firstOpenQuestionCounter = 0
-			const questionsById = data.questions.reduce((obj,questionDoc)=>{
-
-				const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
-
-				if (this.props.globals.isSmallScreen && hasGeoInputField) {
-					firstOpenQuestionCounter += 1
-				}
-
-				questionDoc.properties.question_translated = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
-
-				questionDoc.properties.in_one_word_translated = getTranslationFromArray(questionDoc.properties.in_one_word, this.props.globals.userLocales)
-
-				questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
-					...answer,
-					title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
-					description_translated: getTranslationFromArray(answer.description, this.props.globals.userLocales),
-				}))
-
-				obj[questionDoc._id] = {
-					...questionDoc,
-					
-					visible: true,
-					active: (questionDoc._id === nextQuestionIDs[firstOpenQuestionCounter]),
-					answered: false,
-
-					possibleAnswersByKey: questionDoc.properties.possibleAnswers.reduce((possibleAnswersByKey,possibleAnswer) => {
-						possibleAnswersByKey[possibleAnswer.key] = possibleAnswer
-						return possibleAnswersByKey
-					}, {}),
-				}
-
-				return obj
-			}, {})
-
-			this.setState({
-				questionsById,
-				questionsAreLoaded: true,
-			}/*, ()=>{
-				this.setQuestionAsActive(nextQuestionIDs[0])
-			}*/)
+				const nextQuestionIDs = [
+					...this.props.startQuestions,
+					...this.state.nextQuestionIDs,
+				]
+	
+				let firstOpenQuestionCounter = 0
+				const questionsById = data.questions.reduce((obj,questionDoc)=>{
+	
+					const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
+	
+					if (this.props.globals.isSmallScreen && hasGeoInputField) {
+						firstOpenQuestionCounter += 1
+					}
+	
+					questionDoc.properties.question_translated = getTranslationFromArray(questionDoc.properties.question, this.props.globals.userLocales)
+	
+					questionDoc.properties.in_one_word_translated = getTranslationFromArray(questionDoc.properties.in_one_word, this.props.globals.userLocales)
+	
+					questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
+						...answer,
+						title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
+						description_translated: getTranslationFromArray(answer.description, this.props.globals.userLocales),
+					}))
+	
+					obj[questionDoc._id] = {
+						...questionDoc,
+						
+						visible: true,
+						active: (questionDoc._id === nextQuestionIDs[firstOpenQuestionCounter]),
+						answered: false,
+	
+						possibleAnswersByKey: questionDoc.properties.possibleAnswers.reduce((possibleAnswersByKey,possibleAnswer) => {
+							possibleAnswersByKey[possibleAnswer.key] = possibleAnswer
+							return possibleAnswersByKey
+						}, {}),
+					}
+	
+					return obj
+				}, {})
+	
+				this.setState({
+					questionsById,
+					questionsAreLoaded: true,
+				}/*, ()=>{
+					this.setQuestionAsActive(nextQuestionIDs[0])
+				}*/)
 			}
 		})
 	}
