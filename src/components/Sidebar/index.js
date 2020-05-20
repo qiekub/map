@@ -139,6 +139,8 @@ class Sidebar extends React.Component {
 			'contact:youtube',
 			'contact:yelp',
 			'osm_id',
+			'wikipedia',
+			'wikidata',
 
 			'opening_date',
 			'opening_date:',
