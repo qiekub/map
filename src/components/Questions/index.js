@@ -428,7 +428,10 @@ class Questions extends React.Component {
 			const thisIndex = nextQuestionIDs.indexOf(questionID)
 			if (thisIndex < nextQuestionIDs.length-1) {
 				for (let i=thisIndex+1; i<nextQuestionIDs.length; i+=1) {
-					if (!questionsById[nextQuestionIDs[i]].answered) {
+					if (
+						!!questionsById[nextQuestionIDs[i]]
+						&& !questionsById[nextQuestionIDs[i]].answered
+					) {
 						questionsById[nextQuestionIDs[i]].active = true
 						break;
 					}
