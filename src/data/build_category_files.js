@@ -72,6 +72,7 @@ const categories = [
 			'tourism/gallery',
 			'historic',
 			'tourism/artwork/statue',
+			'tourism/attraction',
 		],
 		color: {
 			key: 'cyan',
@@ -484,6 +485,9 @@ const preset_overwrites = {
 	},
 	'amenity/arts_centre': {
 		icon: 'museum', // brush | palette | museum
+	},
+	'tourism/attraction': {
+		icon: 'local_see',
 	},
 	'historic': {
 		icon: 'local_see', // local_see | place | museum
