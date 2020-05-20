@@ -45,8 +45,8 @@ const Dustbin = ({ label, accept, items, onDrop, onRemoveItem }) => {
 				display: 'block',
 				width: 'auto',
 				minHeight: '1.1875em',
-				padding: (isActive ? '18.5px 7px 16.5px 7px' : '18.5px 8px'),
-				borderWidth: (isActive ? '2px' : '1px'),
+				padding: '18.5px 8px',
+				borderWidth: '1px',
 				borderStyle: 'solid',
 				borderColor: (
 					isActive
