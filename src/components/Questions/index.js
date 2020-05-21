@@ -661,11 +661,14 @@ class Questions extends React.Component {
 						)
 						: null
 					}
-					<ListItemText primary={heading} primaryTypographyProps={{
-						variant: 'body1',
-						// className: 'questionText',
-					}}/>
-				</ListItem>				
+					<ListItemText
+						primary={heading}
+						primaryTypographyProps={{
+							variant: 'body1',
+							// className: 'questionText',
+						}}
+					/>
+				</ListItem>
 
 				<div
 					className="possibleAnswers"
