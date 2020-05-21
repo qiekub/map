@@ -687,7 +687,6 @@ class Questions extends React.Component {
 								return undefined
 							}else{
 								const possibleAnswerKey = possibleAnswer.key
-								const possibleAnswerTags = possibleAnswer.tags || {}
 								const possibleAnswerNamespace = possibleAnswer.namespace
 								possibleAnswer.inputtype = possibleAnswer.inputtype || ''
 								if (possibleAnswer.inputtype === 'date') {
@@ -757,7 +756,10 @@ class Questions extends React.Component {
 										<ListItem
 											button
 											key={possibleAnswerKey}
-											onClick={()=>this.answerQuestion(questionDoc._id, possibleAnswerTags)}
+											onClick={() => this.answerQuestion(
+												questionDoc._id,
+												possibleAnswer.tags || {},
+											)}
 											variant="outlined"
 											size="large"
 											style={{
