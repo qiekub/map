@@ -388,7 +388,7 @@ class Questions extends React.Component {
 		return tags
 	}
 
-	answerQuestion(questionID, answerValue){
+	answerQuestion(questionID, answerValue, followUpQuestionIDs=[]){
 		let questionGotAnswered = false
 		if (Object.keys(answerValue).length > 0) {
 			questionGotAnswered = true
@@ -411,24 +411,27 @@ class Questions extends React.Component {
 			questionsById[questionID].active = false
 			if (questionGotAnswered) {
 				questionsById[questionID].answered = true
+			}
 
-				const currentQuestionPos = nextQuestionIDs.indexOf(questionID)
-				const nextQuestionIDs_start_part = nextQuestionIDs.slice(0, currentQuestionPos+1)
-				const nextQuestionIDs_end_part = nextQuestionIDs.slice(currentQuestionPos)
-
+			if (questionGotAnswered && followUpQuestionIDs.length === 0) {
 				const allKeys = Object.keys(answerValue)
-				const newQuestionIDs = questionsById[questionID].properties.possibleAnswers
+				followUpQuestionIDs = questionsById[questionID].properties.possibleAnswers
 				.filter(answer => allKeys.includes(answer.key))
 				.map(answer => answer.followUpQuestionIDs || [])
 				.reduce((result,followUpQuestionIDs) => {
 					return [...result, ...followUpQuestionIDs]
 				}, [])
-				.filter(questionID => !nextQuestionIDs_start_part.includes(questionID))
+			}
+
+			if (followUpQuestionIDs.length > 0) {
+				const currentQuestionPos = nextQuestionIDs.indexOf(questionID)
+				const nextQuestionIDs_start_part = nextQuestionIDs.slice(0, currentQuestionPos+1)
+				const nextQuestionIDs_end_part = nextQuestionIDs.slice(currentQuestionPos)
 				
 				nextQuestionIDs = [...new Set([
 					...nextQuestionIDs_start_part,
-					...newQuestionIDs,
-					...nextQuestionIDs_end_part.filter(questionID => !newQuestionIDs.includes(questionID))
+					...followUpQuestionIDs.filter(questionID => !nextQuestionIDs_start_part.includes(questionID)),
+					...nextQuestionIDs_end_part.filter(questionID => !followUpQuestionIDs.includes(questionID))
 				])]
 			}
 
@@ -759,6 +762,7 @@ class Questions extends React.Component {
 											onClick={() => this.answerQuestion(
 												questionDoc._id,
 												possibleAnswer.tags || {},
+												possibleAnswer.followUpQuestionIDs || [],
 											)}
 											variant="outlined"
 											size="large"
