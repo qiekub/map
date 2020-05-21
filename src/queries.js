@@ -93,6 +93,10 @@ export const loadQuestions = gql`
 						text
 						language
 					}
+					description (languages: $languages){
+						text
+						language
+					}
 					icon
 					possibleAnswers {
 						inputtype

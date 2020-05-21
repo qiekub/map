@@ -263,6 +263,8 @@ class Questions extends React.Component {
 	
 					questionDoc.properties.in_one_word_translated = getTranslationFromArray(questionDoc.properties.in_one_word, this.props.globals.userLocales)
 	
+					questionDoc.properties.description_translated = getTranslationFromArray(questionDoc.properties.description, this.props.globals.userLocales)
+	
 					questionDoc.properties.possibleAnswers = questionDoc.properties.possibleAnswers.map(answer => ({
 						...answer,
 						title_translated: getTranslationFromArray(answer.title, this.props.globals.userLocales),
@@ -667,6 +669,7 @@ class Questions extends React.Component {
 							variant: 'body1',
 							// className: 'questionText',
 						}}
+						secondary={!questionDoc.active ? '' : questionDoc.properties.description_translated}
 					/>
 				</ListItem>
 
@@ -725,6 +728,7 @@ class Questions extends React.Component {
 										multiline
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
+										helperText={possibleAnswer.description_translated}
 										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
@@ -738,6 +742,7 @@ class Questions extends React.Component {
 										type="number"
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
+										helperText={possibleAnswer.description_translated}
 										variant="outlined"
 										color="secondary"
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
