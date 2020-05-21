@@ -244,7 +244,7 @@ class Questions extends React.Component {
 			},
 		})
 		.subscribe(({data}) => {
-			if (!this.state.questionsAreLoaded) {
+			if (!!data && !this.state.questionsAreLoaded) {
 				const nextQuestionIDs = [
 					...this.props.startQuestions,
 					...this.state.nextQuestionIDs,
