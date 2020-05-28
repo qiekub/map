@@ -6,6 +6,12 @@ export const getID = gql`
 	}
 `
 
+export const whoami = gql`
+	query {
+		whoami
+	}
+`
+
 export const loadPlace = gql`
 	query($_id: ID, $wantedTags: [String], $languages: [String]){
 		getPlace(_id: $_id){
