@@ -5,7 +5,9 @@ import { AppLocalizationProvider } from '../../l10n.js'
 
 import local_ip from '../../.env.local_ip.json'
 
-import ApolloClient from 'apollo-boost'
+import { ApolloClient } from 'apollo-boost'
+
+import { HttpLink } from 'apollo-link-http'
 
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { persistCache } from 'apollo-cache-persist'
@@ -16,6 +18,13 @@ import { withLocalStorage } from '../LocalStorage/'
 const isDevEnvironment = (local_ip !== '')
 
 
+function getCookie(name){
+	const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	if (match) {
+		return match[2]
+	}
+	return null
+}
 
 async function getInitialGlobalState(callback){
 	const cache = new InMemoryCache()
@@ -35,14 +44,21 @@ async function getInitialGlobalState(callback){
 
 	globalState.globalStateFinishedLoading = true
 
-	globalState.graphql = new ApolloClient({
-		cache,
+	const link = new HttpLink({
+		credentials: 'omit',
+		headers: {
+			'-x-session': getCookie('__session'),
+		},
 		uri: (
 			isDevEnvironment
 			? `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
 			: `https://api.qiekub.org/graphql/v1/`
 		),
-		// uri: 'https://us-central1-qiekub.cloudfunctions.net/graphql/graphql/v1',
+	})
+
+	globalState.graphql = new ApolloClient({
+		cache,
+		link,
 	})
 
 	callback(globalState)
