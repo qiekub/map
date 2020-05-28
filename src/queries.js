@@ -1,7 +1,7 @@
 import {gql} from 'apollo-boost'
 
 export const getID = gql`
-	query{
+	query {
 		id: getID
 	}
 `
