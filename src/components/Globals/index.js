@@ -44,21 +44,19 @@ async function getInitialGlobalState(callback){
 
 	globalState.globalStateFinishedLoading = true
 
-	const link = new HttpLink({
-		credentials: 'omit',
-		headers: {
-			'-x-session': getCookie('__session'),
-		},
-		uri: (
-			isDevEnvironment
-			? `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
-			: `https://api.qiekub.org/graphql/v1/`
-		),
-	})
-
 	globalState.graphql = new ApolloClient({
 		cache,
-		link,
+		link: new HttpLink({
+			credentials: 'omit',
+			headers: {
+				'-x-session': getCookie('__session'),
+			},
+			uri: (
+				isDevEnvironment
+				? `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
+				: `https://api.qiekub.org/graphql/v1/`
+			),
+		})
 	})
 
 	callback(globalState)
