@@ -145,65 +145,69 @@ class SearchBar extends React.Component {
 	}
 
 	loadSearchResults(queryString){
-		if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
-			this.props.globals.graphql.query({
-				// fetchPolicy: 'no-cache',
-				query: query_search,
-				variables: {
-					query: queryString,
-					languages: navigator.languages,
-				},
-			}).then(async result => {
-				if (result.data.search.query === this.state.value) {
-					const searchResults = result.data.search.results.map(result => {
-						const preset = result.preset
-						return {
-							...result,
-							name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
-							
-							___preset: (
-								!!preset && !!presets[preset]
-								? {
-									key: preset,
-									...presets[preset],
-								}
-								: presets.default
-							),
-							___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
-	
-							key: JSON.stringify(result),
-						}
-					})
-	
-					const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
-					const searchResults_address = searchResults.filter(result => result.preset === 'address')
-	
+		return new Promise((resolve,reject) => {
+			if (queryString && queryString !== '' && queryString.length > 1 && /\S/.test(queryString)) {
+				this.props.globals.graphql.query({
+					// fetchPolicy: 'no-cache',
+					query: query_search,
+					variables: {
+						query: queryString,
+						languages: navigator.languages,
+					},
+				}).then(async result => {
+					if (result.data.search.query === this.state.value) {
+						const searchResults = result.data.search.results.map(result => {
+							const preset = result.preset
+							return {
+								...result,
+								name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
+								
+								___preset: (
+									!!preset && !!presets[preset]
+									? {
+										key: preset,
+										...presets[preset],
+									}
+									: presets.default
+								),
+								___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
+		
+								key: JSON.stringify(result),
+							}
+						})
+		
+						const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
+						const searchResults_address = searchResults.filter(result => result.preset === 'address')
+		
+						this.setState({
+							showSearchResults: true,
+							loadingSearchResult: false,
+							searchResults_poi,
+							searchResults_address,
+						}, () => resolve() )
+					}else{
+						const too_slow_error = new Error('The search was too slow!')
+						console.error(too_slow_error)
+						reject(too_slow_error)
+					}
+				}).catch(error=>{
+					console.error(error)
 					this.setState({
-						showSearchResults: true,
+						showSearchResults: false,
 						loadingSearchResult: false,
-						searchResults_poi,
-						searchResults_address,
-					})
-				}else{
-					console.error('The search was too slow!')
-				}
-			}).catch(error=>{
+						searchResults_poi: [],
+						searchResults_address: [],
+					}, () => reject(error) )
+				})
+			}else{
 				this.setState({
 					showSearchResults: false,
 					loadingSearchResult: false,
 					searchResults_poi: [],
 					searchResults_address: [],
-				})
-				console.error(error)
-			})
-		}else{
-			this.setState({
-				showSearchResults: false,
-				loadingSearchResult: false,
-				searchResults_poi: [],
-				searchResults_address: [],
-			})
-		}
+				}, () => reject() )
+			}
+		})
 	}
 
 	submitTheSearchQuery(){
