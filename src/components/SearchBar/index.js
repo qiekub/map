@@ -57,7 +57,6 @@ class SearchBar extends React.Component {
 
 		this.searchInputRef = React.createRef()
 
-		this.submitTheSearchQuery = this.submitTheSearchQuery.bind(this)
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
 		this.closeSidebar = this.closeSidebar.bind(this)
@@ -210,17 +209,12 @@ class SearchBar extends React.Component {
 		})
 	}
 
-	submitTheSearchQuery(){
-		if (this.props.onStartSearch) {
+	searchKeypressed(event){
+		if (event.key === 'Enter') {
 			this.searchInputRef.current.blur() // unfocus the input element
 			this.setState({loadingSearchResult: true}, ()=>{
 				this.loadSearchResults(this.state.value)
 			})
-		}
-	}
-	searchKeypressed(event){
-		if (event.key === 'Enter') {
-			this.submitTheSearchQuery()
 		}
 	}
 
