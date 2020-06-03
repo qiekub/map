@@ -8,9 +8,8 @@ import './index.css'
 import { Localized, withLocalization } from '../Localized/'
 
 import { navigate } from '@reach/router'
-import { loadPlace as query_loadPlace } from '../../queries.js'
-
 import {
+	loadPlace as query_loadPlace,
 	getID as query_getID,
 } from '../../queries.js'
 
