@@ -213,7 +213,13 @@ class SearchBar extends React.Component {
 		if (event.key === 'Enter') {
 			this.searchInputRef.current.blur() // unfocus the input element
 			this.setState({loadingSearchResult: true}, ()=>{
-				this.loadSearchResults(this.state.value)
+				this.loadSearchResults(this.state.value).finally(()=>{
+					if (this.state.searchResults_address.length > 0) {
+						this.openSearchResult(this.state.searchResults_address[0])
+					} else if (this.state.searchResults_poi.length > 0) {
+						this.openSearchResult(this.state.searchResults_poi[0])
+					}
+				})
 			})
 		}
 	}
