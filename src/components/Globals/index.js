@@ -45,8 +45,6 @@ async function getInitialGlobalState(callback){
 	
 	const globalState = {}
 
-	globalState.globalStateFinishedLoading = true
-
 	globalState.graphql = new ApolloClient({
 		cache,
 		link: new HttpLink({
@@ -70,6 +68,7 @@ async function getInitialGlobalState(callback){
 	}).catch(error => {
 		console.error(error)
 	}).finally(() => {
+		globalState.globalStateFinishedLoading = true
 		callback(globalState)
 	})
 }
