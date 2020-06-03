@@ -185,12 +185,9 @@ class SearchBar extends React.Component {
 							searchResults_address,
 						}, () => resolve() )
 					}else{
-						const too_slow_error = new Error('The search was too slow!')
-						console.error(too_slow_error)
-						reject(too_slow_error)
+						reject(new Error('The search was too slow!'))
 					}
 				}).catch(error=>{
-					console.error(error)
 					this.setState({
 						showSearchResults: false,
 						loadingSearchResult: false,
@@ -207,6 +204,7 @@ class SearchBar extends React.Component {
 				}, () => reject() )
 			}
 		})
+		.catch(error => console.log(error))
 	}
 
 	searchKeypressed(event){
