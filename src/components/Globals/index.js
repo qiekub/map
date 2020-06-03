@@ -14,6 +14,9 @@ import { persistCache } from 'apollo-cache-persist'
 
 import { withLocalStorage } from '../LocalStorage/'
 
+import {
+	whoami as query_whoami,
+} from '../../queries.js'
 
 const isDevEnvironment = (local_ip !== '')
 
@@ -59,7 +62,16 @@ async function getInitialGlobalState(callback){
 		})
 	})
 
-	callback(globalState)
+	globalState.graphql.query({
+		query: query_whoami,
+		fetchPolicy: 'no-cache',
+	}).then(result => {
+		globalState.profileID = result.data.whoami
+	}).catch(error => {
+		console.error(error)
+	}).finally(() => {
+		callback(globalState)
+	})
 }
 
 
@@ -76,6 +88,7 @@ class GlobalsProvider extends React.Component {
 			globalStateFinishedLoading: false,
 
 			pageOpenTS: new Date(),
+			profileID: null,
 	
 			local_ip,
 			isDevEnvironment,
