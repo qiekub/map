@@ -188,6 +188,9 @@ export const loadChangesets = gql`
 					antiSpamUserIdentifier
 				}
 			}
+			metadata {
+				created
+			}
 		}
 	}
 `
