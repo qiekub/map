@@ -38,7 +38,7 @@
     "serve": "yarn saveLocalIP; yarn start",
     "serve-prod": "yarn build; yarn saveLocalIP; PORT=3000 serve -s build",
     "deploy": "yarn buildData; yarn build; firebase deploy; yarn saveLocalIP;",
-    "start": "PORT=3000 react-scripts start",
+    "start": "HTTPS=false PORT=3000 react-scripts start",
     "build": "echo \"\\\"\\\"\" > ./src/.env.local_ip.json; react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
