@@ -858,10 +858,8 @@ class Sidebar extends React.Component {
 								>
 									<CardContent>
 										<div style={{
-											// paddingTop: '16px',
 											overflow: 'auto',
-											paddingBottom: '16px',
-											margin: '-8px -16px 0',
+											margin: '-8px -16px -16px',
 										}}>
 											<Table size="small">
 												<TableBody>
@@ -926,7 +924,9 @@ class Sidebar extends React.Component {
 											</Table>
 										</div>
 									</CardContent>
-									<CardActions>
+									<CardActions style={{
+										justifyContent: 'space-between',
+									}}>
 										<Tooltip title="Reject" aria-label="Reject">
 											<IconButton aria-label="Reject" style={{
 												color: this.props.theme.palette.error.main,
