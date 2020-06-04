@@ -11,6 +11,7 @@ import { navigate } from '@reach/router'
 import {
 	loadPlace as query_loadPlace,
 	getID as query_getID,
+	loadChangesets as query_loadChangesets,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -34,9 +35,16 @@ import {
 	Paper,
 	Card,
 	CardContent,
+	CardActions,
 	Divider,
+	Button,
 
 	Icon,
+
+	Table,
+	TableBody,
+	TableRow,
+	TableCell,
 } from '@material-ui/core'
 import {
 	WarningRounded as WarningIcon,
@@ -154,6 +162,7 @@ class Sidebar extends React.Component {
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
 
+		this.renderChanges = this.renderChanges.bind(this)
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
 
@@ -253,6 +262,8 @@ class Sidebar extends React.Component {
 						|| (this.docCache !== null && doc._id === this.docCache)
 					) {
 						this.docCache = doc
+
+						this.loadChangesets(doc._id)
 					
 						if (this.props.onDontFilterTheseIds) {
 							this.props.onDontFilterTheseIds([doc._id])
@@ -334,6 +345,25 @@ class Sidebar extends React.Component {
 				}
 			})
 		}
+	}
+
+	loadChangesets(docID){
+		this.props.globals.graphql.query({
+			fetchPolicy: 'no-cache',
+			query: query_loadChangesets,
+			variables: {
+				forID: docID,
+			},
+		}).then(({data}) => {
+			console.log('in-loadChangesets', data)
+			if (!!data && !!data.changesets) {
+				this.setState({changesets: data.changesets})
+			}else{
+				this.setState({changesets: []})
+			}
+		}).catch(error=>{
+			console.error(error)
+		})
 	}
 
 	editNewDoc(docID, typename){
@@ -792,6 +822,116 @@ class Sidebar extends React.Component {
 		)
 	}
 
+	renderChanges(){
+		const changesets = this.state.changesets || []
+
+		if (changesets.length === 0) {
+			return null
+		}
+
+		return (<div style={{
+			marginTop: '32px',
+		}}>
+			<Divider style={{margin:'8px -16px'}} />
+
+			<Typography variant="subtitle1" style={{
+				margin: '16px 0',
+			}}>Proposed Improvements</Typography>
+
+					{
+						changesets.map((changeset, index) => {
+							return (
+								<Card
+									key={changeset._id}
+									variant="outlined"
+									style={{
+										marginBottom: '32px',
+									}}
+								>
+									<CardContent>
+										<div style={{
+											// paddingTop: '16px',
+											overflow: 'auto',
+											paddingBottom: '16px',
+											margin: '-8px -16px 0',
+										}}>
+											<Table size="small">
+												<TableBody>
+													{
+														Object.entries({
+															...changeset.properties,
+															...changeset.metadata,
+														})
+														.filter(entry =>
+															// entry[0] !== 'tags'
+															// &&
+															entry[0] !== '__typename'
+															&& entry[0] !== 'forID'
+														)
+														.map(([tag,value]) => {
+															if (tag === 'antiSpamUserIdentifier') {
+																tag = 'antiSpamID'
+															}
+
+															let cellContent = null
+															if (tag === 'tags') {
+																cellContent = (
+																	<Table
+																		className="tagsTable"
+																		size="small"
+																		style={{
+																			minWidth: '100%',
+																			margin: '-6px -16px -7px -16px',
+																		}}
+																	>
+																		<TableBody>
+																			{Object.entries(changeset.properties.tags).map(([tag,value]) => (
+																				<TableRow key={tag} style={{
+																					verticalAlign: 'top',
+																				}}>
+																					<TableCell component="th" scope="row">{tag}</TableCell>
+																					<TableCell>{value.toString()}</TableCell>
+																				</TableRow>
+																			))}
+																		</TableBody>
+																	</Table>
+																)
+															}else{
+																cellContent = value.toString()
+															}
+
+															return (
+																<TableRow key={tag} style={{
+																	verticalAlign: 'top',
+																}}>
+																	<TableCell component="th" scope="row">
+																		<strong>{tag}</strong>
+																	</TableCell>
+																	<TableCell align="left">
+																		{cellContent}
+																	</TableCell>
+																</TableRow>
+															)
+														})
+													}
+												</TableBody>
+											</Table>
+										</div>
+									</CardContent>
+									<CardActions>
+										<Button size="small">Reject</Button>
+										<Button size="small">Approve (I fact-checked everything!)</Button>
+										<Button size="small">Approve (Seams okay but I didn't check the data.)</Button>
+										<Button size="small">Skip</Button>
+									</CardActions>
+								</Card>
+							)
+						})
+					}
+
+		</div>)
+	}
+
 	renderView(doc){
 		const properties = doc.properties
 		const tags = properties.tags	
@@ -829,6 +969,8 @@ class Sidebar extends React.Component {
 							<Localized id="improve" key="improveButtonLocalized" />
 						</Fab>
 					</div>
+
+					{this.renderChanges()}
 				</CardContent>
 		</React.Fragment>)
 	}
