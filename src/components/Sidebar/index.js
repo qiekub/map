@@ -23,6 +23,9 @@ import { getAddressFormat, getTranslation, getTranslationFromArray, getColorByPr
 import { withGlobals } from '../Globals/'
 
 import {
+	Tooltip,
+	IconButton,
+
 	Chip,
 	Typography,
 	Fab,
@@ -47,6 +50,11 @@ import {
 	TableCell,
 } from '@material-ui/core'
 import {
+	ThumbDownRounded as ThumbDownIcon,
+	ThumbUpRounded as ThumbUpIcon,
+	CheckRounded as CheckIcon,
+	SkipNextRounded as SkipNextIcon,
+
 	WarningRounded as WarningIcon,
 	PlaceRounded as PlaceIcon,
 	// Block as BlockIcon,
@@ -919,10 +927,35 @@ class Sidebar extends React.Component {
 										</div>
 									</CardContent>
 									<CardActions>
-										<Button size="small">Reject</Button>
-										<Button size="small">Approve (I fact-checked everything!)</Button>
-										<Button size="small">Approve (Seams okay but I didn't check the data.)</Button>
-										<Button size="small">Skip</Button>
+										<Tooltip title="Reject" aria-label="Reject">
+											<IconButton aria-label="Reject" style={{
+												color: this.props.theme.palette.error.main,
+											}}>
+												<ThumbDownIcon />
+											</IconButton>
+										</Tooltip>
+										
+										<Tooltip title="Approve (Seams okay but I didn't check the data.)" aria-label="Approve (Seams okay but I didn't check the data.)">
+											<IconButton aria-label="Approve (Seams okay but I didn't check the data.)" style={{
+												color: this.props.theme.palette.warning.main,
+											}}>
+												<CheckIcon />
+											</IconButton>
+										</Tooltip>
+										
+										<Tooltip title="Approve (I fact-checked everything!)" aria-label="Approve (I fact-checked everything!)">
+											<IconButton aria-label="Approve (I fact-checked everything!)" style={{
+												color: this.props.theme.palette.success.main,
+											}}>
+												<ThumbUpIcon />
+											</IconButton>
+										</Tooltip>
+										
+										<Tooltip title="Skip" aria-label="Skip">
+											<IconButton aria-label="Skip">
+												<SkipNextIcon />
+											</IconButton>
+										</Tooltip>
 									</CardActions>
 								</Card>
 							)
