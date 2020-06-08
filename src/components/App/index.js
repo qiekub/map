@@ -12,7 +12,7 @@ import { Localized, withLocalization } from '../Localized/'
 
 import { withGlobals } from '../Globals/'
 
-import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles'
 // import { CssBaseline } from '@material-ui/core'
 
 import {

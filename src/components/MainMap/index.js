@@ -31,7 +31,7 @@ import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
-import {PruneCluster, PruneClusterForLeaflet} from './PruneCluster_dist/PruneCluster.js'
+import { PruneCluster, PruneClusterForLeaflet } from './PruneCluster_dist/PruneCluster.js'
 
 PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 

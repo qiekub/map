@@ -4,7 +4,7 @@ import {
 	// withLocalization,
 } from '@fluent/react'
 
-import { FluentContext } from "../../../node_modules/@fluent/react/esm/context.js";
+import { FluentContext } from '../../../node_modules/@fluent/react/esm/context.js'
 
 const Localized = props => (
 	<LocalizedOriginal

@@ -443,7 +443,7 @@ class Questions extends React.Component {
 						&& !questionsById[nextQuestionIDs[i]].answered
 					) {
 						questionsById[nextQuestionIDs[i]].active = true
-						break;
+						break
 					}
 				}
 			}
