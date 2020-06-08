@@ -864,6 +864,7 @@ class Sidebar extends React.Component {
 												<TableBody>
 													{
 														Object.entries({
+															_id: changeset._id,
 															...changeset.properties,
 															...changeset.metadata,
 														})
