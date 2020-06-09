@@ -141,6 +141,7 @@ class MainDrawerContent extends React.Component {
 				</ListItem>) : null}
 			</List>*/}
 
+			<div style={{margin: '16px 0', textAlign: 'center'}}>
 			<a
 				aria-label="Buy me a coffee"
 				title="Buy me a coffee"
@@ -157,6 +158,7 @@ class MainDrawerContent extends React.Component {
 					boxShadow: this.props.theme.shadows[3],
 				}} />
 			</a>
+			</div>
 		</>)
 	}
 }
