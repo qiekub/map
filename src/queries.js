@@ -180,8 +180,8 @@ export const accounts = gql`
 `
 
 export const changesets = gql`
-	query {
-		changesets {
+	query($forID: ID) {
+		changesets(forID: $forID) {
 			_id
 			properties {
 				__typename
