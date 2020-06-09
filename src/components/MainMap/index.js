@@ -5,7 +5,7 @@ import { withConicGradient } from '../ConicGradient/'
 
 import { navigate } from '@reach/router'
 import {
-	loadMarkers as query_loadMarkers,
+	markers as query_markers,
 } from '../../queries.js'
 
 import './index.css'
@@ -140,15 +140,15 @@ class MainMap extends React.Component {
 	loadMarkers(){
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
-			query: query_loadMarkers,
+			query: query_markers,
 			variables: {
 				languages: navigator.languages,
 				// wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		})
 		.subscribe(({data}) => {
-			if (!!data && !!data.getMarkers) {
-				const docs = data.getMarkers.map(doc=>{
+			if (!!data && !!data.markers) {
+				const docs = data.markers.map(doc=>{
 					doc.___preset = (
 						!!doc.preset && !!presets[doc.preset]
 						? {
