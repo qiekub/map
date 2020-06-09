@@ -21,7 +21,7 @@ import _categories_ from '../../data/dist/categories.json'
 
 import { withGlobals } from '../Globals/'
 
-
+// TODO: Add a filter for "For any or all audience groups." (Trans, BPOC, Gay-Women, ...)
 
 class FiltersPanelContent extends React.Component {
 	constructor(props) {
