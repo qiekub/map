@@ -178,6 +178,12 @@ class Sidebar extends React.Component {
 
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
 		this.abortEdit = this.abortEdit.bind(this)
+
+		this.decideAboutChangeset = this.decideAboutChangeset.bind(this)
+		this.changeset_rejected = this.changeset_rejected.bind(this)
+		this.changeset_approved = this.changeset_approved.bind(this)
+		this.changeset_fact_checked = this.changeset_fact_checked.bind(this)
+		this.changeset_skipped = this.changeset_skipped.bind(this)
 	}
 
 	componentDidMount(){
@@ -373,6 +379,39 @@ class Sidebar extends React.Component {
 			console.error(error)
 		})
 	}
+	decideAboutChangeset(edgeType){
+		this.props.globals.graphql.mutate({
+			fetchPolicy: 'no-cache',
+			mutation: mutate_addEdge,
+			variables: {
+				properties: {
+					edgeType,
+					fromID: this.props.globals.profileID,
+					toID: this.docID,
+					tags: {},
+				},
+			},
+		})
+		.then(({data}) => {
+			console.log('addEdge-data', data)
+		})
+		.catch(error=>{
+			console.error(error)
+		})
+	}
+	changeset_rejected(){
+		this.decideAboutChangeset('rejected')
+	}
+	changeset_approved(){
+		this.decideAboutChangeset('approved')
+	}
+	changeset_fact_checked(){
+		this.decideAboutChangeset('fact_checked')
+	}
+	changeset_skipped(){
+		this.decideAboutChangeset('skipped')
+	}
+
 
 	editNewDoc(docID, typename){
 		const emptyDoc = {
@@ -933,6 +972,7 @@ class Sidebar extends React.Component {
 											aria-label="Reject"
 										>
 											<IconButton
+												onClick={this.changeset_rejected}
 												aria-label="Reject"
 												style={{
 													color: this.props.theme.palette.error.main,
@@ -947,6 +987,7 @@ class Sidebar extends React.Component {
 											aria-label="Approve (Seams okay but I didn't check the data.)"
 										>
 											<IconButton
+												onClick={this.changeset_approved}
 												aria-label="Approve (Seams okay but I didn't check the data.)"
 												style={{
 													color: this.props.theme.palette.warning.main,
@@ -961,6 +1002,7 @@ class Sidebar extends React.Component {
 											aria-label="Approve (I fact-checked everything!)"
 										>
 											<IconButton
+												onClick={this.changeset_fact_checked}
 												aria-label="Approve (I fact-checked everything!)"
 												style={{
 													color: this.props.theme.palette.success.main,
@@ -975,6 +1017,7 @@ class Sidebar extends React.Component {
 											aria-label="Skip"
 										>
 											<IconButton
+												onClick={this.changeset_skipped}
 												aria-label="Skip"
 											>
 												<SkipNextIcon />

@@ -140,6 +140,12 @@ export const addChangeset = gql`
 	}
 `
 
+export const addEdge = gql`
+	mutation($properties: Edge_Input){
+		addEdge(properties: $properties)
+	}
+`
+
 export const sessions = gql`
 	query {
 		sessions {
