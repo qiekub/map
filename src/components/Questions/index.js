@@ -7,7 +7,7 @@ import { Localized, withLocalization } from '../Localized/'
 // import { navigate } from '@reach/router'
 
 import {
-	loadQuestions as query_loadQuestions,
+	questions as query_questions,
 	addChangeset as mutation_addChangeset,
 } from '../../queries.js'
 
@@ -238,7 +238,7 @@ class Questions extends React.Component {
 	loadQuestions(){
 		this.loadQuestionsQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
-			query: query_loadQuestions,
+			query: query_questions,
 			variables: {
 				languages: navigator.languages,
 			},

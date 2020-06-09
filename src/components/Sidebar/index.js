@@ -9,9 +9,10 @@ import { Localized, withLocalization } from '../Localized/'
 
 import { navigate } from '@reach/router'
 import {
-	loadPlace as query_loadPlace,
-	getID as query_getID,
-	loadChangesets as query_loadChangesets,
+	place as query_place,
+	id as query_id,
+	changesets as query_changesets,
+	addEdge as mutate_addEdge,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -235,7 +236,7 @@ class Sidebar extends React.Component {
 		if (!this.isNavigatingToUnusedID) {
 			this.isNavigatingToUnusedID = true
 			this.props.globals.graphql.query({
-				query: query_getID,
+				query: query_id,
 				fetchPolicy: 'no-cache',
 			}).then(async result => {
 				navigate(`./${result.data.id}/`)
@@ -252,7 +253,7 @@ class Sidebar extends React.Component {
 		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			this.placeQuerySubscription = this.props.globals.graphql.watchQuery({
 				fetchPolicy: 'cache-and-network',
-				query: query_loadPlace,
+				query: query_place,
 				variables: {
 					languages: navigator.languages,
 					_id: docID,
@@ -357,7 +358,7 @@ class Sidebar extends React.Component {
 	loadChangesets(docID){
 		this.props.globals.graphql.query({
 			fetchPolicy: 'no-cache',
-			query: query_loadChangesets,
+			query: query_changesets,
 			variables: {
 				forID: docID,
 			},

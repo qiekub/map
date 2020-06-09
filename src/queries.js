@@ -1,8 +1,8 @@
 import {gql} from 'apollo-boost'
 
-export const getID = gql`
+export const id = gql`
 	query {
-		id: getID
+		id
 	}
 `
 
@@ -12,9 +12,9 @@ export const whoami = gql`
 	}
 `
 
-export const loadPlace = gql`
+export const place = gql`
 	query($_id: ID, $wantedTags: [String], $languages: [String]){
-		getPlace(_id: $_id){
+		place(_id: $_id){
 			_id
 			properties {
 				... on Place {
@@ -36,9 +36,9 @@ export const loadPlace = gql`
 	}
 `
 
-export const loadMarkers = gql`
+export const markers = gql`
 	query($languages: [String]){
-		getMarkers{
+		markers{
 			_id
 			name (languages: $languages){
 				text
@@ -85,9 +85,9 @@ export const search = gql`
 	}
 `
 
-export const loadQuestions = gql`
+export const questions = gql`
 	query($languages: [String]){
-		questions: getQuestions {
+		questions {
 			_id
 			properties {
 				... on Question {
@@ -140,7 +140,7 @@ export const addChangeset = gql`
 	}
 `
 
-export const loadSessions = gql`
+export const sessions = gql`
 	query {
 		sessions {
 			_id
@@ -158,7 +158,7 @@ export const loadSessions = gql`
 	}
 `
 
-export const loadAccounts = gql`
+export const accounts = gql`
 	query {
 		accounts {
 			_id
@@ -173,7 +173,7 @@ export const loadAccounts = gql`
 	}
 `
 
-export const loadChangesets = gql`
+export const changesets = gql`
 	query {
 		changesets {
 			_id
