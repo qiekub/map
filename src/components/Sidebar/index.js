@@ -271,9 +271,11 @@ class Sidebar extends React.Component {
 					const doc = data.place
 
 					if (
-						this.docCache === null
-						|| (doc !== this.docCache && this.props.action === 'view')
-						|| (this.docCache !== null && doc._id === this.docCache)
+						doc._id === this.docID
+						&& (
+							this.docCache === null
+							|| (this.docCache !== null && doc._id !== this.docCache._id)
+						)
 					) {
 						this.docCache = doc
 
