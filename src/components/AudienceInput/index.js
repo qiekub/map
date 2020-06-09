@@ -7,6 +7,10 @@ import update from 'immutability-helper'
 import Dustbin from './Dustbin.js'
 import Box from './Box.js'
 
+import {
+	Typography,
+} from '@material-ui/core'
+
 import Localized from '../Localized/'
 
 const AudienceInput = ({ defaultValue, onChange }) => {
@@ -90,6 +94,10 @@ const AudienceInputInner =  ({ defaultValue, onChange }) => {
 
 	return (
 		<div style={{margin:'0 8px'}}>
+			<Typography variant="body2" style={{marginBottom: '16px'}}>
+				<Localized id="audience_input_instruction" />
+			</Typography>
+			
 			<div>
 				{items
 					.map((item, index) => ({ ...item, index }))
