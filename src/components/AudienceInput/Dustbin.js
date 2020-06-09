@@ -88,7 +88,7 @@ const Dustbin = ({ label, accept, items, onDrop, onRemoveItem }) => {
 				<span style={{padding: '0 5px'}}>{label}{activeHelperText}</span>
 			</legend>
 
-			<div style={{margin: '-13px 0 -14px 0'}}>
+			<div style={{margin: '-13px -2px -14px -2px'}}>
 				{items.map(item => (
 					<Box
 						key={item.index}
