@@ -12,7 +12,7 @@ import Localized from '../Localized/'
 const AudienceInput = ({ defaultValue, onChange }) => {
 	return (
 		<DndProvider backend={Backend}>
-			<Example defaultValue={defaultValue} onChange={onChange} />
+			<AudienceInputInner defaultValue={defaultValue} onChange={onChange} />
 		</DndProvider>
 	)
 }
@@ -31,7 +31,7 @@ export default AudienceInput
 
 const accept_type = 'box'
 
-const Example = ({ defaultValue, onChange }) => {
+const AudienceInputInner =  ({ defaultValue, onChange }) => {
 	const [dustbins] = useState([
 		{ value: 'only', label: <Localized id="audience_input_label_only" /> },
 		{ value: 'primary', label: <Localized id="audience_input_label_primary" /> },
