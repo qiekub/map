@@ -6,13 +6,13 @@ import { withLocalization, Localized } from '../Localized/'
 import {
 	Button,
 	Link,
-	// Icon,
+	Icon,
 
 	List,
 	ListItem,
-	// ListItemIcon,
+	ListItemIcon,
 	ListItemText,
-	// Divider,
+	Divider,
 } from '@material-ui/core'
 
 import {
@@ -25,6 +25,16 @@ import { withTheme } from '@material-ui/core/styles'
 
 import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import { ReactComponent as GithubIcon } from '../../images/github_mark_black.svg'
+
+import facebook_icon from '../../images/facebook.png'
+import instagram_icon from '../../images/instagram.png'
+import twitter_icon from '../../images/twitter.png'
+
+const FacebookIcon		= props => <Icon style={{backgroundImage:'url('+facebook_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
+const InstagramIcon		= props => <Icon style={{backgroundImage:'url('+instagram_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
+const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
+
+
 
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
@@ -66,32 +76,63 @@ class MainDrawerContent extends React.Component {
 					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
-				<Link target="_blank" href="https://github.com/qiekub">
-					<Button
-						aria-label={this.props.getString('github_button')}
-						title={this.props.getString('github_button')}
-						variant="contained"
-						color="primary"
-						startIcon={
-							<GithubIcon style={{
-								fill: 'black',
-								marginLeft: '0px',
-								width: '1em',
-								height: '1em',
-							}}/>
-						}
-						style={{
-							margin: '0 16px',
-							width: 'calc(100% - 32px)',
-							textAlign: 'left',
-						}}
-					>
-						<Localized id="github_button" />
-					</Button>
-				</Link>
 
-			{/*<Divider />
+			<Divider />
+
 			<List>
+				<ListItemLink
+					target="_blank"
+					href="https://www.facebook.com/qiekub/"
+					aria-label={this.props.getString('follow_button_facebook')}
+					title={this.props.getString('follow_button_facebook')}
+				>
+					<ListItemIcon>
+						<FacebookIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('follow_button_facebook')} />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://www.instagram.com/qiekub/"
+					aria-label={this.props.getString('follow_button_instagram')}
+					title={this.props.getString('follow_button_instagram')}
+				>
+					<ListItemIcon>
+						<InstagramIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('follow_button_instagram')} />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://twitter.com/qiekub"
+					aria-label={this.props.getString('follow_button_twitter')}
+					title={this.props.getString('follow_button_twitter')}
+				>
+					<ListItemIcon>
+						<TwitterIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('follow_button_twitter')} />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://github.com/qiekub"
+					aria-label={this.props.getString('github_button')}
+					title={this.props.getString('github_button')}
+				>
+					<ListItemIcon>
+						<GithubIcon style={{
+							fill: 'black',
+							width: '1.5em',
+							height: '1.5em',
+						}}/>
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('github_button')} />
+				</ListItemLink>
+			</List>
+
+			<Divider />
+
+			{/*<List>
 				{document.fullscreenEnabled ? (<ListItem button onClick={this.toogleFullscreen}>
 					<ListItemIcon>
 						{this.state.windowIsFullscreen ? <FullscreenExitIcon style={{color:'black'}} /> : <FullscreenIcon style={{color:'black'}} />}
