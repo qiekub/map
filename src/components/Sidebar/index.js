@@ -364,22 +364,26 @@ class Sidebar extends React.Component {
 	}
 
 	loadChangesets(docID){
-		this.props.globals.graphql.query({
-			fetchPolicy: 'no-cache',
-			query: query_changesets,
-			variables: {
-				forID: docID,
-			},
-		}).then(({data}) => {
-			console.log('in-loadChangesets', data)
-			if (!!data && !!data.changesets) {
-				this.setState({changesets: data.changesets})
-			}else{
-				this.setState({changesets: []})
-			}
-		}).catch(error=>{
-			console.error(error)
-		})
+		if (this.props.globals.profileID === null) {
+			this.setState({changesets: []})
+		}else{
+			this.props.globals.graphql.query({
+				fetchPolicy: 'no-cache',
+				query: query_changesets,
+				variables: {
+					forID: docID,
+				},
+			}).then(({data}) => {
+				console.log('in-loadChangesets', data)
+				if (!!data && !!data.changesets) {
+					this.setState({changesets: data.changesets})
+				}else{
+					this.setState({changesets: []})
+				}
+			}).catch(error=>{
+				console.error(error)
+			})
+		}
 	}
 	decideAboutChangeset(edgeType){
 		this.props.globals.graphql.mutate({
