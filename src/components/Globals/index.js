@@ -45,12 +45,14 @@ async function getInitialGlobalState(callback){
 	
 	const globalState = {}
 
+	const __session = getCookie('__session')
+
 	globalState.graphql = new ApolloClient({
 		cache,
 		link: new HttpLink({
 			credentials: 'omit',
 			headers: {
-				'-x-session': getCookie('__session'),
+				'-x-session': __session,
 			},
 			uri: (
 				isDevEnvironment
@@ -60,17 +62,22 @@ async function getInitialGlobalState(callback){
 		})
 	})
 
-	globalState.graphql.query({
-		query: query_whoami,
-		fetchPolicy: 'no-cache',
-	}).then(result => {
-		globalState.profileID = result.data.whoami
-	}).catch(error => {
-		console.error(error)
-	}).finally(() => {
+	if (__session.length !== null) {
+		globalState.graphql.query({
+			query: query_whoami,
+			fetchPolicy: 'cache-first',
+		}).then(result => {
+			globalState.profileID = result.data.whoami
+		}).catch(error => {
+			console.error(error)
+		}).finally(() => {
+			globalState.globalStateFinishedLoading = true
+			callback(globalState)
+		})
+	}else{
 		globalState.globalStateFinishedLoading = true
 		callback(globalState)
-	})
+	}
 }
 
 
