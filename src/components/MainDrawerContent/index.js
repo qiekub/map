@@ -1,11 +1,11 @@
 import React from 'react'
 // import './index.css'
 
-import { withLocalization, Localized } from '../Localized/'
+import { withLocalization/*, Localized*/ } from '../Localized/'
 
 import {
-	Button,
-	Link,
+	// Button,
+	// Link,
 	Icon,
 
 	List,
