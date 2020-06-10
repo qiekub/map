@@ -62,7 +62,7 @@ async function getInitialGlobalState(callback){
 		})
 	})
 
-	if (__session.length !== null) {
+	if (!!__session) {
 		globalState.graphql.query({
 			query: query_whoami,
 			fetchPolicy: 'cache-first',
