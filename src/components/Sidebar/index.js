@@ -11,8 +11,9 @@ import { navigate } from '@reach/router'
 import {
 	place as query_place,
 	id as query_id,
-	changesets as query_changesets,
+	// changesets as query_changesets,
 	addEdge as mutate_addEdge,
+	undecidedChangesets as query_undecidedChangesets,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -369,14 +370,14 @@ class Sidebar extends React.Component {
 		}else{
 			this.props.globals.graphql.query({
 				fetchPolicy: 'no-cache',
-				query: query_changesets,
+				query: query_undecidedChangesets,
 				variables: {
 					forID: docID,
 				},
 			}).then(({data}) => {
 				console.log('in-loadChangesets', data)
-				if (!!data && !!data.changesets) {
-					this.setState({changesets: data.changesets})
+				if (!!data && !!data.undecidedChangesets) {
+					this.setState({changesets: data.undecidedChangesets})
 				}else{
 					this.setState({changesets: []})
 				}

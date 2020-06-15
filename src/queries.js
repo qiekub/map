@@ -179,6 +179,28 @@ export const accounts = gql`
 	}
 `
 
+export const undecidedChangesets = gql`
+	query($forID: ID) {
+		undecidedChangesets(forID: $forID) {
+			_id
+			properties {
+				__typename
+				... on Changeset {
+					forID
+					tags
+					sources
+					fromBot
+					dataset
+					antiSpamUserIdentifier
+				}
+			}
+			metadata {
+				created
+			}
+		}
+	}
+`
+
 export const changesets = gql`
 	query($forID: ID) {
 		changesets(forID: $forID) {
