@@ -5,13 +5,14 @@ import { withLocalization/*, Localized*/ } from '../Localized/'
 
 import {
 	// Button,
-	// Link,
+	Link,
 	Icon,
 
 	List,
 	ListItem,
 	ListItemIcon,
 	ListItemText,
+	ListSubheader,
 	Divider,
 } from '@material-ui/core'
 
@@ -23,7 +24,7 @@ import {
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
-import buymeacoffee_green from '../../images/buymeacoffee_green.png'
+// import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import { ReactComponent as GithubIcon } from '../../images/github_mark_black.svg'
 
 import facebook_icon from '../../images/facebook.png'
@@ -39,31 +40,207 @@ const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 class MainDrawerContent extends React.Component {
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			windowIsFullscreen: false,
-		}
-
-		this.toogleFullscreen = this.toogleFullscreen.bind(this)
-	}
-
-	toogleFullscreen(){
-		if (document.fullscreenEnabled) {
-			if (document.fullscreenElement === null) {
-				document.querySelector('body').requestFullscreen().then(()=>{
-					this.setState({windowIsFullscreen:true})
-				})
-			}else{
-				document.exitFullscreen().then(()=>{
-					this.setState({windowIsFullscreen:false})
-				})
-			}
-		}
-	}
-
 	render() {
+
+		/*
+		# QueerMap
+		by Qiekub
+		
+		- About
+		- Blog
+		- Similar projects
+		
+		--------------------------
+		
+		## Settings
+		- Language (EN/DE/...)
+		- Theme (Dark/Light)
+		
+		--------------------------
+		
+		## Contribute
+		- Add a place
+		- Promote the QueerMap
+		- Help translating
+		- Help programming
+		- Give feedback
+		- Donate
+		
+		## Follow us on...
+		- Facebook
+		- Instagram
+		- Twitter
+		- GitHub
+		
+		## Legal
+		- Imprint
+		- Privacy Policy
+		- Contact
+		*/
+
+		return (<>
+			<List
+				dense
+				style={{
+					paddingRight: '64px',
+				}}
+			>
+				<ListItem>
+					<ListItemText
+						primary="QueerMap"
+						secondary={<>by <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/">Qiekub</Link></>}
+						primaryTypographyProps={{
+							variant: 'h4',
+						}}
+					/>
+				</ListItem>
+		
+				{/*
+				<ListItemLink
+					target="_blank"
+					href="https://www.qiekub.org/impressum.html"
+				>
+					<ListItemText inset primary="About" />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://www.qiekub.org/impressum.html"
+				>
+					<ListItemText inset primary="Blog" />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://www.qiekub.org/impressum.html"
+				>
+					<ListItemText inset primary="Similar Projects" />
+				</ListItemLink>
+				*/}
+			</List>
+		
+
+			<Divider />
+		
+		
+			<List
+				dense
+				subheader={<ListSubheader disableSticky>Follow us on...</ListSubheader>}
+			>
+				<ListItemLink
+					target="_blank"
+					href="https://www.facebook.com/qiekub/"
+					aria-label="Facebook"
+					title="Facebook"
+				>
+					<ListItemIcon>
+						<FacebookIcon />
+					</ListItemIcon>
+					<ListItemText primary="Facebook" />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://www.instagram.com/qiekub/"
+					aria-label="Instagram"
+					title="Instagram"
+				>
+					<ListItemIcon>
+						<InstagramIcon />
+					</ListItemIcon>
+					<ListItemText primary="Instagram" />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://twitter.com/qiekub"
+					aria-label="Twitter"
+					title="Twitter"
+				>
+					<ListItemIcon>
+						<TwitterIcon />
+					</ListItemIcon>
+					<ListItemText primary="Twitter" />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://github.com/qiekub"
+					aria-label="Github"
+					title="Github"
+				>
+					<ListItemIcon>
+						<GithubIcon style={{
+							fill: this.props.theme.palette.text.primary,
+							width: '1.5em',
+							height: '1.5em',
+						}}/>
+					</ListItemIcon>
+					<ListItemText primary="Github" />
+				</ListItemLink>
+			</List>
+		
+			{/*
+			<Divider />
+		
+		
+			<List
+				dense
+				subheader={<ListSubheader disableSticky>Contribute</ListSubheader>}
+			>
+				<ListItem>
+					<ListItemText inset primary="Add a place" />
+				</ListItem>
+				<ListItem>
+					<ListItemText inset primary="Promote the map" />
+				</ListItem>
+				<ListItem>
+					<ListItemText inset primary="Help Translating" />
+				</ListItem>
+				<ListItem>
+					<ListItemText inset primary="Help Programming" />
+				</ListItem>
+				<ListItem>
+					<ListItemText inset primary="Give feedback" />
+				</ListItem>
+				<ListItem>
+					<ListItemText inset primary="Donate" />
+				</ListItem>
+			</List>
+			*/}
+		
+			<Divider />
+		
+		
+			<List
+				dense
+				subheader={<ListSubheader disableSticky>Legal</ListSubheader>}
+			>
+				<ListItemLink
+					target="_blank"
+					href="https://www.qiekub.org/impressum.html"
+					aria-label={this.props.getString('imprint')}
+					title={this.props.getString('imprint')}
+				>
+					<ListItemText inset primary={this.props.getString('imprint')} />
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://www.qiekub.org/datenschutz.html"
+					aria-label={this.props.getString('privacy_policy')}
+					title={this.props.getString('privacy_policy')}
+				>
+					<ListItemText inset primary={this.props.getString('privacy_policy')} />
+				</ListItemLink>
+				<ListItemLink
+					href="mailto:thomas.rosen@qiekub.org"
+					aria-label={this.props.getString('contact')}
+					title={this.props.getString('contact')}
+				>
+					<ListItemText inset primary={this.props.getString('contact')} />
+				</ListItemLink>
+			</List>
+		
+			<div style={{paddingBottom:'128px'}}></div>
+		
+		</>)
+		
+		/*
 		return (<>
 			<List>
 				<ListItemLink target="_blank" href="https://www.qiekub.org/impressum.html" aria-label={this.props.getString('imprint')} title={this.props.getString('imprint')}>
@@ -132,15 +309,6 @@ class MainDrawerContent extends React.Component {
 
 			<Divider />
 
-			{/*<List>
-				{document.fullscreenEnabled ? (<ListItem button onClick={this.toogleFullscreen}>
-					<ListItemIcon>
-						{this.state.windowIsFullscreen ? <FullscreenExitIcon style={{color:'black'}} /> : <FullscreenIcon style={{color:'black'}} />}
-					</ListItemIcon>
-					<ListItemText primary={this.state.windowIsFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} />
-				</ListItem>) : null}
-			</List>*/}
-
 			<div style={{margin: '16px 0', textAlign: 'center'}}>
 			<a
 				aria-label="Buy me a coffee"
@@ -160,6 +328,7 @@ class MainDrawerContent extends React.Component {
 			</a>
 			</div>
 		</>)
+		*/
 	}
 }
 
