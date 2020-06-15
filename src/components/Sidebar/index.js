@@ -242,7 +242,7 @@ class Sidebar extends React.Component {
 				query: query_id,
 				fetchPolicy: 'no-cache',
 			}).then(async result => {
-				await navigate(`/add/${result.data.id}/`)
+				await navigate(`/add/${result.data.id}/`, { replace: true })
 			}).catch(error=>{
 				console.error(error)
 			}).finally(()=>{
