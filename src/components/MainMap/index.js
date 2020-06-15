@@ -6,6 +6,7 @@ import { withConicGradient } from '../ConicGradient/'
 import { navigate } from '@reach/router'
 import {
 	markers as query_markers,
+	placesWithUndecidedChangesets as query_placesWithUndecidedChangesets,
 } from '../../queries.js'
 
 import './index.css'
@@ -52,6 +53,7 @@ class MainMap extends React.Component {
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
 		this.markers = []
+		this.placesWithUndecidedChangesets = []
 
 		this.ConicGradient = null
 
@@ -66,10 +68,13 @@ class MainMap extends React.Component {
 		this.viewportChanged = this.viewportChanged.bind(this)
 		this.zoomIn = this.zoomIn.bind(this)
 		this.zoomOut = this.zoomOut.bind(this)
+
+		this.loadPlacesWithUndecidedChangesets = this.loadPlacesWithUndecidedChangesets.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadMarkers()
+		this.loadPlacesWithUndecidedChangesets()
 
 		if (this.props.conic_gradient) {
 			this.props.conic_gradient.onReady(()=>{
@@ -164,6 +169,20 @@ class MainMap extends React.Component {
 
 				this.docs = docs
 				this.addMarkersToPruneCluster(docs)
+			}
+		})
+	}
+
+	loadPlacesWithUndecidedChangesets(){
+		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
+			fetchPolicy: 'cache-and-network',
+			query: query_placesWithUndecidedChangesets,
+			variables: {},
+		})
+		.subscribe(({data}) => {
+			if (!!data && !!data.placesWithUndecidedChangesets) {
+				this.placesWithUndecidedChangesets = data.placesWithUndecidedChangesets.map(doc=>doc._id)
+				this.filterMarkers(this.filters)
 			}
 		})
 	}
@@ -398,8 +417,9 @@ class MainMap extends React.Component {
 			const ageOption = this.filters.ageOption
 			const audienceQueerOptions = this.filters.audienceQueerOptions || []
 			const checkAudienceQueerOptions = audienceQueerOptions.length > 0
+			const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
 
-			if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge) {
+			if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
 				const markers_length = this.markers.length
 				for (let i = markers_length - 1; i >= 0; i--) {
 					const marker = this.markers[i]
@@ -407,6 +427,11 @@ class MainMap extends React.Component {
 					if (ids.includes(marker.data._id)) {
 						this.markers[i].filtered = false
 					}else{
+
+						let hasUndecidedChangesets = true
+						if (mustHaveUndecidedChangeset) {
+							hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
+						}
 						
 						let isInPresets = true
 						if (presets_length > 0) {
@@ -444,7 +469,7 @@ class MainMap extends React.Component {
 							}
 						}
 
-						this.markers[i].filtered = !(isInPresets && matchesAudienceQueer && isInAgeRange)
+						this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 					}
 				}
 				this.clusterGroup.ProcessView()

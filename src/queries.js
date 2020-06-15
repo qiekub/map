@@ -179,6 +179,14 @@ export const accounts = gql`
 	}
 `
 
+export const placesWithUndecidedChangesets = gql`
+	query($forID: ID) {
+		placesWithUndecidedChangesets(forID: $forID) {
+			_id
+		}
+	}
+`
+
 export const undecidedChangesets = gql`
 	query($forID: ID) {
 		undecidedChangesets(forID: $forID) {

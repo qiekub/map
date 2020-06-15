@@ -38,6 +38,8 @@ menu_text_audience_queer_primary = <strong>Primär</strong> für queere Menschen
 menu_text_audience_queer_welcome = Queere Menschen sind <strong>willkommen</strong>
 menu_text_audience_queer_no = <strong>Nicht</strong> für queere Menschen
 
+must_have_undecided_changes = Muss es unentschiedene Änderungen haben?
+
 
 
 # MainDrawerContent

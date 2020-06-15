@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core'
 
 import {
+	CheckCircleRounded as CheckIcon,
 	ArrowDropDownRounded as ArrowDropDownIcon,
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
@@ -31,6 +32,7 @@ class FiltersPanelContent extends React.Component {
 			category: null,
 			age: null,
 			audience_queer: new Set(),
+			mustHaveUndecidedChangeset: false,
 		}
 
 		this.categories = _categories_.map(category => ({
@@ -66,6 +68,7 @@ class FiltersPanelContent extends React.Component {
 
 		this.setValue = this.setValue.bind(this)
 		this.getFilterObj = this.getFilterObj.bind(this)
+		this.toggleMustHaveUndecidedChangeset = this.toggleMustHaveUndecidedChangeset.bind(this)
 	}
 
 	componentDidMount(){
@@ -95,7 +98,8 @@ class FiltersPanelContent extends React.Component {
 			
 			audienceQueerOptions: this.state.audience_queer.has('eveything') ? [] : [...this.state.audience_queer],
 			selectedAge: this.state.age,
-			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : '')
+			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : ''),
+			mustHaveUndecidedChangeset: this.state.mustHaveUndecidedChangeset,
 		}
 	}
 
@@ -131,6 +135,16 @@ class FiltersPanelContent extends React.Component {
 
 			return {audience_queer}
 		}, ()=>{
+			if (this.props.onChange) {
+				this.props.onChange(this.getFilterObj())
+			}
+		})
+	}
+
+	toggleMustHaveUndecidedChangeset(){
+		this.setState((state, props) => ({
+			mustHaveUndecidedChangeset: !state.mustHaveUndecidedChangeset
+		}), ()=>{
 			if (this.props.onChange) {
 				this.props.onChange(this.getFilterObj())
 			}
@@ -334,6 +348,29 @@ class FiltersPanelContent extends React.Component {
 					</React.Fragment>
 				)}
 			</PopupState>
+
+			{
+				!!this.props.globals.profileID
+				? (<Fab
+					size="small"
+					variant="extended"
+					className="fab"
+					aria-label={this.props.getString('must_have_undecided_changes')}
+					title={this.props.getString('must_have_undecided_changes')}
+					onClick={this.toggleMustHaveUndecidedChangeset}
+				>
+					<Localized id="must_have_undecided_changes" />
+					{
+						!!this.state.mustHaveUndecidedChangeset
+						? (<CheckIcon className="ArrowDropDownIcon" style={{
+							width:'20px',
+							height:'20px',
+						}}/>)
+						:  <div style={{width:'8px'}}></div>
+					}
+				</Fab>)
+				: null
+			}
 		</div>)
 	}
 }
