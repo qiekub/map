@@ -69,6 +69,7 @@ class MainMap extends React.Component {
 		this.zoomIn = this.zoomIn.bind(this)
 		this.zoomOut = this.zoomOut.bind(this)
 
+		this.loadMarkers = this.loadMarkers.bind(this)
 		this.loadPlacesWithUndecidedChangesets = this.loadPlacesWithUndecidedChangesets.bind(this)
 	}
 
