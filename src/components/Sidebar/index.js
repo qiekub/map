@@ -371,7 +371,6 @@ class Sidebar extends React.Component {
 					forID: docID,
 				},
 			}).then(({data}) => {
-				console.log('in-loadChangesets', data)
 				if (!!data && !!data.undecidedChangesets) {
 					this.setState({changesets: data.undecidedChangesets})
 				}else{
