@@ -395,7 +395,6 @@ class Sidebar extends React.Component {
 			},
 		})
 		.then(({data}) => {
-			console.log('addEdge-data', data)
 		})
 		.catch(error=>{
 			console.error(error)
