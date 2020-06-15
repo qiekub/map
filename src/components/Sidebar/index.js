@@ -394,7 +394,7 @@ class Sidebar extends React.Component {
 				properties: {
 					edgeType,
 					fromID: this.props.globals.profileID,
-					toID: this.docID,
+					toID: changesetID,
 					tags: {},
 				},
 			},
