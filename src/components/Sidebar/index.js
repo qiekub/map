@@ -53,7 +53,7 @@ import {
 import {
 	ThumbDownRounded as ThumbDownIcon,
 	ThumbUpRounded as ThumbUpIcon,
-	CheckRounded as CheckIcon,
+	// CheckRounded as CheckIcon,
 	SkipNextRounded as SkipNextIcon,
 
 	WarningRounded as WarningIcon,
@@ -972,7 +972,7 @@ class Sidebar extends React.Component {
 										</div>
 									</CardContent>
 									<CardActions style={{
-										justifyContent: 'space-between',
+										justifyContent: 'space-evenly',
 									}}>
 										<Tooltip
 											title="Reject"
@@ -990,27 +990,13 @@ class Sidebar extends React.Component {
 										</Tooltip>
 										
 										<Tooltip
-											title="Approve (Seams okay but I didn't check the data.)"
-											aria-label="Approve (Seams okay but I didn't check the data.)"
+											title="Approve"
+											aria-label="Approve"
 										>
 											<IconButton
 												onClick={this.changeset_approved}
-												aria-label="Approve (Seams okay but I didn't check the data.)"
-												style={{
-													color: this.props.theme.palette.warning.main,
 												}}
-											>
-												<CheckIcon />
-											</IconButton>
-										</Tooltip>
-										
-										<Tooltip
-											title="Approve (I fact-checked everything!)"
-											aria-label="Approve (I fact-checked everything!)"
-										>
-											<IconButton
-												onClick={this.changeset_fact_checked}
-												aria-label="Approve (I fact-checked everything!)"
+												aria-label="Approve"
 												style={{
 													color: this.props.theme.palette.success.main,
 												}}
