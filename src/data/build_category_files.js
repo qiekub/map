@@ -133,6 +133,8 @@ const categories = [
 			de: 'Tourismus',
 		},
 		presets: [
+			'building/hotel',
+
 			'tourism/hotel',
 			'tourism/hostel',
 			'tourism/apartment',
@@ -142,9 +144,13 @@ const categories = [
 
 			'tourism/picnic_site',
 			'tourism/guest_house',
+			'tourism/chalet',
 			'tourism/information',
 			// 'attraction/train',
 			// 'tourism/theme_park',
+			'natural/beach',
+			'place/neighbourhood',
+			'shop/travel_agency',
 		],
 		color: {
 			key: 'indigo',
@@ -153,6 +159,32 @@ const categories = [
 			// bg: '#1A237E', // 900
 			bg: '#283593', // 800
 			// bg: '#3F51B5', // 500
+			fg: 'white',
+		},
+	},
+	{
+		name: {
+			en: 'Organizations',
+			de: 'Organisationen',
+		},
+		presets: [
+			'office/ngo',
+			'office/association',
+			'office',
+			// 'shop/books',
+			// 'shop/gift',
+			// 'shop/video',
+			// 'shop/clothes',
+			// 'shop/kiosk',
+			// 'shop/massage',
+			// 'building/commercial',
+			// 'amenity/place_of_worship'
+		],
+		color: {
+			key: 'gray',
+			prideFlageMeaning: '',
+			prideFlageColorName: '',
+			bg: '#424242', // 800
 			fg: 'white',
 		},
 	},
@@ -428,6 +460,9 @@ const preset_overwrites = {
 		icon: 'local_cafe',
 	},
 
+	'building/commercial': {
+		icon: 'storefront',
+	},
 	'shop': {
 		icon: 'storefront',
 	},
@@ -511,6 +546,9 @@ const preset_overwrites = {
 	'tourism/information': {
 		icon: 'info',
 	},
+	'building/hotel': {
+		icon: 'hotel',
+	},
 	'tourism/hotel': {
 		icon: 'hotel',
 	},
@@ -521,6 +559,9 @@ const preset_overwrites = {
 		icon: 'hotel',
 	},
 	'tourism/guest_house': {
+		icon: 'hotel',
+	},
+	'tourism/chalet': {
 		icon: 'hotel',
 	},
 	'tourism/camp_site': {
