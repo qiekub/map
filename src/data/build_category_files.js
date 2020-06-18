@@ -591,12 +591,43 @@ const preset_overwrites = {
 const preset_overwrites_sorted = Object.entries(preset_overwrites).sort((a,b)=>b[0].length-a[0].length)
 
 function get_preset_overwrite(preset_key){
+	let found_preset_overwrites = []
+
 	for (const pair of preset_overwrites_sorted) {
-		if (preset_key.startsWith(pair[0])) {
-			return pair[1]
-			// break
+		const this_key = pair[0]
+		const this_preset = pair[1]
+
+		if (
+			preset_key.startsWith(this_key)
+			&& !(this_preset.searchable===false)
+		) {
+			found_preset_overwrites.push({
+				...this_preset,
+				key_length: this_key.length,
+			})
 		}
 	}
+
+
+	found_preset_overwrites = found_preset_overwrites.sort((a,b)=>b.key_length-a.key_length)
+
+	if (found_preset_overwrites.length > 0) {
+		const combined_preset_overwrite = found_preset_overwrites[0]
+
+		if (!combined_preset_overwrite.icon) {
+			for (const preset of found_preset_overwrites) {
+				if (preset.icon) {
+					combined_preset_overwrite.icon = preset.icon
+					break
+				}
+			}
+		}
+
+		return combined_preset_overwrite
+	}
+
+
+	return null
 }
 
 /*
