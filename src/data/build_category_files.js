@@ -635,7 +635,6 @@ for (const preset_key in id_presets) {
 			preset_key.includes('tourism')
 		) &&
 		preset.tags &&
-		preset.geometry &&
 		!(preset.searchable===false) &&
 		preset.geometry.includes('point') &&
 		!Object.keys(preset.tags).includes('brand:wikidata')
