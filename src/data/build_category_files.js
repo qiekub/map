@@ -693,7 +693,9 @@ const presets_sorted = Object.entries(presets)
 		max_tag_value_length: Math.max(...Object.values(pair[1].tags).map(v=>v.length)),
         ...pair[1],
     }
-}).sort((a,b)=>b.tags_length-a.tags_length || b.max_tag_value_length-a.max_tag_value_length).reduce((obj,preset)=>{
+})
+.sort((a,b)=>b.tags_length-a.tags_length || b.max_tag_value_length-a.max_tag_value_length)
+.reduce((obj,preset)=>{
 	obj[preset.key] = preset
 	return obj
 },{})
