@@ -8,7 +8,8 @@ import {
 	ListItemIcon,
 	ListItemText,
 } from '@material-ui/core'
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import matchSorter from 'match-sorter'
 
 // import { Localized/*, withLocalization*/ } from '../Localized/'
 import { withGlobals } from '../Globals/'
@@ -25,9 +26,9 @@ class PresetInput extends React.Component {
 	constructor(props) {
 		super(props)
 
-		this.filterOptions = createFilterOptions({
-			matchFrom: 'start',
-			stringify: option => option.name_translated+' | '+option.category_name_translated,
+		this.filterOptions = (options, {inputValue}) => matchSorter(options, inputValue, {
+			threshold: matchSorter.rankings.CONTAINS,
+			keys: ['name_translated' ,'terms_translated','category_name_translated','key','color.key']
 		})
 
 		this._options_ = [].concat(
@@ -79,6 +80,7 @@ class PresetInput extends React.Component {
 		return {
 			...preset,
 			name_translated: getTranslation(preset.name, this.props.globals.userLocales),
+			terms_translated: getTranslation(preset.terms, this.props.globals.userLocales),
 			icon: preset.icon ? preset.icon.toLowerCase() : '',
 		}
 	}
