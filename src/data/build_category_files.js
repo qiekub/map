@@ -171,6 +171,8 @@ const categories = [
 			'office/ngo',
 			'office/association',
 			'office',
+			'amenity/college',
+			'amenity/school',
 			// 'shop/books',
 			// 'shop/gift',
 			// 'shop/video',
