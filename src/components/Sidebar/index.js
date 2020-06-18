@@ -171,7 +171,8 @@ class Sidebar extends React.Component {
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
 
-		this.renderChanges = this.renderChanges.bind(this)
+		this.renderChangesets = this.renderChangesets.bind(this)
+		this.renderSuggestions = this.renderSuggestions.bind(this)
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
 
@@ -857,7 +858,147 @@ class Sidebar extends React.Component {
 		)
 	}
 
-	renderChanges(){
+	renderChangesets(changesets){
+		if (changesets.length === 0) {
+			return null
+		}
+
+		return changesets.map((changeset, index) => {
+			return (
+				<Card
+					key={changeset._id}
+					variant="outlined"
+					style={{
+						marginBottom: '32px',
+					}}
+				>
+					<CardContent>
+						<div style={{
+							overflow: 'auto',
+							margin: '-8px -16px -16px',
+						}}>
+							<Table size="small">
+								<TableBody>
+									{
+										Object.entries({
+											_id: changeset._id,
+											...changeset.properties,
+											...changeset.metadata,
+										})
+										.filter(entry =>
+											// entry[0] !== 'tags'
+											// &&
+											entry[0] !== '__typename'
+											&& entry[0] !== 'forID'
+										)
+										.map(([tag,value]) => {
+											if (tag === 'antiSpamUserIdentifier') {
+												tag = 'antiSpamID'
+											}
+
+											let cellContent = null
+											if (tag === 'tags') {
+												cellContent = (
+													<Table
+														className="tagsTable"
+														size="small"
+														style={{
+															minWidth: '100%',
+															margin: '-6px -16px -7px -16px',
+														}}
+													>
+														<TableBody>
+															{Object.entries(changeset.properties.tags).map(([tag,value]) => (
+																<TableRow key={tag} style={{
+																	verticalAlign: 'top',
+																}}>
+																	<TableCell component="th" scope="row">{tag}</TableCell>
+																	<TableCell>{value.toString()}</TableCell>
+																</TableRow>
+															))}
+														</TableBody>
+													</Table>
+												)
+											}else{
+												cellContent = value.toString()
+											}
+
+											return (
+												<TableRow key={tag} style={{
+													verticalAlign: 'top',
+												}}>
+													<TableCell component="th" scope="row">
+														<strong>{tag}</strong>
+													</TableCell>
+													<TableCell align="left">
+														{cellContent}
+													</TableCell>
+												</TableRow>
+											)
+										})
+									}
+								</TableBody>
+							</Table>
+						</div>
+					</CardContent>
+					<CardActions style={{
+						justifyContent: 'space-evenly',
+					}}>
+						<Tooltip
+							title="Reject"
+							aria-label="Reject"
+						>
+							<IconButton
+								onClick={()=>{
+									this.decideAboutChangeset(changeset._id, 'rejected')
+								}}
+								aria-label="Reject"
+								style={{
+									color: this.props.theme.palette.error.main,
+								}}
+							>
+								<ThumbDownIcon />
+							</IconButton>
+						</Tooltip>
+										
+						<Tooltip
+							title="Approve"
+							aria-label="Approve"
+						>
+							<IconButton
+								onClick={()=>{
+									this.decideAboutChangeset(changeset._id, 'approved')
+								}}
+								aria-label="Approve"
+								style={{
+									color: this.props.theme.palette.success.main,
+								}}
+							>
+								<ThumbUpIcon />
+							</IconButton>
+						</Tooltip>
+						
+						<Tooltip
+							title="Skip"
+							aria-label="Skip"
+						>
+							<IconButton
+								onClick={()=>{
+									this.decideAboutChangeset(changeset._id, 'skipped')
+								}}
+								aria-label="Skip"
+							>
+								<SkipNextIcon />
+							</IconButton>
+						</Tooltip>
+					</CardActions>
+				</Card>
+			)
+		})
+	}
+
+
+	renderSuggestions(){
 		const changesets = this.state.changesets || []
 
 		if (changesets.length === 0) {
@@ -873,141 +1014,7 @@ class Sidebar extends React.Component {
 				margin: '16px 0',
 			}}>Proposed Improvements</Typography>
 
-					{
-						changesets.map((changeset, index) => {
-							return (
-								<Card
-									key={changeset._id}
-									variant="outlined"
-									style={{
-										marginBottom: '32px',
-									}}
-								>
-									<CardContent>
-										<div style={{
-											overflow: 'auto',
-											margin: '-8px -16px -16px',
-										}}>
-											<Table size="small">
-												<TableBody>
-													{
-														Object.entries({
-															_id: changeset._id,
-															...changeset.properties,
-															...changeset.metadata,
-														})
-														.filter(entry =>
-															// entry[0] !== 'tags'
-															// &&
-															entry[0] !== '__typename'
-															&& entry[0] !== 'forID'
-														)
-														.map(([tag,value]) => {
-															if (tag === 'antiSpamUserIdentifier') {
-																tag = 'antiSpamID'
-															}
-
-															let cellContent = null
-															if (tag === 'tags') {
-																cellContent = (
-																	<Table
-																		className="tagsTable"
-																		size="small"
-																		style={{
-																			minWidth: '100%',
-																			margin: '-6px -16px -7px -16px',
-																		}}
-																	>
-																		<TableBody>
-																			{Object.entries(changeset.properties.tags).map(([tag,value]) => (
-																				<TableRow key={tag} style={{
-																					verticalAlign: 'top',
-																				}}>
-																					<TableCell component="th" scope="row">{tag}</TableCell>
-																					<TableCell>{value.toString()}</TableCell>
-																				</TableRow>
-																			))}
-																		</TableBody>
-																	</Table>
-																)
-															}else{
-																cellContent = value.toString()
-															}
-
-															return (
-																<TableRow key={tag} style={{
-																	verticalAlign: 'top',
-																}}>
-																	<TableCell component="th" scope="row">
-																		<strong>{tag}</strong>
-																	</TableCell>
-																	<TableCell align="left">
-																		{cellContent}
-																	</TableCell>
-																</TableRow>
-															)
-														})
-													}
-												</TableBody>
-											</Table>
-										</div>
-									</CardContent>
-									<CardActions style={{
-										justifyContent: 'space-evenly',
-									}}>
-										<Tooltip
-											title="Reject"
-											aria-label="Reject"
-										>
-											<IconButton
-												onClick={()=>{
-													this.decideAboutChangeset(changeset._id, 'rejected')
-												}}
-												aria-label="Reject"
-												style={{
-													color: this.props.theme.palette.error.main,
-												}}
-											>
-												<ThumbDownIcon />
-											</IconButton>
-										</Tooltip>
-										
-										<Tooltip
-											title="Approve"
-											aria-label="Approve"
-										>
-											<IconButton
-												onClick={()=>{
-													this.decideAboutChangeset(changeset._id, 'approved')
-												}}
-												aria-label="Approve"
-												style={{
-													color: this.props.theme.palette.success.main,
-												}}
-											>
-												<ThumbUpIcon />
-											</IconButton>
-										</Tooltip>
-										
-										<Tooltip
-											title="Skip"
-											aria-label="Skip"
-										>
-											<IconButton
-												onClick={()=>{
-													this.decideAboutChangeset(changeset._id, 'skipped')
-												}}
-												aria-label="Skip"
-											>
-												<SkipNextIcon />
-											</IconButton>
-										</Tooltip>
-									</CardActions>
-								</Card>
-							)
-						})
-					}
-
+			{this.renderChangesets(changesets)}
 		</div>)
 	}
 
@@ -1049,7 +1056,7 @@ class Sidebar extends React.Component {
 						</Fab>
 					</div>
 
-					{this.renderChanges()}
+					{this.renderSuggestions()}
 				</CardContent>
 		</React.Fragment>)
 	}
