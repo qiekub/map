@@ -153,3 +153,8 @@ lng = Längengrad: {$lng}
 error_message_geo_not_legal = Eventuell ist es illegal, an diesem Ort queer zu sein. Fügen keine Orte hinzu, die anderen potenziell schaden könnten, indem Sie diese zwangsouten.
 
 
+
+# PresetInput
+category_more = Weitere
+
+

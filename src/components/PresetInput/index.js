@@ -11,7 +11,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import matchSorter from 'match-sorter'
 
-// import { Localized/*, withLocalization*/ } from '../Localized/'
+import { withLocalization } from '../Localized/'
 import { withGlobals } from '../Globals/'
 
 import { getTranslation } from '../../functions.js'
@@ -59,7 +59,7 @@ class PresetInput extends React.Component {
 				))
 				.map(preset => this.preset4options({
 					...preset,
-					category_name_translated: 'Weitere',
+					category_name_translated: props.getString('category_more'),
 					color: colors.default,
 				}))
 				.sort(this.presetSorter)
@@ -172,7 +172,7 @@ class PresetInput extends React.Component {
 	}
 }
 
-export default withGlobals(PresetInput)
+export default withGlobals(withLocalization(PresetInput))
 
 
 
