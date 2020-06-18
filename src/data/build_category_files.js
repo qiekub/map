@@ -636,7 +636,7 @@ for (const preset_key in id_presets) {
 		) &&
 		preset.tags &&
 		!(preset.searchable===false) &&
-		preset.geometry.includes('point') &&
+		// preset.geometry.includes('point') &&
 		!Object.keys(preset.tags).includes('brand:wikidata')
 	) {
 		const preset_translations = translations[preset_key] || {}
