@@ -615,25 +615,95 @@ function get_preset_overwrite(preset_key){
 	People
 */
 
+
+
+// The following list way generated with:
+// [ ...new Set( Object.keys(id_presets).map(key => key.split('/')[0]) ) ]
+const allowed_presets = [
+	// 'aerialway',
+	// 'aeroway',
+	'amenity',
+	'attraction',
+	// 'boundary',
+	// 'building_point',
+	// 'embankment',
+	// 'emergency',
+	// 'ford_line',
+	// 'highway',
+	// 'indoor',
+	'landuse',
+	'leisure',
+	'man_made',
+	'natural',
+	'place',
+	'playground',
+	// 'power',
+	// 'railway',
+	// 'seamark',
+	'tourism',
+	// 'waterway',
+	// 'addr',
+	// 'address',
+	// 'advertising',
+	'allotments',
+	// 'area',
+	// 'barrier',
+	// 'bridge',
+	// 'building_part',
+	'building',
+	'club',
+	// 'craft',
+	// 'cycleway',
+	// 'demolished',
+	// 'disused',
+	// 'entrance',
+	// 'ford',
+	// 'golf',
+	'healthcare',
+	'historic',
+	// 'internet_access',
+	// 'junction',
+	// 'line',
+	// 'marker',
+	// 'military',
+	// 'network',
+	// 'noexit',
+	'office',
+	// 'piste',
+	// 'point',
+	// 'polling_station',
+	// 'public_transport',
+	// 'relation',
+	// 'route',
+	'shop',
+	// 'telecom',
+	// 'traffic_calming',
+	// 'traffic_sign_vertex',
+	// 'traffic_sign',
+	// 'type',
+]
+
+let lastkey = ''
+
+
+ //  "building/farm": {
+ //  	"icon": "maki-farm",
+ //  	"geometry": ["area"],
+ //  	"tags": {"building": "farm"},
+ //  	"matchScore": 0.5,
+ //  	"name": "Farm House"
+ // },
+
+
+
 const presets = {}
 for (const preset_key in id_presets) {
 	const preset = id_presets[preset_key]
 
+	const key_start = preset_key.split('/')[0]
+
 	if (
-		(
-			preset_key.includes('address') ||
-			preset_key.includes('amenity') ||
-			preset_key.includes('attraction') ||
-			preset_key.includes('club') ||
-			preset_key.includes('healthcare') ||
-			preset_key.includes('historic') ||
-			preset_key.includes('leisure') ||
-			preset_key.includes('natural') ||
-			preset_key.includes('office') ||
-			preset_key.includes('place') ||
-			preset_key.includes('shop') ||
-			preset_key.includes('tourism')
-		) &&
+		allowed_presets.includes(key_start) &&
 		preset.tags &&
 		!(preset.searchable===false) &&
 		// preset.geometry.includes('point') &&
