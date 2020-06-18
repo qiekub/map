@@ -175,7 +175,7 @@ class Questions extends React.Component {
 			questionsById: {},
 			nextQuestionIDs: [], // nextQuestionIDs_templates.create,
 
-			stageIndex: 0, // 0=privacy -> 1=questions -> 2=sources
+			stageIndex: 0, // 0=privacy -> 1=questions -> 2=sources -> 3=thanks
 		}
 
 		// this.answerIDs = new Set()
@@ -199,6 +199,7 @@ class Questions extends React.Component {
 		this.acceptPrivacyPolicy = this.acceptPrivacyPolicy.bind(this)
 		this.showQuestions = this.showQuestions.bind(this)
 		this.addSources	 = this.addSources.bind(this)
+		this.suggest = this.suggest.bind(this)
 		this.finish = this.finish.bind(this)
 		this.saveSourcesText = this.saveSourcesText.bind(this)
 	}
@@ -862,7 +863,7 @@ class Questions extends React.Component {
 	addSources(){
 		this.setState({stageIndex:2})
 	}
-	finish(){
+	suggest(){
 		if (Object.keys(this.answer_tags).length > 0) {
 			this.props.globals.graphql.mutate({
 				mutation: mutation_addChangeset,
@@ -880,8 +881,12 @@ class Questions extends React.Component {
 			.catch(error=>{
 				console.error('mutation_addChangeset-error', error)
 			})
+			.finally(()=>{
+				this.setState({stageIndex:3})
+			})
 		}
-
+	}
+	finish(){
 		if (this.props.onFinish) {
 			this.props.onFinish()
 		}
@@ -968,9 +973,21 @@ class Questions extends React.Component {
 					</React.Fragment>
 	
 					<div style={{
-						textAlign: 'right',
-						margin: '32px 16px 64px 16px'
+						display: 'flex',
+						justifyContent: 'space-between',
+						margin: '32px 0 64px 0'
 					}}>
+						<Fab
+							onClick={this.abort}
+							variant="extended"
+							size="large"
+							style={{
+								boxShadow: 'none',
+							}}
+						>
+							<ArrowBackIcon style={{marginRight:'8px'}}/>
+							<Localized id="abort" />
+						</Fab>
 						<Fab
 							onClick={this.addSources}
 							variant="extended"
@@ -1020,6 +1037,32 @@ class Questions extends React.Component {
 							<ArrowBackIcon style={{marginRight:'8px'}}/>
 							<Localized id="back" />
 						</Fab>
+						<Fab
+							onClick={this.suggest}
+							variant="extended"
+							size="large"
+							color="secondary"
+						>
+							<Localized id="suggest" />
+							<DoneIcon style={{color:'var(--light-green)',marginLeft:'8px'}}/>
+						</Fab>
+					</div>
+			</div>)
+		} else if (stageIndex === 3) { // thanks
+			return (<div style={{padding: '16px'}}>
+				<Typography variant="h6" gutterBottom>
+					<Localized id="headings_thanks_stage" />
+				</Typography>
+
+				<Typography variant="body1" gutterBottom>
+					<Localized id="after_questions_thanks_text" />
+				</Typography>
+	
+					<div style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						margin: '32px 0 64px 0'
+					}}>
 						<Fab
 							onClick={this.finish}
 							variant="extended"

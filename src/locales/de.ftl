@@ -63,6 +63,7 @@ agree = Zustimmen
 back = Zurück
 next = Weiter
 save = Speichern
+suggest = Vorschlagen
 finish = Fertig
 questions_are_loading = Die Fragen werden geladen…
 
@@ -76,6 +77,9 @@ privacy_info =
 
 sources_info = Gib an woher du die Infos hast.
 sources_placeholder = „Eigenes Wissen”, Links zu Webseiten, ...
+
+headings_thanks_stage = Danke
+after_questions_thanks_text = Danke, dass du die Karte verbessert hast! Wir werden deine Vorschläge prüfen.
 
 
 

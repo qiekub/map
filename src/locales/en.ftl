@@ -66,6 +66,7 @@ agree = Agree
 back = Back
 next = Next
 save = Save
+suggest = Suggest
 finish = Finish
 questions_are_loading = The questions are loading…
 
@@ -79,6 +80,9 @@ privacy_info =
 
 sources_info = Name the source of your info.
 sources_placeholder = "Personal knowledge", links to websites...
+
+headings_thanks_stage = Thanks
+after_questions_thanks_text = Thanks for improving the map! We'll check your suggestions.
 
 
 
