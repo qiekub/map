@@ -646,7 +646,14 @@ for (const preset_key in id_presets) {
 			// moreFields: preset.moreFields || [],
 
 			name: preset_translations.name || {'en':preset.name},
-			terms: preset_translations.terms || preset.terms.join(' ') || '',
+			terms: (
+				preset_translations.terms
+				|| (
+					Array.isArray(preset.terms)
+					? preset.terms.join(' ')
+					: ''
+				)
+			),
 
 			...get_preset_overwrite(preset_key),
 		}
