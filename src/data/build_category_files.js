@@ -587,6 +587,35 @@ const preset_overwrites = {
 	'healthcare': {
 		icon: 'local_hospital', // 'healing',
 	},
+
+	'building': {
+		icon: 'house',
+	},
+	'building/farm': {
+		name: {
+			'de': 'Bauernhaus',
+			'en': 'Residential Farm House',
+		},
+	},
+	'building/farm_auxiliary': {
+		name: {
+			'de': 'Landwirtschaftliches Nutzgebäude',
+			'en': 'Farm Building',
+		},
+	},
+
+	'place/farm': {
+		searchable: false,
+	},
+	'landuse/farm': {
+		searchable: false,
+	},
+	'landuse/farmland': {
+		icon: 'agriculture',
+	},
+	'landuse/farmyard': {
+		icon: 'agriculture',
+	},
 }
 const preset_overwrites_sorted = Object.entries(preset_overwrites).sort((a,b)=>b[0].length-a[0].length)
 
