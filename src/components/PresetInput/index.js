@@ -87,7 +87,7 @@ class PresetInput extends React.Component {
 
 	presetChanged(event, value){
 		if (this.props.onChange) {
-			this.props.onChange(value.key || undefined)
+			this.props.onChange(value && value.key ? value.key : null)
 		}
 	}
 
