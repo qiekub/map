@@ -81,11 +81,12 @@ class MainDrawerContent extends React.Component {
 		return (<>
 			<List
 				dense
-				style={{
-					paddingRight: '64px',
-				}}
 			>
-				<ListItem>
+				<ListItem
+					style={{
+						paddingRight: '64px',
+					}}
+				>
 					<ListItemText
 						primary="QueerMap"
 						secondary={
