@@ -316,7 +316,7 @@ class Sidebar extends React.Component {
 								zoomLevel = 17
 							}
 	
-							if (doc.properties.geometry) {
+							if (!!doc.properties.geometry && !!doc.properties.geometry.location) {
 								if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
 									this.props.globals.mainMapFunctions.setView(
 										(
@@ -336,15 +336,15 @@ class Sidebar extends React.Component {
 								// 		}
 								// 	)
 								}
-							}
 	
-							if (!this.props.globals.isSmallScreen) {
-								const docLocation = doc.properties.geometry.location
-								const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
-								if (asPixel.x < 400) {
-									this.props.globals.mainMapFunctions.panTo(
-										this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
-									)
+								if (!this.props.globals.isSmallScreen) {
+									const docLocation = doc.properties.geometry.location
+									const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
+									if (asPixel.x < 400) {
+										this.props.globals.mainMapFunctions.panTo(
+											this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+										)
+									}
 								}
 							}
 	
