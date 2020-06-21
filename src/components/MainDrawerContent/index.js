@@ -18,10 +18,11 @@ import {
 } from '@material-ui/core'
 
 import {
-	// ContactSupportRounded as ContactSupportIcon,
 	// FullscreenRounded as FullscreenIcon,
 	// FullscreenExitRounded as FullscreenExitIcon,
 	HistoryRounded as HistoryIcon,
+	PriorityHighRounded as PriorityHighIcon,
+	EmailRounded as EmailIcon,
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
@@ -255,7 +256,10 @@ class MainDrawerContent extends React.Component {
 					aria-label={this.props.getString('imprint')}
 					title={this.props.getString('imprint')}
 				>
-					<ListItemText inset primary={this.props.getString('imprint')} />
+					<ListItemIcon>
+						<PriorityHighIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('imprint')} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
@@ -263,14 +267,20 @@ class MainDrawerContent extends React.Component {
 					aria-label={this.props.getString('privacy_policy')}
 					title={this.props.getString('privacy_policy')}
 				>
-					<ListItemText inset primary={this.props.getString('privacy_policy')} />
+					<ListItemIcon>
+						<PriorityHighIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('privacy_policy')} />
 				</ListItemLink>
 				<ListItemLink
 					href="mailto:thomas.rosen@qiekub.org"
 					aria-label={this.props.getString('contact')}
 					title={this.props.getString('contact')}
 				>
-					<ListItemText inset primary={this.props.getString('contact')} />
+					<ListItemIcon>
+						<EmailIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
 		
