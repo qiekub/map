@@ -2,6 +2,7 @@ import React from 'react'
 // import './index.css'
 
 import { withLocalization, Localized } from '../Localized/'
+import { withGlobals } from '../Globals/'
 
 import {
 	// Button,
@@ -17,10 +18,10 @@ import {
 } from '@material-ui/core'
 
 import {
-	// HistoryRounded as HistoryIcon,
 	// ContactSupportRounded as ContactSupportIcon,
 	// FullscreenRounded as FullscreenIcon,
 	// FullscreenExitRounded as FullscreenExitIcon,
+	HistoryRounded as HistoryIcon,
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
@@ -124,6 +125,28 @@ class MainDrawerContent extends React.Component {
 				*/}
 			</List>
 		
+
+			{
+				!!this.props.globals.profileID
+				? (<>
+					<Divider />
+	
+					<List
+						dense
+					>
+						<ListItemLink
+							target="_blank"
+							href="https://map.qiekub.org/changesets/"
+						>
+							<ListItemIcon>
+								<HistoryIcon />
+							</ListItemIcon>
+							<ListItemText primary={<Localized id="changesets" />} />
+						</ListItemLink>
+					</List>
+				</>)
+				: null
+			}
 
 			<Divider />
 		
@@ -347,6 +370,6 @@ class MainDrawerContent extends React.Component {
 	}
 }
 
-export default withLocalization(withTheme(MainDrawerContent))
+export default withGlobals(withLocalization(withTheme(MainDrawerContent)))
 
 
