@@ -1,7 +1,7 @@
 import React from 'react'
 // import './index.css'
 
-import { withLocalization/*, Localized*/ } from '../Localized/'
+import { withLocalization, Localized } from '../Localized/'
 
 import {
 	// Button,
@@ -88,7 +88,14 @@ class MainDrawerContent extends React.Component {
 				<ListItem>
 					<ListItemText
 						primary="QueerMap"
-						secondary={<>by <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/">Qiekub</Link></>}
+						secondary={
+							<Localized
+								id="by_brandname_link"
+								elems={{
+									mainlink: <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/" />,
+								}}
+							/>
+						}
 						primaryTypographyProps={{
 							variant: 'h4',
 						}}
@@ -100,19 +107,19 @@ class MainDrawerContent extends React.Component {
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="About" />
+					<ListItemText inset primary={<Localized id="about" />} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="Blog" />
+					<ListItemText inset primary={<Localized id="blog" />} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="Similar Projects" />
+					<ListItemText inset primary={<Localized id="similar_projects" />} />
 				</ListItemLink>
 				*/}
 			</List>
@@ -123,7 +130,11 @@ class MainDrawerContent extends React.Component {
 		
 			<List
 				dense
-				subheader={<ListSubheader disableSticky>Follow us on...</ListSubheader>}
+				subheader={
+					<ListSubheader disableSticky>
+						<Localized id="subheader_follow_us" />
+					</ListSubheader>
+				}
 			>
 				<ListItemLink
 					target="_blank"
@@ -209,7 +220,11 @@ class MainDrawerContent extends React.Component {
 		
 			<List
 				dense
-				subheader={<ListSubheader disableSticky>Legal</ListSubheader>}
+				subheader={
+					<ListSubheader disableSticky>
+						<Localized id="subheader_legal" />
+					</ListSubheader>
+				}
 			>
 				<ListItemLink
 					target="_blank"

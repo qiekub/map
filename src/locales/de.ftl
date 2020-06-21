@@ -43,6 +43,16 @@ must_have_undecided_changes = Muss es unentschiedene Änderungen haben?
 
 
 # MainDrawerContent
+subheader_follow_us = Folg uns auf ...
+subheader_legal = Rechtliches
+
+by_brandname_link = von <mainlink>Qiekub</mainlink>
+
+changesets = Ausstehende Änderungen
+about = Über uns
+blog = Blog
+similar_projects = Ähnliche Projekte
+
 imprint = Impressum
 privacy_policy = Datenschutzerklärung
 contact = Kontakt
