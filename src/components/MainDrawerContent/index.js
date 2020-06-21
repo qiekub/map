@@ -18,8 +18,6 @@ import {
 } from '@material-ui/core'
 
 import {
-	// FullscreenRounded as FullscreenIcon,
-	// FullscreenExitRounded as FullscreenExitIcon,
 	HistoryRounded as HistoryIcon,
 	PriorityHighRounded as PriorityHighIcon,
 	EmailRounded as EmailIcon,
