@@ -60,6 +60,7 @@ class SearchBar extends React.Component {
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
 		this.closeSidebar = this.closeSidebar.bind(this)
+		this.closeMainDrawer = this.closeMainDrawer.bind(this)
 		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
 
 		this.loadSearchResults = this.loadSearchResults.bind(this)
@@ -239,6 +240,9 @@ class SearchBar extends React.Component {
 		})
 	}
 
+	closeMainDrawer(){
+		this.setState({isMainDrawerOpen:false})
+	}
 	toggleMainDrawer(){
 		this.setState((state,props)=>{
 			return {isMainDrawerOpen:!state.isMainDrawerOpen}
@@ -293,7 +297,7 @@ class SearchBar extends React.Component {
 				open={this.state.isMainDrawerOpen}
 				onClose={this.toggleMainDrawer}
 			>
-				<MainDrawerContent />
+				<MainDrawerContent onClose={this.closeMainDrawer}/>
 			</Drawer>
 
 			<Paper

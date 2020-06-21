@@ -41,8 +41,17 @@ const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 class MainDrawerContent extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this.viewChangesets = this.viewChangesets.bind(this)
+	}
+
 	async viewChangesets(){
 		await navigate('/changesets/')
+		if (this.props.onClose) {
+			this.props.onClose()
+		}
 	}
 
 	render() {
