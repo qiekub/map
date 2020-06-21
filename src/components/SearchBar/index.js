@@ -358,6 +358,7 @@ class SearchBar extends React.Component {
 												style={{
 													color: (
 														result.___preset.icon
+														&& !!result.___color
 														? (
 															result.___color.key === 'default'
 															? result.___color.bg
@@ -367,6 +368,7 @@ class SearchBar extends React.Component {
 													),
 													backgroundColor: (
 														result.___preset.icon
+														&& !!result.___color
 														? (
 															result.___color.key === 'default'
 															? ''
