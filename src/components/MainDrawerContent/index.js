@@ -116,7 +116,7 @@ class MainDrawerContent extends React.Component {
 						}}
 					/>
 				</ListItem>
-		
+
 				{/*
 				<ListItemLink
 					target="_blank"
