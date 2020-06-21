@@ -56,10 +56,6 @@ similar_projects = Similar Projects
 imprint = Imprint
 privacy_policy = Privacy Policy
 contact = Contact
-github_button = Contribute on Github
-follow_button_facebook = Follow us on Facebook
-follow_button_instagram = Follow us on Instagram
-follow_button_twitter = Follow us on Twitter
 
 
 

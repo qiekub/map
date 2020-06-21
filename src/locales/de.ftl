@@ -56,7 +56,6 @@ similar_projects = Ähnliche Projekte
 imprint = Impressum
 privacy_policy = Datenschutzerklärung
 contact = Kontakt
-github_button = Auf Github mitmachen
 
 
 
