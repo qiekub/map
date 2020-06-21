@@ -3,6 +3,7 @@ import React from 'react'
 
 import { withLocalization, Localized } from '../Localized/'
 import { withGlobals } from '../Globals/'
+import { navigate } from '@reach/router'
 
 import {
 	// Button,
@@ -40,6 +41,10 @@ const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 class MainDrawerContent extends React.Component {
+	async viewChangesets(){
+		await navigate('/changesets/')
+	}
+
 	render() {
 
 		/*
@@ -135,8 +140,7 @@ class MainDrawerContent extends React.Component {
 						dense
 					>
 						<ListItemLink
-							target="_blank"
-							href="https://map.qiekub.org/changesets/"
+							onClick={this.viewChangesets}
 						>
 							<ListItemIcon>
 								<HistoryIcon />
