@@ -16,6 +16,7 @@ import { withLocalStorage } from '../LocalStorage/'
 
 import {
 	whoami as query_whoami,
+	countries as query_countries,
 } from '../../queries.js'
 
 const isDevEnvironment = (local_ip !== '')
@@ -133,9 +134,66 @@ class GlobalsProvider extends React.Component {
 		// 	}
 		// }
 
+		this.country_by_iso = null
+		this.saved_country_callbacks = []
+
+		this.getCountryByCode_internal = this.getCountryByCode_internal.bind(this)
+		this.getCountryByCode = this.getCountryByCode.bind(this)
+	}
+
+	componentDidMount(){
 		getInitialGlobalState(globalState=>{
-			this.setState(globalState)
+			this.setState({
+				...globalState,
+				getCountryByCode: this.getCountryByCode,
+			}, ()=>{
+				this.getCountryByCode()
+			})
 		})
+	}
+
+	getCountryByCode_internal(iso_a3){
+		return this.country_by_iso[iso_a3]
+	}
+
+	getCountryByCode(iso_a3, callback){
+		if (iso_a3 && callback) {
+			this.saved_country_callbacks.push(()=>{
+				callback(this.getCountryByCode_internal(iso_a3))
+			})
+		}
+
+		if (this.country_by_iso === null) {
+			if (!!this.state.graphql) {
+				const ios_tag_key = 'ISO3166-1:alpha3'
+				this.state.graphql.watchQuery({
+					fetchPolicy: 'cache-and-network',
+					query: query_countries,
+					variables: {
+						wantedTags: [ios_tag_key],
+					},
+				})
+				.subscribe(({data}) => {
+					if (this.country_by_iso === null && !!data && !!data.countries) {
+						const country_by_iso = {}
+		
+						for (const doc of data.countries) {
+							country_by_iso[doc.properties.tags[ios_tag_key]] = doc
+						}
+		
+						this.country_by_iso = country_by_iso
+	
+						for (const saved_country_callback of this.saved_country_callbacks) {
+							saved_country_callback()
+						}
+					}
+				})
+			}
+		}else{
+			for (const saved_country_callback of this.saved_country_callbacks) {
+				saved_country_callback()
+			}
+		}
 	}
 
 	render() {

@@ -10,7 +10,6 @@ import { Localized, withLocalization } from '../Localized/'
 import { navigate } from '@reach/router'
 import {
 	place as query_place,
-	country as query_country,
 	id as query_id,
 	// changesets as query_changesets,
 	// addEdge as mutate_addEdge,
@@ -209,15 +208,19 @@ class SidebarPlace extends React.Component {
 					}else{
 						this.editNewDoc(docID, 'Place')
 					}
-				} else if (action === 'view' || action === 'country') {
+				} else if (action === 'country') {
 					if (!!docID && docID !== '') {
-						this.loadAndViewDoc(action, docID, ()=>{
+						this.navigateToPlaceByCountryCode(docID) // docID is the country-code
+					}
+				}  else if (action === 'view') {
+					if (!!docID && docID !== '') {
+						this.loadAndViewDoc(docID, ()=>{
 							this.setState({page:'view'})
 						})
 					}
 				} else if (action === 'edit') {
 					if (!!docID && docID !== '') {
-						this.loadAndViewDoc(action, docID, ()=>{
+						this.loadAndViewDoc(docID, ()=>{
 							this.setState({page:'edit'})
 						})
 					}
@@ -242,22 +245,19 @@ class SidebarPlace extends React.Component {
 			})
 		}
 	}
-
-	loadCountry(countryCode, callback){
-		if (!!countryCode && countryCode !== '' && countryCode.length === 3) {
-			this.placeQuerySubscription = this.props.globals.graphql.watchQuery({
-				fetchPolicy: 'cache-and-network',
-				query: query_country,
-				variables: {
-					languages: navigator.languages,
-					countryCode: countryCode,
-					wantedTags: this.wantedTagsList,
-				},
+	navigateToPlaceByCountryCode(iso_code){
+		if (!this.isNavigatingToPlaceByCountryCode) {
+			this.isNavigatingToPlaceByCountryCode = true
+			this.props.globals.getCountryByCode(iso_code, async countryDoc => {
+				if (!!countryDoc && !!countryDoc._id) {
+					await navigate(`/view/${countryDoc._id}/`, { replace: true })
+				}
+				delete this.isNavigatingToPlaceByCountryCode
 			})
-			.subscribe(({data}) => callback(data))
 		}
 	}
-	loadPlace(docID, callback){
+
+	loadAndViewDoc(docID, callback){
 		if (!!docID && docID !== '' && docID.length > 1 && /\S/.test(docID)) {
 			this.placeQuerySubscription = this.props.globals.graphql.watchQuery({
 				fetchPolicy: 'cache-and-network',
@@ -268,8 +268,6 @@ class SidebarPlace extends React.Component {
 					wantedTags: this.wantedTagsList,
 				},
 			})
-			.subscribe(({data}) => callback(data))
-			/*
 			.subscribe(({data}) => {
 				if (!!data && !!data.place) {
 					const doc = data.place
@@ -322,34 +320,51 @@ class SidebarPlace extends React.Component {
 								zoomLevel = 17
 							}
 	
-							if (!!doc.properties.geometry && !!doc.properties.geometry.location) {
+							if (!!doc.properties.geometry) {
 								if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
-									this.props.globals.mainMapFunctions.setView(
-										(
-											this.props.globals.isSmallScreen
-											? doc.properties.geometry.location
-											: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
-										),
-										zoomLevel
-									)
-								// }else{
-								// 	this.props.globals.mainMapFunctions.flyTo(
-								// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-								// 		zoomLevel,
-								// 		{
-								// 			animate: true,
-								// 			duration: 1,
-								// 		}
-								// 	)
+									if (!!doc.properties.geometry.boundingbox) {
+										this.props.globals.mainMapFunctions.fitBounds([
+											[
+												doc.properties.geometry.boundingbox.southwest.lat,
+												doc.properties.geometry.boundingbox.southwest.lng,
+											],
+											[
+												doc.properties.geometry.boundingbox.northeast.lat,
+												doc.properties.geometry.boundingbox.northeast.lng,
+											]
+										])
+									} else if (!!doc.properties.geometry.location) {
+										this.props.globals.mainMapFunctions.setView(
+											(
+												this.props.globals.isSmallScreen
+												? doc.properties.geometry.location
+												: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
+											),
+											zoomLevel
+										)
+									// }else{
+									// 	this.props.globals.mainMapFunctions.flyTo(
+									// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
+									// 		zoomLevel,
+									// 		{
+									// 			animate: true,
+									// 			duration: 1,
+									// 		}
+									// 	)
+									}
 								}
 	
 								if (!this.props.globals.isSmallScreen) {
-									const docLocation = doc.properties.geometry.location
-									const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
-									if (asPixel.x < 400) {
-										this.props.globals.mainMapFunctions.panTo(
-											this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
-										)
+									if (!!doc.properties.geometry.boundingbox) {
+										// not implementable
+									}else if (!!doc.properties.geometry.location) {
+										const docLocation = doc.properties.geometry.location
+										const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
+										if (asPixel.x < 400) {
+											this.props.globals.mainMapFunctions.panTo(
+												this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+											)
+										}
 									}
 								}
 							}
@@ -364,155 +379,9 @@ class SidebarPlace extends React.Component {
 					}
 				}
 			})
-			*/
 		}
 	}
 
-	loadAndViewDoc(action, docID, callback){
-		if (action === 'country') {
-			this.loadCountry(docID, data => {
-				this.afterLoadingPlaceDoc(data, callback)
-			})
-		}else{
-			this.loadPlace(docID, data => {
-				this.afterLoadingPlaceDoc(data, callback)
-			})
-		}
-	}
-	afterLoadingPlaceDoc(data, callback){
-				if (!!data && !!data.doc) {
-					const doc = data.doc
-
-					if (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-						doc._id === this.docID // country problem
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-						&& (
-							this.docCache === null
-							|| (this.docCache !== null && doc._id !== this.docCache._id)
-						)
-					) {
-						this.docCache = doc
-
-						this.loadChangesets(doc._id)
-					
-						if (this.props.onDontFilterTheseIds) {
-							this.props.onDontFilterTheseIds([doc._id])
-						}
-
-						const preset = doc.properties.tags.preset
-
-						doc.___preset = (
-							!!preset && !!presets[preset]
-							? {
-								key: preset,
-								...presets[preset],
-							}
-							: presets.default
-						)
-						doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
-	
-						this.setState({
-							doc: doc,
-							page: 'view',
-							headerText: (
-								doc &&
-								doc.properties &&
-								doc.properties.name &&
-								doc.properties.name.length > 0
-								? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
-								: ''
-							),
-						}, ()=>{
-							if (typeof callback === 'function') {
-								callback()
-							}
-			
-							let zoomLevel = this.props.globals.mainMapFunctions.getZoom()
-							if (zoomLevel < 17) {
-								zoomLevel = 17
-							}
-	
-							if (!!doc.properties.geometry && !!doc.properties.geometry.location) {
-								if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
-									this.props.globals.mainMapFunctions.setView(
-										(
-											this.props.globals.isSmallScreen
-											? doc.properties.geometry.location
-											: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
-										),
-										zoomLevel
-									)
-								// }else{
-								// 	this.props.globals.mainMapFunctions.flyTo(
-								// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
-								// 		zoomLevel,
-								// 		{
-								// 			animate: true,
-								// 			duration: 1,
-								// 		}
-								// 	)
-								}
-	
-								if (!this.props.globals.isSmallScreen) {
-									const docLocation = doc.properties.geometry.location
-									const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
-									if (asPixel.x < 400) {
-										this.props.globals.mainMapFunctions.panTo(
-											this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
-										)
-									}
-								}
-							}
-	
-							this.props.onSetSidebarIsOpen(true)
-							this.props.onSetSearchBarValue(this.state.headerText)
-						})
-					}else{
-						if (typeof callback === 'function') {
-							callback()
-						}
-					}
-				}
-	}
 
 
 	loadChangesets(docID){
