@@ -91,6 +91,7 @@ class MainMap extends React.Component {
 				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
 				zoomIn: () => this.map.zoomIn(),
+				fitBounds: (...attr) => this.map.fitBounds(...attr),
 				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
 				panBy: (...attr) => this.map.panBy(...attr),
