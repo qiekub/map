@@ -1128,7 +1128,6 @@ class SidebarPlace extends React.Component {
 		return this.state.changesets.map(changeset => <Changeset key={changeset._id} changeset={changeset} variant="outlined" />)
 	}
 
-
 	renderSuggestions(){
 		const changesets = this.state.changesets || []
 
