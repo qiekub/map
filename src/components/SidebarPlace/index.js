@@ -170,6 +170,8 @@ class SidebarPlace extends React.Component {
 
 		this.checkIfDocIdChanged = this.checkIfDocIdChanged.bind(this)
 		this.abortEdit = this.abortEdit.bind(this)
+
+		this.chipFunction = this.chipFunction.bind(this)
 	}
 
 	componentDidMount(){
@@ -580,6 +582,17 @@ class SidebarPlace extends React.Component {
 		}
 	}
 
+	chipFunction(label){
+		return (<Chip
+			size="small"
+			style={{
+				margin: '0 4px 4px 0',
+			}}
+			key={label}
+			label={this.props.getString(label.replace(/:/g, '_'), null, label)}
+		/>)
+	}
+
 	getAgeRangeText(min_age,max_age){
 		min_age = Number.parseInt(min_age)
 		max_age = Number.parseInt(max_age)
@@ -733,15 +746,6 @@ class SidebarPlace extends React.Component {
 
 		const age_range_text = this.getAgeRangeText(tags.min_age, tags.max_age)
 
-		const chipFunction = label => (<Chip
-			size="small"
-			style={{
-				margin: '0 4px 4px 0',
-			}}
-			key={label}
-			label={this.props.getString(label.replace(/:/g, '_'), null, label)}
-		/>)
-
 		return (
 			<List key="Audience" dense>
 				<ListItem>
@@ -771,7 +775,7 @@ class SidebarPlace extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('audience_only_heading')}&nbsp; {audience.only.map(chipFunction)}
+									{this.props.getString('audience_only_heading')}&nbsp; {audience.only.map(this.chipFunction)}
 								</>}
 							/>
 						</ListItem>
@@ -789,7 +793,7 @@ class SidebarPlace extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('audience_primary_heading')}&nbsp; {audience.primary.map(chipFunction)}
+									{this.props.getString('audience_primary_heading')}&nbsp; {audience.primary.map(this.chipFunction)}
 								</>}
 							/>
 						</ListItem>
@@ -807,7 +811,7 @@ class SidebarPlace extends React.Component {
 									component: 'div',
 								}}
 								primary={<>
-									{this.props.getString('audience_welcome_heading')}&nbsp; {audience.welcome.map(chipFunction)}
+									{this.props.getString('audience_welcome_heading')}&nbsp; {audience.welcome.map(this.chipFunction)}
 								</>}
 							/>
 						</ListItem>
