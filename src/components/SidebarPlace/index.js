@@ -11,8 +11,6 @@ import { navigate } from '@reach/router'
 import {
 	place as query_place,
 	id as query_id,
-	// changesets as query_changesets,
-	// addEdge as mutate_addEdge,
 	undecidedChangesets as query_undecidedChangesets,
 } from '../../queries.js'
 
