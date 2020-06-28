@@ -158,6 +158,43 @@ max_age_text = Till age {$age}.
 min_age_text = Age {$age} and up.
 age_range_text = Ages {$min_age} to {$max_age}.
 
+ilga_heading_main = ILGA Dicrimination Information
+ilga_heading_criminalisation = Are consensual same-sex sexual acts legal?
+ilga_heading_penalty = What is the penalty for same-sex sexual acts?
+ilga_heading_protection = How are queer people protected?
+ilga_heading_recognition = How can same-sex couples be together?
+
+ilga_data_source_info_text = The data is from the <dataset_link>2019 Homophobia Dataset</dataset_link> from ILGA.
+# ilga_data_source_info_text = The information are from the <dataset_link>2019 State Sponsored Homophobia Dataset</dataset_link> from ILGA.
+
+criminalisation_legality_legal_for_all = Legal for all!
+criminalisation_legality_legal_for_males = Legal for males.
+criminalisation_legality_legal_for_female = Legal for females.
+criminalisation_legality_illegal_for_all = Illegal for all!
+criminalisation_legality_illegal_for_males = Illegal for males.
+criminalisation_legality_illegal_for_female = Illegal for female.
+criminalisation_legality_unknown = The legality is unknown.
+
+criminalisation_penalty_none = No penalty!
+# criminalisation_penalty_none = No imprisonment!
+# criminalisation_penalty_none = Not applicable!
+criminalisation_penalty_max_death = Death sentence!
+criminalisation_penalty_max_years = Maximum {$n} years in prison.
+criminalisation_penalty_max_lifetime = Lifetime imprisonment.
+
+protection_none = No protection!
+protection_constitutional = Constitutional
+protection_broad_protections = Broad Protections / Other
+protection_employment = Employment
+protection_hate_crime = Hate Crime
+protection_incitement = Incitement to Hatred / Violence
+protection_ct_ban = Conversion Therapy Ban
+
+recognition_second_parent_adoption = Second parent adoption
+recognition_joint_adoption = Joint adoption
+recognition_civil_unions = Civil unions
+recognition_marriage = Marriage
+
 
 
 # GeoInput
