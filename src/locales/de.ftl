@@ -117,6 +117,7 @@ open_menu_aria_label = Menü öffnen
 close_sidebar_aria_label = Infos schließen
 
 places_listheading = Orte
+countries_listheading = Länder
 addresses_listheading = Adressen
 
 
