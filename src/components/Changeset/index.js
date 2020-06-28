@@ -134,7 +134,7 @@ const Changeset = ({theme, changeset, globals, variant}) => {
 																verticalAlign: 'top',
 															}}>
 																<TableCell component="th" scope="row">{tag}</TableCell>
-																<TableCell>{value.toString()}</TableCell>
+																<TableCell>{!!value ? value.toString() : ''}</TableCell>
 															</TableRow>
 														))}
 													</TableBody>
