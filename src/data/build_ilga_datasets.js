@@ -15,7 +15,7 @@ const synonyms = {
 	'Cape Verde': "Cabo Verde", // TODO: Is this correct?
 
 	// from 2019:
-	'Eswatini': null, // TODO: what is this?
+	'Eswatini': 'Swati', // War früher Swasiland.
 	'St Kitts & Nevis': 'Saint Kitts and Nevis',
 	'St Lucia': 'Saint Lucia',
 	'St Vincent & the Grenadines': 'Saint Vincent and the Grenadines',
