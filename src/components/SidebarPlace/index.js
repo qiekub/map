@@ -602,6 +602,10 @@ class SidebarPlace extends React.Component {
 				recognition_status = 'bad'
 			}
 
+			if (recognition_secondary.length === 0) {
+				recognition_secondary.push('recognition:none')
+			}
+
 			recognition_secondary = recognition_secondary.map(this.chipFunction)
 
 			return (<>

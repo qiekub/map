@@ -190,6 +190,8 @@ protection_hate_crime = Hate Crime
 protection_incitement = Incitement to Hatred / Violence
 protection_ct_ban = Conversion Therapy Ban
 
+recognition_none = No recognition!
+# recognition_none = Same-sex couples aren't recognised!
 recognition_second_parent_adoption = Second parent adoption
 recognition_joint_adoption = Joint adoption
 recognition_civil_unions = Civil unions
