@@ -161,22 +161,17 @@ function build_2019(){
 				key === 'penalty:max'
 			) {
 				if (!isNaN(value)) {
-					key = 'penalty:max:years'
-					return value*1
+					return {k:'penalty:max:years',v:value*1}
 				} else if (value === 'DOES NOT APPLY') {
 					return null
 				} else if (value === 'FOR LIFE') {
-					key = 'penalty:max:lifetime'
-					return true
+					return {k:'penalty:max:lifetime',v:true}
 				} else if (value === 'DEATH') {
-					key = 'penalty:max:death'
-					return true
+					return {k:'penalty:max:death',v:true}
 				} else if (value === 'DEATH (NOT)') {
-					key = 'penalty:max:death'
-					return true
+					return {k:'penalty:max:death',v:true}
 				} else if (value === 'DEATH (REG)') {
-					key = 'penalty:max:death'
-					return true
+					return {k:'penalty:max:death',v:true}
 				} else if (value === 'UNDETERMINED') {
 					// return 'UNDETERMINED'
 					return null
@@ -221,7 +216,18 @@ function build_2019(){
 		const keys = Object.keys(data)
 		for (const key of keys) {
 			if (key !== country_key) {
-				new_object[key] = data[key][index]
+				const value = data[key][index]
+				if (value !== null) {
+					if (
+						typeof value === 'object'
+						&& value.k
+						&& value.v !== null
+					) {
+						new_object[value.k] = value.v
+					}else{
+						new_object[key] = value
+					}
+				}
 			}
 		}
 
@@ -332,14 +338,11 @@ function build_2017(){
 						return 'legal_for_females'
 					}
 				}else if (key === 'penalty:max:2y') {
-					key = 'penalty:max:years'
-					return 2
+					return {k:'penalty:max:years',v:2}
 				}else if (key === 'penalty:max:7y') {
-					key = 'penalty:max:years'
-					return 7
+					return {k:'penalty:max:years',v:7}
 				}else if (key === 'penalty:max:13y') {
-					key = 'penalty:max:years'
-					return 13
+					return {k:'penalty:max:years',v:13}
 				}else if (key === 'penalty:max:lifetime') {
 					if (value === '') {
 						return false
@@ -381,7 +384,18 @@ function build_2017(){
 		const keys = Object.keys(data)
 		for (const key of keys) {
 			if (key !== country_key) {
-				new_object[key] = data[key][index]
+				const value = data[key][index]
+				if (value !== null) {
+					if (
+						typeof value === 'object'
+						&& value.k
+						&& value.v !== null
+					) {
+						new_object[value.k] = value.v
+					}else{
+						new_object[key] = value
+					}
+				}
 			}
 		}
 
@@ -509,14 +523,11 @@ function build_2016(){
 						return 'legal_for_females'
 					}
 				}else if (key === 'penalty:max:2y') {
-					key = 'penalty:max:years'
-					return 2
+					return {k:'penalty:max:years',v:2}
 				}else if (key === 'penalty:max:7y') {
-					key = 'penalty:max:years'
-					return 7
+					return {k:'penalty:max:years',v:7}
 				}else if (key === 'penalty:max:14y') {
-					key = 'penalty:max:years'
-					return 14
+					return {k:'penalty:max:years',v:14}
 				}else if (key === 'penalty:max:lifetime') {
 					if (value === '') {
 						return false
@@ -559,7 +570,18 @@ function build_2016(){
 		const keys = Object.keys(data)
 		for (const key of keys) {
 			if (key !== country_key) {
-				new_object[key] = data[key][index]
+				const value = data[key][index]
+				if (value !== null) {
+					if (
+						typeof value === 'object'
+						&& value.k
+						&& value.v !== null
+					) {
+						new_object[value.k] = value.v
+					}else{
+						new_object[key] = value
+					}
+				}
 			}
 		}
 
