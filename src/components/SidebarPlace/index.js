@@ -498,11 +498,22 @@ class SidebarPlace extends React.Component {
 				'illegal_for_female',
 				'unknown',
 			]
+
+			const legality_key = 'criminalisation:legality'
+			const gender_key = 'criminalisation:legality:by_gender'
+
 			let criminalisation_secondary = 'criminalisation:legality:unknown'
-			if (ilga['criminalisation:legality'] === true) {
-				criminalisation_secondary = 'criminalisation:legality:legal_for_all'
-			} else if (legality_values.includes(ilga['criminalisation:legality'])) {
-				criminalisation_secondary = 'criminalisation:legality:'+ilga['criminalisation:legality']
+			if (
+				ilga.hasOwnProperty(gender_key)
+				&& legality_values.includes(ilga[gender_key])
+			) {
+				criminalisation_secondary = 'criminalisation:legality:'+ilga[gender_key]
+			} else if (ilga.hasOwnProperty(legality_key)) {
+				if (ilga[legality_key] === true) {
+					criminalisation_secondary = 'criminalisation:legality:legal_for_all'
+				} else if (ilga[legality_key] === false) {
+					criminalisation_secondary = 'criminalisation:legality:illegal_for_all'
+				}
 			}
 
 			let criminalisation_status = null
