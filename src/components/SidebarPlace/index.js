@@ -685,7 +685,7 @@ class SidebarPlace extends React.Component {
 							<PeopleIcon />
 						</ListItemIcon>
 						<ListItemText
-							primary={<Localized id="ilga_heading_recognition_heading" />}
+							primary={<Localized id="ilga_heading_recognition" />}
 							secondary={recognition_secondary}
 							secondaryTypographyProps={{
 								style: {
