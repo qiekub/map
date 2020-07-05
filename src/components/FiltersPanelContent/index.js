@@ -31,7 +31,7 @@ class FiltersPanelContent extends React.Component {
 		this.state = {
 			category: null,
 			age: null,
-			audience_queer: new Set(),
+			audience_queer: new Set(['only','primary']), // only primary welcome
 			mustHaveUndecidedChangeset: false,
 		}
 
