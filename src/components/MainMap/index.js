@@ -356,7 +356,11 @@ class MainMap extends React.Component {
 				})
 			}
 		
-			leafletMarker.on('click', () => navigate(`/view/${doc._id}/`) )
+			leafletMarker.on('click', () => {
+				if (!this.state.isGeoChooser) {
+					navigate(`/view/${doc._id}/`)
+				}
+			})
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
@@ -627,7 +631,10 @@ class MainMap extends React.Component {
 
 			<Map
 				ref={this.gotMapRef}
-				className="map"
+				className={
+					'map'
+					+(this.state.isGeoChooser ? ' isGeoChooser' : '')
+				}
 
 				onViewportChanged={this.viewportChanged}
 

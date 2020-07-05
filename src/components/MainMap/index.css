@@ -167,6 +167,10 @@
 
 .marker-custom-icon{
 	margin-top: -45px !important;
+	cursor: pointer !important;
+}
+.isGeoChooser .marker-custom-icon{
+	cursor: default !important;
 }
 .marker-custom-icon .wrapper{
 	--bg-color: #f9f9f9; /* #607d8b; */
