@@ -29,7 +29,14 @@ import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
 import FiltersPanelContent from '../FiltersPanelContent/'
 
-// import 'typeface-roboto'
+import Ubuntu_Bold from '../../fonts/Ubuntu/Ubuntu-Bold.ttf'
+import Ubuntu_BoldItalic from '../../fonts/Ubuntu/Ubuntu-BoldItalic.ttf'
+import Ubuntu_Italic from '../../fonts/Ubuntu/Ubuntu-Italic.ttf'
+import Ubuntu_Light from '../../fonts/Ubuntu/Ubuntu-Light.ttf'
+import Ubuntu_LightItalic from '../../fonts/Ubuntu/Ubuntu-LightItalic.ttf'
+import Ubuntu_Medium from '../../fonts/Ubuntu/Ubuntu-Medium.ttf'
+import Ubuntu_MediumItalic from '../../fonts/Ubuntu/Ubuntu-MediumItalic.ttf'
+import Ubuntu_Regular from '../../fonts/Ubuntu/Ubuntu-Regular.ttf'
 
 const defaultTheme = createMuiTheme({
 	palette: {
@@ -138,7 +145,178 @@ class App extends React.Component {
 
 		const error_main = prefersDarkMode ? '#f44' : '#e00'
 
+		const ubuntu_fonts = [
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "italic",
+				fontWeight: "300",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Light Italic'),
+					local('Ubuntu-LightItalic'),
+					url(${Ubuntu_LightItalic}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "italic",
+				fontWeight: "400",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Italic'),
+					local('Ubuntu-Italic'),
+					url(${Ubuntu_Italic}) format('woff2')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "italic",
+				fontWeight: "500",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Medium Italic'),
+					local('Ubuntu-MediumItalic'),
+					url(${Ubuntu_MediumItalic}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "italic",
+				fontWeight: "700",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Bold Italic'),
+					local('Ubuntu-BoldItalic'),
+					url(${Ubuntu_BoldItalic}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "normal",
+				fontWeight: "300",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Light'),
+					local('Ubuntu-Light'),
+					url(${Ubuntu_Light}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "normal",
+				fontWeight: "400",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Regular'),
+					local('Ubuntu-Regular'),
+					url(${Ubuntu_Regular}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "normal",
+				fontWeight: "500",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Medium'),
+					local('Ubuntu-Medium'),
+					url(${Ubuntu_Medium}) format('ttf')
+				`,
+			},
+			{
+				fontFamily: "'Ubuntu'",
+				fontStyle: "normal",
+				fontWeight: "700",
+				fontDisplay: "swap",
+				src: `
+					local('Ubuntu Bold'),
+					local('Ubuntu-Bold'),
+					url(${Ubuntu_Bold}) format('ttf')
+				`,
+			}
+		]
+
 		const theme = createMuiTheme({
+			typography: {
+				fontFamily: [
+					'Ubuntu',
+					'Helvetica',
+					'Arial',
+					'sans-serif',
+					'"Apple Color Emoji"',
+					'"Segoe UI Emoji"',
+					'"Segoe UI Symbol"',
+				].join(','),
+				h1: {
+					fontSize: '98px',
+					fontWeight: 'light',
+					letterSpacing: '-1.5px',
+				},
+				h2: {
+					fontSize: '61px',
+					fontWeight: 'light',
+					letterSpacing: '-0.5px',
+				},
+				h3: {
+					fontSize: '49px',
+					fontWeight: 'normal',
+					letterSpacing: '0px',
+				},
+				h4: {
+					fontSize: '35px',
+					fontWeight: 'normal',
+					letterSpacing: '0.25px',
+				},
+				h5: {
+					fontSize: '24px',
+					fontWeight: 'normal',
+					letterSpacing: '0px',
+				},
+				h6: {
+					fontSize: '20px',
+					fontWeight: 'medium',
+					letterSpacing: '0.015px',
+					// letterSpacing: '0.15px',
+				},
+				subtitle1: {
+					fontSize: '16px',
+					fontWeight: 'normal',
+					letterSpacing: '0.15px',
+				},
+				subtitle2: {
+					fontSize: '14px',
+					fontWeight: 'medium',
+					letterSpacing: '0.1px',
+				},
+				body1: {
+					fontSize: '16px',
+					fontWeight: 'normal',
+					letterSpacing: '0.01px',
+					// letterSpacing: '0.5px',
+				},
+				body2: {
+					fontSize: '14px',
+					fontWeight: 'normal',
+					letterSpacing: '0.01px',
+					// letterSpacing: '0.25px',
+				},
+				button: {
+					fontSize: '14px',
+					fontWeight: 'medium',
+					letterSpacing: '0.25px',
+					// letterSpacing: '1.25px',
+				},
+				caption: {
+					fontSize: '12px',
+					fontWeight: 'normal',
+					letterSpacing: '0.4px',
+				},
+				overline: {
+					fontSize: '10px',
+					fontWeight: 'normal',
+					letterSpacing: '1.5px',
+				},
+			},
 			palette: {
 				type: prefersDarkMode ? 'dark' : 'light',
 				primary: {
@@ -180,6 +358,11 @@ class App extends React.Component {
 				},
 			},
 			overrides: {
+				MuiCssBaseline: {
+					'@global': {
+						'@font-face': ubuntu_fonts,
+					},
+				},
 				MuiLink: {
 					root: {
 						color: secondary_main,
