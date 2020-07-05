@@ -299,4 +299,39 @@
 
 
 
+.leaflet-pane.leaflet-tooltip-pane .leaflet-tooltip:before{
+	display: none;
+}
+.leaflet-pane.leaflet-tooltip-pane .leaflet-tooltip {
+	border: none;
+	padding: 0;
+	margin: 8px 0 0 0;
+	background: none;
+	color: none;
+
+	position: absolute;
+
+	white-space: nowrap;
+	--max-width: 300px;
+	max-width: var(--max-width);
+	overflow: hidden;
+
+	border-radius: 8px;
+	font-size: 0.75rem !important;
+	font-family: "Ubuntu", "Helvetica", "Arial", sans-serif !important;
+	font-weight: 400 !important;
+	letter-spacing: 0.03333em !important;
+	line-height: 20px !important;
+	box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.marker-custom-tooltip{
+	padding: 2px 8px;
+	color: var(--fg-color, white);
+	background: var(--bg-color, black);
+
+	white-space: inherit;
+	max-width: var(--max-width);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 

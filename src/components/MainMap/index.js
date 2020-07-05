@@ -15,7 +15,7 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getColorByPreset, getTranslationFromArray/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -325,12 +325,34 @@ class MainMap extends React.Component {
 				iconSize: L.point(40, 40, true),
 			}))
 			
-			if (!!doc.name && doc.name.length > 0) {
-				leafletMarker.bindTooltip(doc.name[0].text, {
-					sticky: true,
+			if (
+				!(!!leafletMarker.tooltipGotSet) // prevent duplicate tooltips
+				&& !!doc.name
+				&& doc.name.length > 0
+			) {
+				leafletMarker.tooltipGotSet = true // prevent duplicate tooltips
+
+				leafletMarker.bindTooltip(`
+					<div
+						class="marker-custom-tooltip"
+						style="${`
+							--bg-color:${doc.___color.bg};
+							--fg-color:${doc.___color.fg};
+						`}"
+					>
+						${(
+							doc.name &&
+							doc.name.length > 0
+							? getTranslationFromArray(doc.name, this.props.globals.userLocales)
+							: ''
+						)}
+					</div>
+				`, {
+					sticky: false,
 					interactive: false,
 					opacity: 1,
 					permanent: false,
+					direction: 'bottom',
 				})
 			}
 		
