@@ -72,9 +72,9 @@ class FiltersPanelContent extends React.Component {
 	}
 
 	componentDidMount(){
-		// setTimeout(()=>{
-			// this.setValue('age', 27, ()=>{})
-		// }, 1000)
+		if (this.props.onChange) {
+			this.props.onChange(this.getFilterObj())
+		}
 	}
 
 	getFilterObj(){
