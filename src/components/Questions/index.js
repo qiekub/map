@@ -710,6 +710,10 @@ class Questions extends React.Component {
 										}}
 										doc={this.props.doc}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, null)}
+										style={{
+											margin: '4px 0',
+											padding: '0 12px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
 									return (<PresetInput
@@ -717,6 +721,9 @@ class Questions extends React.Component {
 										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
+										style={{
+											margin:'8px 8px 4px 8px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'audience') {
 									return (<AudienceInput
@@ -725,6 +732,9 @@ class Questions extends React.Component {
 										helperText={possibleAnswer.description_translated}
 										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
+										style={{
+											margin:'0 8px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
@@ -738,7 +748,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '8px 8px 4px 8px',
+											margin: '8px 8px 4px',
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'number') {
@@ -752,7 +762,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '8px 8px 4px 8px',
+											margin: '8px 8px 4px',
 										}}
 									/>)
 								}else{

@@ -35,7 +35,7 @@ export default AudienceInput
 
 const accept_type = 'box'
 
-const AudienceInputInner =  ({ defaultValue, onChange }) => {
+const AudienceInputInner =  ({ defaultValue, onChange, style }) => {
 	const [dustbins] = useState([
 		{ value: 'only', label: <Localized id="audience_input_label_only" /> },
 		{ value: 'primary', label: <Localized id="audience_input_label_primary" /> },
@@ -93,7 +93,7 @@ const AudienceInputInner =  ({ defaultValue, onChange }) => {
 	)
 
 	return (
-		<div style={{margin:'0 8px'}}>
+		<div style={style}>
 			<Typography variant="body2" style={{marginBottom: '16px'}}>
 				<Localized id="audience_input_instruction" />
 			</Typography>

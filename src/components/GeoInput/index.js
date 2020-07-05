@@ -160,7 +160,7 @@ class GeoInput extends React.Component {
 	render() {
 		const map_center = this.state.map_center
 		
-		return (<div style={{margin:'4px 8px'}}>
+		return (<div style={this.props.style}>
 			<Typography variant="body2" gutterBottom>
 				<Localized id="instructions" />
 			</Typography>
