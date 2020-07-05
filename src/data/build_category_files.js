@@ -618,6 +618,10 @@ const preset_overwrites = {
 	'landuse/farmyard': {
 		icon: 'agriculture',
 	},
+
+	'boundary/administrative': {
+		icon: 'map', // map place layers miscellaneous_services
+	},
 }
 const preset_overwrites_sorted = Object.entries(preset_overwrites).sort((a,b)=>b[0].length-a[0].length)
 
@@ -686,7 +690,7 @@ const allowed_presets = [
 	// 'aeroway',
 	'amenity',
 	'attraction',
-	// 'boundary',
+	'boundary',
 	// 'building_point',
 	// 'embankment',
 	// 'emergency',
