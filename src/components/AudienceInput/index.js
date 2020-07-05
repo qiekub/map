@@ -13,10 +13,10 @@ import {
 
 import Localized from '../Localized/'
 
-const AudienceInput = ({ defaultValue, onChange }) => {
+const AudienceInput = (props) => {
 	return (
 		<DndProvider backend={Backend}>
-			<AudienceInputInner defaultValue={defaultValue} onChange={onChange} />
+			<AudienceInputInner {...props} />
 		</DndProvider>
 	)
 }
