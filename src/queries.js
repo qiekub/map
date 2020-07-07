@@ -46,11 +46,15 @@ export const place = gql`
 `
 
 export const countries = gql`
-	query($wantedTags: [String]){
+	query($wantedTags: [String], $languages: [String]){
 		countries{
 			_id
 			properties {
 				... on Place {
+					name (languages: $languages){
+						text
+						language
+					}
 					tags(keys: $wantedTags)
 				}
 			}

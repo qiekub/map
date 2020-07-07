@@ -12,20 +12,18 @@ import {
 	place as query_place,
 	id as query_id,
 	undecidedChangesets as query_undecidedChangesets,
+	countrycode as query_countrycode,
 } from '../../queries.js'
 
-import ilga_2019 from '../../data/dist/ilga_2019.json'
 // import categories from '../../data/dist/categories.json'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getAddressFormat, getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getILGA, getAddressFormat, getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
 import {
-	Link,
-
 	Chip,
 	Typography,
 	Fab,
@@ -34,7 +32,6 @@ import {
 	ListItem,
 	ListItemIcon,
 	ListItemText,
-	ListSubheader,
 
 	Paper,
 	Card,
@@ -68,10 +65,6 @@ import {
 	// Done as DoneIcon,
 	// ArrowBack as ArrowBackIcon,
 	// ArrowForward as ArrowForwardIcon,
-
-	PeopleRounded as PeopleIcon,
-	GavelRounded as GavelIcon,
-	LockRounded as LockIcon,
 } from '@material-ui/icons'
 // import {
 // 	Autocomplete
@@ -81,6 +74,7 @@ import { withTheme } from '@material-ui/core/styles'
 import Changeset from '../Changeset/index.js'
 import Questions from '../Questions/'
 import EmojiIcon from '../EmojiIcon/'
+import DiscriminationFacts from '../DiscriminationFacts/'
 
 import yelp_icon from '../../images/yelp.png'
 import facebook_icon from '../../images/facebook.png'
@@ -327,6 +321,10 @@ class SidebarPlace extends React.Component {
 							}
 	
 							if (!!doc.properties.geometry) {
+								if (doc.properties.geometry.location) {
+									this.setCountryCode(doc.properties.geometry.location)
+								}
+
 								if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
 									if (!!doc.properties.geometry.boundingbox) {
 										this.props.globals.mainMapFunctions.fitBounds([
@@ -386,6 +384,36 @@ class SidebarPlace extends React.Component {
 				}
 			})
 		}
+	}
+
+	setCountryCode({lng, lat}){
+		this.props.globals.graphql.query({
+			query: query_countrycode,
+			variables: {
+				lng,
+				lat,
+			},
+		}).then(result => {
+			if (result && result.data && result.data.countrycode) {
+				const alpha3code = result.data.countrycode
+				this.props.globals.getCountryByCode(alpha3code, countryDoc => {
+					this.setState({
+						countryCode: alpha3code,
+						countryDoc,
+					})
+				})
+			}else{
+				this.setState({
+					countryCode: null,
+					countryDoc: null,
+				})
+			}
+		}).catch(error=>{
+			this.setState({
+				countryCode: null,
+				countryDoc: null,
+			})
+		})
 	}
 
 
@@ -469,260 +497,17 @@ class SidebarPlace extends React.Component {
 	}
 
 	renderILGA(tags){
-		const alpha3code = tags['ISO3166-1:alpha3']
-
-		if (
-			tags.preset === 'boundary/administrative'
-			&& alpha3code && ilga_2019[alpha3code]
-		) {
-			const ilga = ilga_2019[alpha3code]
-
-			const statusColor = status => {
-				if (status === 'great') {
-					return this.props.theme.palette.success.main
-				} else if (status === 'ok') {
-					return this.props.theme.palette.warning.main
-				} else if (status === 'bad') {
-					return this.props.theme.palette.error.main
-				}
-				return ''
-			}
-
-			// ### criminalisation:legality
-			const legality_values = [
-				'legal_for_all',
-				'legal_for_males',
-				'legal_for_female',
-				'illegal_for_all',
-				'illegal_for_males',
-				'illegal_for_female',
-				'unknown',
-			]
-
-			const legality_key = 'criminalisation:legality'
-			const gender_key = 'criminalisation:legality:by_gender'
-
-			let criminalisation_secondary = 'criminalisation:legality:unknown'
-			if (
-				ilga.hasOwnProperty(gender_key)
-				&& legality_values.includes(ilga[gender_key])
-			) {
-				criminalisation_secondary = 'criminalisation:legality:'+ilga[gender_key]
-			} else if (ilga.hasOwnProperty(legality_key)) {
-				if (ilga[legality_key] === true) {
-					criminalisation_secondary = 'criminalisation:legality:legal_for_all'
-				} else if (ilga[legality_key] === false) {
-					criminalisation_secondary = 'criminalisation:legality:illegal_for_all'
-				}
-			}
-
-			let criminalisation_status = null
-			if (criminalisation_secondary === 'criminalisation:legality:legal_for_all') {
-				criminalisation_status = 'great'
-			} else if (criminalisation_secondary === 'criminalisation:legality:illegal_for_all') {
-				criminalisation_status = 'bad'
-			} else if (criminalisation_secondary !== 'criminalisation:legality:unknown') {
-				criminalisation_status = 'ok'
-			}
-
-			criminalisation_secondary = this.chipFunction(criminalisation_secondary)
-
-
-			// ### criminalisation:penalty
-			let penalty_secondary = []
-			const penalty_keys = Object.keys(ilga)
-			.filter(key => key.startsWith('criminalisation:penalty:max:'))
-			.sort((a, b) => a-b)
-			
-			for (const key of penalty_keys) {
-				if (ilga[key] === true) {
-					penalty_secondary.push(key)
-				} else if (!isNaN(ilga[key]) && ilga[key] > 0) {
-					penalty_secondary.push(
-						this.props.getString('criminalisation_penalty_max_years', {
-							n: ilga[key],
-						})
-					)
-				}
-			}
-
-			let penalty_status = null
-			if (penalty_secondary.length === 0) {
-				penalty_status = 'great'
-				penalty_secondary.push('criminalisation:penalty:none')
-			} else if (penalty_secondary.length > 0) {
-				if (
-					penalty_secondary.includes('criminalisation:penalty:max:death')
-					|| penalty_secondary.includes('criminalisation:penalty:max:lifetime')
-				) {
-					penalty_status = 'bad'
-				}else{
-					penalty_status = 'ok'
-				}
-			}
-
-			penalty_secondary = penalty_secondary.map(this.chipFunction)
-
-
-			// ### protection
-			let protection_secondary = []
-			const protection_keys = Object.keys(ilga)
-			.filter(key => key.startsWith('protection:'))
-			.sort((a, b) => a-b)
-			
-			for (const key of protection_keys) {
-				if (ilga[key] === true) {
-					protection_secondary.push(key)
-				}
-			}
-
-			let protection_status = null
-			if (protection_secondary.length >= 6) { // max is 6
-				protection_status = 'great'
-			} else if (protection_secondary.length > 0) {
-				protection_status = 'ok'
-			} else {
-				protection_status = 'bad'
-			}
-
-			if (protection_secondary.length === 0) {
-				protection_secondary.push('protection:none')
-			}
-
-			protection_secondary = protection_secondary.map(this.chipFunction)
-
-
-			// ### recognition
-			let recognition_secondary = []
-			const recognition_keys = Object.keys(ilga)
-			.filter(key => key.startsWith('recognition:'))
-			.sort((a, b) => a-b)
-			
-			for (const key of recognition_keys) {
-				if (ilga[key] === true) {
-					recognition_secondary.push(key)
-				}
-			}
-
-			let recognition_status = null
-			if (recognition_secondary.length >= 4) { // max is 4
-				recognition_status = 'great'
-			} else if (recognition_secondary.length > 0) {
-				recognition_status = 'ok'
-			} else {
-				recognition_status = 'bad'
-			}
-
-			if (recognition_secondary.length === 0) {
-				recognition_secondary.push('recognition:none')
-			}
-
-			recognition_secondary = recognition_secondary.map(this.chipFunction)
-
-			return (<>
-				<List key="ILGA" dense subheader={
-					<ListSubheader>
-						<Localized id="ilga_heading_main" />
-					</ListSubheader>
-				}>
-					<ListItem style={{
-						// color: statusColor(criminalisation_status),
-					}}>
-						<ListItemIcon style={{
-							alignSelf: 'flex-start',
-							paddingTop: '12px',
-							color: statusColor(criminalisation_status),
-						}}>
-							<PeopleIcon />
-						</ListItemIcon>
-						<ListItemText
-							primary={<Localized id="ilga_heading_criminalisation" />}
-							secondary={criminalisation_secondary}
-							secondaryTypographyProps={{
-								style: {
-									marginTop: '4px',
-								}
-							}}
-						/>
-					</ListItem>
-					<ListItem style={{
-						// color: statusColor(penalty_status),
-					}}>
-						<ListItemIcon style={{
-							alignSelf: 'flex-start',
-							paddingTop: '12px',
-							color: statusColor(penalty_status),
-						}}>
-							<GavelIcon />
-						</ListItemIcon>
-						<ListItemText
-							primary={<Localized id="ilga_heading_penalty" />}
-							secondary={penalty_secondary}
-							secondaryTypographyProps={{
-								style: {
-									marginTop: '4px',
-								}
-							}}
-						/>
-					</ListItem>
-					<ListItem style={{
-						// color: statusColor(protection_status),
-					}}>
-						<ListItemIcon style={{
-							alignSelf: 'flex-start',
-							paddingTop: '12px',
-							color: statusColor(protection_status),
-						}}>
-							<LockIcon />
-						</ListItemIcon>
-						<ListItemText
-							primary={<Localized id="ilga_heading_protection" />}
-							secondary={protection_secondary}
-							secondaryTypographyProps={{
-								style: {
-									marginTop: '4px',
-								}
-							}}
-						/>
-					</ListItem>
-					<ListItem style={{
-						// color: statusColor(recognition_status),
-					}}>
-						<ListItemIcon style={{
-							alignSelf: 'flex-start',
-							paddingTop: '12px',
-							color: statusColor(recognition_status),
-						}}>
-							<PeopleIcon />
-						</ListItemIcon>
-						<ListItemText
-							primary={<Localized id="ilga_heading_recognition" />}
-							secondary={recognition_secondary}
-							secondaryTypographyProps={{
-								style: {
-									marginTop: '4px',
-								}
-							}}
-						/>
-					</ListItem>
-				</List>
-	
-				<Typography variant="caption" style={{
-					display: 'block',
-					margin: '0 16px 16px 16px',
-				}}>
-					<Localized
-						id="ilga_data_source_info_text"
-						elems={{
-							dataset_link: <Link target="_blank" href="https://ilga.org/maps-sexual-orientation-laws" />,
-						}}
-					/>
-				</Typography>
-				
-			</>)
+		const alpha3code = tags['ISO3166-1:alpha3'] || this.state.countryCode || null
+		if (!!alpha3code) {
+			return (<DiscriminationFacts
+				key={'d_facts_'+alpha3code}
+				countryCode={alpha3code}
+				toggleable={tags.preset !== 'boundary/administrative'}
+				inline={tags.preset !== 'boundary/administrative'}
+			/>)
+		}else{
+			return null
 		}
-		
-		return null
 	}
 
 	getAgeRangeText(min_age,max_age){
@@ -877,9 +662,12 @@ class SidebarPlace extends React.Component {
 			const alpha3code = tags['ISO3166-1:alpha3']
 			if (
 				tags.preset === 'boundary/administrative'
-				&& alpha3code && ilga_2019[alpha3code]
+				&& alpha3code
 			) {
-				return null
+				const ilga = getILGA(alpha3code)
+				if (!!ilga && !!ilga.ilga) {
+					return null
+				}
 			}
 		}
 
@@ -1172,8 +960,8 @@ class SidebarPlace extends React.Component {
 
 					{
 						[
-							{key:'ILGA', component:this.renderILGA(tags)},
 							{key:'Audience', component:this.renderAudience(tags)},
+							{key:'ILGA', component:this.renderILGA(tags)},
 							{key:'General', component:this.renderGeneral(tags)},
 							{key:'Links', component:this.renderLinks(tags)},
 						]

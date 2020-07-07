@@ -126,6 +126,9 @@ addresses_listheading = Addresses
 improve = Improve
 add_new_place_header_text = Add a new place
 
+view_ilga_infos = ILGA Discrimination Infos for this country…
+view_ilga_infos_for_country = ILGA Discrimination Infos for {$country}
+
 queer = Queer People
 youth = Young People
 trans = Trans*
@@ -159,6 +162,7 @@ min_age_text = Age {$age} and up.
 age_range_text = Ages {$min_age} to {$max_age}.
 
 ilga_heading_main = ILGA Dicrimination Information
+ilga_heading_main_for_country = ILGA Dicrimination Information for {$country}
 ilga_heading_criminalisation = Are consensual same-sex sexual acts legal?
 ilga_heading_penalty = What is the penalty for same-sex sexual acts?
 ilga_heading_protection = How are queer people protected?
@@ -184,7 +188,7 @@ criminalisation_penalty_max_lifetime = Lifetime imprisonment.
 
 protection_none = No protection!
 protection_constitutional = Constitutional
-protection_broad_protections = Broad Protections / Other
+protection_other = Broad Protections / Other
 protection_employment = Employment
 protection_hate_crime = Hate Crime
 protection_incitement = Incitement to Hatred / Violence

@@ -171,6 +171,7 @@ class GlobalsProvider extends React.Component {
 					query: query_countries,
 					variables: {
 						wantedTags: [ios_tag_key],
+						languages: navigator.languages,
 					},
 				})
 				.subscribe(({data}) => {
