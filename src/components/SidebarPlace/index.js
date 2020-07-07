@@ -895,7 +895,7 @@ class SidebarPlace extends React.Component {
 		if (!!yelp) {
 			links.push({
 				href: yelp,
-				text: 'View on Yelp', // TODO: translate
+				text: this.props.getString('view_on_yelp'),
 				icon: <YelpIcon />,
 			})
 		}
@@ -904,7 +904,7 @@ class SidebarPlace extends React.Component {
 		if (!!osm_id) {
 			links.push({
 				href: 'https://openstreetmap.org/'+osm_id,
-				text: 'View on OpenStreetMap', // TODO: translate
+				text: this.props.getString('view_on_osm'),
 				icon: <OpenstreetmapIcon />, // <MapIcon />,
 			})
 		}
