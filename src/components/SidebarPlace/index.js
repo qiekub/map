@@ -301,7 +301,7 @@ class SidebarPlace extends React.Component {
 	
 						this.setState({
 							doc: doc,
-							page: 'view',
+							// page: 'view',
 							headerText: (
 								doc &&
 								doc.properties &&
