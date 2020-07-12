@@ -15,7 +15,7 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset, getTranslationFromArray/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -52,6 +52,7 @@ class MainMap extends React.Component {
 
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
+		this.borderGeojson = null
 		this.markers = []
 		this.placesWithUndecidedChangesets = []
 
@@ -77,6 +78,7 @@ class MainMap extends React.Component {
 	componentDidMount(){
 		this.loadMarkers()
 		this.loadPlacesWithUndecidedChangesets()
+		this.loadBorders()
 
 		if (this.props.conic_gradient) {
 			this.props.conic_gradient.onReady(()=>{
@@ -197,6 +199,72 @@ class MainMap extends React.Component {
 				this.filterMarkers(this.filters)
 			}
 		})
+	}
+
+	async loadBorders(){
+		const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
+		const borders_response = await fetch(borders_path.default)
+		const borders = await borders_response.json()
+		this.borderGeojson = borders
+
+		// this.showBorders()
+	}
+	
+	showBorders(){
+		if (!!this.map && !!this.borderGeojson) {
+			if (!(!!this.borderGeojsonLayer)) {
+
+			const getStatusColor = status => {
+				if (status === 'great' || status === 1) {
+					return this.props.theme.palette.success.main
+				} else if (status === 'ok' || status === 2) {
+					return this.props.theme.palette.warning.main
+				} else if (status === 'bad' || status === 3) {
+					return this.props.theme.palette.error.main
+				}
+				return this.props.theme.palette.background.default
+			}
+
+				this.borderGeojsonLayer = L.geoJSON(this.borderGeojson, {
+					style: feature => {
+						const country_code = getCountryCode(feature.properties)
+						const ilga = getILGA(country_code)
+						const color = getStatusColor(
+							ilga
+							&& ilga.overview
+							&& ilga.overview.statusNumber
+							? ilga.overview.statusNumber
+							: -1
+						)
+
+						return {
+							interactive: false,
+							color: color,
+							fillColor: color,
+							weight: 0,
+							opacity: 0.1,
+							fillOpacity: 0.1,
+						}
+					}
+				})
+				// .addEventListener('click', event => {
+				// 	const properties = event.sourceTarget.feature.properties
+				// 	const country_code = getCountryCode(properties)
+				// 	if (country_code) {
+				// 		navigate(`/country/${country_code}/`)
+				// 	}else{
+				// 		navigate('')
+				// 	}
+				// })
+			}
+
+			this.map.addLayer(this.borderGeojsonLayer)
+		}
+	}
+	hideBorders(){
+		if (!!this.map && !!this.borderGeojsonLayer) {
+			this.map.removeLayer(this.borderGeojsonLayer)
+		}
 	}
 
 	gotMapRef(Map){
@@ -457,8 +525,10 @@ class MainMap extends React.Component {
 	}
 	filterMarkers(filters){
 		if (this.state.isGeoChooser) {
+			this.showBorders()
 			this.showAllMarkersButMiddleMarker()
 		}else{
+			this.hideBorders()
 
 			if (!!this.filters) {
 				const ids = this.filters.ids || []
@@ -528,9 +598,11 @@ class MainMap extends React.Component {
 					}
 					this.clusterGroup.ProcessView()
 				}else{
+					this.hideBorders()
 					this.showAllMarkers()
 				}
 			}else{
+				this.hideBorders()
 				this.showAllMarkers()
 			}
 		}
