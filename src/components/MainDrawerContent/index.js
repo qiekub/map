@@ -1,7 +1,9 @@
 import React from 'react'
 // import './index.css'
 
-import { withLocalization/*, Localized*/ } from '../Localized/'
+import { withLocalization, Localized } from '../Localized/'
+import { withGlobals } from '../Globals/'
+import { navigate } from '@reach/router'
 
 import {
 	// Button,
@@ -17,10 +19,9 @@ import {
 } from '@material-ui/core'
 
 import {
-	// HistoryRounded as HistoryIcon,
-	// ContactSupportRounded as ContactSupportIcon,
-	// FullscreenRounded as FullscreenIcon,
-	// FullscreenExitRounded as FullscreenExitIcon,
+	HistoryRounded as HistoryIcon,
+	PriorityHighRounded as PriorityHighIcon,
+	EmailRounded as EmailIcon,
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
@@ -40,6 +41,19 @@ const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+
 const ListItemLink = props => <ListItem button component="a" {...props} />
 
 class MainDrawerContent extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this.viewChangesets = this.viewChangesets.bind(this)
+	}
+
+	async viewChangesets(){
+		await navigate('/changesets/')
+		if (this.props.onClose) {
+			this.props.onClose()
+		}
+	}
+
 	render() {
 
 		/*
@@ -81,49 +95,82 @@ class MainDrawerContent extends React.Component {
 		return (<>
 			<List
 				dense
-				style={{
-					paddingRight: '64px',
-				}}
 			>
-				<ListItem>
+				<ListItem
+					style={{
+						paddingRight: '64px',
+					}}
+				>
 					<ListItemText
 						primary="QueerMap"
-						secondary={<>by <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/">Qiekub</Link></>}
+						secondary={
+							<Localized
+								id="by_brandname_link"
+								elems={{
+									mainlink: <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/" />,
+								}}
+							/>
+						}
 						primaryTypographyProps={{
 							variant: 'h4',
 						}}
 					/>
 				</ListItem>
-		
+
 				{/*
 				<ListItemLink
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="About" />
+					<ListItemText inset primary={<Localized id="about" />} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="Blog" />
+					<ListItemText inset primary={<Localized id="blog" />} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
 					href="https://www.qiekub.org/impressum.html"
 				>
-					<ListItemText inset primary="Similar Projects" />
+					<ListItemText inset primary={<Localized id="similar_projects" />} />
 				</ListItemLink>
 				*/}
 			</List>
 		
+
+			{
+				!!this.props.globals.profileID
+				? (<>
+					<Divider />
+	
+					<List
+						dense
+					>
+						<ListItemLink
+							onClick={this.viewChangesets}
+						>
+							<ListItemIcon>
+								<HistoryIcon />
+							</ListItemIcon>
+							<ListItemText primary={<Localized id="changesets" />} />
+						</ListItemLink>
+					</List>
+				</>)
+				: null
+			}
 
 			<Divider />
 		
 		
 			<List
 				dense
-				subheader={<ListSubheader disableSticky>Follow us on...</ListSubheader>}
+				subheader={
+					<ListSubheader disableSticky>
+						<Localized id="subheader_follow_us" />
+					</ListSubheader>
+				}
 			>
 				<ListItemLink
 					target="_blank"
@@ -209,7 +256,11 @@ class MainDrawerContent extends React.Component {
 		
 			<List
 				dense
-				subheader={<ListSubheader disableSticky>Legal</ListSubheader>}
+				subheader={
+					<ListSubheader disableSticky>
+						<Localized id="subheader_legal" />
+					</ListSubheader>
+				}
 			>
 				<ListItemLink
 					target="_blank"
@@ -217,7 +268,10 @@ class MainDrawerContent extends React.Component {
 					aria-label={this.props.getString('imprint')}
 					title={this.props.getString('imprint')}
 				>
-					<ListItemText inset primary={this.props.getString('imprint')} />
+					<ListItemIcon>
+						<PriorityHighIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('imprint')} />
 				</ListItemLink>
 				<ListItemLink
 					target="_blank"
@@ -225,14 +279,20 @@ class MainDrawerContent extends React.Component {
 					aria-label={this.props.getString('privacy_policy')}
 					title={this.props.getString('privacy_policy')}
 				>
-					<ListItemText inset primary={this.props.getString('privacy_policy')} />
+					<ListItemIcon>
+						<PriorityHighIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('privacy_policy')} />
 				</ListItemLink>
 				<ListItemLink
 					href="mailto:thomas.rosen@qiekub.org"
 					aria-label={this.props.getString('contact')}
 					title={this.props.getString('contact')}
 				>
-					<ListItemText inset primary={this.props.getString('contact')} />
+					<ListItemIcon>
+						<EmailIcon />
+					</ListItemIcon>
+					<ListItemText primary={this.props.getString('contact')} />
 				</ListItemLink>
 			</List>
 		
@@ -332,6 +392,6 @@ class MainDrawerContent extends React.Component {
 	}
 }
 
-export default withLocalization(withTheme(MainDrawerContent))
+export default withGlobals(withLocalization(withTheme(MainDrawerContent)))
 
 

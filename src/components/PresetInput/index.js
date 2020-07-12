@@ -102,7 +102,7 @@ class PresetInput extends React.Component {
 			})
 		}
 
-		return (<div style={{margin:'8px 8px 4px 8px'}}>
+		return (<div style={this.props.style}>
 			<Autocomplete
 				options={this._options_}
 				groupBy={preset => preset.category_name_translated || ''}

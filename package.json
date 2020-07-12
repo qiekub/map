@@ -34,7 +34,7 @@
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {
-    "buildData": "cd ./src/data/; node ./build_address_formats_files.js; node ./build_category_files.js; cd ../../;",
+    "buildData": "cd ./src/data/; node ./build_address_formats_files.js; node ./build_category_files.js; node ./build_ilga_datasets.js; cd ../../;",
     "saveLocalIP": "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1' | echo \"\\\"$(cat)\\\"\" > ./src/.env.local_ip.json",
     "serve": "yarn saveLocalIP; yarn start",
     "serve-prod": "yarn build; yarn saveLocalIP; PORT=3000 serve -s build",

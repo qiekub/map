@@ -43,13 +43,19 @@ must_have_undecided_changes = Must have undecided changes?
 
 
 # MainDrawerContent
+subheader_follow_us = Follow us on...
+subheader_legal = Legal
+
+by_brandname_link = by <mainlink>Qiekub</mainlink>
+
+changesets = Pending Changes
+about = About
+blog = Blog
+similar_projects = Similar Projects
+
 imprint = Imprint
 privacy_policy = Privacy Policy
 contact = Contact
-github_button = Contribute on Github
-follow_button_facebook = Follow us on Facebook
-follow_button_instagram = Follow us on Instagram
-follow_button_twitter = Follow us on Twitter
 
 
 
@@ -111,6 +117,7 @@ open_menu_aria_label = Open menu
 close_sidebar_aria_label = Close info panel
 
 places_listheading = Places
+countries_listheading = Countries
 addresses_listheading = Addresses
 
 
@@ -118,6 +125,11 @@ addresses_listheading = Addresses
 # Sidebar
 improve = Improve
 add_new_place_header_text = Add a new place
+
+view_on_yelp = View on Yelp…
+view_on_osm = View on OpenStreetMap…
+view_ilga_infos = ILGA Discrimination Infos for this country…
+view_ilga_infos_for_country = ILGA Discrimination Infos for {$country}
 
 queer = Queer People
 youth = Young People
@@ -151,13 +163,54 @@ max_age_text = Till age {$age}.
 min_age_text = Age {$age} and up.
 age_range_text = Ages {$min_age} to {$max_age}.
 
+ilga_heading_main = ILGA Dicrimination Information
+ilga_heading_main_for_country = ILGA Dicrimination Information for {$country}
+ilga_heading_criminalisation = Are consensual same-sex sexual acts legal?
+ilga_heading_penalty = What is the penalty for same-sex sexual acts?
+ilga_heading_protection = How are queer people protected?
+ilga_heading_recognition = How can same-sex couples be together?
+
+ilga_data_source_info_text = The data is from the <dataset_link>2019 Homophobia Dataset</dataset_link> from ILGA.
+# ilga_data_source_info_text = The information are from the <dataset_link>2019 State Sponsored Homophobia Dataset</dataset_link> from ILGA.
+
+criminalisation_legality_legal_for_all = Legal for all!
+criminalisation_legality_legal_for_males = Legal for males.
+criminalisation_legality_legal_for_female = Legal for females.
+criminalisation_legality_illegal_for_all = Illegal for all!
+criminalisation_legality_illegal_for_males = Illegal for males.
+criminalisation_legality_illegal_for_female = Illegal for female.
+criminalisation_legality_unknown = The legality is unknown.
+
+criminalisation_penalty_none = No penalty!
+# criminalisation_penalty_none = No imprisonment!
+# criminalisation_penalty_none = Not applicable!
+criminalisation_penalty_max_death = Death sentence!
+criminalisation_penalty_max_years = Maximum {$n} years in prison.
+criminalisation_penalty_max_lifetime = Lifetime imprisonment.
+
+protection_none = No protection!
+protection_constitutional = Constitutional
+protection_other = Broad Protections / Other
+protection_employment = Employment
+protection_hate_crime = Hate Crime
+protection_incitement = Incitement to Hatred / Violence
+protection_ct_ban = Conversion Therapy Ban
+
+recognition_none = No recognition!
+# recognition_none = Same-sex couples aren't recognised!
+recognition_second_parent_adoption = Second parent adoption
+recognition_joint_adoption = Joint adoption
+recognition_civil_unions = Civil unions
+recognition_marriage = Marriage
+
 
 
 # GeoInput
 instructions = Move the map to choose the location.
 lat = Latitude: {$lat}
 lng = Longitude: {$lng}
-error_message_geo_not_legal = It might be illegal to be queer at this location. Don't add places that could potentially harm others by exposing them.
+legality_message_geo_not_legal = It might be illegal to be queer at this location.
+legality_message_be_cautious = Don't add places that could potentially harm others by exposing them. When in doubt, check the ILGA Dicrimination Information.
 
 
 

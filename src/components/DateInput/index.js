@@ -172,6 +172,7 @@ class DateInput extends React.Component {
 
 		return (<div
 			className="DateInput"
+			style={this.props.style}
 		>
 			<div className="TextFields">
 				{

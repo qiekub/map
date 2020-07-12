@@ -1,3 +1,5 @@
+import ilga_dataset from './data/dist/ilga_2019.json'
+
 import { negotiateLanguages } from '@fluent/langneg'
 import address_formats from './data/dist/address_formats.json'
 const addressFormats = address_formats.map(item => ({
@@ -139,3 +141,206 @@ export function getAddressFormat(tags) {
 export function getWantedTagsList(presets){
 	return [...new Set([].concat(...Object.values(presets).map(preset=>Object.keys(preset.tags))))]
 }
+
+
+export function getILGA(alpha3code){
+		const TR = {} // TR means "to return"
+
+		if (!(!!alpha3code)) {
+			return null
+		}
+		
+		
+		const ilga = ilga_dataset[alpha3code]
+
+		if (!(!!ilga)) {
+			return null
+		}
+		
+		TR.ilga = ilga
+
+
+		// ### criminalisation:legality
+		const legality_values = [
+			'legal_for_all',
+			'legal_for_males',
+			'legal_for_female',
+			'illegal_for_all',
+			'illegal_for_males',
+			'illegal_for_female',
+			'unknown',
+		]
+
+		const legality_key = 'criminalisation:legality'
+		const gender_key = 'criminalisation:legality:by_gender'
+
+		TR.criminalisation = {}
+		TR.criminalisation.description = 'criminalisation:legality:unknown'
+		if (
+			ilga.hasOwnProperty(gender_key)
+			&& legality_values.includes(ilga[gender_key])
+		) {
+			TR.criminalisation.description = 'criminalisation:legality:'+ilga[gender_key]
+		} else if (ilga.hasOwnProperty(legality_key)) {
+			if (ilga[legality_key] === true) {
+				TR.criminalisation.description = 'criminalisation:legality:legal_for_all'
+			} else if (ilga[legality_key] === false) {
+				TR.criminalisation.description = 'criminalisation:legality:illegal_for_all'
+			}
+		}
+
+		TR.criminalisation.status = null
+		if (TR.criminalisation.description === 'criminalisation:legality:legal_for_all') {
+			TR.criminalisation.status = 'great'
+		} else if (TR.criminalisation.description === 'criminalisation:legality:illegal_for_all') {
+			TR.criminalisation.status = 'bad'
+		} else if (TR.criminalisation.description !== 'criminalisation:legality:unknown') {
+			TR.criminalisation.status = 'ok'
+		}
+
+		TR.criminalisation.description = [TR.criminalisation.description]
+
+
+		// ### criminalisation:penalty
+		TR.penalty = {}
+		TR.penalty.description = []
+		TR.penalty.vars = {}
+		const penalty_keys = Object.keys(ilga)
+		.filter(key => key.startsWith('criminalisation:penalty:max:'))
+		.sort((a, b) => a-b)
+			
+		for (const key of penalty_keys) {
+			if (ilga[key] === true) {
+				TR.penalty.description.push(key)
+			} else if (!isNaN(ilga[key]) && ilga[key] > 0) {
+				TR.penalty.description.push('criminalisation:penalty:max:years')
+				TR.penalty.vars.years = ilga[key]
+			}
+		}
+
+		TR.penalty.status = null
+		if (TR.penalty.description.length === 0) {
+			TR.penalty.status = 'great'
+			TR.penalty.description.push('criminalisation:penalty:none')
+		} else if (TR.penalty.description.length > 0) {
+			if (
+				TR.penalty.description.includes('criminalisation:penalty:max:death')
+				|| TR.penalty.description.includes('criminalisation:penalty:max:lifetime')
+			) {
+				TR.penalty.status = 'bad'
+			}else{
+				TR.penalty.status = 'ok'
+			}
+		}
+
+
+		// ### protection
+		TR.protection = {}
+		TR.protection.description = []
+		const protection_keys = Object.keys(ilga)
+		.filter(key => key.startsWith('protection:'))
+		.sort((a, b) => a-b)
+			
+		for (const key of protection_keys) {
+			if (ilga[key] === true) {
+				TR.protection.description.push(key)
+			}
+		}
+
+		TR.protection.status = null
+		if (
+			TR.protection.description.includes('protection:constitutional')
+			|| TR.protection.description.length >= 6 // max is 6
+		) {
+			TR.protection.status = 'great'
+		} else if (TR.protection.description.length > 0) {
+			TR.protection.status = 'ok'
+		} else {
+			TR.protection.status = 'bad'
+		}
+
+		if (TR.protection.description.length === 0) {
+			TR.protection.description.push('protection:none')
+		}
+
+
+		// ### recognition
+		TR.recognition = {}
+		TR.recognition.description = []
+		const recognition_keys = Object.keys(ilga)
+		.filter(key => key.startsWith('recognition:'))
+		.sort((a, b) => a-b)
+			
+		for (const key of recognition_keys) {
+			if (ilga[key] === true) {
+				TR.recognition.description.push(key)
+			}
+		}
+
+		TR.recognition.status = null
+		if (
+			TR.recognition.description.includes('recognition:marriage')
+			|| TR.recognition.description.length >= 4 // max is 4
+		) {
+			TR.recognition.status = 'great'
+		} else if (TR.recognition.description.length > 0) {
+			TR.recognition.status = 'ok'
+		} else {
+			TR.recognition.status = 'bad'
+		}
+
+		if (TR.recognition.description.length === 0) {
+			TR.recognition.description.push('recognition:none')
+		}
+
+
+		TR.overview = {}
+		TR.overview.statusNumber = -1
+		if (
+			TR
+			&& TR.criminalisation
+			&& TR.criminalisation.status
+			&& TR.penalty
+			&& TR.penalty.status
+			&& TR.protection
+			&& TR.protection.status
+			&& TR.recognition
+			&& TR.recognition.status
+		) {
+			const getStatusNumber = status => {
+				if (status === 'great') {
+					return 1
+				} else if (status === 'ok') {
+					return 2
+				} else if (status === 'bad') {
+					return 3
+				}
+				return -1
+			}
+
+			TR.overview.statusNumber = Math.max(...[
+				getStatusNumber(TR.criminalisation.status),
+				getStatusNumber(TR.penalty.status),
+				getStatusNumber(TR.protection.status),
+				getStatusNumber(TR.recognition.status),
+			])
+		}
+
+
+		return TR
+}
+
+export function getCountryCode(properties){
+	let country_code = null
+	if (properties.ISO_A3 && properties.ISO_A3 !== '-99') {
+		country_code = properties.ISO_A3
+	} else if (properties.ISO_A3_EH && properties.ISO_A3_EH !== '-99') {
+		country_code = properties.ISO_A3_EH
+	} else if (properties.ADM0_A3 && properties.ADM0_A3 !== '-99') {
+		country_code = properties.ADM0_A3
+	}
+
+	return country_code
+}
+
+

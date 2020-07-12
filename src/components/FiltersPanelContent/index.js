@@ -31,7 +31,7 @@ class FiltersPanelContent extends React.Component {
 		this.state = {
 			category: null,
 			age: null,
-			audience_queer: new Set(),
+			audience_queer: new Set(['only','primary']), // only primary welcome
 			mustHaveUndecidedChangeset: false,
 		}
 
@@ -72,9 +72,9 @@ class FiltersPanelContent extends React.Component {
 	}
 
 	componentDidMount(){
-		// setTimeout(()=>{
-			// this.setValue('age', 27, ()=>{})
-		// }, 1000)
+		if (this.props.onChange) {
+			this.props.onChange(this.getFilterObj())
+		}
 	}
 
 	getFilterObj(){

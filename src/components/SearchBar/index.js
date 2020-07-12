@@ -50,6 +50,7 @@ class SearchBar extends React.Component {
 			loadingSearchResult: false,
 			isMainDrawerOpen: false,
 			searchResults_poi: [],
+			searchResults_administratives: [],
 			searchResults_address: [],
 			showSearchResults: false,
 			showWebsiteIntro: true,
@@ -60,6 +61,7 @@ class SearchBar extends React.Component {
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
 		this.closeSidebar = this.closeSidebar.bind(this)
+		this.closeMainDrawer = this.closeMainDrawer.bind(this)
 		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
 
 		this.loadSearchResults = this.loadSearchResults.bind(this)
@@ -175,13 +177,18 @@ class SearchBar extends React.Component {
 							}
 						})
 		
-						const searchResults_poi = searchResults.filter(result => result.preset !== 'address')
+						const searchResults_poi = searchResults.filter(result =>
+							result.preset !== 'address'
+							&& result.preset !== 'boundary/administrative'
+						)
+						const searchResults_administratives = searchResults.filter(result => result.preset === 'boundary/administrative')
 						const searchResults_address = searchResults.filter(result => result.preset === 'address')
 		
 						this.setState({
 							showSearchResults: true,
 							loadingSearchResult: false,
 							searchResults_poi,
+							searchResults_administratives,
 							searchResults_address,
 						}, () => resolve() )
 					}else{
@@ -192,6 +199,7 @@ class SearchBar extends React.Component {
 						showSearchResults: false,
 						loadingSearchResult: false,
 						searchResults_poi: [],
+						searchResults_administratives: [],
 						searchResults_address: [],
 					}, () => reject(error) )
 				})
@@ -200,6 +208,7 @@ class SearchBar extends React.Component {
 					showSearchResults: false,
 					loadingSearchResult: false,
 					searchResults_poi: [],
+					searchResults_administratives: [],
 					searchResults_address: [],
 				}, () => reject() )
 			}
@@ -216,6 +225,8 @@ class SearchBar extends React.Component {
 						this.openSearchResult(this.state.searchResults_address[0])
 					} else if (this.state.searchResults_poi.length > 0) {
 						this.openSearchResult(this.state.searchResults_poi[0])
+					} else if (this.state.searchResults_administratives.length > 0) {
+						this.openSearchResult(this.state.searchResults_administratives[0])
 					}
 				})
 			})
@@ -239,6 +250,9 @@ class SearchBar extends React.Component {
 		})
 	}
 
+	closeMainDrawer(){
+		this.setState({isMainDrawerOpen:false})
+	}
 	toggleMainDrawer(){
 		this.setState((state,props)=>{
 			return {isMainDrawerOpen:!state.isMainDrawerOpen}
@@ -293,14 +307,23 @@ class SearchBar extends React.Component {
 				open={this.state.isMainDrawerOpen}
 				onClose={this.toggleMainDrawer}
 			>
-				<MainDrawerContent />
+				<MainDrawerContent onClose={this.closeMainDrawer}/>
 			</Drawer>
 
 			<Paper
 				className={
 					'header '
 					+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')
-					+(this.state.showSearchResults && (this.state.searchResults_poi.length > 0 || this.state.searchResults_address.length > 0) ? 'showingSearchResults' : '')
+					+(
+						this.state.showSearchResults
+						&& (
+							this.state.searchResults_poi.length > 0
+							|| this.state.searchResults_administratives.length > 0
+							|| this.state.searchResults_address.length > 0
+						)
+						? 'showingSearchResults'
+						: ''
+					)
 					+(!this.state.showSearchResults && this.state.showWebsiteIntro ? 'showingWebsiteIntro' : '')
 				}
 				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
@@ -391,6 +414,69 @@ class SearchBar extends React.Component {
 							</List>
 						)
 					}
+					{
+						this.state.searchResults_administratives.length === 0
+						? null
+						: (
+							<List
+								subheader={
+									<ListSubheader disableSticky>
+										<Localized id="countries_listheading" />
+									</ListSubheader>
+								}
+							>
+							{
+								this.state.searchResults_administratives.map(result => {
+									return (<ListItem
+											button
+											alignItems={
+												result.name_translated !== '' && result.address !== ''
+												? 'flex-start'
+												: 'center'
+											}
+											key={result.key}
+											onClick={()=>this.openSearchResult(result)}
+										>
+										<ListItemIcon>
+											<div
+												className="material-icons-round"
+												style={{
+													color: (
+														result.___preset.icon
+														&& !!result.___color
+														? (
+															result.___color.key === 'default'
+															? result.___color.bg
+															: result.___color.fg
+														)
+														: ''
+													),
+													backgroundColor: (
+														result.___preset.icon
+														&& !!result.___color
+														? (
+															result.___color.key === 'default'
+															? ''
+															: result.___color.bg
+														)
+														: ''
+													),
+													borderRadius: '100%',
+													width: '40px',
+													height: '40px',
+													lineHeight: '40px',
+													textAlign: 'center',
+												}}
+											>{result.___preset.icon}</div>
+										</ListItemIcon>
+										<ListItemText primary={result.name_translated} secondary={result.address}/>
+									</ListItem>)
+								})
+							}
+							</List>
+						)
+					}
+					
 					{
 						this.state.searchResults_address.length === 0
 						? null

@@ -15,7 +15,7 @@ import './index.css'
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -52,6 +52,7 @@ class MainMap extends React.Component {
 
 		// this.MarkerLayerRef = React.createRef()
 		this.map = null
+		this.borderGeojson = null
 		this.markers = []
 		this.placesWithUndecidedChangesets = []
 
@@ -63,6 +64,7 @@ class MainMap extends React.Component {
 		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
 		this.filterMarkers = this.filterMarkers.bind(this)
 		this.showAllMarkers = this.showAllMarkers.bind(this)
+		this.showAllMarkersButMiddleMarker = this.showAllMarkersButMiddleMarker.bind(this)
 
 		this.setMapPos = this.setMapPos.bind(this)
 		this.viewportChanged = this.viewportChanged.bind(this)
@@ -76,6 +78,7 @@ class MainMap extends React.Component {
 	componentDidMount(){
 		this.loadMarkers()
 		this.loadPlacesWithUndecidedChangesets()
+		this.loadBorders()
 
 		if (this.props.conic_gradient) {
 			this.props.conic_gradient.onReady(()=>{
@@ -91,6 +94,7 @@ class MainMap extends React.Component {
 				getCenter: () => this.map.getCenter(),
 				getBounds: () => this.map.getBounds(),
 				zoomIn: () => this.map.zoomIn(),
+				fitBounds: (...attr) => this.map.fitBounds(...attr),
 				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
 				setView: (...attr) => this.map.setView(...attr),
 				panBy: (...attr) => this.map.panBy(...attr),
@@ -108,6 +112,11 @@ class MainMap extends React.Component {
 		}
 
 		window.addEventListener('updateMainMapView', this.setMapPos)
+
+		this.mapViewport = {
+			center: this.props.store.get('map_center_real') || [51,10],
+			zoom: this.props.store.get('map_zoom') || 3,
+		}
 	}
 	componentDidUpdate(){
 		if (this.props.filters !== this.filters) {
@@ -132,14 +141,18 @@ class MainMap extends React.Component {
 			this.setState({
 				isGeoChooser: true,
 				middleMarkerDoc,
+			}, ()=>{
+				this.filterMarkers(this.filters)
+				this.setGlobalMapCenter()
 			})
-			this.hideAllMarkers()
 		}else{
 			this.setState({
 				isGeoChooser: false,
 				middleMarkerDoc: undefined,
+			}, ()=>{
+				this.filterMarkers(this.filters)
+				this.setGlobalMapCenter()
 			})
-			this.filterMarkers(this.filters)
 		}
 	}
 
@@ -186,6 +199,72 @@ class MainMap extends React.Component {
 				this.filterMarkers(this.filters)
 			}
 		})
+	}
+
+	async loadBorders(){
+		const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
+		const borders_response = await fetch(borders_path.default)
+		const borders = await borders_response.json()
+		this.borderGeojson = borders
+
+		// this.showBorders()
+	}
+	
+	showBorders(){
+		if (!!this.map && !!this.borderGeojson) {
+			if (!(!!this.borderGeojsonLayer)) {
+
+			const getStatusColor = status => {
+				if (status === 'great' || status === 1) {
+					return this.props.theme.palette.success.main
+				} else if (status === 'ok' || status === 2) {
+					return this.props.theme.palette.warning.main
+				} else if (status === 'bad' || status === 3) {
+					return this.props.theme.palette.error.main
+				}
+				return this.props.theme.palette.background.default
+			}
+
+				this.borderGeojsonLayer = L.geoJSON(this.borderGeojson, {
+					style: feature => {
+						const country_code = getCountryCode(feature.properties)
+						const ilga = getILGA(country_code)
+						const color = getStatusColor(
+							ilga
+							&& ilga.overview
+							&& ilga.overview.statusNumber
+							? ilga.overview.statusNumber
+							: -1
+						)
+
+						return {
+							interactive: false,
+							color: color,
+							fillColor: color,
+							weight: 0,
+							opacity: 0.1,
+							fillOpacity: 0.1,
+						}
+					}
+				})
+				// .addEventListener('click', event => {
+				// 	const properties = event.sourceTarget.feature.properties
+				// 	const country_code = getCountryCode(properties)
+				// 	if (country_code) {
+				// 		navigate(`/country/${country_code}/`)
+				// 	}else{
+				// 		navigate('')
+				// 	}
+				// })
+			}
+
+			this.map.addLayer(this.borderGeojsonLayer)
+		}
+	}
+	hideBorders(){
+		if (!!this.map && !!this.borderGeojsonLayer) {
+			this.map.removeLayer(this.borderGeojsonLayer)
+		}
 	}
 
 	gotMapRef(Map){
@@ -324,16 +403,42 @@ class MainMap extends React.Component {
 				iconSize: L.point(40, 40, true),
 			}))
 			
-			if (!!doc.name && doc.name.length > 0) {
-				leafletMarker.bindTooltip(doc.name[0].text, {
-					sticky: true,
+			if (
+				!(!!leafletMarker.tooltipGotSet) // prevent duplicate tooltips
+				&& !!doc.name
+				&& doc.name.length > 0
+			) {
+				leafletMarker.tooltipGotSet = true // prevent duplicate tooltips
+
+				leafletMarker.bindTooltip(`
+					<div
+						class="marker-custom-tooltip"
+						style="${`
+							--bg-color:${doc.___color.bg};
+							--fg-color:${doc.___color.fg};
+						`}"
+					>
+						${(
+							doc.name &&
+							doc.name.length > 0
+							? getTranslationFromArray(doc.name, this.props.globals.userLocales)
+							: ''
+						)}
+					</div>
+				`, {
+					sticky: false,
 					interactive: false,
 					opacity: 1,
 					permanent: false,
+					direction: 'bottom',
 				})
 			}
 		
-			leafletMarker.on('click', () => navigate(`/view/${doc._id}/`) )
+			leafletMarker.on('click', () => {
+				if (!this.state.isGeoChooser) {
+					navigate(`/view/${doc._id}/`)
+				}
+			})
 		}
 
 		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
@@ -404,81 +509,102 @@ class MainMap extends React.Component {
 		}
 		this.clusterGroup.ProcessView()
 	}
+	showAllMarkersButMiddleMarker(){
+		const middleMarkerID = this.state.middleMarkerDoc._id
+
+		const markers_length = this.markers.length
+		for (let i = markers_length - 1; i >= 0; i--) {
+			if (middleMarkerID === this.markers[i].data._id) {
+				this.markers[i].filtered = true
+			}else{
+				this.markers[i].filtered = false
+			}
+		}
+
+		this.clusterGroup.ProcessView()
+	}
 	filterMarkers(filters){
 		if (this.state.isGeoChooser) {
-			this.hideAllMarkers()
-		} else if (!!this.filters) {
-			const ids = this.filters.ids || []
+			this.showBorders()
+			this.showAllMarkersButMiddleMarker()
+		}else{
+			this.hideBorders()
 
-			const presets = this.filters.presets || []
-			// const presets = ['amenity/community_centre']
-			const presets_length = presets.length
-
-			const selectedAge = this.filters.selectedAge
-			const ageOption = this.filters.ageOption
-			const audienceQueerOptions = this.filters.audienceQueerOptions || []
-			const checkAudienceQueerOptions = audienceQueerOptions.length > 0
-			const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
-
-			if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
-				const markers_length = this.markers.length
-				for (let i = markers_length - 1; i >= 0; i--) {
-					const marker = this.markers[i]
-
-					if (ids.includes(marker.data._id)) {
-						this.markers[i].filtered = false
-					}else{
-
-						let hasUndecidedChangesets = true
-						if (mustHaveUndecidedChangeset) {
-							hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
-						}
-						
-						let isInPresets = true
-						if (presets_length > 0) {
-							isInPresets = presets.map(preset_key=>{
-								return marker.data.___preset.key.startsWith(preset_key)
-							}).reduce((bool,value) => (value ? true : bool), false)
-						}
-
-						let matchesAudienceQueer = true
-						if (checkAudienceQueerOptions) {
-							if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
-								matchesAudienceQueer = false
+			if (!!this.filters) {
+				const ids = this.filters.ids || []
+	
+				const presets = this.filters.presets || []
+				// const presets = ['amenity/community_centre']
+				const presets_length = presets.length
+	
+				const selectedAge = this.filters.selectedAge
+				const ageOption = this.filters.ageOption
+				const audienceQueerOptions = this.filters.audienceQueerOptions || []
+				const checkAudienceQueerOptions = audienceQueerOptions.length > 0
+				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
+	
+				if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
+					const markers_length = this.markers.length
+					for (let i = markers_length - 1; i >= 0; i--) {
+						const marker = this.markers[i]
+	
+						if (ids.includes(marker.data._id)) {
+							this.markers[i].filtered = false
+						}else{
+	
+							let hasUndecidedChangesets = true
+							if (mustHaveUndecidedChangeset) {
+								hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
 							}
-						}
-
-						let isInAgeRange = true
-						if (!!selectedAge) {
-							isInAgeRange = false
-							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
-								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-								isInAgeRange = (
-									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
-								)
-							}else{
-								if (!!marker.data.tags.min_age) {
+							
+							let isInPresets = true
+							if (presets_length > 0) {
+								isInPresets = presets.map(preset_key=>{
+									return marker.data.___preset.key.startsWith(preset_key)
+								}).reduce((bool,value) => (value ? true : bool), false)
+							}
+	
+							let matchesAudienceQueer = true
+							if (checkAudienceQueerOptions) {
+								if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
+									matchesAudienceQueer = false
+								}
+							}
+	
+							let isInAgeRange = true
+							if (!!selectedAge) {
+								isInAgeRange = false
+								if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
 									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-								}
-								if (isInAgeRange && !!marker.data.tags.max_age) {
 									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									isInAgeRange = (
+										   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+										&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									)
+								}else{
+									if (!!marker.data.tags.min_age) {
+										const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+										isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+									}
+									if (isInAgeRange && !!marker.data.tags.max_age) {
+										const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+										isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									}
 								}
 							}
+	
+							this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 						}
-
-						this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 					}
+					this.clusterGroup.ProcessView()
+				}else{
+					this.hideBorders()
+					this.showAllMarkers()
 				}
-				this.clusterGroup.ProcessView()
 			}else{
+				this.hideBorders()
 				this.showAllMarkers()
 			}
-		}else{
-			this.showAllMarkers()
 		}
 	}
 
@@ -500,33 +626,41 @@ class MainMap extends React.Component {
 	// 	return 80
 	// }
 
-	viewportChanged(viewport){
-		if (viewport.center && viewport.zoom) {
-			if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-				this.props.globals.map_center = Object.values(this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
-			}else{
-				this.props.globals.map_center = viewport.center
-			}
-	
-			this.props.globals.map_zoom = viewport.zoom
-			window.dispatchEvent(new Event('mapViewportUpdated'))
-	
-			if (viewport.zoom >= 18) {
-				this.clusterGroup.Cluster.Size = 10
-			} else if (viewport.zoom >= 16) {
-				this.clusterGroup.Cluster.Size = 20
-			} else if (viewport.zoom >= 14) {
-				this.clusterGroup.Cluster.Size = 60
-			} else if (viewport.zoom >= 8) {
-				this.clusterGroup.Cluster.Size = 80
-			} else {
-				this.clusterGroup.Cluster.Size = this.defaultClusterSize
-			}
-
-			this.props.store.set('map_center_fake', this.props.globals.map_center)
-			this.props.store.set('map_center_real', viewport.center)
-			this.props.store.set('map_zoom', this.props.globals.map_zoom)
+	setGlobalMapCenter(){
+		const viewport = this.mapViewport
+		
+		if (!(!!viewport && !!viewport.center && !!viewport.zoom)) {
+			return
 		}
+
+		let mapCenter = viewport.center || [NaN,NaN]
+		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
+			mapCenter = Object.values(this.map.unproject(this.map.project(mapCenter).add([200,0])) ) // map center with sidebar offset
+		}
+
+		let mapZoom = viewport.zoom || NaN
+		if (mapZoom >= 18) {
+			this.clusterGroup.Cluster.Size = 10
+		} else if (mapZoom >= 16) {
+			this.clusterGroup.Cluster.Size = 20
+		} else if (mapZoom >= 14) {
+			this.clusterGroup.Cluster.Size = 60
+		} else if (mapZoom >= 8) {
+			this.clusterGroup.Cluster.Size = 80
+		} else {
+			this.clusterGroup.Cluster.Size = this.defaultClusterSize
+		}
+
+		this.props.store.set('map_center_fake', mapCenter)
+		this.props.store.set('map_center_real', viewport.center)
+		this.props.store.set('map_zoom', mapZoom)
+
+		window.dispatchEvent(new Event('mapViewportUpdated'))
+	}
+
+	viewportChanged(viewport){
+		this.mapViewport = viewport
+		this.setGlobalMapCenter()
 	}
 
 	zoomIn(){
@@ -604,7 +738,10 @@ class MainMap extends React.Component {
 
 			<Map
 				ref={this.gotMapRef}
-				className="map"
+				className={
+					'map'
+					+(this.state.isGeoChooser ? ' isGeoChooser' : '')
+				}
 
 				onViewportChanged={this.viewportChanged}
 

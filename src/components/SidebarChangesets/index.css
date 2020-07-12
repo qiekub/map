@@ -1,0 +1,24 @@
+.MuiCardContent-root .MuiListItem-gutters {
+    padding-left: 32px;
+    padding-right: 32px;
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+}
+
+html body .sidebarContentCard{
+	position: relative;
+	overflow: visible;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	flex-grow: 1;
+
+	padding-bottom: 64px;
+
+	/*transition: background-color var(--transition-time) var(--timing-function);*/
+}
+
+
+html body .improveFab .icon{
+	color: var(--light-green);
+	margin-right: 8px;
+}

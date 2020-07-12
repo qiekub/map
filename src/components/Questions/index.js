@@ -54,116 +54,6 @@ import AudienceInput from '../AudienceInput/'
 // 	create: ['name','geo_pos','answer_more'],
 // }
 
-/*
-const _parsers_ = {
-	urls: function(value){
-		let urls = value.match(/[^\s]+(?:\.|:|\/).+(?=\s|$)/iumg)
-		// This is not a good regexp but it work okayish.
-		// A comment on url matching: https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python/827621#827621
-
-		urls = [...new Set(urls.filter(v=>v))]
-
-		if (urls.length === 1) {
-			return {urls: urls[0]}
-		} else if (urls.length > 1) {
-			return {urls: urls}
-		}
-
-		return undefined
-	},
-	socialmedia: function(value){
-		// https://wiki.openstreetmap.org/wiki/Key:contact
-
-		let keys = {
-			'instagram.com': 'instagram',
-			'facebook.com': 'facebook',
-			'twitter.com': 'twitter',
-			'youtube.com': 'youtube',
-			't.me': 'telegram',
-			'foursquare.com': 'foursquare',
-		}
-
-		let tags = Array.from(value.matchAll(
-			/[^\s]*?([^.\s]+\.[^.\s/]+)\/[^\s]+/iumg
-		), match => match)
-		.reduce((tags,match) => {
-			const key = keys[match[1]]
-			if (key) {
-				if (!tags[key]) {
-					tags[key] = []
-				}
-				tags[key].push(match[0])
-			}
-			return tags
-		}, {})
-
-		for (const key in tags) {
-			if (tags[key].length === 1) {
-				tags[key] = tags[key][0]
-			}
-			tags['contact:'+key] = tags[key]
-		}
-
-		console.log('tags', tags)
-
-		// usernames = [...new Set(usernames.filter(v=>v))]
-
-		// if (usernames.length === 1) {
-		// 	return {
-		// 		instagram: usernames[0],
-		// 		'contact:instagram': usernames[0],
-		// 	}
-		// } else if (usernames.length > 1) {
-		// 	return {
-		// 		instagram: usernames,
-		// 		'contact:instagram': usernames,
-		// 	}
-		// }
-
-		return undefined
-	},
-	wikidata: function(value){
-		// http://www.wikidata.org/wiki/Q9141
-
-		let ids = Array.from(value.matchAll(
-			/wikidata\.org\/wiki\/([A-Z0-9]+)(?=\s|$)/gmiu
-		), m => m[1])
-
-		ids = [...new Set(ids.filter(v=>v))]
-
-		if (ids.length === 1) {
-			return {wikidata: ids[0]}
-		} else if (ids.length > 1) {
-			return {wikidata: ids}
-		}
-
-		return undefined
-	},
-	wikipedia: function(value){
-		let ids = Array.from(value.matchAll(
-			/(?:([a-z]+)\.)?wikipedia\.org\/wiki\/([^/\s]+)(?=\s|$)/iugm
-		), m => (!!m[1] ? m[1]+':' : '')+m[2])
-
-		ids = [...new Set(ids.filter(v=>v))]
-
-		if (ids.length === 1) {
-			return {wikidata: ids[0]}
-		} else if (ids.length > 1) {
-			return {wikidata: ids}
-		}
-
-		return undefined
-	},
-}
-*/
-
-// console.log(
-// 	_parsers_.socialmedia(`
-// 		instagram.com/thomasrosen
-// 		https://www.instagram.com/thomasrosen/
-// 	`)
-// )
-
 class Questions extends React.Component {
 	constructor(props) {
 		super(props)
@@ -359,30 +249,6 @@ class Questions extends React.Component {
 						..._presets_[tags.preset].tags,
 					}
 				}
-
-
-				// console.log()
-				// console.log('- parser -----------------------------')
-				// console.log()
-
-				// if (
-				// 	!!possibleAnswer.parsers
-				// 	&& possibleAnswer.parsers.length > 0
-				// ) {
-				// 	console.log('possibleAnswer.parsers', possibleAnswer.parsers)
-
-				// 	for (const parserKey of possibleAnswer.parsers) {
-				// 		if (_parsers_[parserKey]) {
-				// 			tags = {
-				// 				...tags,
-				// 				..._parsers_[parserKey](answerValue),
-				// 			}
-				// 		}
-				// 	}
-				// 	console.log('tags', tags)
-				// }
-
-
 			}
 		}
 
@@ -710,6 +576,10 @@ class Questions extends React.Component {
 										}}
 										doc={this.props.doc}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, null)}
+										style={{
+											margin: '4px 0',
+											padding: '0 12px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'preset') {
 									return (<PresetInput
@@ -717,6 +587,9 @@ class Questions extends React.Component {
 										label={possibleAnswer.title_translated}
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={newValue=>this.saveInputValue(questionDoc._id, possibleAnswerKey, newValue)}
+										style={{
+											margin:'8px 8px 4px 8px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'audience') {
 									return (<AudienceInput
@@ -725,6 +598,9 @@ class Questions extends React.Component {
 										helperText={possibleAnswer.description_translated}
 										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
+										style={{
+											margin:'0 8px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'text') {
 									return (<TextField
@@ -738,7 +614,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '8px 8px 4px 8px',
+											margin: '8px 8px 4px',
 										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'number') {
@@ -752,7 +628,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValue(questionDoc._id, possibleAnswerKey)}
 										onChange={event=>this.saveInputValue(questionDoc._id, possibleAnswerKey, event.target.value)}
 										style={{
-											margin: '8px 8px 4px 8px',
+											margin: '8px 8px 4px',
 										}}
 									/>)
 								}else{

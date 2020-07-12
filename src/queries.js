@@ -27,9 +27,35 @@ export const place = gql`
 							lng
 							lat
 						}
+						boundingbox {
+							northeast {
+								lng
+								lat
+							}
+							southwest {
+								lng
+								lat
+							}
+						}
 					}
 					tags(keys: $wantedTags)
-					confidences(keys: $wantedTags)
+				}
+			}
+		}
+	}
+`
+
+export const countries = gql`
+	query($wantedTags: [String], $languages: [String]){
+		countries{
+			_id
+			properties {
+				... on Place {
+					name (languages: $languages){
+						text
+						language
+					}
+					tags(keys: $wantedTags)
 				}
 			}
 		}
@@ -128,9 +154,9 @@ export const questions = gql`
 	}
 `
 
-export const isGeoCoordinateLegal = gql`
+export const countrycode = gql`
 	query($lat: Float = 0.0, $lng: Float = 0.0) {
-		isGeoCoordinateLegal(lat: $lat, lng: $lng)
+		countrycode(lat: $lat, lng: $lng)
 	}
 `
 
