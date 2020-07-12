@@ -21,8 +21,9 @@ class GeoInput extends React.Component {
 		super(props)
 
 		this.state = {
-			map_center: this.props.globals.map_center || {lng:NaN,lat:NaN},
 			isLegal: true,
+			lng: NaN,
+			lat: NaN,
 		}
 
 		this.initialMapViewport = undefined
@@ -72,29 +73,19 @@ class GeoInput extends React.Component {
 		) {
 			this.usedMarker = marker
 
-			const currentCenter = this.props.globals.mainMapFunctions.getCenter()
-			const currentZoom = this.props.globals.mainMapFunctions.getZoom()
+			let lat = marker.center.lat || 0
+			let lng = marker.center.lng || 0
 
-			this.initialMapViewport = {
-				center: currentCenter,
-				zoom: currentZoom,
+			if (lat === 0 && lng === 0) {
+				const mapCenter = (this.props.store.get('map_center_fake') || [NaN,NaN])
+				.map(number => Number.parseFloat(number.toFixed(6))) // WHY just 6 decimal points: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+
+				lng = mapCenter[1]
+				lat = mapCenter[0]
 			}
 
-		
-			let markerPos = {
-				lng: marker.center.lng, 
-				lat: marker.center.lat,
-			}
-
-			let newZoom = currentZoom > 18 ? currentZoom : 18
-			if (markerPos.lat === 0 && markerPos.lng === 0) {
-				newZoom = 3
-				markerPos = {
-					lng: -35, 
-					lat: 40,
-				}
-			}
-
+			let markerPos = {lng,lat}
+			let newZoom = this.props.store.get('map_zoom') || 3
 
 			if (this.props.globals.sidebarIsOpen) { // TODO this.props.globals.sidebarIsOpen isn't enough on small screens
 				markerPos = this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
@@ -108,36 +99,21 @@ class GeoInput extends React.Component {
 		}
 	}
 
+	getGeo(){
+		const mapCenter = (this.props.store.get('map_center_fake') || [NaN,NaN])
+		.map(number => Number.parseFloat(number.toFixed(6))) // WHY just 6 decimal points: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+
+		const lng = mapCenter[1]
+		const lat = mapCenter[0]
+
+		return {lng, lat}
+	}
+
 	setStateGeoPos(event){
-		const map_center = this.props.globals.map_center.map(number => Number.parseFloat(number.toFixed(6))) // WHY: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+		const {lng,lat} = this.getGeo()
 
-		const lng = map_center[1]
-		const lat = map_center[0]
-
-		this.setState({
-			map_center: {
-				lng,
-				lat,
-			}
-		}, ()=>{
-			this.checkIfLegal(isLegal => {
-				this.setState({isLegal})
-				// if (this.props.onChange) {
-				// 	if (isLegal) {
-				// 		this.props.onChange({
-				// 			lng,
-				// 			lat,
-				// 		})
-				// 	}else{
-				// 		this.props.onChange({
-				// 			lng: NaN,
-				// 			lat: NaN,
-				// 		})
-				// 	}
-				// }
-			})
-		})
-
+		this.setState({lng,lat})
+	
 		if (this.props.onChange) {
 			this.props.onChange({
 				lng,
@@ -147,17 +123,15 @@ class GeoInput extends React.Component {
 	}
 
 	render() {
-		const map_center = this.state.map_center
-		
 		return (<div style={this.props.style}>
 			<Typography variant="body2" gutterBottom>
 				<Localized id="instructions" />
 			</Typography>
 			<Typography variant="body2" style={{opacity:0.6}}>
-				<Localized id="lat" vars={{ lat: (map_center.lat+'' || '') }} />
+				<Localized id="lat" vars={{ lat: (this.state.lat+'' || '') }} />
 			</Typography>
 			<Typography variant="body2" style={{opacity:0.6}}>
-				<Localized id="lng" vars={{ lng: (map_center.lng+'' || '') }} />
+				<Localized id="lng" vars={{ lng: (this.state.lng+'' || '') }} />
 			</Typography>
 
 			{
