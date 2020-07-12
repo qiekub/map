@@ -63,6 +63,7 @@ class MainMap extends React.Component {
 		this.addMarkersToPruneCluster = this.addMarkersToPruneCluster.bind(this)
 		this.filterMarkers = this.filterMarkers.bind(this)
 		this.showAllMarkers = this.showAllMarkers.bind(this)
+		this.showAllMarkersButMiddleMarker = this.showAllMarkersButMiddleMarker.bind(this)
 
 		this.setMapPos = this.setMapPos.bind(this)
 		this.viewportChanged = this.viewportChanged.bind(this)
@@ -133,14 +134,18 @@ class MainMap extends React.Component {
 			this.setState({
 				isGeoChooser: true,
 				middleMarkerDoc,
+			}, ()=>{
+				this.filterMarkers(this.filters)
+				this.setGlobalMapCenter()
 			})
-			this.hideAllMarkers()
 		}else{
 			this.setState({
 				isGeoChooser: false,
 				middleMarkerDoc: undefined,
+			}, ()=>{
+				this.filterMarkers(this.filters)
+				this.setGlobalMapCenter()
 			})
-			this.filterMarkers(this.filters)
 		}
 	}
 
@@ -431,81 +436,98 @@ class MainMap extends React.Component {
 		}
 		this.clusterGroup.ProcessView()
 	}
+	showAllMarkersButMiddleMarker(){
+		const middleMarkerID = this.state.middleMarkerDoc._id
+
+		const markers_length = this.markers.length
+		for (let i = markers_length - 1; i >= 0; i--) {
+			if (middleMarkerID === this.markers[i].data._id) {
+				this.markers[i].filtered = true
+			}else{
+				this.markers[i].filtered = false
+			}
+		}
+
+		this.clusterGroup.ProcessView()
+	}
 	filterMarkers(filters){
 		if (this.state.isGeoChooser) {
-			this.hideAllMarkers()
-		} else if (!!this.filters) {
-			const ids = this.filters.ids || []
+			this.showAllMarkersButMiddleMarker()
+		}else{
 
-			const presets = this.filters.presets || []
-			// const presets = ['amenity/community_centre']
-			const presets_length = presets.length
-
-			const selectedAge = this.filters.selectedAge
-			const ageOption = this.filters.ageOption
-			const audienceQueerOptions = this.filters.audienceQueerOptions || []
-			const checkAudienceQueerOptions = audienceQueerOptions.length > 0
-			const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
-
-			if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
-				const markers_length = this.markers.length
-				for (let i = markers_length - 1; i >= 0; i--) {
-					const marker = this.markers[i]
-
-					if (ids.includes(marker.data._id)) {
-						this.markers[i].filtered = false
-					}else{
-
-						let hasUndecidedChangesets = true
-						if (mustHaveUndecidedChangeset) {
-							hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
-						}
-						
-						let isInPresets = true
-						if (presets_length > 0) {
-							isInPresets = presets.map(preset_key=>{
-								return marker.data.___preset.key.startsWith(preset_key)
-							}).reduce((bool,value) => (value ? true : bool), false)
-						}
-
-						let matchesAudienceQueer = true
-						if (checkAudienceQueerOptions) {
-							if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
-								matchesAudienceQueer = false
+			if (!!this.filters) {
+				const ids = this.filters.ids || []
+	
+				const presets = this.filters.presets || []
+				// const presets = ['amenity/community_centre']
+				const presets_length = presets.length
+	
+				const selectedAge = this.filters.selectedAge
+				const ageOption = this.filters.ageOption
+				const audienceQueerOptions = this.filters.audienceQueerOptions || []
+				const checkAudienceQueerOptions = audienceQueerOptions.length > 0
+				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
+	
+				if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
+					const markers_length = this.markers.length
+					for (let i = markers_length - 1; i >= 0; i--) {
+						const marker = this.markers[i]
+	
+						if (ids.includes(marker.data._id)) {
+							this.markers[i].filtered = false
+						}else{
+	
+							let hasUndecidedChangesets = true
+							if (mustHaveUndecidedChangeset) {
+								hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
 							}
-						}
-
-						let isInAgeRange = true
-						if (!!selectedAge) {
-							isInAgeRange = false
-							if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
-								const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-								const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-								isInAgeRange = (
-									   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-									&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
-								)
-							}else{
-								if (!!marker.data.tags.min_age) {
+							
+							let isInPresets = true
+							if (presets_length > 0) {
+								isInPresets = presets.map(preset_key=>{
+									return marker.data.___preset.key.startsWith(preset_key)
+								}).reduce((bool,value) => (value ? true : bool), false)
+							}
+	
+							let matchesAudienceQueer = true
+							if (checkAudienceQueerOptions) {
+								if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
+									matchesAudienceQueer = false
+								}
+							}
+	
+							let isInAgeRange = true
+							if (!!selectedAge) {
+								isInAgeRange = false
+								if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
 									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
-									isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
-								}
-								if (isInAgeRange && !!marker.data.tags.max_age) {
 									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
-									isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									isInAgeRange = (
+										   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+										&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									)
+								}else{
+									if (!!marker.data.tags.min_age) {
+										const parsedMin = Number.parseFloat(marker.data.tags.min_age)
+										isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+									}
+									if (isInAgeRange && !!marker.data.tags.max_age) {
+										const parsedMax = Number.parseFloat(marker.data.tags.max_age)
+										isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
+									}
 								}
 							}
+	
+							this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 						}
-
-						this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 					}
+					this.clusterGroup.ProcessView()
+				}else{
+					this.showAllMarkers()
 				}
-				this.clusterGroup.ProcessView()
 			}else{
 				this.showAllMarkers()
 			}
-		}else{
-			this.showAllMarkers()
 		}
 	}
 
