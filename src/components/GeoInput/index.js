@@ -44,17 +44,6 @@ class GeoInput extends React.Component {
 		}
 	}
 	componentWillUnmount(){
-		// reset map viewport to original state
-		if (
-			this.initialMapViewport &&
-			this.initialMapViewport.center &&
-			this.initialMapViewport.zoom
-		) {
-			this.props.globals.mainMapFunctions.flyTo(this.initialMapViewport.center, this.initialMapViewport.zoom, {
-				duration: this.props.globals.transitionDuration * 0.001
-			})
-		}
-
 		window.removeEventListener('mapViewportUpdated', this.setStateGeoPos)
 		setTimeout(()=>{
 			this.props.globals.mainMapFunctions.useAsGeoChooser(false, undefined)
