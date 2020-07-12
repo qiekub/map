@@ -110,6 +110,11 @@ class MainMap extends React.Component {
 		}
 
 		window.addEventListener('updateMainMapView', this.setMapPos)
+
+		this.mapViewport = {
+			center: this.props.store.get('map_center_real') || [51,10],
+			zoom: this.props.store.get('map_zoom') || 3,
+		}
 	}
 	componentDidUpdate(){
 		if (this.props.filters !== this.filters) {
@@ -549,33 +554,41 @@ class MainMap extends React.Component {
 	// 	return 80
 	// }
 
-	viewportChanged(viewport){
-		if (viewport.center && viewport.zoom) {
-			if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-				this.props.globals.map_center = Object.values(this.map.unproject(this.map.project(viewport.center).add([200,0])) ) // map center with sidebar offset
-			}else{
-				this.props.globals.map_center = viewport.center
-			}
-	
-			this.props.globals.map_zoom = viewport.zoom
-			window.dispatchEvent(new Event('mapViewportUpdated'))
-	
-			if (viewport.zoom >= 18) {
-				this.clusterGroup.Cluster.Size = 10
-			} else if (viewport.zoom >= 16) {
-				this.clusterGroup.Cluster.Size = 20
-			} else if (viewport.zoom >= 14) {
-				this.clusterGroup.Cluster.Size = 60
-			} else if (viewport.zoom >= 8) {
-				this.clusterGroup.Cluster.Size = 80
-			} else {
-				this.clusterGroup.Cluster.Size = this.defaultClusterSize
-			}
-
-			this.props.store.set('map_center_fake', this.props.globals.map_center)
-			this.props.store.set('map_center_real', viewport.center)
-			this.props.store.set('map_zoom', this.props.globals.map_zoom)
+	setGlobalMapCenter(){
+		const viewport = this.mapViewport
+		
+		if (!(!!viewport && !!viewport.center && !!viewport.zoom)) {
+			return
 		}
+
+		let mapCenter = viewport.center || [NaN,NaN]
+		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
+			mapCenter = Object.values(this.map.unproject(this.map.project(mapCenter).add([200,0])) ) // map center with sidebar offset
+		}
+
+		let mapZoom = viewport.zoom || NaN
+		if (mapZoom >= 18) {
+			this.clusterGroup.Cluster.Size = 10
+		} else if (mapZoom >= 16) {
+			this.clusterGroup.Cluster.Size = 20
+		} else if (mapZoom >= 14) {
+			this.clusterGroup.Cluster.Size = 60
+		} else if (mapZoom >= 8) {
+			this.clusterGroup.Cluster.Size = 80
+		} else {
+			this.clusterGroup.Cluster.Size = this.defaultClusterSize
+		}
+
+		this.props.store.set('map_center_fake', mapCenter)
+		this.props.store.set('map_center_real', viewport.center)
+		this.props.store.set('map_zoom', mapZoom)
+
+		window.dispatchEvent(new Event('mapViewportUpdated'))
+	}
+
+	viewportChanged(viewport){
+		this.mapViewport = viewport
+		this.setGlobalMapCenter()
 	}
 
 	zoomIn(){
