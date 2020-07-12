@@ -253,6 +253,16 @@
 
 	display: none;
 	margin-left: 200px;
+
+	animation: middleMarkerUpDown 0.5s ease alternate infinite;
+}
+@keyframes middleMarkerUpDown {
+	0% {
+		transform: translate3d(-50%, -50%, 0);
+	}
+	100% {
+		transform: translate3d(-50%, -65%, 0);
+	}
 }
 @media (max-width: 800px) {
 	.markerInTheMiddel{
