@@ -208,7 +208,8 @@ recognition_marriage = Marriage
 instructions = Verschiebe die Karte, um den Standort auszuwählen.
 lat = Breitengrad: {$lat}
 lng = Längengrad: {$lng}
-error_message_geo_not_legal = Eventuell ist es illegal, an diesem Ort queer zu sein. Fügen keine Orte hinzu, die anderen potenziell schaden könnten, indem Sie diese zwangsouten.
+legality_message_geo_not_legal = Eventuell ist es illegal, an diesem Ort queer zu sein.
+legality_message_be_cautious = Fügen keine Orte hinzu, die anderen potenziell schaden könnten, indem Sie diese zwangsouten. Prüfe im Zweifelsfall die ILGA-Dikriminations-Informationen.
 
 
 

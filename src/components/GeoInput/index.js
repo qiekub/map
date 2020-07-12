@@ -2,7 +2,7 @@ import React from 'react'
 // import './index.css'
 
 import {
-	isGeoCoordinateLegal as query_isGeoCoordinateLegal,
+	countrycode as query_countrycode,
 } from '../../queries.js'
 
 import {
@@ -13,23 +13,28 @@ import {
 // } from '@material-ui/icons'
 
 import { Localized/*, withLocalization*/ } from '../Localized/'
-
 import { withGlobals } from '../Globals/'
+import { withTheme } from '@material-ui/core/styles'
+import { getILGA } from '../../functions.js'
+
+import DiscriminationFacts from '../DiscriminationFacts/'
 
 class GeoInput extends React.Component {
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			isLegal: true,
 			lng: NaN,
 			lat: NaN,
+			countryCode: null,
+			legalityStatusNumber: null,
 		}
 
 		this.initialMapViewport = undefined
 		this.usedMarker = undefined
 
 		this.setStateGeoPos = this.setStateGeoPos.bind(this)
+		this.getStatusColor = this.getStatusColor.bind(this)
 	}
 
 	componentDidMount(){
@@ -51,17 +56,39 @@ class GeoInput extends React.Component {
 		}, 1)
 	}
 
-	checkIfLegal(callback){
+	getLegalityNumber(alpha3code){
+		const ilga = getILGA(alpha3code)
+		if (ilga) {
+			return ilga.overview.statusNumber
+		}
+
+		return null
+	}
+
+	setCountryCode(lng, lat){
 		this.props.globals.graphql.query({
-			query: query_isGeoCoordinateLegal,
+			query: query_countrycode,
 			variables: {
-				lng: this.state.map_center.lng,
-				lat: this.state.map_center.lat,
+				lng,
+				lat,
 			},
 		}).then(result => {
-			callback(result && result.data && result.data.isGeoCoordinateLegal)
+			if (result && result.data && result.data.countrycode) {
+				this.setState({
+					countryCode: result.data.countrycode,
+					legalityStatusNumber: this.getLegalityNumber(result.data.countrycode),
+				})
+			}else{
+				this.setState({
+					countryCode: null,
+					legalityStatusNumber: null,
+				})
+			}
 		}).catch(error=>{
-			callback(false)
+			this.setState({
+				countryCode: null,
+				legalityStatusNumber: null,
+			})
 		})
 	}
 
@@ -113,6 +140,7 @@ class GeoInput extends React.Component {
 		const {lng,lat} = this.getGeo()
 
 		this.setState({lng,lat})
+		this.setCountryCode(lng, lat)
 	
 		if (this.props.onChange) {
 			this.props.onChange({
@@ -120,6 +148,17 @@ class GeoInput extends React.Component {
 				lat,
 			})
 		}
+	}
+
+	getStatusColor(status){
+		if (status === 'great' || status === 1) {
+			return this.props.theme.palette.success.main
+		} else if (status === 'ok' || status === 2) {
+			return this.props.theme.palette.warning.main
+		} else if (status === 'bad' || status === 3) {
+			return this.props.theme.palette.error.main
+		}
+		return this.props.theme.palette.background.default
 	}
 
 	render() {
@@ -135,18 +174,51 @@ class GeoInput extends React.Component {
 			</Typography>
 
 			{
-				!this.state.isLegal
+				this.state.legalityStatusNumber === 3
 				? (
 					<Typography
 						key="geoInputErrorMessage_NotLegal"
 						variant="body2"
-						color="error"
 						style={{
-							marginTop: '16px'
+							marginTop: '16px',
+							color: this.getStatusColor(this.state.legalityStatusNumber),
 						}}
 					>
-						<Localized id="error_message_geo_not_legal" />
+						<Localized id="legality_message_geo_not_legal" />
 					</Typography>
+				)
+				: undefined
+			}
+
+			<Typography
+				key="geoInputInfoMessage_BeCautious"
+				variant="body2"
+				style={{
+					marginTop: '16px',
+				}}
+			>
+				<Localized id="legality_message_be_cautious" />
+			</Typography>
+
+			{
+				!!this.state.countryCode
+				? (
+					<div
+						style={{
+							display: 'block',
+							margin: '16px 0 0',
+							background: this.props.theme.palette.background.default,
+							borderRadius: '8px',
+							// border: '1px solid '+this.props.theme.palette.divider,
+							overflow: 'hidden',
+						}}
+					>
+						<DiscriminationFacts
+							key={'d_facts_'+this.state.countryCode}
+							countryCode={this.state.countryCode}
+							toggleable={true}
+						/>
+					</div>
 				)
 				: undefined
 			}
@@ -154,7 +226,7 @@ class GeoInput extends React.Component {
 	}
 }
 
-export default withGlobals(GeoInput)
+export default withGlobals(withTheme(GeoInput))
 
 // You can't use this position as it's illegal to be queer there. (Or we aren't sure.)
 

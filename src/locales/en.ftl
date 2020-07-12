@@ -209,7 +209,8 @@ recognition_marriage = Marriage
 instructions = Move the map to choose the location.
 lat = Latitude: {$lat}
 lng = Longitude: {$lng}
-error_message_geo_not_legal = It might be illegal to be queer at this location. Don't add places that could potentially harm others by exposing them.
+legality_message_geo_not_legal = It might be illegal to be queer at this location.
+legality_message_be_cautious = Don't add places that could potentially harm others by exposing them. When in doubt, check the ILGA Dicrimination Information.
 
 
 
