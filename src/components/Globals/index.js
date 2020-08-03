@@ -153,6 +153,7 @@ class GlobalsProvider extends React.Component {
 	}
 
 	getCountryByCode_internal(iso_a3){
+		iso_a3 = iso_a3.toUpperCase()
 		return this.country_by_iso[iso_a3]
 	}
 
@@ -179,7 +180,7 @@ class GlobalsProvider extends React.Component {
 						const country_by_iso = {}
 		
 						for (const doc of data.countries) {
-							country_by_iso[doc.properties.tags[ios_tag_key]] = doc
+							country_by_iso[doc.properties.tags[ios_tag_key].toUpperCase()] = doc
 						}
 		
 						this.country_by_iso = country_by_iso
