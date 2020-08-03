@@ -96,7 +96,7 @@ class FiltersPanelContent extends React.Component {
 		return {
 			presets: (!!this.state.category ? this.state.category.presets : []),
 			
-			audienceQueerOptions: this.state.audience_queer.has('eveything') ? [] : [...this.state.audience_queer],
+			audienceQueerOptions: this.state.audience_queer.has('everything') ? [] : [...this.state.audience_queer],
 			selectedAge: this.state.age,
 			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : ''),
 			mustHaveUndecidedChangeset: this.state.mustHaveUndecidedChangeset,
