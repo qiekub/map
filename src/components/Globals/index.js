@@ -180,7 +180,9 @@ class GlobalsProvider extends React.Component {
 						const country_by_iso = {}
 		
 						for (const doc of data.countries) {
-							country_by_iso[doc.properties.tags[ios_tag_key].toUpperCase()] = doc
+							let country_key = doc.properties.tags[ios_tag_key] || ''
+							country_key = country_key.toUpperCase()
+							country_by_iso[country_key] = doc
 						}
 		
 						this.country_by_iso = country_by_iso
