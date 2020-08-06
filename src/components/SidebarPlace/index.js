@@ -1059,6 +1059,12 @@ class SidebarPlace extends React.Component {
 			? this.props.theme.palette.getContrastText(headerBackgroundColor)
 			: doc.___color.fg
 		)
+		let currentPage = null
+		if (this.state.page === 'view') {
+			currentPage = this.renderView(doc)
+		} else if (this.state.page === 'edit') {
+			currentPage = this.renderQuestions(doc)
+		}
 
 		return (<>
 			<Paper
@@ -1115,11 +1121,7 @@ class SidebarPlace extends React.Component {
 				</CardContent>
 			</Card>
 
-				{
-					this.state.page === 'view'
-					? this.renderView(doc)
-					: this.renderQuestions(doc)
-				}
+			{currentPage}
 
 			</Paper>
 		</>)
