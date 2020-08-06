@@ -2,6 +2,7 @@ import React from 'react'
 // import './index.css'
 
 import {
+	Paper,
 	TextField,
 
 	ListItem,
@@ -147,6 +148,13 @@ class PresetInput extends React.Component {
 					</ListItemIcon>
 					<ListItemText primary={preset.name_translated}/>
 				</ListItem>)}
+
+				ListboxProps={{
+					style: {
+						'-webkit-overflow-scrolling': 'touch',
+					},
+				}}
+				PaperComponent={Paper}
 				
 				blurOnSelect
 				openOnFocus
