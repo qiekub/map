@@ -1108,6 +1108,7 @@ class SidebarPlace extends React.Component {
 				className={this.props.className}
 				style={{
 					backgroundColor: headerBackgroundColor,
+					color: headerForegroundColor,
 				}}
 			>
 
