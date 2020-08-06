@@ -1064,6 +1064,41 @@ class SidebarPlace extends React.Component {
 			currentPage = this.renderView(doc)
 		} else if (this.state.page === 'edit') {
 			currentPage = this.renderQuestions(doc)
+
+		let presetTypeHader = null
+		if (
+			!!doc
+			&& !!doc.___preset
+			&& doc.___preset.key !== ''
+			&& doc.___preset.key !== 'default'
+		) {
+			presetTypeHader = (
+				<ListItem
+					style={{
+						color: headerForegroundColor,
+					}}
+				>
+					<ListItemIcon>
+						<div
+							className="material-icons-round"
+							style={{
+								color: headerForegroundColor,
+							}}
+						>
+							{
+								doc.___preset.icon
+								? doc.___preset.icon.toLowerCase()
+								: 'place'
+							}
+						</div>
+					</ListItemIcon>
+					<ListItemText
+						primary={
+							getTranslation(doc.___preset.name, this.props.globals.userLocales)
+						}
+					/>
+				</ListItem>
+			)
 		}
 
 		return (<>
@@ -1107,17 +1142,7 @@ class SidebarPlace extends React.Component {
 						{this.state.headerText}
 					</Typography>
 					
-					{
-						doc.___preset.key !== '' && doc.___preset.key !== 'default'
-						? (<ListItem style={{m_argin:'0 -32px',color:headerForegroundColor}}>
-								<ListItemIcon style={{m_inWidth:'auto',m_arginRight:'16px'}}>
-									<div className="material-icons-round" style={{color:headerForegroundColor}}>{doc.___preset.icon ? doc.___preset.icon.toLowerCase() : 'place'}</div>
-								</ListItemIcon>
-								<ListItemText primary={getTranslation(doc.___preset.name,this.props.globals.userLocales)}/>
-							</ListItem>
-						)
-						: null
-					}
+					{presetTypeHader}
 				</CardContent>
 			</Card>
 
