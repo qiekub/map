@@ -955,6 +955,14 @@ class SidebarPlace extends React.Component {
 		const tags = properties.tags || {}
 
 		return (<React.Fragment key="view">
+			<Card
+				key="sidebarContentCard"
+				elevation={6}
+				className="sidebarContentCard"
+				style={{
+					backgroundColor: this.props.theme.palette.background.paper,
+				}}
+			>
 				<CardContent>
 
 					{
@@ -992,6 +1000,7 @@ class SidebarPlace extends React.Component {
 
 					{this.renderSuggestions()}
 				</CardContent>
+			</Card>
 		</React.Fragment>)
 	}
 	renderQuestions(doc){
@@ -1002,6 +1011,14 @@ class SidebarPlace extends React.Component {
 		)
 
 		return (<React.Fragment key="editing">
+			<Card
+				key="sidebarContentCard"
+				elevation={6}
+				className="sidebarContentCard"
+				style={{
+					backgroundColor: this.props.theme.palette.background.default,
+				}}
+			>
 			<CardContent>
 				<Questions
 					key="the_questions"
@@ -1015,6 +1032,7 @@ class SidebarPlace extends React.Component {
 					onAbort={this.abortEdit}
 				/>
 			</CardContent>
+			</Card>
 		</React.Fragment>)
 	}
 
@@ -1097,24 +1115,11 @@ class SidebarPlace extends React.Component {
 				</CardContent>
 			</Card>
 
-			<Card
-				key="sidebarContentCard"
-				elevation={6}
-				className="sidebarContentCard"
-				style={{
-					backgroundColor: (
-						this.state.page === 'view'
-						? this.props.theme.palette.background.paper
-						: this.props.theme.palette.background.default
-					),
-				}}
-			>
 				{
 					this.state.page === 'view'
 					? this.renderView(doc)
 					: this.renderQuestions(doc)
 				}
-			</Card>
 
 			</Paper>
 		</>)
