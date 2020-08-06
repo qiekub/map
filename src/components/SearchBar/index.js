@@ -645,6 +645,7 @@ class SearchBar extends React.Component {
 					{
 						actions.map(action => {
 							return <Chip
+								key={action.title}
 								icon={action.icon}
 								label={<Localized id={action.title} />}
 								onClick={action.onClick}
