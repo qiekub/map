@@ -1107,11 +1107,6 @@ class SidebarPlace extends React.Component {
 				className={this.props.className}
 				style={{
 					backgroundColor: headerBackgroundColor,
-					// background: `linear-gradient(180deg, ${headerBackgroundColor} 50%, ${
-					// 	this.state.page === 'view'
-					// 	? this.props.theme.palette.background.paper
-					// 	: this.props.theme.palette.background.default
-					// } 50%)`,
 					display: 'flex',
 					alignContent: 'stretch',
 					flexDirection: 'column',
@@ -1127,14 +1122,6 @@ class SidebarPlace extends React.Component {
 					flexShrink: 0,
 
 					background: 'transparent',
-					/*...(
-						doc.___color.key !== 'default'
-						? {
-							color: doc.___color.fg,
-							background: headerBackgroundColor,
-						}
-						: undefined
-					)*/
 				}}
 			>
 				<CardContent>
