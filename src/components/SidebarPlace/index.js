@@ -1046,17 +1046,20 @@ class SidebarPlace extends React.Component {
 			return null
 		}
 
-		const headerBackgroundColor = (
-			doc.___color.key === 'default'
-			? this.props.theme.palette.background.default
-			: doc.___color.bg
-		)
+		let headerBackgroundColor = ''
+		let headerForegroundColor = ''
+		if (
+			!!doc
+			&& !!doc.___color
+			&& doc.___color.key !== 'default'
+		) {
+			headerBackgroundColor = doc.___color.bg
+			headerForegroundColor = doc.___color.fg
+		}else{
+			headerBackgroundColor = this.props.theme.palette.background.default
+			headerForegroundColor = this.props.theme.palette.getContrastText(headerBackgroundColor)
+		}
 
-		const headerForegroundColor = (
-			doc.___color.key === 'default'
-			? this.props.theme.palette.getContrastText(headerBackgroundColor)
-			: doc.___color.fg
-		)
 		let currentPage = null
 		if (this.state.page === 'view') {
 			currentPage = this.renderView(doc)
