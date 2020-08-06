@@ -1,5 +1,7 @@
 import React from 'react'
 
+import './index.css'
+
 import SidebarPlace from '../SidebarPlace/'
 import SidebarChangesets from '../SidebarChangesets/'
 

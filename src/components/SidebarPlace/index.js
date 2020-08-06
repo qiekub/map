@@ -3,7 +3,6 @@ Wheelchair accessible / Not wheelchair accessible
 */
 
 import React from 'react'
-import './index.css'
 
 import { Localized, withLocalization } from '../Localized/'
 
