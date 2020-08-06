@@ -397,3 +397,28 @@
 	text-overflow: ellipsis;
 }
 
+
+
+
+.zoomButtons{
+	position: fixed;
+	z-index: var(--z-index-fabs);
+	bottom: 28px;
+	right: 4px;
+	pointerEvents: none;
+}
+@media (max-width: 900px) {
+	.appClassWrapper.sidebarIsOpen .zoomButtons{
+		bottom: 80px;
+	}
+}
+@media (max-width: 500px) {
+	.zoomButtons{
+		bottom: auto;
+		top: 80px;
+	}
+}
+
+
+
+

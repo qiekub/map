@@ -624,6 +624,7 @@ class App extends React.Component {
 				filters={this.state.filters}
 				mapIsResizing={this.state.mapIsResizing}
 				sidebarIsOpen={this.state.sidebarIsOpen}
+				onFiltersChanged={this.filtersChanged}
 			/>
 			
 		</StylesProvider>

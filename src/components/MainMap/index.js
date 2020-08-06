@@ -703,14 +703,7 @@ class MainMap extends React.Component {
 				</div>
 			</div>
 
-			<div style={{
-				position: 'fixed',
-				zIndex: '99999999',
-				bottom: '28px',
-				right: '4px',
-				// margin: '0 8px 8px 0',
-				pointerEvents: 'none',
-			}}>
+			<div className="zoomButtons">
 				<Fab
 					aria-label={this.props.getString('zoom_in_aria_label')}
 					title={this.props.getString('zoom_in_aria_label')}
