@@ -17,9 +17,11 @@ import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core
 
 import {
 	Fab,
+	Drawer,
 } from '@material-ui/core'
 import {
 	AddRounded as AddIcon,
+	MenuRounded as MenuIcon,
 	// FilterList as FilterListIcon,
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
@@ -27,6 +29,7 @@ import {
 import MainMap from '../MainMap/'
 import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
+import MainDrawerContent from '../MainDrawerContent/'
 
 import Ubuntu_Bold from '../../fonts/Ubuntu/Ubuntu-Bold.ttf'
 import Ubuntu_BoldItalic from '../../fonts/Ubuntu/Ubuntu-BoldItalic.ttf'
@@ -93,6 +96,8 @@ class App extends React.Component {
 
 			action: '',
 			docID: '',
+
+			isMainDrawerOpen: false,
 		}
 
 		this.functions = {}
@@ -111,6 +116,9 @@ class App extends React.Component {
 
 		this.dontFilterTheseIds = this.dontFilterTheseIds.bind(this)
 		this.onPathChanged = this.onPathChanged.bind(this)
+
+		this.closeMainDrawer = this.closeMainDrawer.bind(this)
+		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
 	}
 
 	componentDidMount(){
@@ -499,6 +507,14 @@ class App extends React.Component {
 		this.setState(pathVars)
 	}
 
+	closeMainDrawer(){
+		this.setState({isMainDrawerOpen:false})
+	}
+	toggleMainDrawer(){
+		this.setState((state,props)=>{
+			return {isMainDrawerOpen:!state.isMainDrawerOpen}
+		})
+	}
 	render() {
 		return (<>
 			<ThemeProvider theme={this.state.theme}>
@@ -514,7 +530,41 @@ class App extends React.Component {
 					onPathChanged={this.onPathChanged}
 				/>
 			</Router>
-			
+
+			<Drawer
+				open={this.state.isMainDrawerOpen}
+				onClose={this.toggleMainDrawer}
+			>
+				<MainDrawerContent onClose={this.closeMainDrawer}/>
+			</Drawer>
+
+			{/*<Fab
+				aria-label={this.props.getString('open_menu_aria_label')}
+				title={this.props.getString('open_menu_aria_label')}
+				variant="extended"
+				className="mainMenuFab"
+				onClick={this.toggleMainDrawer}
+			>
+				<MenuIcon style={{marginRight:'8px'}} />
+				QueerMap <Localized
+					id="by_brandname_link"
+					elems={{
+						mainlink: null,
+					}}
+				/>
+			</Fab>*/}
+
+
+			<Fab
+				aria-label={this.props.getString('open_menu_aria_label')}
+				title={this.props.getString('open_menu_aria_label')}
+				variant="round"
+				size="medium"
+				className="mainMenuFab"
+				onClick={this.toggleMainDrawer}
+			>
+				<MenuIcon />
+			</Fab>
 
 			<SearchBar
 				className="SearchBar"

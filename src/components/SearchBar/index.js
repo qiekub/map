@@ -36,10 +36,8 @@ import {
 	HourglassEmptyRounded as HourglassEmptyIcon,
 	CloseRounded as CloseIcon,
 	ArrowBackRounded as ArrowBackIcon,
-	MenuRounded as MenuIcon,
 } from '@material-ui/icons'
 
-import MainDrawerContent from '../MainDrawerContent/'
 
 class SearchBar extends React.Component {
 	constructor(props) {
@@ -48,7 +46,6 @@ class SearchBar extends React.Component {
 		this.state = {
 			value: '',
 			loadingSearchResult: false,
-			isMainDrawerOpen: false,
 			searchResults_poi: [],
 			searchResults_administratives: [],
 			searchResults_address: [],
@@ -61,8 +58,6 @@ class SearchBar extends React.Component {
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
 		this.closeSidebar = this.closeSidebar.bind(this)
-		this.closeMainDrawer = this.closeMainDrawer.bind(this)
-		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
 
 		this.loadSearchResults = this.loadSearchResults.bind(this)
 		this.openSearchResult = this.openSearchResult.bind(this)
@@ -249,16 +244,6 @@ class SearchBar extends React.Component {
 			}
 		})
 	}
-
-	closeMainDrawer(){
-		this.setState({isMainDrawerOpen:false})
-	}
-	toggleMainDrawer(){
-		this.setState((state,props)=>{
-			return {isMainDrawerOpen:!state.isMainDrawerOpen}
-		})
-	}
-
 	acceptEssentialPrivacyAndCloseIntro(){
 		this.props.store.setPrivacy(null, true).finally(()=>{
 			this.props.store.set('showWebsiteIntro', false)
@@ -279,11 +264,9 @@ class SearchBar extends React.Component {
 				</IconButton>
 			)
 		} else {
-			leftIcon = (
-				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} onClick={this.toggleMainDrawer} aria-label={this.props.getString('open_menu_aria_label')} title={this.props.getString('open_menu_aria_label')}>
-					<MenuIcon />
-				</IconButton>
-			)
+			leftIcon = (<div style={{
+				width: '16px',
+			}}></div>)
 		}
 
 
@@ -303,12 +286,7 @@ class SearchBar extends React.Component {
 		}
 
 		return (<div className={this.props.className}>
-			<Drawer
-				open={this.state.isMainDrawerOpen}
-				onClose={this.toggleMainDrawer}
 			>
-				<MainDrawerContent onClose={this.closeMainDrawer}/>
-			</Drawer>
 
 			<Paper
 				className={

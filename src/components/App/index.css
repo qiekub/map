@@ -11,6 +11,7 @@ body {
 	--z-index-introcard: 3;
 	--z-index-sidebar: 4;
 	--z-index-searchbar: 5;
+	--z-index-menu-fab: 5;
 
 	--border-radius: 8px;
 
@@ -45,6 +46,17 @@ body,
 html body .MuiPaper-rounded,
 html body .MuiButton-root{
 	border-radius: 8px;
+
+html body .mainMenuFab{
+	z-index: var(--z-index-menu-fab);
+	position: absolute;
+
+	top: 16px;
+	left: 16px;
+
+	text-transform: none;
+	font-weight: bold;
+}
 }
 
 html body .addNewFab{
