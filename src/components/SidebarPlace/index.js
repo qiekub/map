@@ -190,6 +190,10 @@ class SidebarPlace extends React.Component {
 			this.action !== action ||
 			this.docID !== docID
 		) {
+			let docID_changed = false
+			if (this.docID !== docID) {
+				docID_changed = true
+			}
 			this.action = action
 			this.docID = docID
 
@@ -201,26 +205,50 @@ class SidebarPlace extends React.Component {
 					headerText: '',
 				})
 			}else{
-				if (action === 'add') {
-					if (!(!!docID) || docID === '') {
-						this.navigateToUnusedID()
-					}else{
-						this.editNewDoc(docID, 'Place')
+				const loadingState = (
+					docID_changed === true
+					? {
+						doc: {},
+						page: 'loading',
+						headerText: '',
 					}
+					: {
+						page: 'loading',
+					}
+				)
+
+				if (action === 'add') {
+					this.props.onSetSidebarIsOpen(true)
+					this.setState(loadingState, ()=>{
+						if (!(!!docID) || docID === '') {
+							this.navigateToUnusedID()
+						}else{
+							this.editNewDoc(docID, 'Place')
+						}
+					})
 				} else if (action === 'country') {
 					if (!!docID && docID !== '') {
-						this.navigateToPlaceByCountryCode(docID) // docID is the country-code
+						this.props.onSetSidebarIsOpen(true)
+						this.setState(loadingState, ()=>{
+							this.navigateToPlaceByCountryCode(docID) // docID is the country-code
+						})
 					}
 				}  else if (action === 'view') {
 					if (!!docID && docID !== '') {
-						this.loadAndViewDoc(docID, ()=>{
-							this.setState({page:'view'})
+						this.props.onSetSidebarIsOpen(true)
+						this.setState(loadingState, ()=>{
+							this.loadAndViewDoc(docID, ()=>{
+								this.setState({page:'view'})
+							})
 						})
 					}
 				} else if (action === 'edit') {
 					if (!!docID && docID !== '') {
-						this.loadAndViewDoc(docID, ()=>{
-							this.setState({page:'edit'})
+						this.props.onSetSidebarIsOpen(true)
+						this.setState(loadingState, ()=>{
+							this.loadAndViewDoc(docID, ()=>{
+								this.setState({page:'edit'})
+							})
 						})
 					}
 				}
@@ -946,7 +974,9 @@ class SidebarPlace extends React.Component {
 				margin: '16px 0',
 			}}>Proposed Improvements</Typography>
 
-			{this.renderChangesets(changesets)}
+			<div style={{margin:'0 -16px'}}>
+				{this.renderChangesets(changesets)}
+			</div>
 		</div>)
 	}
 
@@ -1035,6 +1065,21 @@ class SidebarPlace extends React.Component {
 			</Card>
 		</React.Fragment>)
 	}
+	renderLoading(){
+		return (<React.Fragment key="loading">
+			<Typography
+				variant="h4"
+				component="h1"
+				style={{
+					margin: '-32px 32px 0 32px',
+					fontWeight: '900',
+					color: 'inherit',
+				}}
+			>
+				<Localized id="loading" />
+			</Typography>
+		</React.Fragment>)
+	}
 
 	render(){
 		const doc = this.state.doc
@@ -1065,6 +1110,9 @@ class SidebarPlace extends React.Component {
 			currentPage = this.renderView(doc)
 		} else if (this.state.page === 'edit') {
 			currentPage = this.renderQuestions(doc)
+		} else if (this.state.page === 'loading') {
+			currentPage = this.renderLoading()
+		}
 
 		let presetTypeHader = null
 		if (

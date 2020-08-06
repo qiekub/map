@@ -128,6 +128,8 @@ addresses_listheading = Adressen
 
 
 # Sidebar
+loading = Laden…
+
 improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
 
