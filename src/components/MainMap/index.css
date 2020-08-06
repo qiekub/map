@@ -289,7 +289,7 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate3d(-50%, -50%, 0);
+	transform: translate3d(-50%, -50%, 0) scaleY(1);
 	cursor: text;
 
 	/*margin-top: -5px;*/
@@ -306,10 +306,10 @@
 }
 @keyframes middleMarkerUpDown {
 	0% {
-		transform: translate3d(-50%, -50%, 0);
+		transform: translate3d(-50%, -50%, 0) scaleY(0.95);
 	}
 	100% {
-		transform: translate3d(-50%, -65%, 0);
+		transform: translate3d(-50%, -65%, 0) scaleY(1);
 	}
 }
 @media (max-width: 800px) {
