@@ -432,7 +432,7 @@ class App extends React.Component {
 	}
 
 	setSearchBarValue(value){
-		this.setState({searchBarValue:value})
+		// this.setState({searchBarValue:value})
 	}
 
 	setSidebarIsOpen(value){
