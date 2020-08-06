@@ -793,7 +793,7 @@ class Questions extends React.Component {
 				<div style={{
 					display: 'flex',
 					justifyContent: 'space-between',
-					margin: '32px 0 64px 0'
+					margin: '32px 0 0 0'
 				}}>
 					<Fab
 						onClick={this.abort}
@@ -851,7 +851,7 @@ class Questions extends React.Component {
 					<div style={{
 						display: 'flex',
 						justifyContent: 'space-between',
-						margin: '32px 0 64px 0'
+						margin: '32px 0 0 0'
 					}}>
 						<Fab
 							onClick={this.abort}
@@ -900,7 +900,7 @@ class Questions extends React.Component {
 					<div style={{
 						display: 'flex',
 						justifyContent: 'space-between',
-						margin: '32px 0 64px 0'
+						margin: '32px 0 0 0'
 					}}>
 						<Fab
 							onClick={this.showQuestions}
@@ -937,7 +937,7 @@ class Questions extends React.Component {
 					<div style={{
 						display: 'flex',
 						justifyContent: 'space-between',
-						margin: '32px 0 64px 0'
+						margin: '32px 0 0 0'
 					}}>
 						<Fab
 							onClick={this.finish}
