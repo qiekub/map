@@ -1039,12 +1039,10 @@ class SidebarPlace extends React.Component {
 	render(){
 		const doc = this.state.doc
 
-		if (!(
-			!!doc &&
-			!!doc._id // &&
-			// !!doc.properties &&
-			// !!doc.properties.tags
-		)) {
+		if (
+			!(!!doc)
+			|| !(['view','edit','loading'].includes(this.state.page))
+		) {
 			return null
 		}
 
