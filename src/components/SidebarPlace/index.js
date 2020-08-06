@@ -1108,9 +1108,6 @@ class SidebarPlace extends React.Component {
 				className={this.props.className}
 				style={{
 					backgroundColor: headerBackgroundColor,
-					display: 'flex',
-					alignContent: 'stretch',
-					flexDirection: 'column',
 				}}
 			>
 
