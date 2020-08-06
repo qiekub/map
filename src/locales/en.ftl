@@ -1,6 +1,11 @@
 
+# Actions
+give_feedback = Give Feedback
+add_place = Add New Place
+
+
+
 # App
-add-place-fab = Add a Place
 close-button = close
 
 

@@ -10,7 +10,7 @@ body {
 	--z-index-fabs: 2;
 	--z-index-introcard: 3;
 	--z-index-sidebar: 4;
-	--z-index-searchbar: 5;
+	--z-index-searchbar: 3;
 	--z-index-menu-fab: 5;
 
 	--border-radius: 8px;
@@ -151,16 +151,25 @@ html body .Sidebar{
 
 .SearchBar{
 	z-index: var(--z-index-searchbar);
-	top: 0;
-	margin: 16px;
+	bottom: 16px;
 	width: calc(400px - 32px);
 	max-width: calc(100% - 32px);
+	left: 50%;
+	transform: translateX(-50%);
+}
+.appClassWrapper.sidebarIsOpen .SearchBar{
+	transform: translateX(calc(-50% + 200px));
+}
+@media (max-width: 900px) {
+	.appClassWrapper.sidebarIsOpen .SearchBar{
+		max-width: calc(100% - 408px);
+	}
 }
 
 
 @supports (backdrop-filter: blur(16px)) {
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
-	.SearchBar .header:before,
+	.SearchBar .blurredBG:before,
 	.filtersPanel .fab:before {
 		content: '';
 		position: absolute;
@@ -174,7 +183,7 @@ html body .Sidebar{
 	}
 
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
-	.SearchBar .header:before,
+	.SearchBar .blurredBG:before,
 	.filtersPanel .fab:before{
 		backdrop-filter: blur(16px); /* blur(32px) saturate(2); */
 	}
@@ -183,13 +192,14 @@ html body .Sidebar{
 		background: none;
 	}
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
-	.SearchBar .header,
+	.SearchBar .blurredBG,
 	.filtersPanel .fab{
+		position: relative;
 		background-color: rgba(255,255,255,0.9) !important;
 	}
 	@media (prefers-color-scheme: dark) {
 		.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root,
-		.SearchBar .header,
+		.SearchBar .blurredBG,
 		.filtersPanel .fab{
 			background-color: rgba(32,32,32,0.9) !important;
 		}

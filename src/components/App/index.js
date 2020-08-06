@@ -8,7 +8,7 @@ import { Router, navigate } from '@reach/router'
 // import colors from '../../data/dist/colors.json'
 // import colorsByPreset from '../../data/dist/colorsByPreset.json'
 
-import { Localized, withLocalization } from '../Localized/'
+import { /*Localized,*/ withLocalization } from '../Localized/'
 
 import { withGlobals } from '../Globals/'
 
@@ -20,7 +20,6 @@ import {
 	Drawer,
 } from '@material-ui/core'
 import {
-	AddRounded as AddIcon,
 	CloseRounded as CloseIcon,
 	MenuRounded as MenuIcon,
 	// FilterList as FilterListIcon,
@@ -526,7 +525,12 @@ class App extends React.Component {
 	}
 
 	render() {
-		return (<>
+		return (<div
+			className={
+				'appClassWrapper '
+				+(this.state.sidebarIsOpen ? 'sidebarIsOpen ' : 'sidebarIsClosed')
+			}
+		>
 			<ThemeProvider theme={this.state.theme}>
 			<StylesProvider injectFirst>
 
@@ -598,21 +602,6 @@ class App extends React.Component {
 				onDontFilterTheseIds={this.dontFilterTheseIds}
 			/>
 
-			{
-				this.state.isSmallScreen
-				? undefined
-				: (<Fab
-					aria-label={this.props.getString('add-place-fab')}
-					title={this.props.getString('add-place-fab')}
-					variant="extended"
-					color="secondary"
-					className="addNewFab"
-					onClick={()=>navigate('/add/')}
-				>
-					<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
-					<Localized id="add-place-fab" />
-				</Fab>)
-
 			<Sidebar
 				action={this.state.action}
 				docID={this.state.docID}
@@ -639,7 +628,7 @@ class App extends React.Component {
 			
 		</StylesProvider>
 		</ThemeProvider>
-		</>)
+		</div>)
 	}
 }
 

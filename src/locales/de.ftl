@@ -1,6 +1,11 @@
 
+# Actions
+give_feedback = Feedback geben
+add_place = Ort hinzufügen
+
+
+
 # App
-add-place-fab = Ort hinzufügen
 close-button = schließen
 
 

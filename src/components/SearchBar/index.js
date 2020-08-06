@@ -17,7 +17,6 @@ import {
 	Paper,
 	InputBase,
 	IconButton,
-	Drawer,
 
 	List,
 	ListItem,
@@ -29,13 +28,37 @@ import {
 	Button,
 	Typography,
 	Link,
+
+	Chip,
 } from '@material-ui/core'
 
 import {
-	// SearchRounded as SearchIcon,
+	AlternateEmailRounded as AlternateEmailIcon,
+	AddRounded as AddIcon,
+	SearchRounded as SearchIcon,
 	HourglassEmptyRounded as HourglassEmptyIcon,
 	ArrowBackRounded as ArrowBackIcon,
 } from '@material-ui/icons'
+
+
+
+const actions = [
+	{
+		icon: <AddIcon />,
+		title: 'add_place',
+		onClick: () => {
+			navigate('/add/')
+		}
+	},
+	{
+		icon: <AlternateEmailIcon />,
+		title: 'give_feedback',
+		onClick: () => {
+			window.open('mailto:thomas.rosen@qiekub.org', '_self')
+		}
+	},
+]
+
 
 
 class SearchBar extends React.Component {
@@ -50,6 +73,7 @@ class SearchBar extends React.Component {
 			searchResults_address: [],
 			showSearchResults: false,
 			showWebsiteIntro: true,
+			searchBarIsFocused: false,
 		}
 
 		this.searchInputRef = React.createRef()
@@ -62,6 +86,11 @@ class SearchBar extends React.Component {
 
 		this.acceptEssentialPrivacyAndCloseIntro = this.acceptEssentialPrivacyAndCloseIntro.bind(this)
 		this.hideSearchResults = this.hideSearchResults.bind(this)
+
+		this.startSearchFromIcon = this.startSearchFromIcon.bind(this)
+
+		this.gainedFocus = this.gainedFocus.bind(this)
+		this.lostFocus = this.lostFocus.bind(this)
 	}
 
 	componentDidMount() {
@@ -237,6 +266,29 @@ class SearchBar extends React.Component {
 		this.setState({showSearchResults: false})
 	}
 
+	startSearchFromIcon(){
+		this.searchInputRef.current.blur() // unfocus the input element
+		this.setState({loadingSearchResult: true}, ()=>{
+			this.loadSearchResults(this.state.value).finally(()=>{
+				if (this.state.searchResults_address.length > 0) {
+					this.openSearchResult(this.state.searchResults_address[0])
+				} else if (this.state.searchResults_poi.length > 0) {
+					this.openSearchResult(this.state.searchResults_poi[0])
+				} else if (this.state.searchResults_administratives.length > 0) {
+					this.openSearchResult(this.state.searchResults_administratives[0])
+				}
+			})
+		})
+	}
+
+	gainedFocus(event){
+		this.setState({searchBarIsFocused: true})
+		this.saveSearchQueryText(event)
+	}
+	lostFocus(){
+		this.setState({searchBarIsFocused: false})
+	}
+
 	render() {
 		let leftIcon = undefined
 		if (this.state.showSearchResults) {
@@ -252,12 +304,12 @@ class SearchBar extends React.Component {
 		}
 
 
-		let rightIcon = undefined
 		let rightIcon = (
 			<IconButton style={{margin:'4px',padding:'10px'}} onClick={this.startSearchFromIcon}>
 				<SearchIcon />
 			</IconButton>
 		)
+		if (this.state.loadingSearchResult) {
 			rightIcon = (
 				<Icon style={{margin:'4px',padding:'10px'}}>
 					<HourglassEmptyIcon />
@@ -265,50 +317,117 @@ class SearchBar extends React.Component {
 			)
 		}
 
+		const showingSearchResults = (
+			this.state.showSearchResults
+			&& (
+				this.state.searchResults_poi.length > 0
+				|| this.state.searchResults_administratives.length > 0
+				|| this.state.searchResults_address.length > 0
+			)
+		)
+
+		const showingWebsiteIntro = (
+			!this.state.showSearchResults
+			&& this.state.showWebsiteIntro
+		)
+
 		return (<div className={this.props.className}>
-			>
 
 			<Paper
 				className={
-					'header '
-					+(this.props.sidebarIsOpen ? 'sidebarIsOpen' : '')
+					'header blurredBG '
+					+(showingWebsiteIntro ? 'showingWebsiteIntro' : '')
+				}
+				elevation={6}
+				variant="elevation"
+				style={{
+					margin: '8px 0 0 0',
+
+					display: (
+						showingWebsiteIntro
+						? 'block'
+						: 'none'
+					),
+				}}
+			>
+				<div className="scrollWrapper websiteIntro">
+					<List>
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">{this.props.getString('welcome_emoji_icon')}</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('welcome_heading')}
+								secondary={this.props.getString('project-summary')}
+							/>
+						</ListItem>
+
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">{this.props.getString('thanks_emoji_icon')}</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('thanks_heading')}
+								secondary={
+									<Localized
+										id="thanks_text"
+										elems={{
+											mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
+										}}
+									/>
+								}
+							/>
+						</ListItem>
+
+						<ListItem alignItems="flex-start">
+							<ListItemIcon>
+								<div className="emojiIcon">{this.props.getString('privacy_emoji_icon')}</div>
+							</ListItemIcon>
+							<ListItemText
+								primary={this.props.getString('privacy_essential_data_heading')}
+								secondary={
+									<Localized
+										id="privacy_essential_data_info"
+										elems={{
+											p: <Typography variant="body2" color="textSecondary" gutterBottom />,
+										}}
+									/>
+								}
+								secondaryTypographyProps={{
+									component: 'div',
+								}}
+							/>
+						</ListItem>
+					</List>
+					<CardActions style={{justifyContent: 'flex-end'}}>
+						<Button onClick={this.acceptEssentialPrivacyAndCloseIntro}>
+							<Localized id="okay-button" />
+						</Button>
+					</CardActions>
+				</div>
+			</Paper>
+
+			<Paper
+				className={
+					'header blurredBG '
 					+(
-						this.state.showSearchResults
-						&& (
-							this.state.searchResults_poi.length > 0
-							|| this.state.searchResults_administratives.length > 0
-							|| this.state.searchResults_address.length > 0
-						)
+						showingSearchResults
 						? 'showingSearchResults'
 						: ''
 					)
-					+(!this.state.showSearchResults && this.state.showWebsiteIntro ? 'showingWebsiteIntro' : '')
 				}
-				elevation={(this.props.sidebarIsOpen ? 6 : 6)}
+				elevation={6}
 				variant="elevation"
+				style={{
+					margin: '8px 0 0 0',
+
+					display: (
+						showingSearchResults
+						? 'block'
+						: 'none'
+					),
+				}}
 			>
-				<div className="searchBar">
-					{leftIcon}
-					<InputBase
-						className="searchInput"
-						value={this.state.value}
-						placeholder={this.props.getString('search-for-queerness')}
-						onFocus={this.saveSearchQueryText}
-
-						onChange={this.saveSearchQueryText}
-						onKeyPress={this.searchKeypressed}
-
-						disabled={this.props.sidebarIsOpen}
-
-						inputRef={this.searchInputRef}
-
-						inputProps={{
-							title: this.props.getString('search-for-queerness'),
-							'aria-label': this.props.getString('search-for-queerness')
-						}}
-					/>
-					{rightIcon}
-				</div>
 				<div className="scrollWrapper searchResults">
 					{
 						this.state.searchResults_poi.length === 0
@@ -496,60 +615,80 @@ class SearchBar extends React.Component {
 						)
 					}
 				</div>
-				<div className="scrollWrapper websiteIntro">
-					<List>
-						<ListItem alignItems="flex-start">
-							<ListItemIcon>
-								<div className="emojiIcon">{this.props.getString('welcome_emoji_icon')}</div>
-							</ListItemIcon>
-							<ListItemText
-								primary={this.props.getString('welcome_heading')}
-								secondary={this.props.getString('project-summary')}
-							/>
-						</ListItem>
+			</Paper>
 
-						<ListItem alignItems="flex-start">
-							<ListItemIcon>
-								<div className="emojiIcon">{this.props.getString('thanks_emoji_icon')}</div>
-							</ListItemIcon>
-							<ListItemText
-								primary={this.props.getString('thanks_heading')}
-								secondary={
-									<Localized
-										id="thanks_text"
-										elems={{
-											mapbox_link: <Link href="https://www.mapbox.com/community/" target="_blank" rel="noreferrer"></Link>,
-										}}
-									/>
-								}
-							/>
-						</ListItem>
+			<Paper
+				className="actions blurredBG"
+				elevation={6}
+				variant="elevation"
+				style={{
+					margin: '8px 0 0 0',
+					borderRadius: '24px',
+					overflow: 'hidden',
 
-						<ListItem alignItems="flex-start">
-							<ListItemIcon>
-								<div className="emojiIcon">{this.props.getString('privacy_emoji_icon')}</div>
-							</ListItemIcon>
-							<ListItemText
-								primary={this.props.getString('privacy_essential_data_heading')}
-								secondary={
-									<Localized
-										id="privacy_essential_data_info"
-										elems={{
-											p: <Typography variant="body2" color="textSecondary" gutterBottom />,
-										}}
-									/>
-								}
-								secondaryTypographyProps={{
-									component: 'div',
+					display: (
+						this.state.showSearchResults
+						|| this.state.showWebsiteIntro
+						? 'none'
+						: 'block'
+					),
+				}}
+			>
+				<div
+					style={{
+						overflow: 'auto',
+						whiteSpace: 'nowrap',
+						'-webkit-overflow-scrolling': 'touch',
+						padding: '8px',
+					}}
+				>
+					{
+						actions.map(action => {
+							return <Chip
+								icon={action.icon}
+								label={<Localized id={action.title} />}
+								onClick={action.onClick}
+								style={{
+									marginRight: '8px',
 								}}
 							/>
-						</ListItem>
-					</List>
-					<CardActions style={{justifyContent: 'flex-end'}}>
-						<Button onClick={this.acceptEssentialPrivacyAndCloseIntro}>
-							<Localized id="okay-button" />
-						</Button>
-					</CardActions>
+						})
+					}
+				</div>
+			</Paper>
+
+			<Paper
+				className={
+					'header blurredBG '
+					+(this.state.searchBarIsFocused ? 'focused ' : '')
+				}
+				elevation={6}
+				variant="elevation"
+				style={{
+					margin: '8px 0 0 0',
+					borderRadius: '16px',
+				}}
+			>
+				<div className="searchBar">
+					{leftIcon}
+					<InputBase
+						className="searchInput"
+						value={this.state.value}
+						placeholder={this.props.getString('search-for-queerness')}
+						onFocus={this.gainedFocus}
+						onBlur={this.lostFocus}
+
+						onChange={this.saveSearchQueryText}
+						onKeyPress={this.searchKeypressed}
+
+						inputRef={this.searchInputRef}
+
+						inputProps={{
+							title: this.props.getString('search-for-queerness'),
+							'aria-label': this.props.getString('search-for-queerness')
+						}}
+					/>
+					{rightIcon}
 				</div>
 			</Paper>
 		</div>)
