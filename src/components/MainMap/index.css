@@ -1,3 +1,51 @@
+.filtersPanel{
+	z-index: 2;
+	position: absolute;
+
+	top: calc(16px + 8px);
+	left: 54px;
+	right: 36px;
+	text-align: center;
+
+	pointer-events: none;
+}
+.appClassWrapper.sidebarIsOpen .filtersPanel{
+	left: 400px;
+}
+
+.filtersPanel .filterMenuInner{
+	pointer-events: none;
+
+	display: inline-block;
+	padding-right: 16px;
+}
+.filtersPanel .filterMenuInner button{
+	pointer-events: auto;
+}
+
+@media (max-width: 800px) {
+	.filtersPanel{
+		top: 8px;
+		right: 0;
+		padding: 16px;
+		max-width: none;
+		overflow: auto;
+		white-space: nowrap;
+	}
+	
+	.filtersPanel,
+	.filtersPanel .filterMenuInner {
+		pointer-events: auto;
+		-ms-overflow-style: none;
+		-webkit-overflow-scrolling: touch;
+	}
+	.filtersPanel::-webkit-scrollbar 
+	.filtersPanel .filterMenuInner::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+
 .map{
 	width: 100%;
 	height: 100%;

@@ -27,7 +27,6 @@ import {
 import MainMap from '../MainMap/'
 import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
-import FiltersPanelContent from '../FiltersPanelContent/'
 
 import Ubuntu_Bold from '../../fonts/Ubuntu/Ubuntu-Bold.ttf'
 import Ubuntu_BoldItalic from '../../fonts/Ubuntu/Ubuntu-BoldItalic.ttf'
@@ -540,11 +539,6 @@ class App extends React.Component {
 					<AddIcon style={{color:'var(--light-green)',marginRight:'8px'}} />
 					<Localized id="add-place-fab" />
 				</Fab>)
-			}
-
-			<div className="filtersPanel">
-				<FiltersPanelContent onChange={this.filtersChanged}/>
-			</div>
 
 			<Sidebar
 				action={this.state.action}

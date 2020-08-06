@@ -28,6 +28,8 @@ import {
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
+import FiltersPanelContent from '../FiltersPanelContent/'
+
 import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
@@ -73,6 +75,8 @@ class MainMap extends React.Component {
 
 		this.loadMarkers = this.loadMarkers.bind(this)
 		this.loadPlacesWithUndecidedChangesets = this.loadPlacesWithUndecidedChangesets.bind(this)
+
+		this.filtersChanged = this.filtersChanged.bind(this)
 	}
 
 	componentDidMount(){
@@ -670,10 +674,21 @@ class MainMap extends React.Component {
 		this.map.setZoom(this.map.getZoom()-1)
 	}
 
+	filtersChanged(...attr){
+		if (this.props.onFiltersChanged) {
+			this.props.onFiltersChanged(...attr)
+		}
+	}
+	
 	render() {
 		// <ZoomControl position="bottomright" />
 
 		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>						
+
+			<div className="filtersPanel">
+				<FiltersPanelContent onChange={this.filtersChanged}/>
+			</div>
+
 			<div className={`markerInTheMiddel rainbow ${this.state.isGeoChooser ? 'visible' : 'hidden'}`}>
 				<div className="leaflet-marker-icon marker-custom-icon">
 					{

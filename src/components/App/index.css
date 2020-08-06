@@ -75,49 +75,6 @@ html body .addNewFab{
 	}
 }
 
-.filtersPanel{
-	z-index: var(--z-index-fabs);
-	position: absolute;
-
-	top: calc(16px + 9px);
-	left: calc(400px + 8px);
-	max-width: calc(calc(100% - 400px) - 16px);
-
-	pointer-events: none;
-}
-.filtersPanel .filterMenuInner{
-	pointer-events: none;
-}
-.filtersPanel .filterMenuInner button{
-	pointer-events: auto;
-}
-@media (max-width: 800px) {
-	.filtersPanel{
-		top: calc(52px + 16px);
-		left: 0;
-		right: 0;
-		padding: 16px;
-		max-width: none;
-		overflow: auto;
-		white-space: nowrap;
-	}
-	.filtersPanel .filterMenuInner{
-		display: inline-block;
-		padding-right: 16px;
-	}
-	
-	.filtersPanel,
-	.filtersPanel .filterMenuInner {
-		pointer-events: auto;
-		-ms-overflow-style: none;
-		-webkit-overflow-scrolling: touch;
-	}
-	.filtersPanel::-webkit-scrollbar 
-	.filtersPanel .filterMenuInner::-webkit-scrollbar {
-		display: none;
-	}
-}
-
 .page {
 	z-index: var(--z-index-page);
 	position: absolute;
