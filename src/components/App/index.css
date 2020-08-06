@@ -57,6 +57,25 @@ html body .mainMenuFab{
 	text-transform: none;
 	font-weight: bold;
 }
+
+html body .closeSidebarFab{
+	z-index: var(--z-index-menu-fab);
+	position: absolute;
+
+	max-width: 48px;
+
+	top: 16px;
+
+	left: 400px;
+	right: auto;
+	transform: translateX(calc(-100% - 16px));
+}
+@media (max-width: 400px) {
+	html body .closeSidebarFab{
+		left: auto;
+		right: 16px;
+		transform: none;
+	}
 }
 
 html body .addNewFab{

@@ -34,7 +34,6 @@ import {
 import {
 	// SearchRounded as SearchIcon,
 	HourglassEmptyRounded as HourglassEmptyIcon,
-	CloseRounded as CloseIcon,
 	ArrowBackRounded as ArrowBackIcon,
 } from '@material-ui/icons'
 
@@ -57,7 +56,6 @@ class SearchBar extends React.Component {
 
 		this.saveSearchQueryText = this.saveSearchQueryText.bind(this)
 		this.searchKeypressed = this.searchKeypressed.bind(this)
-		this.closeSidebar = this.closeSidebar.bind(this)
 
 		this.loadSearchResults = this.loadSearchResults.bind(this)
 		this.openSearchResult = this.openSearchResult.bind(this)
@@ -228,22 +226,6 @@ class SearchBar extends React.Component {
 		}
 	}
 
-	async closeSidebar(){
-		await navigate(`/`)
-
-		if (this.props.onDontFilterTheseIds) {
-			this.props.onDontFilterTheseIds([])
-		}
-
-		this.setState({value: ''}, ()=>{
-			if (this.props.onSetSidebarIsOpen) {
-				this.props.onSetSidebarIsOpen(false)
-			}
-			if (this.props.onSetSearchBarValue) {
-				this.props.onSetSearchBarValue('')
-			}
-		})
-	}
 	acceptEssentialPrivacyAndCloseIntro(){
 		this.props.store.setPrivacy(null, true).finally(()=>{
 			this.props.store.set('showWebsiteIntro', false)
@@ -271,13 +253,11 @@ class SearchBar extends React.Component {
 
 
 		let rightIcon = undefined
-		if (this.props.sidebarIsOpen) {
-			rightIcon = (
-				<IconButton style={{margin:'4px',padding:'10px'}} onClick={this.closeSidebar} aria-label={this.props.getString('close_sidebar_aria_label')} title={this.props.getString('close_sidebar_aria_label')}>
-					<CloseIcon />
-				</IconButton>
-			)
-		} else if (this.state.loadingSearchResult) {
+		let rightIcon = (
+			<IconButton style={{margin:'4px',padding:'10px'}} onClick={this.startSearchFromIcon}>
+				<SearchIcon />
+			</IconButton>
+		)
 			rightIcon = (
 				<Icon style={{margin:'4px',padding:'10px'}}>
 					<HourglassEmptyIcon />

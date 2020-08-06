@@ -21,6 +21,7 @@ import {
 } from '@material-ui/core'
 import {
 	AddRounded as AddIcon,
+	CloseRounded as CloseIcon,
 	MenuRounded as MenuIcon,
 	// FilterList as FilterListIcon,
 	// ExpandLess as ExpandLessIcon,
@@ -119,6 +120,8 @@ class App extends React.Component {
 
 		this.closeMainDrawer = this.closeMainDrawer.bind(this)
 		this.toggleMainDrawer = this.toggleMainDrawer.bind(this)
+
+		this.closeSidebar = this.closeSidebar.bind(this)
 	}
 
 	componentDidMount(){
@@ -515,6 +518,13 @@ class App extends React.Component {
 			return {isMainDrawerOpen:!state.isMainDrawerOpen}
 		})
 	}
+
+	async closeSidebar(){
+		await navigate(`/`)
+		this.dontFilterTheseIds([])
+		this.setState({sidebarIsOpen: false})
+	}
+
 	render() {
 		return (<>
 			<ThemeProvider theme={this.state.theme}>
@@ -564,6 +574,19 @@ class App extends React.Component {
 				onClick={this.toggleMainDrawer}
 			>
 				<MenuIcon />
+			</Fab>
+
+			<Fab
+				aria-label={this.props.getString('close_sidebar_aria_label')}
+				title={this.props.getString('close_sidebar_aria_label')}
+				variant="extended"
+				className="closeSidebarFab"
+				onClick={this.closeSidebar}
+				style={{
+					display: (this.state.sidebarIsOpen ? 'flex' : 'none'),
+				}}
+			>
+				<CloseIcon />
 			</Fab>
 
 			<SearchBar
