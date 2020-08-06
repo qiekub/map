@@ -8,11 +8,11 @@
 html body .sidebarContentCard{
 	position: relative;
 	overflow: visible;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-	flex-grow: 1;
+	/*border-bottom-right-radius: 0;*/
+	/*border-bottom-left-radius: 0;*/
+	/*flex-grow: 1;*/
 
-	padding-bottom: 64px;
+	margin: 0 16px 84px 16px;
 
 	/*transition: background-color var(--transition-time) var(--timing-function);*/
 }
