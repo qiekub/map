@@ -1124,7 +1124,16 @@ class SidebarPlace extends React.Component {
 				}}
 			>
 				<CardContent>
-					<Typography gutterBottom variant="h4" component="h1" style={{margin:'0 16px',fontWeight:'900',color:headerForegroundColor}}>
+					<Typography
+						gutterBottom
+						variant="h4"
+						component="h1"
+						style={{
+							margin:'0 16px',
+							fontWeight:'900',
+							color: headerForegroundColor,
+						}}
+					>
 						{this.state.headerText}
 					</Typography>
 					
