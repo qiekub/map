@@ -951,8 +951,8 @@ class SidebarPlace extends React.Component {
 	}
 
 	renderView(doc){
-		const properties = doc.properties
-		const tags = properties.tags
+		const properties = doc.properties || {}
+		const tags = properties.tags || {}
 
 		return (<React.Fragment key="view">
 				<CardContent>
