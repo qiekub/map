@@ -111,7 +111,7 @@ class PresetInput extends React.Component {
 			
 				renderOption={(preset) => (<ListItem
 					component="div"
-						style={{
+					style={{
 						margin: '-6px -16px -6px -24px',
 					}}
 				>
