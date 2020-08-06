@@ -188,7 +188,7 @@ html body .Sidebar{
 	.menuBlurredPaperBackground .MuiMenu-paper .MuiList-root:before,
 	.SearchBar .blurredBG:before,
 	.filtersPanel .fab:before{
-		backdrop-filter: blur(16px); /* blur(32px) saturate(2); */
+		backdrop-filter: blur(16px);
 	}
 
 	.menuBlurredPaperBackground .MuiMenu-paper{
@@ -210,4 +210,6 @@ html body .Sidebar{
 }
 
 
-
+/*
+		backdrop-filter: blur(32px) saturate(2);
+*/
