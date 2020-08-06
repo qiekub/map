@@ -100,6 +100,9 @@ class SidebarChangesets extends React.Component {
 			<div
 				key="sidebarContentCard"
 				className="sidebarContentCard"
+				style={{
+					margin: '0',
+				}}
 			>
 				{
 					this.state.changesets && this.state.changesets.length > 0
