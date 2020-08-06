@@ -638,7 +638,7 @@ class SearchBar extends React.Component {
 					style={{
 						overflow: 'auto',
 						whiteSpace: 'nowrap',
-						'-webkit-overflow-scrolling': 'touch',
+						WebkitOverflowScrolling: 'touch',
 						padding: '8px',
 					}}
 				>
