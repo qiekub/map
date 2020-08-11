@@ -5,11 +5,11 @@ import { AppLocalizationProvider } from '../../l10n.js'
 
 import local_ip from '../../.env.local_ip.json'
 
-import { ApolloClient } from 'apollo-boost'
-
-import { HttpLink } from 'apollo-link-http'
-
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import {
+	ApolloClient,
+	HttpLink,
+	InMemoryCache,
+} from '@apollo/client'
 import { persistCache } from 'apollo-cache-persist'
 
 import { withLocalStorage } from '../LocalStorage/'

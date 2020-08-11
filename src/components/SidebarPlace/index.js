@@ -297,7 +297,7 @@ class SidebarPlace extends React.Component {
 			})
 			.subscribe(({data}) => {
 				if (!!data && !!data.place) {
-					const doc = data.place
+					const doc = JSON.parse(JSON.stringify(data.place))
 
 					if (
 						doc._id === this.docID

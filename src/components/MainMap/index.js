@@ -171,7 +171,7 @@ class MainMap extends React.Component {
 		})
 		.subscribe(({data}) => {
 			if (!!data && !!data.markers) {
-				const docs = data.markers.map(doc=>{
+				const docs = JSON.parse(JSON.stringify(data.markers)).map(doc=>{
 					doc.___preset = (
 						!!doc.preset && !!presets[doc.preset]
 						? {
