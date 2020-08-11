@@ -202,12 +202,15 @@ class FiltersPanelContent extends React.Component {
 									selected={isSelected}
 									style={{
 										background: (isSelected ? category.color.bg : ''),
-										...(
-											this.props.theme.palette.type === 'light'
-											? {color: (isSelected ? category.color.fg : category.color.bg)}
-											: undefined
+										color: (
+											isSelected
+											? category.color.fg
+											: (
+												this.props.theme.palette.type === 'light'
+												? category.color.bg
+												: undefined
+											)
 										),
-										// color: (isSelected ? category.color.fg : category.color.bg),
 									}}
 								>
 									<div className="filterMenuDot" style={{background:(isSelected ? category.color.fg : category.color.bg)}}></div>
