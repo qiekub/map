@@ -39,22 +39,36 @@ const categories = [
 	},
 	{
 		name: {
-			en: 'Going Out',
+			en: 'Tourism',
+			de: 'Tourismus',
 		},
 		presets: [
-			'amenity/bar',
-			'amenity/pub',
-			'amenity/nightclub',
-			'leisure/dance',
-			// 'club',
+			'building/hotel',
+
+			'tourism/hotel',
+			'tourism/hostel',
+			'tourism/apartment',
+			'tourism/camp_site',
+			'tourism/camp_pitch',
+			'tourism/caravan_site',
+
+			'tourism/picnic_site',
+			'tourism/guest_house',
+			'tourism/chalet',
+			'tourism/information',
+			// 'attraction/train',
+			// 'tourism/theme_park',
+			'natural/beach',
+			'place/neighbourhood',
+			'shop/travel_agency',
 		],
 		color: {
-			key: 'red',
-			prideFlageMeaning: 'Life',
-			prideFlageColorName: 'Red',
-			// bg: '#B71C1C', // 900
-			bg: '#C62828', // 800
-			// bg: '#F44336', // 500
+			key: 'indigo',
+			prideFlageMeaning: 'Serenity',
+			prideFlageColorName: 'Indigo',
+			// bg: '#1A237E', // 900
+			bg: '#283593', // 800
+			// bg: '#3F51B5', // 500
 			fg: 'white',
 		},
 	},
@@ -97,10 +111,54 @@ const categories = [
 			'amenity/fast_food',
 		],
 		color: {
+			key: 'yellow',
+			prideFlageMeaning: 'Sunlight',
+			prideFlageColorName: 'Yellow',
+			bg: '#F9A825', // 800
+			fg: 'black',
+		},
+	},
+	{
+		name: {
+			en: 'Health',
+		},
+		presets: [
+			'amenity/doctors',
+			'amenity/clinic',
+			'amenity/dentist',
+			'amenity/hospital',
+			'amenity/pharmacy',
+			'healthcare',
+			'amenity/social_facility/Vet Center',
+			'shop/optician',
+			'shop/shoes/Foot Solutions'
+		],
+		color: {
 			key: 'orange',
 			prideFlageMeaning: 'Healing',
 			prideFlageColorName: 'Orange',
 			bg: '#E65100', // 900
+			fg: 'white',
+		},
+	},
+	{
+		name: {
+			en: 'Going Out',
+		},
+		presets: [
+			'amenity/bar',
+			'amenity/pub',
+			'amenity/nightclub',
+			'leisure/dance',
+			// 'club',
+		],
+		color: {
+			key: 'red',
+			prideFlageMeaning: 'Life',
+			prideFlageColorName: 'Red',
+			// bg: '#B71C1C', // 900
+			bg: '#C62828', // 800
+			// bg: '#F44336', // 500
 			fg: 'white',
 		},
 	},
@@ -124,41 +182,6 @@ const categories = [
 			// bg: '#880E4F', // 900
 			bg: '#AD1457', // 800
 			// bg: '#E91E63', // 500
-			fg: 'white',
-		},
-	},
-	{
-		name: {
-			en: 'Tourism',
-			de: 'Tourismus',
-		},
-		presets: [
-			'building/hotel',
-
-			'tourism/hotel',
-			'tourism/hostel',
-			'tourism/apartment',
-			'tourism/camp_site',
-			'tourism/camp_pitch',
-			'tourism/caravan_site',
-
-			'tourism/picnic_site',
-			'tourism/guest_house',
-			'tourism/chalet',
-			'tourism/information',
-			// 'attraction/train',
-			// 'tourism/theme_park',
-			'natural/beach',
-			'place/neighbourhood',
-			'shop/travel_agency',
-		],
-		color: {
-			key: 'indigo',
-			prideFlageMeaning: 'Serenity',
-			prideFlageColorName: 'Indigo',
-			// bg: '#1A237E', // 900
-			bg: '#283593', // 800
-			// bg: '#3F51B5', // 500
 			fg: 'white',
 		},
 	},
