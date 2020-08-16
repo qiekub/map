@@ -87,6 +87,7 @@ const categories = [
 			'historic',
 			'tourism/artwork/statue',
 			'tourism/attraction',
+			'amenity/place_of_worship',
 		],
 		color: {
 			key: 'cyan',
