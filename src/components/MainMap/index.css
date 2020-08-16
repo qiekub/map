@@ -23,7 +23,7 @@
 	pointer-events: auto;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px), (max-height: 500px) {
 	.filtersPanel{
 		top: 8px;
 		right: 0;
@@ -313,7 +313,7 @@
 		transform: translate3d(-50%, -65%, 0) scaleY(1);
 	}
 }
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
 	.markerInTheMiddel{
 		margin-left: 0;
 	}
@@ -408,7 +408,7 @@
 	right: 4px;
 	pointerEvents: none;
 }
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 	.appClassWrapper.sidebarIsOpen .zoomButtons{
 		bottom: 80px;
 	}
