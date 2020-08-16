@@ -579,7 +579,11 @@ class MainMap extends React.Component {
 	
 							let hasUndecidedChangesets = true
 							if (mustHaveUndecidedChangeset) {
-								hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
+								if (marker.data.status === 'undecided') {
+									hasUndecidedChangesets = true
+								}else{
+									hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
+								}
 							}
 							
 							let isInPresets = true
