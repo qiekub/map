@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core'
 
 import {
-	HistoryRounded as HistoryIcon,
 	PriorityHighRounded as PriorityHighIcon,
 	EmailRounded as EmailIcon,
 } from '@material-ui/icons'
@@ -139,27 +138,6 @@ class MainDrawerContent extends React.Component {
 				*/}
 			</List>
 		
-
-			{
-				!!this.props.globals.profileID
-				? (<>
-					<Divider />
-	
-					<List
-						dense
-					>
-						<ListItemLink
-							onClick={this.viewChangesets}
-						>
-							<ListItemIcon>
-								<HistoryIcon />
-							</ListItemIcon>
-							<ListItemText primary={<Localized id="changesets" />} />
-						</ListItemLink>
-					</List>
-				</>)
-				: null
-			}
 
 			<Divider />
 		
