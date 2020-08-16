@@ -142,7 +142,7 @@ class Questions extends React.Component {
 				]
 	
 				let firstOpenQuestionCounter = 0
-				const questionsById = data.questions.reduce((obj,questionDoc)=>{
+				const questionsById = JSON.parse(JSON.stringify(data.questions)).reduce((obj,questionDoc)=>{
 	
 					const hasGeoInputField = questionDoc.properties.possibleAnswers.filter(possibleAnswer => possibleAnswer.inputtype === 'geo').length > 0
 	
