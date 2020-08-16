@@ -45,6 +45,11 @@ menu_text_audience_queer_no = <strong>Not</strong> for queer people
 
 must_have_undecided_changes = Must have undecided changes?
 
+button_text_published = Published?
+menu_text_published_everything = <strong>Dont't filter</strong> by published.
+menu_text_published_unpublished = Only <strong>unpublished</strong> places
+menu_text_published_published = Only <strong>published</strong> places
+
 
 
 # MainDrawerContent

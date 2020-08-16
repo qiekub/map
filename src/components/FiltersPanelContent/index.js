@@ -33,6 +33,7 @@ class FiltersPanelContent extends React.Component {
 			age: null,
 			audience_queer: new Set(['only','primary','welcome']), // only primary welcome
 			mustHaveUndecidedChangeset: false,
+			published: null,
 		}
 
 		this.categories = _categories_.map(category => ({
@@ -100,11 +101,16 @@ class FiltersPanelContent extends React.Component {
 			selectedAge: this.state.age,
 			ageOption: (this.state.age === this.highest_ages_entry ? 'open_end' : ''),
 			mustHaveUndecidedChangeset: this.state.mustHaveUndecidedChangeset,
+			published: this.state.published,
 		}
 	}
 
 	setValue(stateKeyName, value, closeMenuCallback){
-		this.setState({[stateKeyName]: (!!value ? value : null)}, ()=>{
+		this.setState({[stateKeyName]: (
+			!!value || value === false
+			? value
+			: null
+		)}, ()=>{
 			if (typeof closeMenuCallback === 'function') {
 				closeMenuCallback()
 			}
@@ -354,24 +360,91 @@ class FiltersPanelContent extends React.Component {
 
 			{
 				!!this.props.globals.profileID
-				? (<Fab
-					size="small"
-					variant="extended"
-					className="fab"
-					aria-label={this.props.getString('must_have_undecided_changes')}
-					title={this.props.getString('must_have_undecided_changes')}
-					onClick={this.toggleMustHaveUndecidedChangeset}
-				>
-					<Localized id="must_have_undecided_changes" />
-					{
-						!!this.state.mustHaveUndecidedChangeset
-						? (<CheckIcon className="ArrowDropDownIcon" style={{
-							width:'20px',
-							height:'20px',
-						}}/>)
-						:  <div style={{width:'8px'}}></div>
-					}
-				</Fab>)
+				? (<>
+					<Fab
+						size="small"
+						variant="extended"
+						className="fab"
+						aria-label={this.props.getString('must_have_undecided_changes')}
+						title={this.props.getString('must_have_undecided_changes')}
+						onClick={this.toggleMustHaveUndecidedChangeset}
+					>
+						<Localized id="must_have_undecided_changes" />
+						{
+							!!this.state.mustHaveUndecidedChangeset
+							? (<CheckIcon className="ArrowDropDownIcon" style={{
+								width:'20px',
+								height:'20px',
+							}}/>)
+							:  <div style={{width:'8px'}}></div>
+						}
+					</Fab>
+
+
+
+			<PopupState variant="popover">
+				{popupState => (
+					<React.Fragment>
+						<Fab
+							{...bindTrigger(popupState)}
+							size="small"
+							variant="extended"
+							className="fab"
+							aria-label={this.props.getString('button_text_published')}
+							title={this.props.getString('button_text_published')}
+						>
+							{
+								this.state.published === null
+								? <Localized id="button_text_published" />
+								: (
+									this.state.published === true
+									? <Localized id="menu_text_published_published" />
+									: <Localized id="menu_text_published_unpublished" />
+								)
+							}
+							<ArrowDropDownIcon className="ArrowDropDownIcon"/>
+						</Fab>
+						<Menu
+							{...bindMenu(popupState)}
+							transitionDuration={0}
+							anchorOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+							}}
+							className="menuBlurredPaperBackground"
+						>
+							<MenuItem
+								key="everything"
+								onClick={()=>this.setValue('published', null, popupState.close)}
+							>
+								<div className="filterMenuDot hasIcon material-icons-round">
+									{this.state.published === null ? 'check' : ''}
+								</div>
+								<Localized id="menu_text_published_everything" />
+							</MenuItem>
+							<MenuItem
+								key="unpublished"
+								onClick={()=>this.setValue('published', false, popupState.close)}
+							>
+								<div className="filterMenuDot hasIcon material-icons-round">
+									{this.state.published === false ? 'check' : ''}
+								</div>
+								<Localized id="menu_text_published_unpublished" />
+							</MenuItem>
+							<MenuItem
+								key="published"
+								onClick={()=>this.setValue('published', true, popupState.close)}
+							>
+								<div className="filterMenuDot hasIcon material-icons-round">
+									{this.state.published === true ? 'check' : ''}
+								</div>
+								<Localized id="menu_text_published_published" />
+							</MenuItem>
+						</Menu>
+					</React.Fragment>
+				)}
+			</PopupState>
+				</>)
 				: null
 			}
 		</div>)

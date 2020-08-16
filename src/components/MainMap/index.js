@@ -546,12 +546,19 @@ class MainMap extends React.Component {
 				const audienceQueerOptions = this.filters.audienceQueerOptions || []
 				const checkAudienceQueerOptions = audienceQueerOptions.length > 0
 				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
+				const published = (
+					this.filters.published === false || this.filters.published === true
+					? this.filters.published
+					: null
+				)
 	
 				if (
 					presets_length > 0
 					|| checkAudienceQueerOptions
 					|| !!selectedAge
 					|| mustHaveUndecidedChangeset
+					|| published === true
+					|| published === false
 				) {
 					const markers_length = this.markers.length
 					for (let i = markers_length - 1; i >= 0; i--) {
@@ -560,6 +567,15 @@ class MainMap extends React.Component {
 						if (ids.includes(marker.data._id)) {
 							this.markers[i].filtered = false
 						}else{
+							
+							let publishedFilter = false
+							if (published === true) {
+								publishedFilter = marker.data.tags.published === true
+							}else if (published === false) {
+								publishedFilter = marker.data.tags.published !== true
+							}else if (published === null) {
+								publishedFilter = true
+							}
 	
 							let hasUndecidedChangesets = true
 							if (mustHaveUndecidedChangeset) {
@@ -602,7 +618,7 @@ class MainMap extends React.Component {
 								}
 							}
 	
-							this.markers[i].filtered = !(hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
+							this.markers[i].filtered = !(publishedFilter && hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 						}
 					}
 					this.clusterGroup.ProcessView()
