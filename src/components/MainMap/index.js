@@ -547,7 +547,12 @@ class MainMap extends React.Component {
 				const checkAudienceQueerOptions = audienceQueerOptions.length > 0
 				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
 	
-				if (presets_length > 0 || checkAudienceQueerOptions || !!selectedAge || mustHaveUndecidedChangeset) {
+				if (
+					presets_length > 0
+					|| checkAudienceQueerOptions
+					|| !!selectedAge
+					|| mustHaveUndecidedChangeset
+				) {
 					const markers_length = this.markers.length
 					for (let i = markers_length - 1; i >= 0; i--) {
 						const marker = this.markers[i]
