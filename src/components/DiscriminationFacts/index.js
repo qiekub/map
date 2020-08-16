@@ -197,6 +197,7 @@ class DiscriminationFacts extends React.Component {
 							onClick={this.toggleExpanded}
 							style={{
 								margin: '0 -16px',
+								...this.props.style,
 							}}
 						>
 							<ListItemIcon>
