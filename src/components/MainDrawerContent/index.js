@@ -27,10 +27,12 @@ import { withTheme } from '@material-ui/core/styles'
 // import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import { ReactComponent as GithubIcon } from '../../images/github_mark_black.svg'
 
+import telegram_icon from '../../images/telegram.png'
 import facebook_icon from '../../images/facebook.png'
 import instagram_icon from '../../images/instagram.png'
 import twitter_icon from '../../images/twitter.png'
 
+const TelegramIcon		= props => <Icon style={{backgroundImage:'url('+telegram_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const FacebookIcon		= props => <Icon style={{backgroundImage:'url('+facebook_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const InstagramIcon		= props => <Icon style={{backgroundImage:'url('+instagram_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
@@ -80,6 +82,7 @@ class MainDrawerContent extends React.Component {
 		- Donate
 		
 		## Follow us on...
+		- Telegram
 		- Facebook
 		- Instagram
 		- Twitter
@@ -150,6 +153,17 @@ class MainDrawerContent extends React.Component {
 					</ListSubheader>
 				}
 			>
+				<ListItemLink
+					target="_blank"
+					href="https://t.me/qiekub"
+					aria-label="Telegram"
+					title="Telegram"
+				>
+					<ListItemIcon>
+						<TelegramIcon />
+					</ListItemIcon>
+					<ListItemText primary="Telegram" />
+				</ListItemLink>
 				<ListItemLink
 					target="_blank"
 					href="https://www.facebook.com/qiekub/"
