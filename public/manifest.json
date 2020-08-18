@@ -6,6 +6,21 @@
 	"theme_color": "#000000",
 	"background_color": "#000000",
 	"orientation": "portrait-primary",
+	"shortcuts": [
+		{
+			"name": "Add a new place!",
+			"short_name": "Add",
+			"description": "Add a new queer place to the map.",
+			"url": "/add",
+			"icons": [
+				{
+					"sizes": "64x64",
+					"src": "favicon.png",
+					"type": "image/png"
+				}
+			]
+		}
+	],
 	"icons": [
 		{
 			"sizes": "16x16",
