@@ -89,6 +89,8 @@ class SearchBar extends React.Component {
 
 		this.gainedFocus = this.gainedFocus.bind(this)
 		this.lostFocus = this.lostFocus.bind(this)
+
+		this.focusSearchField = this.focusSearchField.bind(this)
 	}
 
 	componentDidMount() {
@@ -264,6 +266,10 @@ class SearchBar extends React.Component {
 		this.setState({showSearchResults: false})
 	}
 
+	focusSearchField(){
+		this.searchInputRef.current.focus()
+	}
+
 	startSearchFromIcon(){
 		this.searchInputRef.current.blur() // unfocus the input element
 		this.setState({loadingSearchResult: true}, ()=>{
@@ -296,16 +302,18 @@ class SearchBar extends React.Component {
 				</IconButton>
 			)
 		} else {
-			leftIcon = (<div style={{
-				width: '16px',
-			}}></div>)
+			leftIcon = (
+				<IconButton edge="end" style={{margin:'4px',padding:'10px'}} onClick={this.focusSearchField}>
+					<SearchIcon />
+				</IconButton>
+			)
 		}
 
 
 		let rightIcon = (
-			<IconButton style={{margin:'4px',padding:'10px'}} onClick={this.startSearchFromIcon}>
-				<SearchIcon />
-			</IconButton>
+			<div style={{
+				width: '16px',
+			}}></div>
 		)
 		if (this.state.loadingSearchResult) {
 			rightIcon = (
