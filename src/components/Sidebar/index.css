@@ -7,11 +7,14 @@
 
 html body .sidebarContentCard{
 	position: relative;
-	overflow: visible;
+	overflow: hidden;
 
-	margin: 0 16px 80px 16px;
+	margin: 0 16px 16px 16px;
 }
 
+html body .sidebarContentCard .CardContent{
+	padding: 8px 16px;
+}
 
 html body .improveFab .icon{
 	color: var(--light-green);
