@@ -226,15 +226,24 @@ class MainDrawerContent extends React.Component {
 				<ListItem>
 					<ListItemText inset primary="Promote the map" />
 				</ListItem>
-				<ListItem>
+				<ListItemLink
+					target="_blank"
+					href="https://github.com/qiekub/map/wiki/Translating"
+				>
 					<ListItemText inset primary="Help Translating" />
-				</ListItem>
-				<ListItem>
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="https://github.com/qiekub"
+				>
 					<ListItemText inset primary="Help Programming" />
-				</ListItem>
-				<ListItem>
+				</ListItemLink>
+				<ListItemLink
+					target="_blank"
+					href="mailto:thomas.rosen@qiekub.org"
+				>
 					<ListItemText inset primary="Give feedback" />
-				</ListItem>
+				</ListItemLink>
 				<ListItem>
 					<ListItemText inset primary="Donate" />
 				</ListItem>
