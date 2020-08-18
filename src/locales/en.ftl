@@ -56,7 +56,7 @@ menu_text_published_published = Only <strong>published</strong> places
 subheader_follow_us = Follow us on...
 subheader_legal = Legal
 
-by_brandname_link = by <mainlink>Qiekub</mainlink>
+queermap_logo_alt_text = QueerMap by qiekub
 
 changesets = Pending Changes
 about = About

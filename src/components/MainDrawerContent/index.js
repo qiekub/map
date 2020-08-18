@@ -27,6 +27,9 @@ import { withTheme } from '@material-ui/core/styles'
 // import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import { ReactComponent as GithubIcon } from '../../images/github_mark_black.svg'
 
+import queermap_logo_lightmode from '../../images/QueerMap by qiekub Logo - lightmode.svg'
+import queermap_logo_darkmode from '../../images/QueerMap by qiekub Logo - darkmode.svg'
+
 import telegram_icon from '../../images/telegram.png'
 import facebook_icon from '../../images/facebook.png'
 import instagram_icon from '../../images/instagram.png'
@@ -98,26 +101,21 @@ class MainDrawerContent extends React.Component {
 			<List
 				dense
 			>
-				<ListItem
-					style={{
-						paddingRight: '64px',
-					}}
+				<Link
+					style={{color:this.props.theme.palette.text.primary}}
+					target="_blank"
+					href="https://qiekub.org/"
 				>
-					<ListItemText
-						primary="QueerMap"
-						secondary={
-							<Localized
-								id="by_brandname_link"
-								elems={{
-									mainlink: <Link style={{color:this.props.theme.palette.text.primary}} target="_blank" href="https://qiekub.org/" />,
-								}}
-							/>
+					<img
+						src={
+							this.props.theme.palette.type === 'dark'
+							? queermap_logo_darkmode
+							: queermap_logo_lightmode
 						}
-						primaryTypographyProps={{
-							variant: 'h4',
-						}}
+						alt={this.props.getString('queermap_logo_alt_text')}
+						width="256px"
 					/>
-				</ListItem>
+				</Link>
 
 				{/*
 				<ListItemLink

@@ -51,7 +51,7 @@ must_have_undecided_changes = Muss es unentschiedene Änderungen haben?
 subheader_follow_us = Folg uns auf ...
 subheader_legal = Rechtliches
 
-by_brandname_link = von <mainlink>Qiekub</mainlink>
+queermap_logo_alt_text = QueerMap von qiekub
 
 changesets = Ausstehende Änderungen
 about = Über uns
