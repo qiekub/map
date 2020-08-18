@@ -235,7 +235,7 @@ class SearchBar extends React.Component {
 				}, () => reject() )
 			}
 		})
-		.catch(error => console.log(error))
+		.catch(error => console.error(error))
 	}
 
 	searchKeypressed(event){
