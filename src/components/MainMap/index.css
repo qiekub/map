@@ -410,7 +410,7 @@
 }
 @media (max-width: 1000px) {
 	.appClassWrapper.sidebarIsOpen .zoomButtons{
-		bottom: 80px;
+		bottom: 128px;
 	}
 }
 @media (max-width: 500px) {

@@ -28,8 +28,6 @@ import {
 	Button,
 	Typography,
 	Link,
-
-	Chip,
 } from '@material-ui/core'
 
 import {
@@ -40,24 +38,7 @@ import {
 	ArrowBackRounded as ArrowBackIcon,
 } from '@material-ui/icons'
 
-
-
-const actions = [
-	{
-		icon: <AddIcon />,
-		title: 'add_place',
-		onClick: () => {
-			navigate('/add/')
-		}
-	},
-	{
-		icon: <AlternateEmailIcon />,
-		title: 'give_feedback',
-		onClick: () => {
-			window.open('mailto:thomas.rosen@qiekub.org', '_self')
-		}
-	},
-]
+import ActionBar from '../ActionBar/'
 
 
 
@@ -75,6 +56,23 @@ class SearchBar extends React.Component {
 			showWebsiteIntro: true,
 			searchBarIsFocused: false,
 		}
+
+		this.actions = [
+			{
+				icon: <AddIcon />,
+				title: 'add_place',
+				onClick: () => {
+					navigate('/add/')
+				}
+			},
+			{
+				icon: <AlternateEmailIcon />,
+				title: 'give_feedback',
+				onClick: () => {
+					window.open('mailto:thomas.rosen@qiekub.org', '_self')
+				}
+			},
+		]
 
 		this.searchInputRef = React.createRef()
 
@@ -617,15 +615,10 @@ class SearchBar extends React.Component {
 				</div>
 			</Paper>
 
-			<Paper
-				className="actions blurredBG"
-				elevation={6}
-				variant="elevation"
-				style={{
-					margin: '8px 0 0 0',
-					borderRadius: '24px',
-					overflow: 'hidden',
 
+			<ActionBar
+				actions={this.actions}
+				style={{
 					display: (
 						this.state.showSearchResults
 						|| this.state.showWebsiteIntro
@@ -633,30 +626,7 @@ class SearchBar extends React.Component {
 						: 'block'
 					),
 				}}
-			>
-				<div
-					style={{
-						overflow: 'auto',
-						whiteSpace: 'nowrap',
-						WebkitOverflowScrolling: 'touch',
-						padding: '8px',
-					}}
-				>
-					{
-						actions.map(action => {
-							return <Chip
-								key={action.title}
-								icon={action.icon}
-								label={<Localized id={action.title} />}
-								onClick={action.onClick}
-								style={{
-									marginRight: '8px',
-								}}
-							/>
-						})
-					}
-				</div>
-			</Paper>
+			/>
 
 			<Paper
 				className={
