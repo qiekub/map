@@ -107,7 +107,7 @@ after_questions_thanks_text = Thanks for improving the map! We'll check your sug
 search-for-queerness = Search For Queerness!
 
 welcome_emoji_icon = 👋
-welcome_heading = Welcome to the QueerMap!
+welcome_heading = Welcome to QueerMap!
 project-summary = A map of LGBTQ places, collected by people like you for you.
 
 thanks_emoji_icon = 🙏
