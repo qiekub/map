@@ -110,6 +110,7 @@ class MainMap extends React.Component {
 				latLngToContainerPoint: (...attr) => this.map.latLngToContainerPoint(...attr),
 
 				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
+				refetchMarkers: () => this.refetchMarkers(),
 			}
 			this.props.globals.mainMapFunctions = functions
 			this.props.onFunctions(functions)
@@ -134,6 +135,16 @@ class MainMap extends React.Component {
 		if (this.markerQuerySubscription) {
 			this.markerQuerySubscription.unsubscribe()
 		}
+	}
+
+	refetchMarkers(){
+		this.props.globals.graphql.query({
+			fetchPolicy: 'network-only',
+			query: query_markers,
+			variables: {
+				languages: navigator.languages,
+			},
+		})
 	}
 
 	setMapPos(event){

@@ -2,6 +2,7 @@
 # Actions
 give_feedback = Feedback geben
 add_place = Ort hinzufügen
+improve_place = Ort verbessern
 
 
 
@@ -130,7 +131,6 @@ addresses_listheading = Adressen
 # Sidebar
 loading = Laden…
 
-improve = Verbessern
 add_new_place_header_text = Neuen Ort hinzufügen
 
 view_on_yelp = In Yelp anschauen…

@@ -2,7 +2,7 @@
 Wheelchair accessible / Not wheelchair accessible
 */
 
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { Localized, withLocalization } from '../Localized/'
 
@@ -10,8 +10,10 @@ import { navigate } from '@reach/router'
 import {
 	place as query_place,
 	id as query_id,
-	undecidedChangesets as query_undecidedChangesets,
+	undecidedTags as query_undecidedTags,
 	countrycode as query_countrycode,
+	addEdge as mutate_addEdge,
+	addChangeset as mutation_addChangeset,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -25,12 +27,13 @@ import { withGlobals } from '../Globals/'
 import {
 	Chip,
 	Typography,
-	Fab,
 
 	List,
+	ListSubheader,
 	ListItem,
 	ListItemIcon,
 	ListItemText,
+	ListItemSecondaryAction,
 
 	Paper,
 	Card,
@@ -38,6 +41,11 @@ import {
 	Divider,
 
 	Icon,
+
+	Tooltip,
+	IconButton,
+
+	Select,
 } from '@material-ui/core'
 import {
 	WarningRounded as WarningIcon,
@@ -60,20 +68,26 @@ import {
 	// Twitter as TwitterIcon,
 	// YouTube as YouTubeIcon,
 
-	EditRounded as EditIcon,
+	EditLocationRounded as EditLocationIcon,
 	// Done as DoneIcon,
 	// ArrowBack as ArrowBackIcon,
 	// ArrowForward as ArrowForwardIcon,
+
+	ThumbDownRounded as ThumbDownIcon,
+	ThumbUpRounded as ThumbUpIcon,
+
+	VisibilityOffRounded as VisibilityOffIcon,
+	PublicRounded as PublicIcon,
 } from '@material-ui/icons'
 // import {
 // 	Autocomplete
 // } from '@material-ui/lab'
 import { withTheme } from '@material-ui/core/styles'
 
-import Changeset from '../Changeset/index.js'
 import Questions from '../Questions/'
 import EmojiIcon from '../EmojiIcon/'
 import DiscriminationFacts from '../DiscriminationFacts/'
+import ActionBar from '../ActionBar/'
 
 import yelp_icon from '../../images/yelp.png'
 import facebook_icon from '../../images/facebook.png'
@@ -106,6 +120,211 @@ const ListItemLink = props => <ListItem button component="a" {...props} />
 // const tag_suggestions = ['youthcenter','cafe','bar','education','community-center','youthgroup','group','mediaprojects']
 // const this_is_a_place_for_suggestions = ['queer','undecided','friends','family','trans','inter','gay','hetero','bi','lesbian','friend']
 
+
+function ProposedChanges({theme, globals, tagsByPair}) {
+	const [doneTagsByPair, setDoneTagsByPair] = useState({})
+
+	const decideAboutChangesetKey = useCallback(function(edgeType, pairKey){
+		const thisPairInfos = tagsByPair[pairKey]
+		const tagKey = thisPairInfos.key
+		const changesetIDs = thisPairInfos.changesetIDs
+
+		for (const changesetID of changesetIDs) {
+			globals.graphql.mutate({
+				fetchPolicy: 'no-cache',
+				mutation: mutate_addEdge,
+				variables: {
+					properties: {
+						fromID: globals.profileID,
+						edgeType,
+						toID: changesetID,
+						tags: {
+							forTag: tagKey,
+						},
+					},
+				},
+			})
+			.then(({data}) => {
+				if (
+					tagKey === 'preset'
+					|| tagKey === 'published'
+					|| tagKey === 'lng'
+					|| tagKey === 'lat'
+				) {
+					globals.mainMapFunctions.refetchMarkers()
+				}
+			})
+			.catch(error=>{
+				console.error(error)
+			})
+		}
+
+		setDoneTagsByPair({
+			...doneTagsByPair,
+			[pairKey]: {
+				...thisPairInfos,
+				done: true,
+			}
+		})
+	}, [setDoneTagsByPair, doneTagsByPair, tagsByPair, globals])
+
+
+
+	const by_key = {}
+
+	const tagsByPair_array = Object.values(tagsByPair)
+	for (const infos of tagsByPair_array) {
+		const key = infos.key
+		const value = infos.value
+		const pairKey = infos.pairKey
+
+		if (
+			!doneTagsByPair.hasOwnProperty(pairKey)
+			|| doneTagsByPair[pairKey].done === false
+		) {
+			if (!by_key.hasOwnProperty(key)) {
+				by_key[key] = {
+					key,
+					entries: [],
+				}
+			}
+	
+			by_key[key].entries.push({
+				pairKey,
+				value: value+'',
+			})
+		}
+	}
+
+
+	const by_key_array = Object.values(by_key)
+	.map(({key, entries}) => ({
+		key,
+		entries: entries.sort((a, b) => {
+			if (a.value < b.value) {
+				return -1
+			}
+			if (a.value > b.value) {
+				return 1
+			}
+			return 0
+		})
+	}))
+	.sort((a, b) => {
+		if (a.key < b.key) {
+			return -1
+		}
+		if (a.key > b.key) {
+			return 1
+		}
+		return 0
+	})
+
+	if (by_key_array.length === 0) {
+		return null
+	}
+
+	return (
+		<Card
+			key="sidebarContentCard"
+			elevation={6}
+			className="sidebarContentCard"
+			style={{
+				backgroundColor: theme.palette.background.paper,
+				padding: '8px 16px 0 16px',
+			}}
+		>
+			<CardContent>
+				<Typography variant="subtitle1" style={{
+					padding: '0 0 16px 0'
+				}}>Proposed Tags</Typography>
+
+				<div style={{margin:'0 -16px'}}>
+					{
+						by_key_array.map(key_data => {
+							return (
+								<List
+									key={key_data.key}
+									subheader={
+										<ListSubheader
+											key={key_data.key}
+											style={{
+												lineHeight: '1.5',
+												paddingTop: '8px',
+											}}
+										>
+											{key_data.key}
+										</ListSubheader>
+									}
+								>
+									{
+										key_data.entries.map(entry => {
+											return <ListItem
+												dense
+												key={entry.pairKey}
+												style={{
+													width: 'calc(calc(100% + -96px) + 16px)',
+												}}
+											>
+												<ListItemText
+													primary={entry.value}
+													primaryTypographyProps={{
+														style: {
+															whiteSpace: 'normal',
+															wordBreak: 'break-word',
+														}
+													}}
+												/>
+		
+												<ListItemSecondaryAction>
+													<Tooltip
+														title="Reject"
+														aria-label="Reject"
+													>
+														<IconButton
+															onClick={()=>{
+																decideAboutChangesetKey('rejectedTag', entry.pairKey)
+															}}
+															aria-label="Reject"
+															style={{
+																color: theme.palette.error.main,
+															}}
+														>
+															<ThumbDownIcon />
+														</IconButton>
+													</Tooltip>
+																			
+													<Tooltip
+														title="Approve"
+														aria-label="Approve"
+													>
+														<IconButton
+															onClick={()=>{
+																decideAboutChangesetKey('approvedTag', entry.pairKey)
+															}}
+															aria-label="Approve"
+															style={{
+																color: theme.palette.success.main,
+															}}
+														>
+															<ThumbUpIcon />
+														</IconButton>
+													</Tooltip>
+												</ListItemSecondaryAction>
+											</ListItem>
+										})
+									}
+								</List>
+							)
+						})
+					}
+				</div>
+			</CardContent>
+		</Card>
+	)
+}
+
+
 class SidebarPlace extends React.Component {
 	constructor(props) {
 		super(props)
@@ -114,6 +333,8 @@ class SidebarPlace extends React.Component {
 			doc: {},
 			page: '', // view edit
 			headerText: '',
+			published: false,
+			tagsByPair: {},
 		}
 		this.docCache = null
 
@@ -150,6 +371,18 @@ class SidebarPlace extends React.Component {
 			'closing_date:',
 
 			'ISO3166-1:alpha3',
+
+			'published',
+		]
+
+		this.actions = [
+			{
+				icon: <EditLocationIcon />,
+				title: 'improve_place',
+				onClick: () => {
+					this.edit()
+				}
+			},
 		]
 
 		this.action = undefined
@@ -159,8 +392,8 @@ class SidebarPlace extends React.Component {
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
 
-		this.renderChangesets = this.renderChangesets.bind(this)
-		this.renderSuggestions = this.renderSuggestions.bind(this)
+		this.savePlaceVisibility = this.savePlaceVisibility.bind(this)
+
 		this.renderView = this.renderView.bind(this)
 		this.renderQuestions = this.renderQuestions.bind(this)
 
@@ -203,6 +436,8 @@ class SidebarPlace extends React.Component {
 					doc: {},
 					page: '',
 					headerText: '',
+					published: false,
+					tagsByPair: {},
 				})
 			}else{
 				const loadingState = (
@@ -211,6 +446,8 @@ class SidebarPlace extends React.Component {
 						doc: {},
 						page: 'loading',
 						headerText: '',
+						published: false,
+						tagsByPair: {},
 					}
 					: {
 						page: 'loading',
@@ -308,11 +545,41 @@ class SidebarPlace extends React.Component {
 					) {
 						this.docCache = doc
 
-						this.loadChangesets(doc._id)
-					
+						this.loadChangesets(doc)
+
 						if (this.props.onDontFilterTheseIds) {
 							this.props.onDontFilterTheseIds([doc._id])
 						}
+
+						if (doc.properties.__typename === 'Changeset') {
+							doc.properties.name = []
+							if (doc.properties.tags.name) {
+								doc.properties.name.push({
+									__typename: 'Text',
+									language: null,
+									text: doc.properties.tags.name,
+								})
+							}
+							if (doc.properties.tags.name_en) {
+								doc.properties.name.push({
+									__typename: 'Text',
+									language: 'en',
+									text: doc.properties.tags.name_en,
+								})
+							}
+				
+							doc.properties.geometry = {
+								__typename: 'GeoData',
+							}
+							if (doc.properties.tags.lat && doc.properties.tags.lng) {
+								doc.properties.geometry.location = {
+									__typename: 'GeoCoordinate',
+									lat: doc.properties.tags.lat,
+									lng: doc.properties.tags.lng,
+								}
+							}
+						}
+
 
 						const preset = doc.properties.tags.preset
 
@@ -337,6 +604,7 @@ class SidebarPlace extends React.Component {
 								? getTranslationFromArray(doc.properties.name, this.props.globals.userLocales)
 								: ''
 							),
+							published: doc.properties.tags.published || false,
 						}, ()=>{
 							if (typeof callback === 'function') {
 								callback()
@@ -445,21 +713,48 @@ class SidebarPlace extends React.Component {
 
 
 
-	loadChangesets(docID){
+	loadChangesets(doc){
 		if (this.props.globals.profileID === null) {
-			this.setState({changesets: []})
+			this.setState({tagsByPair: {}})
 		}else{
 			this.props.globals.graphql.query({
 				fetchPolicy: 'no-cache',
-				query: query_undecidedChangesets,
+				query: query_undecidedTags,
 				variables: {
-					forID: docID,
+					forID: (
+						doc.properties.__typename === 'Changeset'
+						? doc.properties.forID
+						: doc._id
+					),
 				},
 			}).then(({data}) => {
-				if (!!data && !!data.undecidedChangesets) {
-					this.setState({changesets: data.undecidedChangesets})
+				if (!!data && !!data.undecidedTags) {
+					const tagsByPair = data.undecidedTags.reduce((obj, infos) => {
+						// tags = [...   {
+						//   "_id": "5f2a59ab15943edbbd26bb0f",
+						//   "forID": "5f2a59ab15943e426b26bb0e",
+						//   "lastModified": "2020-08-05T07:03:07.576Z",
+						//   "key": "email",
+						//   "value": "info@outragemag.com",
+						//   "doc_decision": "approved",
+						//   "tag_decision": null,
+						//   "changesetIDs": [
+						//     "5f2a59ab15943edbbd26bb0f"
+						//   ]
+						// },   ...]
+				
+						const pairKey = infos.key+'='+infos.value
+						obj[pairKey] = {
+							...infos,
+							pairKey,
+							done: false,
+						}
+						return obj
+					}, {})
+
+					this.setState({tagsByPair})
 				}else{
-					this.setState({changesets: []})
+					this.setState({tagsByPair: {}})
 				}
 			}).catch(error=>{
 				console.error(error)
@@ -491,6 +786,7 @@ class SidebarPlace extends React.Component {
 			doc: emptyDoc,
 			page: 'edit',
 			headerText: this.props.getString('add_new_place_header_text'),
+			published: false,
 		}, ()=>{
 			this.props.onSetSidebarIsOpen(true)
 			this.props.onSetSearchBarValue(this.state.headerText)
@@ -502,6 +798,67 @@ class SidebarPlace extends React.Component {
 	}
 	view(){
 		navigate(`/view/${this.state.doc._id}/`)
+	}
+
+	savePlaceVisibility(event){
+		console.log('event.target.value', event.target.value)
+		const published = !!event.target.value ? true : false
+
+		const placeID = (
+			this.state.doc.properties.__typename === 'Changeset'
+			? this.state.doc.properties.forID
+			: this.state.doc._id
+		)
+
+		this.props.globals.graphql.mutate({
+			mutation: mutation_addChangeset,
+			variables: {
+				properties: {
+					forID: placeID,
+					tags: {
+						published,
+					},
+					sources: '',
+					fromBot: false,
+					dataset: 'qiekub',
+					antiSpamUserIdentifier: this.props.store.get('uuid') || '',
+				}
+			}
+		})
+		.then(({data})=>{
+			console.log('data', data.addChangeset)
+
+			if (!!data.addChangeset) {
+				const changesetID = data.addChangeset
+
+				this.props.globals.graphql.mutate({
+					mutation: mutate_addEdge,
+					variables: {
+						properties: {
+							fromID: this.props.globals.profileID,
+							edgeType: 'approvedTag',
+							toID: changesetID,
+							tags: {
+								forTag: 'published',
+							},
+						}
+					}
+				})
+				.then(({data}) => {
+					console.log('mutate_addEdge-data', data)
+					this.setState({published})
+					this.props.globals.mainMapFunctions.refetchMarkers()
+				})
+				.catch(error=>{
+					console.error('mutate_addEdge-error', error)
+				})
+			}else{
+				console.error('mutation_addChangeset-error: no changesetID')
+			}
+		})
+		.catch(error=>{
+			console.error('mutation_addChangeset-error', error)
+		})
 	}
 
 	abortEdit(){
@@ -531,6 +888,10 @@ class SidebarPlace extends React.Component {
 				countryCode={alpha3code}
 				toggleable={tags.preset !== 'boundary/administrative'}
 				inline={tags.preset !== 'boundary/administrative'}
+				style={{
+					marginTop: '8px',
+					marginBottom: '8px',
+				}}
 			/>)
 		}else{
 			return null
@@ -950,87 +1311,195 @@ class SidebarPlace extends React.Component {
 		)
 	}
 
-	renderChangesets(changesets){
-		if (changesets.length === 0) {
-			return null
-		}
-
-		return this.state.changesets.map(changeset => <Changeset key={changeset._id} changeset={changeset} variant="outlined" />)
-	}
-
-	renderSuggestions(){
-		const changesets = this.state.changesets || []
-
-		if (changesets.length === 0) {
-			return null
-		}
-
-		return (<div style={{
-			marginTop: '32px',
-		}}>
-			<Divider style={{margin:'8px -16px'}} />
-
-			<Typography variant="subtitle1" style={{
-				margin: '16px 0',
-			}}>Proposed Improvements</Typography>
-
-			<div style={{margin:'0 -16px'}}>
-				{this.renderChangesets(changesets)}
-			</div>
-		</div>)
-	}
-
 	renderView(doc){
 		const properties = doc.properties || {}
 		const tags = properties.tags || {}
 
+		const isChangeset = properties.__typename === 'Changeset'
+		const published = this.state.published
+
+		const Audience = this.renderAudience(tags)
+		const ILGA = this.renderILGA(tags)
+		const General = this.renderGeneral(tags)
+		const Links = this.renderLinks(tags)
+
+		const changeset_is_unpublished_title = 'This changeset is only visible to maintainers.'
+		const changeset_is_unpublished_description = <>
+			You can decide if the place should be visible to the public in the visibility-section.<br />
+			<br />
+			You can approve or reject the submissions at the bottom. It'll appear on the map once latitude and longitude are approved.
+		</>
+
+		const place_is_unpublished_title = 'This place is only visible to maintainers.'
+		const place_is_hidden_title = 'This place is only visible to logged-in users.'
+		const place_is_hidden_description = <>
+			You can decide if the place should be visible to the public in the visibility-section.
+		</>
+
 		return (<React.Fragment key="view">
+
+			{
+				isChangeset
+				? null
+				: (
+					<ActionBar
+						actions={this.actions}
+						style={{
+							margin: (
+								published
+								? '16px'
+								: '-16px 16px 16px 16px'
+							),
+						}}
+					/>
+				)
+			}
+
+			{
+				this.props.globals.profileID && (isChangeset || !published)
+				? (
+					<Card
+						elevation={6}
+						className="sidebarContentCard"
+						style={{
+							backgroundColor: this.props.theme.palette.warning.dark,
+							color: this.props.theme.palette.warning.contrastText,
+						}}
+					>
+						<CardContent className="CardContent">
+							<ListItem>
+								<ListItemText
+									primary={
+										isChangeset
+										? changeset_is_unpublished_title
+										: (
+											!published
+											? place_is_unpublished_title
+											: place_is_hidden_title
+										)
+									}
+									secondary={
+										isChangeset
+										? changeset_is_unpublished_description
+										: place_is_hidden_description
+									}
+									secondaryTypographyProps={{
+										style: {
+											color: this.props.theme.palette.warning.contrastText,
+										},
+									}}
+								/>
+							</ListItem>
+						</CardContent>
+					</Card>
+				)
+				: null
+			}
+
+			{
+				[
+					{key:'Audience+ILGA', component: <>
+						{Audience}
+						{Audience && ILGA ? <Divider /> : null}
+						{ILGA}
+					</>},
+					{key:'General+Links', component: <>
+						{General}
+						{General && Links ? <Divider /> : null}
+						{Links}
+					</>},
+				]
+				.map(value => (
+					<Card
+						key={'sidebarContentCard_'+value.key}
+						elevation={6}
+						className="sidebarContentCard"
+						style={{
+							backgroundColor: this.props.theme.palette.background.paper,
+						}}
+					>
+						<CardContent className="CardContent">
+							{value.component}
+						</CardContent>
+					</Card>
+				))
+			}
+			
+			{
+				this.props.globals.profileID
+				? (<>
 			<Card
-				key="sidebarContentCard"
 				elevation={6}
 				className="sidebarContentCard"
 				style={{
 					backgroundColor: this.props.theme.palette.background.paper,
+					// backgroundColor: this.props.theme.palette.warning.dark,
+					// color: this.props.theme.palette.warning.contrastText,
 				}}
 			>
-				<CardContent>
-
-					{
-						[
-							{key:'Audience', component:this.renderAudience(tags)},
-							{key:'ILGA', component:this.renderILGA(tags)},
-							{key:'General', component:this.renderGeneral(tags)},
-							{key:'Links', component:this.renderLinks(tags)},
-						]
-						.filter(v=>!!v.component)
-						.reduce((parts,value) => {
-							parts.push(value.component)
-							parts.push(<Divider key={"divider_"+value.key} style={{margin:'8px -16px'}} />)
-							return parts
-						}, [])
-					}
-
-					<div key="improveButtonWrapper" style={{
-						display: (tags.preset === 'boundary/administrative' ? 'none' : 'block'),
-						marginTop: '32px',
-						textAlign: 'center',
-					}}>
-						<Fab
-							key="improveButton"
-							variant="extended"
-							onClick={this.edit}
-							size="large"
-							color="secondary"
-							className="improveFab"
+				<CardContent
+					className="CardContent"
+					style={{
+						padding: '16px 24px'
+					}}
+				>
+					<Typography variant="subtitle1" style={{
+						padding: '0 0 8px 0'
+					}}>Visibility</Typography>
+					
+					<Select
+						key="Visibility"
+						value={published}
+						variant="outlined"
+						color="secondary"
+						onChange={this.savePlaceVisibility}
+						style={{
+							display: 'flex',
+							width: '100%',
+						}}
+						SelectDisplayProps={{
+							style: {
+								paddingTop: '12.5px',
+								paddingBottom: '12.5px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'flex-start',
+							}
+						}}
+					>						
+						<ListItem
+							dense
+							value={false}
 						>
-							<EditIcon className="icon" key="improveButtonIcon"/>
-							<Localized id="improve" key="improveButtonLocalized" />
-						</Fab>
-					</div>
-
-					{this.renderSuggestions()}
+							<ListItemIcon>
+								<VisibilityOffIcon />
+							</ListItemIcon>
+							<ListItemText
+								primary="Unpublished"
+								secondary="Only visible to maintainers."
+							/>
+						</ListItem>
+						<ListItem
+							dense
+							value={true}
+						>
+							<ListItemIcon>
+								<PublicIcon />
+							</ListItemIcon>
+							<ListItemText
+								primary="Published"
+								secondary="Visible to everyone."
+							/>
+						</ListItem>
+					</Select>
 				</CardContent>
 			</Card>
+
+					<ProposedChanges theme={this.props.theme} globals={this.props.globals} tagsByPair={this.state.tagsByPair || {}}/>
+
+				</>)
+				: null
+			}
 		</React.Fragment>)
 	}
 	renderQuestions(doc){
