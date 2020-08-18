@@ -17,6 +17,7 @@ export const place = gql`
 		place(_id: $_id){
 			_id
 			properties {
+				__typename
 				... on Place {
 					name (languages: $languages){
 						text
@@ -39,6 +40,10 @@ export const place = gql`
 						}
 					}
 					tags(keys: $wantedTags)
+				}
+				... Changeset {
+					tags
+					forID
 				}
 			}
 		}
@@ -66,6 +71,7 @@ export const markers = gql`
 	query($languages: [String]){
 		markers{
 			_id
+			originalTypename
 			name (languages: $languages){
 				text
 				language
@@ -73,6 +79,7 @@ export const markers = gql`
 			lng
 			lat
 			preset
+			status
 			tags
 		}
 	}
