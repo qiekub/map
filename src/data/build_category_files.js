@@ -203,6 +203,7 @@ const categories = [
 			'office',
 			'amenity/college',
 			'amenity/school',
+			'building/university',
 			'shop/books',
 			'shop/gift',
 			'shop/video',
@@ -528,6 +529,12 @@ const preset_overwrites = {
 	'natural': {
 		icon: 'nature',
 	},
+	'leisure/garden': {
+		icon: 'nature',
+	},
+	'leisure/beach_resort': {
+		icon: 'beach_access',
+	},
 	'natural/beach': {
 		icon: 'beach_access',
 	},
@@ -616,11 +623,23 @@ const preset_overwrites = {
 		icon: 'local_movies',
 	},
 
+	'amenity/college': {
+		icon: 'school',
+	},
+	'amenity/school': {
+		icon: 'school',
+	},
+	'building/university': {
+		icon: 'school',
+	},
 	'amenity/library': {
 		icon: 'local_library',
 	},
 	'healthcare': {
 		icon: 'local_hospital', // 'healing',
+	},
+	'amenity/doctors': {
+		icon: 'medical_services', // local_hospital local_pharmacy
 	},
 
 	'building': {
@@ -653,6 +672,9 @@ const preset_overwrites = {
 	},
 
 	'boundary/administrative': {
+		icon: 'map', // map place layers miscellaneous_services
+	},
+	'place/neighbourhood': {
 		icon: 'map', // map place layers miscellaneous_services
 	},
 }
