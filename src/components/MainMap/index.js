@@ -6,7 +6,7 @@ import { withConicGradient } from '../ConicGradient/'
 import { navigate } from '@reach/router'
 import {
 	markers as query_markers,
-	placesWithUndecidedChangesets as query_placesWithUndecidedChangesets,
+	undecidedPlaces as query_undecidedPlaces,
 } from '../../queries.js'
 
 import './index.css'
@@ -56,7 +56,7 @@ class MainMap extends React.Component {
 		this.map = null
 		this.borderGeojson = null
 		this.markers = []
-		this.placesWithUndecidedChangesets = []
+		this.undecidedPlaces = []
 
 		this.ConicGradient = null
 
@@ -74,14 +74,14 @@ class MainMap extends React.Component {
 		this.zoomOut = this.zoomOut.bind(this)
 
 		this.loadMarkers = this.loadMarkers.bind(this)
-		this.loadPlacesWithUndecidedChangesets = this.loadPlacesWithUndecidedChangesets.bind(this)
+		this.loadUndecidedPlaces = this.loadUndecidedPlaces.bind(this)
 
 		this.filtersChanged = this.filtersChanged.bind(this)
 	}
 
 	componentDidMount(){
 		this.loadMarkers()
-		this.loadPlacesWithUndecidedChangesets()
+		this.loadUndecidedPlaces()
 		this.loadBorders()
 
 		if (this.props.conic_gradient) {
@@ -191,15 +191,15 @@ class MainMap extends React.Component {
 		})
 	}
 
-	loadPlacesWithUndecidedChangesets(){
+	loadUndecidedPlaces(){
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
-			query: query_placesWithUndecidedChangesets,
+			query: query_undecidedPlaces,
 			variables: {},
 		})
 		.subscribe(({data}) => {
-			if (!!data && !!data.placesWithUndecidedChangesets) {
-				this.placesWithUndecidedChangesets = data.placesWithUndecidedChangesets.map(doc=>doc._id)
+			if (!!data && !!data.undecidedPlaces) {
+				this.undecidedPlaces = data.undecidedPlaces.map(doc=>doc._id)
 				this.filterMarkers(this.filters)
 			}
 		})
@@ -582,7 +582,7 @@ class MainMap extends React.Component {
 								if (marker.data.status === 'undecided') {
 									hasUndecidedChangesets = true
 								}else{
-									hasUndecidedChangesets = this.placesWithUndecidedChangesets.includes(marker.data._id)
+									hasUndecidedChangesets = this.undecidedPlaces.includes(marker.data._id)
 								}
 							}
 							

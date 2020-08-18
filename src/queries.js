@@ -205,33 +205,17 @@ export const accounts = gql`
 	}
 `
 
-export const placesWithUndecidedChangesets = gql`
+export const undecidedPlaces = gql`
 	query($forID: ID) {
-		placesWithUndecidedChangesets(forID: $forID) {
+		undecidedPlaces(forID: $forID) {
 			_id
 		}
 	}
 `
 
-export const undecidedChangesets = gql`
+export const undecidedTags = gql`
 	query($forID: ID) {
-		undecidedChangesets(forID: $forID) {
-			_id
-			properties {
-				__typename
-				... on Changeset {
-					forID
-					tags
-					sources
-					fromBot
-					dataset
-					antiSpamUserIdentifier
-				}
-			}
-			metadata {
-				created
-			}
-		}
+		undecidedTags(forID: $forID)
 	}
 `
 
