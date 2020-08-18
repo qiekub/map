@@ -199,6 +199,7 @@ export const accounts = gql`
 				... on Account {
 					provider
 					username
+					displayName
 				}
 			}
 		}
