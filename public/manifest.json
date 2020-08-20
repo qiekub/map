@@ -14,7 +14,7 @@
 			"url": "/add",
 			"icons": [
 				{
-					"sizes": "64x64",
+					"sizes": "128x128",
 					"src": "favicon.png",
 					"type": "image/png"
 				}
@@ -24,57 +24,57 @@
 	"icons": [
 		{
 			"sizes": "16x16",
-			"src": "/AppIcons/QueerMap Icon Logo-16.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-16.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "20x20",
-			"src": "/AppIcons/QueerMap Icon Logo-20.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-20.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "29x29",
-			"src": "/AppIcons/QueerMap Icon Logo-29.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-29.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "32x32",
-			"src": "/AppIcons/QueerMap Icon Logo-32.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-32.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "40x40",
-			"src": "/AppIcons/QueerMap Icon Logo-40.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-40.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "64x64",
-			"src": "/AppIcons/QueerMap Icon Logo-64.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-64.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "76x76",
-			"src": "/AppIcons/QueerMap Icon Logo-76.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-76.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "128x128",
-			"src": "/AppIcons/QueerMap Icon Logo-128.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-128.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "256x256",
-			"src": "/AppIcons/QueerMap Icon Logo-256.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-256.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "512x512",
-			"src": "/AppIcons/QueerMap Icon Logo-512.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-512.png",
 			"type": "image/png"
 		},
 		{
 			"sizes": "1024x1024",
-			"src": "/AppIcons/QueerMap Icon Logo-1024.png",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-1024.png",
 			"type": "image/png"
 		}
 	]
