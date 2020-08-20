@@ -1,4 +1,4 @@
-# Qiekub Map
+# qiekub Map
 
 🏳️‍🌈🗺 A map of community centers and other helpful information for queer (LGBTQ) people.
 
