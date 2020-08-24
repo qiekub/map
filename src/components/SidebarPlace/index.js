@@ -802,9 +802,11 @@ class SidebarPlace extends React.Component {
 			variables: {
 				properties: {
 					fromID: this.props.globals.profileID,
-					edgeType: 'markedAsDuplicate',
+					edgeType: 'deleted',
 					toID: docID,
-					tags: {},
+					tags: {
+						reason: 'duplicate'
+					},
 				}
 			}
 		})
