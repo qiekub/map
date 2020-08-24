@@ -378,23 +378,6 @@ class SidebarPlace extends React.Component {
 			'published',
 		]
 
-		this.actions = [
-			{
-				icon: <EditLocationIcon />,
-				title: 'improve_place',
-				onClick: () => {
-					this.edit()
-				}
-			},
-			{
-				icon: <WrongLocationIcon />,
-				title: 'mark_as_duplicate',
-				onClick: () => {
-					this.mark_as_duplicate()
-				}
-			},
-		]
-
 		this.action = undefined
 		this.docID = undefined
 
@@ -1349,6 +1332,7 @@ class SidebarPlace extends React.Component {
 		const properties = doc.properties || {}
 		const tags = properties.tags || {}
 
+		const isLoggedIn = !!this.props.globals.profileID
 		const isChangeset = properties.__typename === 'Changeset'
 		const published = this.state.published
 
@@ -1370,14 +1354,34 @@ class SidebarPlace extends React.Component {
 			You can decide if the place should be visible to the public in the visibility-section.
 		</>
 
+		const actions = []
+		if (!isChangeset) {
+			actions.push({
+				icon: <EditLocationIcon />,
+				title: 'improve_place',
+				onClick: () => {
+					this.edit()
+				}
+			})
+		}
+		if (isLoggedIn) {
+			actions.push({
+				icon: <WrongLocationIcon />,
+				title: 'mark_as_duplicate',
+				onClick: () => {
+					this.mark_as_duplicate()
+				}
+			})
+		}
+
 		return (<React.Fragment key="view">
 
 			{
-				isChangeset
+				actions.length === 0
 				? null
 				: (
 					<ActionBar
-						actions={this.actions}
+						actions={actions}
 						style={{
 							margin: (
 								published
