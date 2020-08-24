@@ -3,6 +3,7 @@
 give_feedback = Feedback geben
 add_place = Ort hinzufügen
 improve_place = Ort verbessern
+mark_as_duplicate = Als Doppelt markieren
 
 
 

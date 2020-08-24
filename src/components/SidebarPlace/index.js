@@ -103,6 +103,9 @@ const YouTubeIcon		= props => <Icon style={{backgroundImage:'url('+youtube_icon+
 const TwitterIcon		= props => <Icon style={{backgroundImage:'url('+twitter_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const OpenstreetmapIcon	= props => <Icon style={{backgroundImage:'url('+openstreetmap_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 
+const WrongLocationIcon = props => (<Icon className="MuiChip-icon">
+	<span className="material-icons-round">wrong_location</span>
+</Icon>)
 
 // import opening_hours from '../../scripts/opening_hours.js/index.js'
 // import '../../scripts/opening_hours+deps.min.js'
@@ -383,6 +386,13 @@ class SidebarPlace extends React.Component {
 					this.edit()
 				}
 			},
+			{
+				icon: <WrongLocationIcon />,
+				title: 'mark_as_duplicate',
+				onClick: () => {
+					this.mark_as_duplicate()
+				}
+			},
 		]
 
 		this.action = undefined
@@ -392,6 +402,7 @@ class SidebarPlace extends React.Component {
 		this.edit = this.edit.bind(this)
 		this.view = this.view.bind(this)
 
+		this.savePlaceVisibilityFromEvent = this.savePlaceVisibilityFromEvent.bind(this)
 		this.savePlaceVisibility = this.savePlaceVisibility.bind(this)
 
 		this.renderView = this.renderView.bind(this)
@@ -800,9 +811,36 @@ class SidebarPlace extends React.Component {
 		navigate(`/view/${this.state.doc._id}/`)
 	}
 
-	savePlaceVisibility(event){
-		const published = !!event.target.value ? true : false
+	mark_as_duplicate(){
+		const docID = this.state.doc._id
 
+		this.props.globals.graphql.mutate({
+			mutation: mutate_addEdge,
+			variables: {
+				properties: {
+					fromID: this.props.globals.profileID,
+					edgeType: 'markedAsDuplicate',
+					toID: docID,
+					tags: {},
+				}
+			}
+		})
+		.then(({data}) => {
+			if (this.state.doc.properties.__typename === 'Place') {
+				this.savePlaceVisibility(false)
+			}
+		})
+		.catch(error=>{
+			console.error('mutate_addEdge-error', error)
+		})
+	}
+
+	savePlaceVisibilityFromEvent(event) {
+		const published = !!event.target.value ? true : false
+		this.savePlaceVisibility(published)
+	}
+
+	savePlaceVisibility(published){
 		const placeID = (
 			this.state.doc.properties.__typename === 'Changeset'
 			? this.state.doc.properties.forID
@@ -1448,7 +1486,7 @@ class SidebarPlace extends React.Component {
 						value={published}
 						variant="outlined"
 						color="secondary"
-						onChange={this.savePlaceVisibility}
+						onChange={this.savePlaceVisibilityFromEvent}
 						style={{
 							display: 'flex',
 							width: '100%',
