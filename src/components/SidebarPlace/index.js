@@ -801,7 +801,6 @@ class SidebarPlace extends React.Component {
 	}
 
 	savePlaceVisibility(event){
-		console.log('event.target.value', event.target.value)
 		const published = !!event.target.value ? true : false
 
 		const placeID = (
@@ -826,8 +825,6 @@ class SidebarPlace extends React.Component {
 			}
 		})
 		.then(({data})=>{
-			console.log('data', data.addChangeset)
-
 			if (!!data.addChangeset) {
 				const changesetID = data.addChangeset
 
@@ -845,7 +842,6 @@ class SidebarPlace extends React.Component {
 					}
 				})
 				.then(({data}) => {
-					console.log('mutate_addEdge-data', data)
 					this.setState({published})
 					this.props.globals.mainMapFunctions.refetchMarkers()
 				})
