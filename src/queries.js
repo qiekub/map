@@ -41,7 +41,7 @@ export const place = gql`
 					}
 					tags(keys: $wantedTags)
 				}
-				... Changeset {
+				... on Changeset {
 					tags
 					forID
 				}
