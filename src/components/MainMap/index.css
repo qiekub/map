@@ -313,7 +313,7 @@
 		transform: translate3d(-50%, -65%, 0) scaleY(1);
 	}
 }
-@media (max-width: 1000px) {
+@media (max-width: 600px) {
 	.markerInTheMiddel{
 		margin-left: 0;
 	}

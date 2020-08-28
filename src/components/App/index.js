@@ -132,7 +132,7 @@ class App extends React.Component {
 			this.matcher_color_scheme.addListener(this.check_color_scheme)
 			this.check_color_scheme(this.matcher_color_scheme)
 
-			this.matcher_small_screen = window.matchMedia('(min-width: 800px)')
+			this.matcher_small_screen = window.matchMedia('(min-width: 600px)')
 			this.matcher_small_screen.addListener(this.check_small_screen)
 			this.check_small_screen(this.matcher_small_screen)
 		}else{
