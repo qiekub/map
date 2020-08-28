@@ -134,10 +134,16 @@ class GlobalsProvider extends React.Component {
 		// 	}
 		// }
 
-		this.country_by_iso = null
+		this.loadedCountries = false
+		this.country_by_iso_a2 = {}
+		this.country_by_iso_a3 = {} 
 		this.saved_country_callbacks = []
 
-		this.getCountryByCode_internal = this.getCountryByCode_internal.bind(this)
+		this.loadCountries = this.loadCountries.bind(this)
+		this.getCountryByAlpha2 = this.getCountryByAlpha2.bind(this)
+		this.getCountryByAlpha3 = this.getCountryByAlpha3.bind(this)
+		this.convert_alpha3_to_alpha2 = this.convert_alpha3_to_alpha2.bind(this)
+		this.convert_alpha2_to_alpha3 = this.convert_alpha2_to_alpha3.bind(this)
 		this.getCountryByCode = this.getCountryByCode.bind(this)
 	}
 
@@ -145,47 +151,62 @@ class GlobalsProvider extends React.Component {
 		getInitialGlobalState(globalState=>{
 			this.setState({
 				...globalState,
+				getCountryByAlpha2: this.getCountryByAlpha2,
+				getCountryByAlpha3: this.getCountryByAlpha3,
+				convert_alpha3_to_alpha2: this.convert_alpha3_to_alpha2,
+				convert_alpha2_to_alpha3: this.convert_alpha2_to_alpha3,
 				getCountryByCode: this.getCountryByCode,
 			}, ()=>{
-				this.getCountryByCode()
+				this.loadCountries()
 			})
 		})
 	}
 
-	getCountryByCode_internal(iso_a3){
-		iso_a3 = iso_a3.toUpperCase()
-		return this.country_by_iso[iso_a3]
-	}
 
-	getCountryByCode(iso_a3, callback){
-		if (iso_a3 && callback) {
-			this.saved_country_callbacks.push(()=>{
-				callback(this.getCountryByCode_internal(iso_a3))
-			})
+	loadCountries(callback){
+		if (callback) {
+			this.saved_country_callbacks.push(callback)
 		}
 
-		if (this.country_by_iso === null) {
+		if (!this.loadedCountries) {
 			if (!!this.state.graphql) {
-				const ios_tag_key = 'ISO3166-1:alpha3'
 				this.state.graphql.watchQuery({
 					fetchPolicy: 'cache-and-network',
 					query: query_countries,
 					variables: {
-						wantedTags: [ios_tag_key],
+						wantedTags: [
+							// 'ISO3166-1',
+							'ISO3166-1:alpha2',
+							'ISO3166-1:alpha3',
+							// 'ISO3166-1:numeric',
+							// 'timezone',
+						],
 						languages: navigator.languages,
 					},
 				})
 				.subscribe(({data}) => {
-					if (this.country_by_iso === null && !!data && !!data.countries) {
-						const country_by_iso = {}
+					if (!!data && !!data.countries) {
+						const country_by_iso_a2 = {}
+						const country_by_iso_a3 = {}
 		
 						for (const doc of data.countries) {
-							let country_key = doc.properties.tags[ios_tag_key] || ''
-							country_key = country_key.toUpperCase()
-							country_by_iso[country_key] = doc
+							let country_key_a2 = doc.properties.tags['ISO3166-1:alpha2']
+							if (country_key_a2) {
+								country_key_a2 = country_key_a2.toUpperCase()
+								country_by_iso_a2[country_key_a2] = doc
+							}
+
+							let country_key_a3 = doc.properties.tags['ISO3166-1:alpha3']
+							if (country_key_a3) {
+								country_key_a3 = country_key_a3.toUpperCase()
+								country_by_iso_a3[country_key_a3] = doc
+							}
 						}
 		
-						this.country_by_iso = country_by_iso
+						this.country_by_iso_a2 = country_by_iso_a2
+						this.country_by_iso_a3 = country_by_iso_a3
+
+						this.loadedCountries = true
 	
 						for (const saved_country_callback of this.saved_country_callbacks) {
 							saved_country_callback()
@@ -198,6 +219,34 @@ class GlobalsProvider extends React.Component {
 				saved_country_callback()
 			}
 		}
+	}
+
+	getCountryByAlpha2(alpha2, callback){
+		this.loadCountries(()=>{
+			alpha2 = alpha2.toUpperCase()
+			callback(this.country_by_iso_a2[alpha2])
+		})
+	}
+	getCountryByAlpha3(alpha3, callback){
+		this.loadCountries(()=>{
+			alpha3 = alpha3.toUpperCase()
+			callback(this.country_by_iso_a3[alpha3])
+		})
+	}
+
+	convert_alpha3_to_alpha2(alpha3, callback){
+		this.getCountryByAlpha3(alpha3, countryDoc=>{
+			callback(countryDoc.properties.tags['ISO3166-1:alpha2'])
+		})
+	}
+	convert_alpha2_to_alpha3(alpha2, callback){
+		this.getCountryByAlpha2(alpha2, countryDoc=>{
+			callback(countryDoc.properties.tags['ISO3166-1:alpha3'])
+		})
+	}
+
+	getCountryByCode(iso_a3, callback){
+		this.getCountryByAlpha3(iso_a3, callback)
 	}
 
 	render() {
