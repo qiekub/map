@@ -46,6 +46,7 @@ import GeoInput from '../GeoInput/'
 import PresetInput from '../PresetInput/'
 import DateInput from '../DateInput/'
 import AudienceInput from '../AudienceInput/'
+import AddressInput from '../AddressInput/'
 
 
 
@@ -474,6 +475,7 @@ class Questions extends React.Component {
 				|| possibleAnswer.inputtype === 'preset'
 				|| possibleAnswer.inputtype === 'date'
 				|| possibleAnswer.inputtype === 'audience'
+				|| possibleAnswer.inputtype === 'address'
 			)
 		}).length > 0
 
@@ -566,6 +568,21 @@ class Questions extends React.Component {
 										helperText={possibleAnswer.description_translated}
 										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
+									/>)
+								}else if (possibleAnswer.inputtype === 'address') {
+									return (<AddressInput
+										key={possibleAnswerKey}
+										label={possibleAnswer.title_translated}
+										helperText={possibleAnswer.description_translated}
+										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
+										tags={{
+											...this.props.doc.properties.tags,
+											...this.answer_tags,
+										}}
+										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
+										style={{
+											padding: '0 8px',
+										}}
 									/>)
 								}else if (possibleAnswer.inputtype === 'geo') {
 									return (<GeoInput

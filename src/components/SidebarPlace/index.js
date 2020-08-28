@@ -355,6 +355,9 @@ class SidebarPlace extends React.Component {
 			// 'wheelchair',
 
 			'addr:',
+			'lat',
+			'lng',
+
 			'contact:email',
 			'contact:phone',
 
@@ -1545,7 +1548,7 @@ class SidebarPlace extends React.Component {
 	renderQuestions(doc){
 		const startQuestions = (
 			this.props.action === 'add'
-			? ['preset','geo_pos','name','audience','website','answer_more']
+			? ['preset','geo_pos','address','name','audience','website','answer_more']
 			: ['start_improve']
 		)
 

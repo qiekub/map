@@ -225,3 +225,43 @@ legality_message_be_cautious = Fügen keine Orte hinzu, die anderen potenziell s
 category_more = Weitere
 
 
+
+# AddressInput
+show_all_fields = Zeige alle Felder
+
+label_block_number = Blocknummer
+label_block_number_jp = Blocknr.
+label_city = Stadt
+label_city_cn = Stadt/Präfektur/Liga
+label_city_jp = Stadt/Gemeinde/Dorf/Tokyo Spezial Bezirk
+label_city_vn = Stadt/Gemeinde
+label_conscriptionnumber = 123
+label_country = Staat
+label_county = Regierungsbezirk
+label_county_jp = Stadtteil
+label_district = Landkreis/Bezirk
+label_district_cn = Distrikt/Landkreis/Banner
+label_district_vn = Arrondissement/Gemeinde/Stadtteil
+label_floor = Stockwerk
+label_hamlet = Weiler
+label_housename = Postalischer Hausname
+label_housenumber = 123
+label_housenumber_jp = Hausnr.
+label_neighbourhood = Viertel
+label_neighbourhood_jp = Chōme/Aza/Koaza
+label_place = Ort
+label_postcode = Postleitzahl
+label_province = Regierungsbezirk, Provinz
+label_province_cn = Provinz/Gemeinde/AR/SAR
+label_province_jp = Präfektur
+label_quarter = Quartier
+label_quarter_jp = Ōaza/Machi
+label_state = Bundesland
+label_street = Straße
+label_subdistrict = Stadtbezirk
+label_subdistrict_vn = Bezirk/Gemeinde/Städtchen
+label_suburb = Stadtteil
+label_suburb_jp = Bezirk
+label_unit = Stiege/Bauteil
+
+
