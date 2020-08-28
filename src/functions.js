@@ -96,45 +96,103 @@ export function getColorByPreset(preset_key,colorsByPreset_sorted){
 }
 
 
-export function getAddressFormat(tags) {
 
-	// if (!!tags['addr:format']) {
-	// 	const format_country_code = tags['addr:format'].toUpperCase()
-	// 	for (const addressFormat of addressFormats) {
-	// 		if (addressFormat.countryCodes.includes(format_country_code)) {
-	// 			return addressFormat
-	// 		}
-	// 	}
-	// }
+export function addAddressFormatDefaults(addressFormat){
+	// format-defaults from ID
+	addressFormat.format = addressFormat.format || [
+		['housenumber', 'street'],
+		['city', 'postcode']
+	]
 
-	// TODO: The following code is not getting the correct address format.
+	// widths-defaults from ID
+	addressFormat.widths = addressFormat.widths || {
+		housenumber: 1/3, street: 2/3, unit: 1/3,
+		city: 2/3, state: 1/3, postcode: 1/3,
+		// housenumber: 1/3, street: 2/3,
+		// city: 2/3, state: 1/4, postcode: 1/3,
+	}
 
-	const addr_keys = Object.keys(tags)
-	.filter(key => key.startsWith('addr:'))
-	.map(key => key.split('addr:')[1])
-	
-	// const addr_keys_length = addr_keys.length
-	
-	let lastMatchCount = 0 // 99999
-	let lastAddressFormat = null
+	addressFormat.keys = addressFormat.keys || [].concat(...addressFormat.format)
+
+	return addressFormat
+}
+
+export function getAddressFormatDefault(){
 	for (const addressFormat of addressFormats) {
-		const thisMatchCount = addr_keys.filter(value => addressFormat.keys.includes(value)).length
-		// const length_difference = Math.abs(addressFormat.keys.length - addr_keys_length) / addr_keys_length
-		// const existing_keys_difference = Math.ceil((1 - (thisMatchCount / addr_keys_length))*100)*0.01
-		// const sum_difference = length_difference + existing_keys_difference
-		
-		if (thisMatchCount >= lastMatchCount) { // if (sum_difference <= lastMatchCount) {
-			lastMatchCount = thisMatchCount // sum_difference
-			lastAddressFormat = addressFormat
+		if (addressFormat.countryCodes.length === 0) {
+			return addAddressFormatDefaults(addressFormat)
+		} 
+	}
+
+	return null
+}
+
+export function getAddressFormatByCountryCode(countryCode, showAllFields){
+	countryCode = (countryCode || '').toUpperCase()
+
+	let addressFormat2return = null
+
+	for (const addressFormat of addressFormats) {
+		if (addressFormat.countryCodes.includes(countryCode)) {
+			addressFormat2return = addAddressFormatDefaults(addressFormat)
+			break
 		}
 	}
 
-	if (!!lastAddressFormat) {
-		return lastAddressFormat
+	if (addressFormat2return === null) {
+		addressFormat2return = getAddressFormatDefault()
 	}
 
+	addressFormat2return = JSON.parse(JSON.stringify(addressFormat2return)) // clone the object as we are using push afterwards
 
-	return address_formats[0]
+	if (showAllFields && addressFormat2return !== null) {
+		const alreadInUseKeys = addressFormat2return.keys
+
+		for (const addressFormat of addressFormats) {
+			if (addressFormat.countryCodes.includes('_ALL_FIELDS_')) {
+				const missingKeys = addressFormat.keys
+				
+				const keys2add = missingKeys.filter(key => !alreadInUseKeys.includes(key))
+				for (const key of keys2add) {
+					addressFormat2return.format.push([key])
+					addressFormat2return.widths[key] = 1
+				}
+
+				break
+			}
+		}
+	}
+
+	return addressFormat2return
+}
+
+export function getAddressFormatByTags(tags) {
+	const addr_keys = Object.keys(tags)
+	.filter(key => key.startsWith('addr:'))
+	.map(key => key.split('addr:')[1])
+
+	return getAddressFormatBySubkeys(addr_keys)
+}
+
+export function getAddressFormatBySubkeys(addr_keys) {
+	let lastMatchCount = 0
+	let lastAddressFormat = null
+	for (const addressFormat of addressFormats) {
+		if (!addressFormat.countryCodes.includes('_ALL_FIELDS_')) {
+			const thisMatchCount = addr_keys.filter(value => addressFormat.keys.includes(value)).length
+			
+			if (thisMatchCount >= lastMatchCount) {
+				lastMatchCount = thisMatchCount
+				lastAddressFormat = addressFormat
+			}
+		}
+	}
+	
+	if (!!lastAddressFormat) {
+		return addAddressFormatDefaults(lastAddressFormat)
+	}
+	
+	return null
 }
 
 

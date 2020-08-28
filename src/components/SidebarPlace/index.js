@@ -20,7 +20,7 @@ import {
 import presets from '../../data/dist/presets.json'
 import colors from '../../data/dist/colors.json'
 import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getILGA, getAddressFormat, getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import { getILGA, getAddressFormatByTags, getAddressFormatDefault, getTranslation, getTranslationFromArray, getColorByPreset/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
 
 import { withGlobals } from '../Globals/'
 
@@ -1186,7 +1186,7 @@ class SidebarPlace extends React.Component {
 
 		const rows = []
 
-		const address_format = getAddressFormat(tags)
+		const address_format = getAddressFormatByTags(tags) || getAddressFormatDefault()
 		if (!!address_format) {
 			const address = address_format.format.map(part => {
 				const mappedParts = part.map(key => !!tags['addr:'+key] ? tags['addr:'+key] : null).filter(v=>v)
