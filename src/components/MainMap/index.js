@@ -203,17 +203,19 @@ class MainMap extends React.Component {
 	}
 
 	loadUndecidedPlaces(){
-		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
-			fetchPolicy: 'cache-and-network',
-			query: query_undecidedPlaces,
-			variables: {},
-		})
-		.subscribe(({data}) => {
-			if (!!data && !!data.undecidedPlaces) {
-				this.undecidedPlaces = data.undecidedPlaces.map(doc=>doc._id)
-				this.filterMarkers(this.filters)
-			}
-		})
+		if (!!this.props.globals.profileID) {
+			this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
+				fetchPolicy: 'cache-and-network',
+				query: query_undecidedPlaces,
+				variables: {},
+			})
+			.subscribe(({data}) => {
+				if (!!data && !!data.undecidedPlaces) {
+					this.undecidedPlaces = data.undecidedPlaces.map(doc=>doc._id)
+					this.filterMarkers(this.filters)
+				}
+			})
+		}
 	}
 
 	async loadBorders(){
