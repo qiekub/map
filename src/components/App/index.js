@@ -367,6 +367,16 @@ class App extends React.Component {
 				},
 			},
 			overrides: {
+				MuiInputLabel: {
+					'root': {
+						textOverflow: 'ellipsis',
+						overflow: 'hidden',
+						whiteSpace: 'nowrap',
+						right: '16px',
+						height: '100%',
+					},
+				},
+				
 				MuiCssBaseline: {
 					'@global': {
 						'@font-face': ubuntu_fonts,
