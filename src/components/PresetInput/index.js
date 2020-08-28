@@ -151,7 +151,7 @@ class PresetInput extends React.Component {
 
 				ListboxProps={{
 					style: {
-						'-webkit-overflow-scrolling': 'touch',
+						WebkitOverflowScrolling: 'touch',
 					},
 				}}
 				PaperComponent={Paper}
