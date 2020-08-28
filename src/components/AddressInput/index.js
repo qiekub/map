@@ -92,7 +92,7 @@ class AddressInput extends React.Component {
 		this.setState((state, props)=>({
 			value: {
 				...state.value,
-				formatKey: value
+				[formatKey]: value
 			}
 		}), ()=>{
 			if (this.props.onChange) {
