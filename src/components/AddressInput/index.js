@@ -29,6 +29,8 @@ class AddressInput extends React.Component {
 			showAllFields: false,
 		}
 
+		this.newValue = {}
+
 		this.parseDefaultValue = this.parseDefaultValue.bind(this)
 		this.setValue = this.setValue.bind(this)
 		this.toggleShowAllFields = this.toggleShowAllFields.bind(this)
@@ -44,6 +46,9 @@ class AddressInput extends React.Component {
 		this.setState({
 			value: this.props.defaultValue || {}
 		}, ()=>{
+			this.newValue = JSON.parse(JSON.stringify(this.state.value))
+			this.publishChanges()
+
 			this.setCountryCode()
 		})
 	}
@@ -63,42 +68,31 @@ class AddressInput extends React.Component {
 				const alpha3code = result.data.countrycode
 
 				this.props.globals.convert_alpha3_to_alpha2(alpha3code, (alpha2code)=>{
-					this.setState((state, props) => ({
-						value: {
-							...state.value,
-							country: alpha2code,
-						}
-					}))
+					this.setValue('country',alpha2code)
 				})
 			}else{
-				this.setState((state, props) => ({
-					value: {
-						...state.value,
-						country: null,
-					}
-				}))
+				this.setValue('country',null)
 			}
 		}).catch(error=>{
-			this.setState((state, props) => ({
-				value: {
-					...state.value,
-					country: null,
-				}
-			}))
+			this.setValue('country',null)
 		})
 	}
 
 	setValue(formatKey,value){
-		this.setState((state, props)=>({
-			value: {
-				...state.value,
-				[formatKey]: value
+		this.newValue[formatKey] = value
+		this.publishChanges()
+	}
+	publishChanges(){
+		if (this.props.onChange) {
+			let changedValues = {}
+			for (const key of Object.keys(this.newValue)) {
+				if (this.state.value[key] !== this.newValue[key]) {
+					changedValues[key] = this.newValue[key]
+				}
 			}
-		}), ()=>{
-			if (this.props.onChange) {
-				this.props.onChange(this.state.value)
-			}
-		})
+
+			this.props.onChange(changedValues)
+		}
 	}
 
 	getAddressInputStyles(addressFormat, formatKey) {
@@ -151,7 +145,7 @@ class AddressInput extends React.Component {
 							<TextField
 								className="TextField"
 								type="text"
-								key={formatKey+'_'+value}
+								key={formatKey}
 								label={label}
 								title={label}
 								variant="outlined"
