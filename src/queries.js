@@ -249,4 +249,10 @@ export const changesets = gql`
 	}
 `
 
+export const recompile = gql`
+	mutation($_id: ID){
+		recompile(_id: $_id)
+	}
+`
+
 

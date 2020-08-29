@@ -5,6 +5,7 @@ add_place = Add New Place
 improve_place = Improve Place
 mark_as_duplicate = Mark as Duplicate
 reload_proposed_tags = Reload Proposed Tags
+recompile = Recompile Place
 
 
 

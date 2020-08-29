@@ -14,6 +14,7 @@ import {
 	countrycode as query_countrycode,
 	addEdge as mutate_addEdge,
 	addChangeset as mutation_addChangeset,
+	recompile as mutation_recompile,
 } from '../../queries.js'
 
 // import categories from '../../data/dist/categories.json'
@@ -883,6 +884,29 @@ class SidebarPlace extends React.Component {
 		})
 	}
 
+	recompile(){
+		const doc = this.state.doc
+		const placeID = (
+			doc.properties.__typename === 'Changeset'
+			? doc.properties.forID
+			: doc._id
+		)
+
+		this.props.globals.graphql.mutate({
+			fetchPolicy: 'no-cache',
+			mutation: mutation_recompile,
+			variables: {
+				_id: placeID
+			},
+		})
+		.then(({data}) => {
+			this.checkIfDocIdChanged()
+		})
+		.catch(error=>{
+			console.error(error)
+		})
+	}
+
 	abortEdit(){
 		if (this.props.action === 'add') {
 			navigate(`/`)
@@ -1378,6 +1402,13 @@ class SidebarPlace extends React.Component {
 				}
 			})
 			if (!isChangeset) {
+				actions.push({
+					icon: <EditLocationIcon />,
+					title: 'recompile',
+					onClick: () => {
+						this.recompile()
+					}
+				})
 				actions.push({
 					icon: <EditLocationIcon />,
 					title: 'reload_proposed_tags',
