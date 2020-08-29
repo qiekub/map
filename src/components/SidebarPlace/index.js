@@ -223,10 +223,6 @@ function ProposedChanges({theme, globals, tagsByPair}) {
 		return 0
 	})
 
-	if (by_key_array.length === 0) {
-		return null
-	}
-
 	return (
 		<Card
 			key="sidebarContentCard"
@@ -242,86 +238,90 @@ function ProposedChanges({theme, globals, tagsByPair}) {
 					padding: '0 0 16px 0'
 				}}>Proposed Tags</Typography>
 
-				<div style={{margin:'0 -16px'}}>
-					{
-						by_key_array.map(key_data => {
-							return (
-								<List
-									key={key_data.key}
-									subheader={
-										<ListSubheader
-											key={key_data.key}
-											style={{
-												lineHeight: '1.5',
-												paddingTop: '8px',
-											}}
-										>
-											{key_data.key}
-										</ListSubheader>
-									}
-								>
-									{
-										key_data.entries.map(entry => {
-											return <ListItem
-												dense
-												key={entry.pairKey}
+				{
+					by_key_array.length === 0
+					? <Typography variant="body2">There are no proposed tags.</Typography>
+					: (<div style={{margin:'0 -16px'}}>
+						{
+							by_key_array.map(key_data => {
+								return (
+									<List
+										key={key_data.key}
+										subheader={
+											<ListSubheader
+												key={key_data.key}
 												style={{
-													width: 'calc(calc(100% + -96px) + 16px)',
+													lineHeight: '1.5',
+													paddingTop: '8px',
 												}}
 											>
-												<ListItemText
-													primary={entry.value}
-													primaryTypographyProps={{
-														style: {
-															whiteSpace: 'normal',
-															wordBreak: 'break-word',
-														}
+												{key_data.key}
+											</ListSubheader>
+										}
+									>
+										{
+											key_data.entries.map(entry => {
+												return <ListItem
+													dense
+													key={entry.pairKey}
+													style={{
+														width: 'calc(calc(100% + -96px) + 16px)',
 													}}
-												/>
-		
-												<ListItemSecondaryAction>
-													<Tooltip
-														title="Reject"
-														aria-label="Reject"
-													>
-														<IconButton
-															onClick={()=>{
-																decideAboutChangesetKey('rejectedTag', entry.pairKey)
-															}}
+												>
+													<ListItemText
+														primary={entry.value}
+														primaryTypographyProps={{
+															style: {
+																whiteSpace: 'normal',
+																wordBreak: 'break-word',
+															}
+														}}
+													/>
+			
+													<ListItemSecondaryAction>
+														<Tooltip
+															title="Reject"
 															aria-label="Reject"
-															style={{
-																color: theme.palette.error.main,
-															}}
 														>
-															<ThumbDownIcon />
-														</IconButton>
-													</Tooltip>
-																			
-													<Tooltip
-														title="Approve"
-														aria-label="Approve"
-													>
-														<IconButton
-															onClick={()=>{
-																decideAboutChangesetKey('approvedTag', entry.pairKey)
-															}}
+															<IconButton
+																onClick={()=>{
+																	decideAboutChangesetKey('rejectedTag', entry.pairKey)
+																}}
+																aria-label="Reject"
+																style={{
+																	color: theme.palette.error.main,
+																}}
+															>
+																<ThumbDownIcon />
+															</IconButton>
+														</Tooltip>
+																				
+														<Tooltip
+															title="Approve"
 															aria-label="Approve"
-															style={{
-																color: theme.palette.success.main,
-															}}
 														>
-															<ThumbUpIcon />
-														</IconButton>
-													</Tooltip>
-												</ListItemSecondaryAction>
-											</ListItem>
-										})
-									}
-								</List>
-							)
-						})
-					}
-				</div>
+															<IconButton
+																onClick={()=>{
+																	decideAboutChangesetKey('approvedTag', entry.pairKey)
+																}}
+																aria-label="Approve"
+																style={{
+																	color: theme.palette.success.main,
+																}}
+															>
+																<ThumbUpIcon />
+															</IconButton>
+														</Tooltip>
+													</ListItemSecondaryAction>
+												</ListItem>
+											})
+										}
+									</List>
+								)
+							})
+						}
+					</div>)
+				}
 			</CardContent>
 		</Card>
 	)
