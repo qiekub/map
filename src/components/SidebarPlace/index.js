@@ -1538,7 +1538,7 @@ class SidebarPlace extends React.Component {
 				</CardContent>
 			</Card>
 
-					<ProposedChanges theme={this.props.theme} globals={this.props.globals} tagsByPair={this.state.tagsByPair || {}}/>
+					<ProposedChanges key={this.state.tagsByPair || {}} theme={this.props.theme} globals={this.props.globals} tagsByPair={this.state.tagsByPair || {}}/>
 
 				</>)
 				: null
