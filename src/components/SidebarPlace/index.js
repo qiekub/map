@@ -1404,16 +1404,16 @@ class SidebarPlace extends React.Component {
 			if (!isChangeset) {
 				actions.push({
 					icon: <EditLocationIcon />,
-					title: 'recompile',
+					title: 'reload_proposed_tags',
 					onClick: () => {
-						this.recompile()
+						this.loadChangesets(this.state.doc)
 					}
 				})
 				actions.push({
 					icon: <EditLocationIcon />,
-					title: 'reload_proposed_tags',
+					title: 'recompile',
 					onClick: () => {
-						this.loadChangesets(this.state.doc)
+						this.recompile()
 					}
 				})
 			}
