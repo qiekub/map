@@ -1377,6 +1377,15 @@ class SidebarPlace extends React.Component {
 					this.mark_as_duplicate()
 				}
 			})
+			if (!isChangeset) {
+				actions.push({
+					icon: <EditLocationIcon />,
+					title: 'reload_proposed_tags',
+					onClick: () => {
+						this.loadChangesets(this.state.doc)
+					}
+				})
+			}
 		}
 
 		return (<React.Fragment key="view">

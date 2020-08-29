@@ -4,6 +4,7 @@ give_feedback = Give Feedback
 add_place = Add New Place
 improve_place = Improve Place
 mark_as_duplicate = Mark as Duplicate
+reload_proposed_tags = Reload Proposed Tags
 
 
 
