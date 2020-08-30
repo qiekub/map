@@ -560,8 +560,8 @@ class Questions extends React.Component {
 							}else{
 								const possibleAnswerKey = possibleAnswer.key
 								const possibleAnswerNamespace = possibleAnswer.namespace
-								possibleAnswer.inputtype = possibleAnswer.inputtype || ''
-								if (possibleAnswer.inputtype === 'date') {
+								const inputtype = possibleAnswer.inputtype || ''
+								if (inputtype === 'date') {
 									return (<DateInput
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
@@ -569,7 +569,7 @@ class Questions extends React.Component {
 										defaultValue={this.getInputValueByNamespace(questionDoc._id,possibleAnswerNamespace)}
 										onChange={newValue=>this.saveValueByKey(questionDoc._id, newValue, possibleAnswerNamespace)}
 									/>)
-								}else if (possibleAnswer.inputtype === 'address') {
+								}else if (inputtype === 'address') {
 									return (<AddressInput
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
@@ -584,7 +584,7 @@ class Questions extends React.Component {
 											padding: '0 8px',
 										}}
 									/>)
-								}else if (possibleAnswer.inputtype === 'geo') {
+								}else if (inputtype === 'geo') {
 									return (<GeoInput
 										key={possibleAnswerKey}
 										marker={{
@@ -598,7 +598,7 @@ class Questions extends React.Component {
 											padding: '0 12px',
 										}}
 									/>)
-								}else if (possibleAnswer.inputtype === 'preset') {
+								}else if (inputtype === 'preset') {
 									return (<PresetInput
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
@@ -608,7 +608,7 @@ class Questions extends React.Component {
 											margin:'8px 8px 4px 8px',
 										}}
 									/>)
-								}else if (possibleAnswer.inputtype === 'audience') {
+								}else if (inputtype === 'audience') {
 									return (<AudienceInput
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
@@ -619,7 +619,7 @@ class Questions extends React.Component {
 											margin:'0 8px',
 										}}
 									/>)
-								}else if (possibleAnswer.inputtype === 'text') {
+								}else if (inputtype === 'text') {
 									return (<TextField
 										type="text"
 										multiline
@@ -634,7 +634,7 @@ class Questions extends React.Component {
 											margin: '8px 8px 4px',
 										}}
 									/>)
-								}else if (possibleAnswer.inputtype === 'number') {
+								}else if (inputtype === 'number') {
 									return (<TextField
 										type="number"
 										key={possibleAnswerKey}
