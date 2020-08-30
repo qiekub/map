@@ -1481,17 +1481,32 @@ class SidebarPlace extends React.Component {
 
 			{
 				[
-					{key:'Audience+ILGA', component: <>
-						{Audience}
-						{Audience && ILGA ? <Divider /> : null}
-						{ILGA}
-					</>},
-					{key:'General+Links', component: <>
-						{General}
-						{General && Links ? <Divider /> : null}
-						{Links}
-					</>},
+					...(
+						Audience === null && ILGA === null
+						? []
+						: [{
+							key:'Audience+ILGA',
+							component: <>
+								{Audience}
+								{Audience && ILGA ? <Divider /> : null}
+								{ILGA}
+							</>
+						}]
+					),
+					...(
+						General === null && Links === null
+						? []
+						: [{
+							key:'General+Links',
+							component: <>
+								{General}
+								{General && Links ? <Divider /> : null}
+								{Links}
+							</>
+						}]
+					),
 				]
+				.filter(Boolean)
 				.map(value => (
 					<Card
 						key={'sidebarContentCard_'+value.key}
