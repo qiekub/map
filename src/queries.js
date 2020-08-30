@@ -139,6 +139,7 @@ export const questions = gql`
 					icon
 					possibleAnswers {
 						inputtype
+						inputOptions
 						namespace
 						parsers
 						key

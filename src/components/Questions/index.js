@@ -561,6 +561,8 @@ class Questions extends React.Component {
 								const possibleAnswerKey = possibleAnswer.key
 								const possibleAnswerNamespace = possibleAnswer.namespace
 								const inputtype = possibleAnswer.inputtype || ''
+								const inputOptions = possibleAnswer.inputOptions || {}
+								
 								if (inputtype === 'date') {
 									return (<DateInput
 										key={possibleAnswerKey}
@@ -622,7 +624,11 @@ class Questions extends React.Component {
 								}else if (inputtype === 'text') {
 									return (<TextField
 										type="text"
-										multiline
+										{...(
+											inputOptions.multiline
+											? {multiline: 'multiline'}
+											: null
+										)}
 										key={possibleAnswerKey}
 										label={possibleAnswer.title_translated}
 										helperText={possibleAnswer.description_translated}
