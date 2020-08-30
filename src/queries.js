@@ -23,6 +23,10 @@ export const place = gql`
 						text
 						language
 					}
+					description (languages: $languages){
+						text
+						language
+					}
 					geometry {
 						location {
 							lng

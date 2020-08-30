@@ -346,6 +346,9 @@ class SidebarPlace extends React.Component {
 			'name',
 			'name:en',
 			// 'name:',
+			'description',
+			// 'description:en',
+			// 'description:',
 
 			'preset',
 
@@ -1209,6 +1212,29 @@ class SidebarPlace extends React.Component {
 		)
 	}
 
+	renderDescription(doc){
+		if (
+			doc &&
+			doc.properties &&
+			doc.properties.description &&
+			doc.properties.description.length > 0
+		) {
+			const description = getTranslationFromArray(doc.properties.description, this.props.globals.userLocales)
+			.split('\n')
+			.map(line => <Typography variant="body2">{line}</Typography>)
+
+			return (
+				<div style={{
+					margin: '8px 0',
+				}}>
+					{description}
+				</div>
+			)
+		}else{
+			return null
+		}
+	}
+
 	renderGeneral(tags){
 
 		const rows = []
@@ -1365,6 +1391,7 @@ class SidebarPlace extends React.Component {
 		const isChangeset = properties.__typename === 'Changeset'
 		const published = this.state.published
 
+		const Description = this.renderDescription(doc)
 		const Audience = this.renderAudience(tags)
 		const ILGA = this.renderILGA(tags)
 		const General = this.renderGeneral(tags)
@@ -1481,6 +1508,14 @@ class SidebarPlace extends React.Component {
 
 			{
 				[
+					...(
+						Description === null
+						? []
+						: [{
+							key: 'Description',
+							component: Description,
+						}]
+					),
 					...(
 						Audience === null && ILGA === null
 						? []
@@ -1603,7 +1638,7 @@ class SidebarPlace extends React.Component {
 	renderQuestions(doc){
 		const startQuestions = (
 			this.props.action === 'add'
-			? ['preset','geo_pos','address','name','audience','website','answer_more']
+			? ['preset','geo_pos','address','name','description','audience','website','answer_more']
 			: ['start_improve']
 		)
 
