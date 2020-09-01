@@ -1221,7 +1221,7 @@ class SidebarPlace extends React.Component {
 		) {
 			const description = getTranslationFromArray(doc.properties.description, this.props.globals.userLocales)
 			.split('\n')
-			.map(line => <Typography variant="body2">{line}</Typography>)
+			.map(line => <Typography key={line} variant="body2">{line}</Typography>)
 
 			return (
 				<div style={{
