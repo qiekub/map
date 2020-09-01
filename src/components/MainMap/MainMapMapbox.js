@@ -70,7 +70,7 @@ class MainMapMapbox extends React.Component {
 		// this.MarkerLayerRef = React.createRef()
 		this.leaflet_map = null
 		this.map = null
-		this.borderGeojson = null
+		this.borderGotLoaded = false
 		this.prune_markers = []
 		this.undecidedPlaces = []
 
@@ -99,7 +99,6 @@ class MainMapMapbox extends React.Component {
 	componentDidMount(){
 		this.loadMarkers()
 		this.loadUndecidedPlaces()
-		this.loadBorders()
 
 		if (this.props.conic_gradient) {
 			this.props.conic_gradient.onReady(()=>{
@@ -246,76 +245,75 @@ class MainMapMapbox extends React.Component {
 			})
 		}
 	}
-
-	async loadBorders(){
-		const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
-		const borders_response = await fetch(borders_path.default)
-		const borders = await borders_response.json()
-
-		const getStatusColor = status => {
-			if (status === 'great' || status === 1) {
-				return this.props.theme.palette.success.main
-			} else if (status === 'ok' || status === 2) {
-				return this.props.theme.palette.warning.main
-			} else if (status === 'bad' || status === 3) {
-				return this.props.theme.palette.error.main
+	
+	async showBorders(){
+		if (!this.borderGotLoaded) {
+			this.borderGotLoaded = true
+			const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
+			const borders_response = await fetch(borders_path.default)
+			const borders = await borders_response.json()
+		
+			const getStatusColor = status => {
+				if (status === 'great' || status === 1) {
+					return this.props.theme.palette.success.main
+				} else if (status === 'ok' || status === 2) {
+					return this.props.theme.palette.warning.main
+				} else if (status === 'bad' || status === 3) {
+					return this.props.theme.palette.error.main
+				}
+				return this.props.theme.palette.background.default
 			}
-			return this.props.theme.palette.background.default
-		}
+		
+			borders.features = borders.features.map(feature => {
+				const country_code = getCountryCode(feature.properties)
+				const ilga = getILGA(country_code)
+				const color = getStatusColor(
+					ilga
+					&& ilga.overview
+					&& ilga.overview.statusNumber
+					? ilga.overview.statusNumber
+					: -1
+				)
+		
+				return {
+					geometry: feature.geometry,
+					properties: {
+						...feature.properties,
+						color,
+					},
+				}
+			})
 
-		borders.features = borders.features.map(feature => {
-			const country_code = getCountryCode(feature.properties)
-			const ilga = getILGA(country_code)
-			const color = getStatusColor(
-				ilga
-				&& ilga.overview
-				&& ilga.overview.statusNumber
-				? ilga.overview.statusNumber
-				: -1
-			)
-
-			return {
-				geometry: feature.geometry,
-				properties: {
-					...feature.properties,
-					color,
-				},
-			}
-		})
-
-		this.map.on('load', ()=>{
-			this.borderGeojsonLayer = this.map.addSource('borders', {
+			this.map.addSource('borders', {
 				type: 'geojson',
 				data: borders,
 			})
 
-			// this.showBorders()
-		})
-	}
-	
-	showBorders(){
-		if (!!this.map) {
-			const layers = this.map.getStyle().layers
-			// Find the index of the first symbol layer in the map style
-			let firstSymbolId = null
-			for (const layer of layers) {
-				if (layer.type === 'symbol') {
-					firstSymbolId = layer.id
-					break
-				}
-			}
-
-			this.map.addLayer({
-				'id': 'borders',
-				'type': 'fill',
-				'source': 'borders',
-				'layout': {},
-				'paint': {
-					'fill-color': ['get', 'color'],
-					'fill-opacity': 0.15,
-				},
-			}, firstSymbolId)
+			// this.map.on('load', ()=>{
+			// 	// this.showBorders()
+			// })
 		}
+
+		const layers = this.map.getStyle().layers
+		// Find the index of the first symbol layer in the map style
+		let firstSymbolId = null
+		for (const layer of layers) {
+			if (layer.type === 'symbol') {
+				firstSymbolId = layer.id
+				break
+			}
+		}
+	
+		this.map.addLayer({
+			'id': 'borders',
+			'type': 'fill',
+			'source': 'borders',
+			'layout': {},
+			'paint': {
+				'fill-color': ['get', 'color'],
+				'fill-opacity': 0.15,
+			},
+		}, firstSymbolId)
 	}
 	hideBorders(){
 		if (!!this.map && this.map.getLayer('borders')) {
@@ -729,10 +727,10 @@ class MainMapMapbox extends React.Component {
 	}
 	filterMarkers(filters){
 		if (this.state.isGeoChooser) {
-			// this.showBorders()
+			this.showBorders()
 			this.showAllMarkersButMiddleMarker()
 		}else{
-			// this.hideBorders()
+			this.hideBorders()
 
 			if (!!this.filters) {
 				const ids = this.filters.ids || []
@@ -828,11 +826,11 @@ class MainMapMapbox extends React.Component {
 					this.clusterGroup.ProcessView()
 					this.updateMarkersAfterPruneClusterUpdate()
 				}else{
-					// this.hideBorders()
+					this.hideBorders()
 					this.showAllMarkers()
 				}
 			}else{
-				// this.hideBorders()
+				this.hideBorders()
 				this.showAllMarkers()
 			}
 		}
