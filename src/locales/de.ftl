@@ -67,6 +67,7 @@ contact = Kontakt
 
 
 # MainMap
+map_language = de
 improve_this_map = Karte verbessern
 zoom_in_aria_label = Rein Zoomen
 zoom_out_aria_label = Raus Zoomen

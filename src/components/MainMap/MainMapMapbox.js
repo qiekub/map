@@ -407,6 +407,15 @@ class MainMapMapbox extends React.Component {
 				boxZoom: false,
 				doubleClickZoom: false,
 			})
+
+			let currentMapboxStylesheetID = null
+			this.map.on('styledata', event => {
+				const newMapboxStylesheetID = event.style.stylesheet.id
+				if (event.style._loaded && currentMapboxStylesheetID !== newMapboxStylesheetID) {
+					currentMapboxStylesheetID = event.style.stylesheet.id
+					this.localizeTheMap()
+				}
+			})
 	
 			this.map.on('move', this.syncViewport)
 			this.map.on('moveend', this.syncViewport)
@@ -425,6 +434,27 @@ class MainMapMapbox extends React.Component {
 				pitch: this.map.getPitch(),
 			})
 		}
+	}
+
+	localizeTheMap(){
+		const language = this.props.getString('map_language')
+
+		const layerIDs = this.map.getStyle().layers
+		.filter(layer => (
+			layer.hasOwnProperty('layout')
+			&& layer.layout.hasOwnProperty('text-field')
+			&& layer.layout['text-field'].flat().includes('name')
+		))
+		.map(layer => layer.id)
+
+		for (const layerID of layerIDs) {
+			this.map.setLayoutProperty(layerID, 'text-field', [
+				'coalesce',
+				['get', 'name_'+language],
+				['get', 'name_en'],
+				['get', 'name'],
+			])
+		}	
 	}
 
 
