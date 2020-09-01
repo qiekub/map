@@ -406,6 +406,8 @@ class MainMapMapbox extends React.Component {
 				doubleClickZoom: false,
 			})
 
+			// this.map.showPadding = true
+
 			let currentMapboxStylesheetID = null
 			this.map.on('styledata', event => {
 				const newMapboxStylesheetID = event.style.stylesheet.id
