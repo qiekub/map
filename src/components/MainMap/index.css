@@ -146,6 +146,7 @@
 .leaflet-container .leaflet-control-attribution a{
 	color: inherit;
 	pointer-events: auto;
+	font-weight: normal !important;
 }
 @media (prefers-color-scheme: dark) {
 	.leaflet-container .leaflet-control-attribution{
