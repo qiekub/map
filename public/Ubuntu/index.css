@@ -1,0 +1,101 @@
+* {
+	font-family:
+		Ubuntu,
+		Helvetica,
+		Arial,
+		sans-serif,
+		"Apple Color Emoji",
+		"Segoe UI Emoji",
+		"Segoe UI Symbol"
+	;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: italic;
+	font-weight: 300;
+	font-display: swap;
+	src:
+		local('Ubuntu Light Italic'),
+		local('Ubuntu-LightItalic'),
+		url('./Ubuntu-LightItalic.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('Ubuntu Italic'),
+		local('Ubuntu-Italic'),
+		url('./Ubuntu-Italic.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: italic;
+	font-weight: 500;
+	font-display: swap;
+	src:
+		local('Ubuntu Medium Italic'),
+		local('Ubuntu-MediumItalic'),
+		url('./Ubuntu-MediumItalic.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src:
+		local('Ubuntu Bold Italic'),
+		local('Ubuntu-BoldItalic'),
+		url('./Ubuntu-BoldItalic.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src:
+		local('Ubuntu Light'),
+		local('Ubuntu-Light'),
+		url('./Ubuntu-Light.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('Ubuntu Regular'),
+		local('Ubuntu-Regular'),
+		url('./Ubuntu-Regular.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src:
+		local('Ubuntu Medium'),
+		local('Ubuntu-Medium'),
+		url('./Ubuntu-Medium.ttf') format('truetype')
+	;
+}
+@font-face {
+	font-family: 'Ubuntu';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src:
+		local('Ubuntu Bold'),
+		local('Ubuntu-Bold'),
+		url('./Ubuntu-Bold.ttf') format('truetype')
+	;
+}
+		

@@ -31,15 +31,6 @@ import SearchBar from '../SearchBar/'
 import Sidebar from '../Sidebar/'
 import MainDrawerContent from '../MainDrawerContent/'
 
-import Ubuntu_Bold from '../../fonts/Ubuntu/Ubuntu-Bold.ttf'
-import Ubuntu_BoldItalic from '../../fonts/Ubuntu/Ubuntu-BoldItalic.ttf'
-import Ubuntu_Italic from '../../fonts/Ubuntu/Ubuntu-Italic.ttf'
-import Ubuntu_Light from '../../fonts/Ubuntu/Ubuntu-Light.ttf'
-import Ubuntu_LightItalic from '../../fonts/Ubuntu/Ubuntu-LightItalic.ttf'
-import Ubuntu_Medium from '../../fonts/Ubuntu/Ubuntu-Medium.ttf'
-import Ubuntu_MediumItalic from '../../fonts/Ubuntu/Ubuntu-MediumItalic.ttf'
-import Ubuntu_Regular from '../../fonts/Ubuntu/Ubuntu-Regular.ttf'
-
 const defaultTheme = createMuiTheme({
 	palette: {
 		type: 'light',
@@ -153,97 +144,6 @@ class App extends React.Component {
 		const secondary_main = prefersDarkMode ? '#448aff' : '#2962ff' // A200_A700
 
 		const error_main = prefersDarkMode ? '#f44' : '#e00'
-
-		const ubuntu_fonts = [
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "italic",
-				fontWeight: "300",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Light Italic'),
-					local('Ubuntu-LightItalic'),
-					url(${Ubuntu_LightItalic}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "italic",
-				fontWeight: "400",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Italic'),
-					local('Ubuntu-Italic'),
-					url(${Ubuntu_Italic}) format('woff2')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "italic",
-				fontWeight: "500",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Medium Italic'),
-					local('Ubuntu-MediumItalic'),
-					url(${Ubuntu_MediumItalic}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "italic",
-				fontWeight: "700",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Bold Italic'),
-					local('Ubuntu-BoldItalic'),
-					url(${Ubuntu_BoldItalic}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "normal",
-				fontWeight: "300",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Light'),
-					local('Ubuntu-Light'),
-					url(${Ubuntu_Light}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "normal",
-				fontWeight: "400",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Regular'),
-					local('Ubuntu-Regular'),
-					url(${Ubuntu_Regular}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "normal",
-				fontWeight: "500",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Medium'),
-					local('Ubuntu-Medium'),
-					url(${Ubuntu_Medium}) format('ttf')
-				`,
-			},
-			{
-				fontFamily: "'Ubuntu'",
-				fontStyle: "normal",
-				fontWeight: "700",
-				fontDisplay: "swap",
-				src: `
-					local('Ubuntu Bold'),
-					local('Ubuntu-Bold'),
-					url(${Ubuntu_Bold}) format('ttf')
-				`,
-			}
-		]
 
 		const theme = createMuiTheme({
 			typography: {
@@ -377,11 +277,6 @@ class App extends React.Component {
 					},
 				},
 				
-				MuiCssBaseline: {
-					'@global': {
-						'@font-face': ubuntu_fonts,
-					},
-				},
 				MuiLink: {
 					root: {
 						color: secondary_main,
