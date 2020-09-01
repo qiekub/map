@@ -104,11 +104,7 @@ class GeoInput extends React.Component {
 			let lng = marker.center.lng || 0
 
 			if (lat === 0 && lng === 0) {
-				const mapCenter = (this.props.store.get('map_center_fake') || [NaN,NaN])
-				.map(number => Number.parseFloat(number.toFixed(6))) // WHY just 6 decimal points: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
-
-				lng = mapCenter[1]
-				lat = mapCenter[0]
+				({lng, lat} = this.getGeo())
 			}
 
 			let markerPos = {lng,lat}
@@ -138,12 +134,19 @@ class GeoInput extends React.Component {
 		}
 	}
 
-	getGeo(){
-		const mapCenter = (this.props.store.get('map_center_fake') || [NaN,NaN])
-		.map(number => Number.parseFloat(number.toFixed(6))) // WHY just 6 decimal points: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+	getGeo(storeKey){
+		const map_center_fake = this.props.store.get('map_center_fake')
 
-		const lng = mapCenter[1]
-		const lat = mapCenter[0]
+		let lng = 0
+		let lat = 0
+
+		if (Array.isArray(map_center_fake)) {
+			lng = Number.parseFloat(map_center_fake[0].toFixed(6)) // WHY: just 6 decimal points: https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+			lat = Number.parseFloat(map_center_fake[1].toFixed(6))
+		} else if (!!map_center_fake) {
+			lng = Number.parseFloat(map_center_fake.lng.toFixed(6))
+			lat = Number.parseFloat(map_center_fake.lat.toFixed(6))
+		}
 
 		return {lng, lat}
 	}

@@ -111,6 +111,7 @@ class MainMapMapbox extends React.Component {
 		if (this.props.onFunctions) {
 			const functions = {
 				getMapType: () => 'mapbox',
+				setPadding: (...attr) => this.map.setPadding(...attr),
 				setZoom: (...attr) => this.map.setZoom(...attr),
 				getZoom: () => this.map.getZoom(),
 				getCenter: () => this.map.getCenter(),
@@ -330,7 +331,7 @@ class MainMapMapbox extends React.Component {
 	}
 
 	getInitCenter(){
-		let center = this.props.store.get('map_center_real')
+		let center = this.props.store.get('map_center_fake')
 
 		if (!(!!center)) {
 			center = {
@@ -846,12 +847,25 @@ class MainMapMapbox extends React.Component {
 			return
 		}
 
-		let mapCenter = viewport.center || [NaN,NaN]
-		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-			mapCenter = Object.values(this.leaflet_map.unproject(this.leaflet_map.project(mapCenter).add([200,0])) ) // map center with sidebar offset
-		}
+		let mapCenter = viewport.center || {lng:0,lat:0}
+		// if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
+		// 	const p1 = this.map.project(mapCenter)
+		// console.log('p1', p1)
+		// 	const {x, y} = p1
+		// 	mapCenter = this.map.unproject({
+		// 		x: x+200,
+		// 		y,
+		// 	}) // map center with sidebar offset
+		//
+		// 	if (Array.isArray(mapCenter)) {
+		// 		mapCenter = {
+		// 			lng: mapCenter[1],
+		// 			lat: mapCenter[0],
+		// 		}
+		// 	}
+		// }
 
-		let mapZoom = viewport.zoom || NaN
+		let mapZoom = viewport.zoom || 2
 		if (this.clusterGroup) {
 			if (mapZoom >= 18) {
 				this.clusterGroup.Cluster.Size = 10

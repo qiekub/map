@@ -346,6 +346,10 @@ class App extends React.Component {
 
 		this.props.globals.sidebarIsOpen = value
 
+		this.functions['MainMap'].setPadding({
+			left: (value ? 400 : 0),
+		})
+
 		this.setState({
 			mapIsResizing: true,
 			sidebarIsOpen: value,
