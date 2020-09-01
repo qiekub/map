@@ -114,12 +114,24 @@ class GeoInput extends React.Component {
 			let markerPos = {lng,lat}
 			let newZoom = this.props.store.get('map_zoom') || 3
 
-			if (this.props.globals.sidebarIsOpen) { // TODO this.props.globals.sidebarIsOpen isn't enough on small screens
-				markerPos = this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
+			if (this.props.globals.mainMapFunctions.getMapType() === 'mapbox') {
+				this.props.globals.mainMapFunctions.flyTo({
+					center: markerPos,
+					zoom: newZoom,
+					padding: {
+						left: (this.props.globals.sidebarIsOpen ? 400 : 0),
+					},
+					duration: this.props.globals.transitionDuration,
+				})
+			}else{
+				if (this.props.globals.sidebarIsOpen) { // TODO this.props.globals.sidebarIsOpen isn't enough on small screens
+					markerPos = this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(markerPos, newZoom).add([-200,0]), newZoom) // map center with sidebar offset
+				}
+				this.props.globals.mainMapFunctions.flyTo(markerPos, newZoom, {
+					duration: this.props.globals.transitionDuration * 0.001,
+				})
 			}
-			this.props.globals.mainMapFunctions.flyTo(markerPos, newZoom, {
-				duration: this.props.globals.transitionDuration * 0.001,
-			})
+
 			setTimeout(()=>{
 				this.props.globals.mainMapFunctions.useAsGeoChooser(true, this.props.doc)
 			}, this.props.globals.transitionDuration)

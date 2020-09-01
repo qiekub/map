@@ -126,24 +126,51 @@ class SearchBar extends React.Component {
 		}
 
 		if (!!searchResult.geometry.boundingbox) {
-			this.props.globals.mainMapFunctions.flyToBounds([
-				[
-					searchResult.geometry.boundingbox.southwest.lat,
-					searchResult.geometry.boundingbox.southwest.lng,
-				],
-				[
-					searchResult.geometry.boundingbox.northeast.lat,
-					searchResult.geometry.boundingbox.northeast.lng,
-				]
-			], {
-				animate: true,
-				duration: 1.5,
-			})
+			if (this.props.globals.mainMapFunctions.getMapType() === 'mapbox') {
+
+				let padding = 128
+				if (this.props.globals.isSmallScreen) {
+					padding = 64
+				}
+						
+				this.props.globals.mainMapFunctions.fitBounds([
+					[
+						searchResult.geometry.boundingbox.southwest.lng,
+						searchResult.geometry.boundingbox.southwest.lat,
+					],
+					[
+						searchResult.geometry.boundingbox.northeast.lng,
+						searchResult.geometry.boundingbox.northeast.lat,
+					]
+				], {
+					padding: {
+						top: padding,
+						right: padding,
+						bottom: 116+padding,
+						left: (this.props.sidebarIsOpen ? 400+padding : padding)
+					},
+				})
+
+			}else{
+				this.props.globals.mainMapFunctions.flyToBounds([
+					[
+						searchResult.geometry.boundingbox.southwest.lat,
+						searchResult.geometry.boundingbox.southwest.lng,
+					],
+					[
+						searchResult.geometry.boundingbox.northeast.lat,
+						searchResult.geometry.boundingbox.northeast.lng,
+					]
+				], {
+					animate: true,
+					duration: 1.5,
+				})
 			
-			// this.props.globals.mainMapFunctions.setBounds([
-			// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
-			// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
-			// ])
+				// this.props.globals.mainMapFunctions.setBounds([
+				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
+				// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
+				// ])
+			}
 		}else if (!!searchResult.geometry.location) {
 			const location = searchResult.geometry.location
 
@@ -152,18 +179,33 @@ class SearchBar extends React.Component {
 				zoomLevel = 17
 			}
 
-			this.props.globals.mainMapFunctions.flyTo(
-				(
-					this.props.globals.isSmallScreen
-					? location
-					: this.props.globals.mainMapFunctions.unproject( this.props.globals.mainMapFunctions.project(location,zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
-				),
-				zoomLevel,
-				{
-					animate: true,
-					duration: 1.5,
-				}
-			)
+			if (this.props.globals.mainMapFunctions.getMapType() === 'mapbox') {
+				this.props.globals.mainMapFunctions.flyTo({
+					center: location,
+					zoom: zoomLevel,
+					padding: {
+						left: (this.props.globals.isSmallScreen ? 0 : 400),
+					},
+				})
+			}else{
+				this.props.globals.mainMapFunctions.flyTo(
+					(
+						this.props.globals.isSmallScreen
+						? location
+						: this.props.globals.mainMapFunctions.unproject(
+								this.props.globals.mainMapFunctions
+								.project(location,zoomLevel)
+								.add([-200,0]),
+								zoomLevel
+							) // add sidebar offset
+					),
+					zoomLevel,
+					{
+						animate: true,
+						duration: 1.5,
+					},
+				)
+			}
 		}
 	}
 

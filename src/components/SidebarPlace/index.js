@@ -634,14 +634,25 @@ class SidebarPlace extends React.Component {
 											]
 										])
 									} else if (!!doc.properties.geometry.location) {
-										this.props.globals.mainMapFunctions.setView(
-											(
-												this.props.globals.isSmallScreen
-												? doc.properties.geometry.location
-												: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
-											),
-											zoomLevel
-										)
+										if (this.props.globals.mainMapFunctions.getMapType() === 'mapbox') {
+											this.props.globals.mainMapFunctions.setView({
+												center: doc.properties.geometry.location,
+												zoom: zoomLevel,
+												padding: {
+													left: (this.props.globals.isSmallScreen ? 0 : 400),
+												},
+											})
+										}else{
+											this.props.globals.mainMapFunctions.setView(
+												(
+													this.props.globals.isSmallScreen
+													? doc.properties.geometry.location
+													: this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(doc.properties.geometry.location, zoomLevel).add([-200,0]), zoomLevel) // add sidebar offset
+												),
+												zoomLevel
+											)
+										}
+
 									// }else{
 									// 	this.props.globals.mainMapFunctions.flyTo(
 									// 		[doc.properties.geometry.location.lat,doc.properties.geometry.location.lng],
@@ -661,9 +672,18 @@ class SidebarPlace extends React.Component {
 										const docLocation = doc.properties.geometry.location
 										const asPixel = this.props.globals.mainMapFunctions.latLngToContainerPoint(docLocation)
 										if (asPixel.x < 400) {
-											this.props.globals.mainMapFunctions.panTo(
-												this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
-											)
+											if (this.props.globals.mainMapFunctions.getMapType() === 'mapbox') {
+												this.props.globals.mainMapFunctions.flyTo({
+													center: docLocation,
+													padding: {
+														left: 400,
+													},
+												})
+											}else{
+												this.props.globals.mainMapFunctions.panTo(
+													this.props.globals.mainMapFunctions.unproject(this.props.globals.mainMapFunctions.project(docLocation).add([-200,0])) // add sidebar offset
+												)
+											}
 										}
 									}
 								}
