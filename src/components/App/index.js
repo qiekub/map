@@ -426,7 +426,7 @@ class App extends React.Component {
 	async closeSidebar(){
 		await navigate(`/`)
 		this.dontFilterTheseIds([])
-		this.setState({sidebarIsOpen: false})
+		this.setSidebarIsOpen(false)
 	}
 
 	render() {
