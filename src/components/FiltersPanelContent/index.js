@@ -33,7 +33,7 @@ class FiltersPanelContent extends React.Component {
 			age: null,
 			audience_queer: new Set(['only','primary','welcome']), // only primary welcome
 			mustHaveUndecidedChangeset: false,
-			published: null,
+			published: true,
 		}
 
 		this.categories = _categories_.map(category => ({
