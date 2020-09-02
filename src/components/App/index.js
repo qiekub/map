@@ -26,14 +26,14 @@ import {
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
-// import MainMap from '../MainMap/'
+import MainMap from '../MainMap/'
 // import SearchBar from '../SearchBar/'
 // import Sidebar from '../Sidebar/'
 // import MainDrawerContent from '../MainDrawerContent/'
 
 
 const renderLoader = () => <>Loading…</>
-const MainMap = lazy(() => import('../MainMap'))
+// const MainMap = lazy(() => import('../MainMap'))
 const SearchBar = lazy(() => import('../SearchBar'))
 const Sidebar = lazy(() => import('../Sidebar'))
 const MainDrawerContent = lazy(() => import('../MainDrawerContent'))
@@ -544,6 +544,8 @@ class App extends React.Component {
 				onDontFilterTheseIds={this.dontFilterTheseIds}
 			/>
 			
+			</Suspense>
+			
 			<MainMap
 				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
 				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
@@ -552,8 +554,6 @@ class App extends React.Component {
 				sidebarIsOpen={this.state.sidebarIsOpen}
 				onFiltersChanged={this.filtersChanged}
 			/>
-			
-			</Suspense>
 
 		</StylesProvider>
 		</ThemeProvider>
