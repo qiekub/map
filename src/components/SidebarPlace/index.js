@@ -2,7 +2,7 @@
 Wheelchair accessible / Not wheelchair accessible
 */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, lazy, Suspense } from 'react'
 
 import { Localized, withLocalization } from '../Localized/'
 
@@ -85,7 +85,7 @@ import {
 // } from '@material-ui/lab'
 import { withTheme } from '@material-ui/core/styles'
 
-import Questions from '../Questions/'
+
 import EmojiIcon from '../EmojiIcon/'
 import DiscriminationFacts from '../DiscriminationFacts/'
 import ActionBar from '../ActionBar/'
@@ -96,6 +96,9 @@ import instagram_icon from '../../images/instagram.png'
 import youtube_icon from '../../images/youtube.png'
 import twitter_icon from '../../images/twitter.png'
 import openstreetmap_icon from '../../images/openstreetmap.svg'
+
+// import Questions from '../Questions/'
+const Questions = lazy(() => import('../Questions'))
 
 const YelpIcon			= props => <Icon style={{backgroundImage:'url('+yelp_icon+')',		backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
 const FacebookIcon		= props => <Icon style={{backgroundImage:'url('+facebook_icon+')',	backgroundSize:'contain',backgroundRepeat:'no-repeat'}}></Icon>
@@ -1672,17 +1675,19 @@ class SidebarPlace extends React.Component {
 				}}
 			>
 			<CardContent>
-				<Questions
-					key="the_questions"
-					startQuestions={startQuestions}
-					doc={doc}
-					onFinish={
-						this.props.action === 'add'
-						? this.abortEdit
-						: this.view
-					}
-					onAbort={this.abortEdit}
-				/>
+				<Suspense fallback={this.props.globals.renderLazyLoader()}>
+					<Questions
+						key="the_questions"
+						startQuestions={startQuestions}
+						doc={doc}
+						onFinish={
+							this.props.action === 'add'
+							? this.abortEdit
+							: this.view
+						}
+						onAbort={this.abortEdit}
+					/>
+				</Suspense>
 			</CardContent>
 			</Card>
 		</React.Fragment>)
