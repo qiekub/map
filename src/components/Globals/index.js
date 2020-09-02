@@ -87,6 +87,8 @@ async function getInitialGlobalState(callback){
 
 const GlobalsContext = React.createContext()
 
+const renderLazyLoader = () => <>Loading…</>
+
 class GlobalsProvider extends React.Component {
 	constructor(props) {
 		super(props)
@@ -126,6 +128,8 @@ class GlobalsProvider extends React.Component {
 				audience_queer_primary: '🌈',
 				audience_queer_welcome: '✨',
 			},
+
+			renderLazyLoader,
 		}
 		// this.state = {
 		// 	...globalState,

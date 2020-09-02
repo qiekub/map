@@ -32,7 +32,6 @@ import MainMap from '../MainMap/'
 // import MainDrawerContent from '../MainDrawerContent/'
 
 
-const renderLoader = () => <>Loading…</>
 // const MainMap = lazy(() => import('../MainMap'))
 const SearchBar = lazy(() => import('../SearchBar'))
 const Sidebar = lazy(() => import('../Sidebar'))
@@ -470,7 +469,7 @@ class App extends React.Component {
 				open={this.state.isMainDrawerOpen}
 				onClose={this.toggleMainDrawer}
 			>
-				<Suspense fallback={renderLoader()}>
+				<Suspense fallback={this.props.globals.renderLazyLoader()}>
 					<MainDrawerContent onClose={this.closeMainDrawer}/>
 				</Suspense>
 			</Drawer>
@@ -517,7 +516,7 @@ class App extends React.Component {
 			</Fab>
 
 
-			<Suspense fallback={renderLoader()}>
+			<Suspense fallback={this.props.globals.renderLazyLoader()}>
 
 			<SearchBar
 				className="SearchBar"
