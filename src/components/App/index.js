@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, lazy, Suspense } from 'react'
 import './index.css'
 
 import { Router, navigate } from '@reach/router'
@@ -26,10 +26,21 @@ import {
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
-import MainMap from '../MainMap/'
-import SearchBar from '../SearchBar/'
-import Sidebar from '../Sidebar/'
-import MainDrawerContent from '../MainDrawerContent/'
+// import MainMap from '../MainMap/'
+// import SearchBar from '../SearchBar/'
+// import Sidebar from '../Sidebar/'
+// import MainDrawerContent from '../MainDrawerContent/'
+
+
+const renderLoader = () => <>Loading…</>
+const MainMap = lazy(() => import('../MainMap'))
+const SearchBar = lazy(() => import('../SearchBar'))
+const Sidebar = lazy(() => import('../Sidebar'))
+const MainDrawerContent = lazy(() => import('../MainDrawerContent'))
+
+
+
+
 
 const defaultTheme = createMuiTheme({
 	palette: {
@@ -454,11 +465,14 @@ class App extends React.Component {
 				/>
 			</Router>
 
+
 			<Drawer
 				open={this.state.isMainDrawerOpen}
 				onClose={this.toggleMainDrawer}
 			>
-				<MainDrawerContent onClose={this.closeMainDrawer}/>
+				<Suspense fallback={renderLoader()}>
+					<MainDrawerContent onClose={this.closeMainDrawer}/>
+				</Suspense>
 			</Drawer>
 
 			{/*<Fab
@@ -502,6 +516,9 @@ class App extends React.Component {
 				<CloseIcon />
 			</Fab>
 
+
+			<Suspense fallback={renderLoader()}>
+
 			<SearchBar
 				className="SearchBar"
 				value={this.state.searchBarValue}
@@ -536,6 +553,8 @@ class App extends React.Component {
 				onFiltersChanged={this.filtersChanged}
 			/>
 			
+			</Suspense>
+
 		</StylesProvider>
 		</ThemeProvider>
 		</div>)
