@@ -57,8 +57,8 @@ async function getInitialGlobalState(callback){
 			},
 			uri: (
 				isDevEnvironment
-				? `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
-				: `https://api.qiekub.org/graphql/v1/`
+				? 'http://0.0.0.0:11692/graphql/v1/' // `http://${local_ip}:5000/qiekub/us-central1/graphql/graphql/v1`
+				: `https://api2.qiekub.org/graphql/v1/`
 			),
 		})
 	})
