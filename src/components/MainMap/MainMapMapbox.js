@@ -51,9 +51,6 @@ class MainMapMapbox extends React.Component {
 			docs: [],
 			isGeoChooser: false,
 			middleMarkerDoc: undefined,
-			lng: 5,
-			lat: 34,
-			zoom: 2
 		}
 
 		this.currentStyleURL = null
