@@ -1,0 +1,9 @@
+add_place = Magdagdag ng lugar
+close-button = isara
+audience_input_label_welcome = Tanggap ang…
+year-label = Taon
+month-label = Buwan
+day-label = Araw
+show-everything = Ipakita lahat
+subheader_follow_us = Sundan kami…
+blog = Blog

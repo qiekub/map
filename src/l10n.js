@@ -9,6 +9,7 @@ import { negotiateLanguages } from '@fluent/langneg'
 
 	'fr',
 	'de',
+	'fil',
 	'vi',
 	'en_GB',
 	'en_US',
