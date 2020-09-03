@@ -7,6 +7,7 @@ import { ReactLocalization, LocalizationProvider } from '@fluent/react'
 import { FluentBundle, FluentResource } from '@fluent/bundle'
 import { negotiateLanguages } from '@fluent/langneg'
 
+	'fr',
 	'de',
 	'vi',
 	'en_GB',
