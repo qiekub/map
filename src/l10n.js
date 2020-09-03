@@ -8,6 +8,7 @@ import { FluentBundle, FluentResource } from '@fluent/bundle'
 import { negotiateLanguages } from '@fluent/langneg'
 
 	'de',
+	'vi',
 	'en_GB',
 	'en_US',
 	'en',
