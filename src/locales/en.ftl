@@ -76,8 +76,8 @@ contact = Contact
 # MainMap
 map_language = en
 improve_this_map = Improve this map
-zoom_in_aria_label = Zoom out
-zoom_out_aria_label = Zoom in
+zoom_in_aria_label = Zoom in
+zoom_out_aria_label = Zoom out
 
 
 
