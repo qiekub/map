@@ -27,8 +27,8 @@ import { withTheme } from '@material-ui/core/styles'
 // import buymeacoffee_green from '../../images/buymeacoffee_green.png'
 import { ReactComponent as GithubIcon } from '../../images/github_mark_black.svg'
 
-import queermap_logo_lightmode from '../../images/QueerMap by qiekub Logo - lightmode.svg'
-import queermap_logo_darkmode from '../../images/QueerMap by qiekub Logo - darkmode.svg'
+import queermap_logo_lightmode from '../../images/Logo - Horizontal - Colored - Transparent - Dark on Light.svg'
+import queermap_logo_darkmode from '../../images/Logo - Horizontal - Colored - Transparent - Light on Dark.svg'
 
 import telegram_icon from '../../images/telegram.png'
 import facebook_icon from '../../images/facebook.png'
