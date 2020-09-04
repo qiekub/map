@@ -1,3 +1,8 @@
+
+// 604800 seconds = 1 week
+// 2629800 seconds = 1 month
+// 31557600 seconds = 1 year
+
 {
 	"hosting": {
 		// "predeploy": [
@@ -57,49 +62,56 @@
 				"source": "/static/**",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=604800" // 604800 seconds = 1 week
+					"value": "max-age=31557600"
+				}]
+			},
+			{
+				"source": "/scripts/**",
+				"headers": [{
+					"key": "Cache-Control",
+					"value": "max-age=31557600"
 				}]
 			},
 			{
 				"source": "manifest.json",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=2629800" // 2629800 seconds = 1 month
+					"value": "max-age=2629800"
 				}]
 			},
 			{
-				"source": "conic-gradient-polyfill.js",
+				"source": "/materialicons/**",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=31557600" // 2629800 seconds = 1 month
+					"value": "max-age=31557600"
 				}]
 			},
 			{
-				"source": "/materialicons/index.css",
+				"source": "/Ubuntu/**",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=31557600" // 31557600 seconds = 1 year
+					"value": "max-age=31557600"
 				}]
 			},
 			{
-				"source": "/roboto-font/index.css",
+				"source": "/AppIcons/**",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=31557600" // 31557600 seconds = 1 year
+					"value": "max-age=31557600"
 				}]
 			},
 			{
 				"source": "**/*.@(jpg|jpeg|gif|png|webp)",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=2629800" // 2629800 seconds = 1 month
+					"value": "max-age=31557600"
 				}]
 			},
 			{
 				"source": "**/*.@(ttf|woff|woff2)",
 				"headers": [{
 					"key": "Cache-Control",
-					"value": "max-age=31557600" // 31557600 seconds = 1 year
+					"value": "max-age=31557600"
 				}]
 			}
 		]
