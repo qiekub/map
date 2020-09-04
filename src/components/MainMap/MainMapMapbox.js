@@ -920,8 +920,6 @@ class MainMapMapbox extends React.Component {
 	}
 	
 	render() {
-		// <ZoomControl position="bottomright" />
-
 		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>						
 
 			<div className="filtersPanel">
