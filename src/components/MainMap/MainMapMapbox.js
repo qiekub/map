@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {lazy, Suspense} from 'react'
 
 import { withLocalization } from '../Localized/'
 import { withConicGradient } from '../ConicGradient/'
@@ -33,16 +33,13 @@ import FiltersPanelContent from '../FiltersPanelContent/'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
 
-import mapboxgl from 'mapbox-gl'
-import './mapbox-gl.v1.12.0.css' // https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css
+// import MapboxLoader from './MapboxLoader.js'
 
 import { PruneCluster, PruneClusterForLeaflet } from './PruneCluster_dist/PruneCluster.js'
 
 PruneCluster.Cluster.ENABLE_MARKERS_LIST = true
 
-mapboxgl.accessToken = 'pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOTFwdGRxajAwODIzaXFwaG02ODlteTMifQ.n4y40LbSaVs_oJcR-czHGg'
-
-// mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.1.0/mapbox-gl-rtl-text.js')
+const MapboxLoader = lazy(() => import('./MapboxLoader.js'))
 
 class MainMapMapbox extends React.Component {
 	constructor(props) {
@@ -73,7 +70,8 @@ class MainMapMapbox extends React.Component {
 
 		this.ConicGradient = null
 
-		this.gotMapRef = this.gotMapRef.bind(this)
+		this.loadedMapbox = this.loadedMapbox.bind(this)
+		// this.gotMapRef = this.gotMapRef.bind(this)
 		this.gotMapRefLeaflet = this.gotMapRefLeaflet.bind(this)
 
 		this.syncViewport = this.syncViewport.bind(this)
@@ -376,16 +374,18 @@ class MainMapMapbox extends React.Component {
 			}, 100)
 		}
 	}
-	gotMapRef(element){
-		if (!!element && this.map === null) {
+	loadedMapbox({ref, mapboxgl}){
+		this.mapboxgl = mapboxgl
+	
+		if (!!ref && this.map === null) {
 			this.currentStyleURL = this.getStyleUrl()
 
 			const center = this.getInitCenter()
 	
-			this.map = new mapboxgl.Map({
-				container: element,
+			this.map = new this.mapboxgl.Map({
+				container: ref,
 				style: this.currentStyleURL,
-				center: new mapboxgl.LngLat(center.lng, center.lat),
+				center: new this.mapboxgl.LngLat(center.lng, center.lat),
 				zoom: this.props.store.get('map_zoom') || 3,
 				bearing: 0, // this.props.store.get('map_bearing') || 0,
 				pitch: 0, // this.props.store.get('map_pitch') || 0,
@@ -460,7 +460,10 @@ class MainMapMapbox extends React.Component {
 	updateMarkers(options){
 		options = options || {}
 
-		if (!(!!this.clusterGroup)) {
+		if (
+			!(!!this.clusterGroup)
+			|| !(!!this.mapboxgl)
+		) {
 			return null
 		}
 
@@ -484,7 +487,7 @@ class MainMapMapbox extends React.Component {
 	
 			let marker = this.mapbox_markers[id]
 			if (!marker) {
-				marker = this.mapbox_markers[id] = new mapboxgl.Marker({
+				marker = this.mapbox_markers[id] = new this.mapboxgl.Marker({
 					element: (
 						feature.population === 1
 						? this.createPoiMarker(feature)
@@ -602,12 +605,12 @@ class MainMapMapbox extends React.Component {
 
 			// const o_bounds = options.bounds
 			//
-			// const minLngLat = new mapboxgl.LngLat(o_bounds.minLng, o_bounds.minLat);
-			// const maxLngLat = new mapboxgl.LngLat(o_bounds.maxLng, o_bounds.maxLat);
+			// const minLngLat = new this.mapboxgl.LngLat(o_bounds.minLng, o_bounds.minLat);
+			// const maxLngLat = new this.mapboxgl.LngLat(o_bounds.maxLng, o_bounds.maxLat);
 			// const distance = minLngLat.distanceTo(maxLngLat)*0.5
 			// const middle = options.position
 			//
-			// const bounds = new mapboxgl.LngLat(middle.lng, middle.lat).toBounds(distance)
+			// const bounds = new this.mapboxgl.LngLat(middle.lng, middle.lat).toBounds(distance)
 			//
 			// this.map.fitBounds(bounds, {
 			// 	padding: {
@@ -688,8 +691,8 @@ class MainMapMapbox extends React.Component {
 			this.clusterGroup.RegisterMarker(marker)
 		}
 
-		this.clusterGroup.ProcessView()
-		this.leaflet_map.invalidateSize(false)
+		// this.clusterGroup.ProcessView()
+		// this.leaflet_map.invalidateSize(false)
 
 		this.filterMarkers(this.filters)
 	}
@@ -980,13 +983,15 @@ class MainMapMapbox extends React.Component {
 				</Fab>
 			</div>
 
-			<div
-				ref={this.gotMapRef}
-				className={
-					'map'
-					+(this.state.isGeoChooser ? ' isGeoChooser' : '')
-				}
-			></div>
+			<Suspense fallback={this.props.globals.renderLazyLoader()}>
+				<MapboxLoader
+					onLoad={this.loadedMapbox}
+					className={
+						'map'
+						+(this.state.isGeoChooser ? ' isGeoChooser' : '')
+					}
+				/>
+			</Suspense>
 
 			<div
 				ref={this.gotMapRefLeaflet}
