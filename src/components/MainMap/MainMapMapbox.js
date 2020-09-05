@@ -122,7 +122,7 @@ class MainMapMapbox extends React.Component {
 				panBy: (...attr) => this.map.panBy(...attr),
 				panTo: (...attr) => this.map.panTo(...attr),
 				flyTo: (...attr) => this.map.flyTo(...attr),
-				invalidateSize: (...attr) => this.leaflet_map.invalidateSize(...attr),
+				invalidateSize: (...attr) => (), // this.map.resize(...attr),
 				project: (...attr) => this.leaflet_map.project(...attr),
 				unproject: (...attr) => this.leaflet_map.unproject(...attr),
 				latLngToContainerPoint: (...attr) => this.leaflet_map.latLngToContainerPoint(...attr),
