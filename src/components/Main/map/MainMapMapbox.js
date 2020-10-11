@@ -1,22 +1,22 @@
 import React, {lazy, Suspense} from 'react'
 
-import { withLocalization } from '../Localized/'
-import { withConicGradient } from '../ConicGradient/'
+import { withLocalization } from '../../Localized/'
+import { withConicGradient } from '../../ConicGradient/'
 
 import { navigate } from '@reach/router'
 import {
 	markers as query_markers,
 	undecidedPlaces as query_undecidedPlaces,
-} from '../../queries.js'
+} from '../../../queries.js'
 
 import './index.css'
 
-import presets from '../../data/dist/presets.json'
-import colors from '../../data/dist/colors.json'
-import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA /*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+import presets from '../../../data/dist/presets.json'
+import colors from '../../../data/dist/colors.json'
+import colorsByPreset from '../../../data/dist/colorsByPreset.json'
+import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA /*, getPreset, getWantedTagsList*/ } from '../../../functions.js'
 
-import { withGlobals } from '../Globals/'
+import { withGlobals } from '../../Globals/'
 
 import {
 	Fab,
@@ -27,7 +27,7 @@ import {
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
-import FiltersPanelContent from '../FiltersPanelContent/'
+import FiltersPanelContent from '../../FiltersPanelContent/'
 
 // import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
@@ -105,30 +105,32 @@ class MainMapMapbox extends React.Component {
 
 		if (this.props.onFunctions) {
 			const functions = {
-				getMapType: () => 'mapbox',
-				setPadding: (...attr) => this.map.setPadding(...attr),
-				setZoom: (...attr) => this.map.setZoom(...attr),
-				getZoom: () => this.map.getZoom(),
-				getCenter: () => this.map.getCenter(),
-				getBounds: () => this.map.getBounds(),
-				zoomIn: () => this.map.zoomIn(),
-				fitBounds: (...attr) => this.map.fitBounds(...attr),
-				flyToBounds: (...attr) => this.map.fitBounds(...attr),
-				// setView: (...attr) => {
-				// 	this.map.setCenter(attr.center)
-				// 	this.map.setZoom(attr.zoom)
-				// }, // this.map.setView(...attr),
-				setView: (...attr) => this.map.jumpTo(...attr),
-				panBy: (...attr) => this.map.panBy(...attr),
-				panTo: (...attr) => this.map.panTo(...attr),
-				flyTo: (...attr) => this.map.flyTo(...attr),
-				invalidateSize: (...attr) => {}, // this.map.resize(...attr),
-				project: (...attr) => this.leaflet_map.project(...attr),
-				unproject: (...attr) => this.leaflet_map.unproject(...attr),
-				latLngToContainerPoint: (...attr) => this.leaflet_map.latLngToContainerPoint(...attr),
+				map: {
+					getMapType: () => 'mapbox',
+					setPadding: (...attr) => this.map.setPadding(...attr),
+					setZoom: (...attr) => this.map.setZoom(...attr),
+					getZoom: () => this.map.getZoom(),
+					getCenter: () => this.map.getCenter(),
+					getBounds: () => this.map.getBounds(),
+					zoomIn: () => this.map.zoomIn(),
+					fitBounds: (...attr) => this.map.fitBounds(...attr),
+					flyToBounds: (...attr) => this.map.fitBounds(...attr),
+					// setView: (...attr) => {
+					// 	this.map.setCenter(attr.center)
+					// 	this.map.setZoom(attr.zoom)
+					// }, // this.map.setView(...attr),
+					setView: (...attr) => this.map.jumpTo(...attr),
+					panBy: (...attr) => this.map.panBy(...attr),
+					panTo: (...attr) => this.map.panTo(...attr),
+					flyTo: (...attr) => this.map.flyTo(...attr),
+					invalidateSize: (...attr) => {}, // this.map.resize(...attr),
+					project: (...attr) => this.leaflet_map.project(...attr),
+					unproject: (...attr) => this.leaflet_map.unproject(...attr),
+					latLngToContainerPoint: (...attr) => this.leaflet_map.latLngToContainerPoint(...attr),
 
-				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
-				refetchMarkers: () => this.refetchMarkers(),
+					useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
+					refetchMarkers: () => this.refetchMarkers(),
+				}
 			}
 			this.props.globals.mainMapFunctions = functions
 			this.props.onFunctions(functions)

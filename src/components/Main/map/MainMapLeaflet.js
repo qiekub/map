@@ -1,23 +1,23 @@
 import React from 'react'
 
-import { withLocalization } from '../Localized/'
-import { withConicGradient } from '../ConicGradient/'
+import { withLocalization } from '../../Localized/'
+import { withConicGradient } from '../../ConicGradient/'
 
 import { navigate } from '@reach/router'
 import {
 	markers as query_markers,
 	undecidedPlaces as query_undecidedPlaces,
-} from '../../queries.js'
+} from '../../../queries.js'
 
 import './index.css'
 
-// import categories from '../../data/dist/categories.json'
-import presets from '../../data/dist/presets.json'
-import colors from '../../data/dist/colors.json'
-import colorsByPreset from '../../data/dist/colorsByPreset.json'
-import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA/*, getPreset, getWantedTagsList*/ } from '../../functions.js'
+// import categories from '../../../data/dist/categories.json'
+import presets from '../../../data/dist/presets.json'
+import colors from '../../../data/dist/colors.json'
+import colorsByPreset from '../../../data/dist/colorsByPreset.json'
+import { getColorByPreset, getTranslationFromArray, getCountryCode, getILGA/*, getPreset, getWantedTagsList*/ } from '../../../functions.js'
 
-import { withGlobals } from '../Globals/'
+import { withGlobals } from '../../Globals/'
 
 import {
 	Fab,
@@ -28,7 +28,7 @@ import {
 } from '@material-ui/icons'
 import { withTheme } from '@material-ui/core/styles'
 
-import FiltersPanelContent from '../FiltersPanelContent/'
+import FiltersPanelContent from '../../FiltersPanelContent/'
 
 import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
@@ -93,25 +93,27 @@ class MainMapLeaflet extends React.Component {
 
 		if (this.props.onFunctions) {
 			const functions = {
-				getMapType: () => 'leaflet',
-				setZoom: (...attr) => this.map.setZoom(...attr),
-				getZoom: () => this.map.getZoom(),
-				getCenter: () => this.map.getCenter(),
-				getBounds: () => this.map.getBounds(),
-				zoomIn: () => this.map.zoomIn(),
-				fitBounds: (...attr) => this.map.fitBounds(...attr),
-				flyToBounds: (...attr) => this.map.flyToBounds(...attr),
-				setView: (...attr) => this.map.setView(...attr),
-				panBy: (...attr) => this.map.panBy(...attr),
-				panTo: (...attr) => this.map.panTo(...attr),
-				flyTo: (...attr) => this.map.flyTo(...attr),
-				invalidateSize: (...attr) => this.map.invalidateSize(...attr),
-				project: (...attr) => this.map.project(...attr),
-				unproject: (...attr) => this.map.unproject(...attr),
-				latLngToContainerPoint: (...attr) => this.map.latLngToContainerPoint(...attr),
+				map: {
+					getMapType: () => 'leaflet',
+					setZoom: (...attr) => this.map.setZoom(...attr),
+					getZoom: () => this.map.getZoom(),
+					getCenter: () => this.map.getCenter(),
+					getBounds: () => this.map.getBounds(),
+					zoomIn: () => this.map.zoomIn(),
+					fitBounds: (...attr) => this.map.fitBounds(...attr),
+					flyToBounds: (...attr) => this.map.flyToBounds(...attr),
+					setView: (...attr) => this.map.setView(...attr),
+					panBy: (...attr) => this.map.panBy(...attr),
+					panTo: (...attr) => this.map.panTo(...attr),
+					flyTo: (...attr) => this.map.flyTo(...attr),
+					invalidateSize: (...attr) => this.map.invalidateSize(...attr),
+					project: (...attr) => this.map.project(...attr),
+					unproject: (...attr) => this.map.unproject(...attr),
+					latLngToContainerPoint: (...attr) => this.map.latLngToContainerPoint(...attr),
 
-				useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
-				refetchMarkers: () => this.refetchMarkers(),
+					useAsGeoChooser: (...attr) => this.useAsGeoChooser(...attr),
+					refetchMarkers: () => this.refetchMarkers(),
+				},
 			}
 			this.props.globals.mainMapFunctions = functions
 			this.props.onFunctions(functions)

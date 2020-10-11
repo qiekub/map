@@ -26,7 +26,7 @@ import {
 	// ExpandLess as ExpandLessIcon,
 } from '@material-ui/icons'
 
-import MainMap from '../MainMap/'
+import Main from '../Main/'
 // import SearchBar from '../SearchBar/'
 // import Sidebar from '../Sidebar/'
 // import MainDrawerContent from '../MainDrawerContent/'
@@ -351,12 +351,12 @@ class App extends React.Component {
 	}
 
 	setSidebarIsOpen(value){
-		// const center = this.functions['MainMap'].getCenter()
-		// const zoom = this.functions['MainMap'].getZoom()
+		// const center = this.functions['Main']['map'].getCenter()
+		// const zoom = this.functions['Main']['map'].getZoom()
 
 		this.props.globals.sidebarIsOpen = value
 
-		this.functions['MainMap'].setPadding({
+		this.functions['Main']['map'].setPadding({
 			left: (value ? 400 : 0),
 		})
 
@@ -370,25 +370,25 @@ class App extends React.Component {
 			// this.check_small_screen()
 
 			// if (new Date()*1 - this.props.globals.pageOpenTS*1 > 2000) {
-			// 	// this.functions['MainMap'].invalidateSize()
+			// 	// this.functions['Main']['map'].invalidateSize()
 			// 	setTimeout(()=>{
-			// 		// const center2 = this.functions['MainMap'].getCenter()
-			// 		this.functions['MainMap'].flyTo(center, Math.round(zoom), {
+			// 		// const center2 = this.functions['Main']['map'].getCenter()
+			// 		this.functions['Main']['map'].flyTo(center, Math.round(zoom), {
 			// 			animate: true,
 			// 			duration: 1.5,
 			// 		})
-			// 		// this.functions['MainMap'].invalidateSize()
+			// 		// this.functions['Main']['map'].invalidateSize()
 			// 	}, 500)
 			// }
 
 			// if (new Date()*1 - this.props.globals.pageOpenTS*1 < 2000) {
-			// 	this.functions['MainMap'].panTo(center, {
+			// 	this.functions['Main']['map'].panTo(center, {
 			// 		animate: true,
 			// 		duration: 5,
 			// 	})
 			// }else{
-			// 	this.functions['MainMap'].panTo(
-			// 		this.functions['MainMap'].getCenter(), {
+			// 	this.functions['Main']['map'].panTo(
+			// 		this.functions['Main']['map'].getCenter(), {
 			// 		animate: true,
 			// 		duration: 5,
 			// 	})
@@ -397,13 +397,13 @@ class App extends React.Component {
 	}
 
 	setView(...attr){
-		return this.functions['MainMap'].setView(...attr)
+		return this.functions['Main']['map'].setView(...attr)
 	}
 	flyTo(...attr){
-		return this.functions['MainMap'].flyTo(...attr)
+		return this.functions['Main']['map'].flyTo(...attr)
 	}
 	getZoom(...attr){
-		return this.functions['MainMap'].getZoom(...attr)
+		return this.functions['Main']['map'].getZoom(...attr)
 	}
 
 	filtersChanged(newFilters){
@@ -545,9 +545,9 @@ class App extends React.Component {
 
 			</Suspense>
 			
-			<MainMap
+			<Main
 				className={`page ${this.state.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}
-				onFunctions={(...attr)=>{this.saveFunctions('MainMap',...attr)}}
+				onFunctions={(...attr)=>{this.saveFunctions('Main',...attr)}}
 				filters={this.state.filters}
 				mapIsResizing={this.state.mapIsResizing}
 				sidebarIsOpen={this.state.sidebarIsOpen}
