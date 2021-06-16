@@ -1,0 +1,81 @@
+{
+	"short_name": "QueerMap",
+	"name": "QueerMap by qiekub",
+	"start_url": ".",
+	"display": "minimal-ui",
+	"theme_color": "#000000",
+	"background_color": "#000000",
+	"orientation": "portrait-primary",
+	"shortcuts": [
+		{
+			"name": "Add a new place!",
+			"short_name": "Add",
+			"description": "Add a new queer place to the map.",
+			"url": "/add",
+			"icons": [
+				{
+					"sizes": "128x128",
+					"src": "favicon.png",
+					"type": "image/png"
+				}
+			]
+		}
+	],
+	"icons": [
+		{
+			"sizes": "16x16",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-16.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "20x20",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-20.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "29x29",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-29.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "32x32",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-32.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "40x40",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-40.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "64x64",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-64.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "76x76",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-76.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "128x128",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-128.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "256x256",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-256.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "512x512",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-512.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "1024x1024",
+			"src": "/AppIcons/Profilepicture - Square - Colored - Light Violet BG - Dark on Light@10x-1024.png",
+			"type": "image/png"
+		}
+	]
+}

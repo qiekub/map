@@ -1,0 +1,1 @@
+map_language = ja
