@@ -44,7 +44,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: |
-            cd ~/map/ && git checkout gh-pages && git pull && supervisorctl restart queermap;
+            cd ~/map/ && git checkout gh-pages && git pull && supervisorctl restart map;
           host: giclas.uberspace.de
           username: qiekub
           password: ${{ secrets.UBERSPACE_PASSWORD_QIEKUB }}
