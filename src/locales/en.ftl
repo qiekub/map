@@ -78,7 +78,7 @@ map_language = en
 improve_this_map = Improve this map
 zoom_in_aria_label = Zoom in
 zoom_out_aria_label = Zoom out
-
+mapbox_logo_alt_text = Logo of Mapbox
 
 
 # Questions

@@ -1,0 +1,17 @@
+.mapbox_logo {
+  position: fixed;
+  z-index: 2;
+  bottom: 16px;
+  left: 16px;
+  height: 32px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.mapbox_logo:hover {
+  opacity: 1;
+}
+@media (max-width:730px) {
+  .mapbox_logo {
+    bottom: 140px;
+  }
+}

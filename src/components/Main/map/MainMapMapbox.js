@@ -10,6 +10,7 @@ import {
 } from '../../../queries.js'
 
 import './index.css'
+import classes from './MainMapMapbox.module.css'
 
 import presets from '../../../data/dist/presets.json'
 import colors from '../../../data/dist/colors.json'
@@ -32,6 +33,9 @@ import FiltersPanelContent from '../../FiltersPanelContent/'
 // import { Map, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import './leaflet/leaflet.css'
+
+import mapbox_logo_lightmode from '../../../images/mapbox-logo-black.svg'
+import mapbox_logo_darkmode from '../../../images/mapbox-logo-white.svg'
 
 // import MapboxLoader from './MapboxLoader.js'
 
@@ -982,6 +986,22 @@ class MainMapMapbox extends React.Component {
 					<ZoomOutIcon />
 				</Fab>
 			</div>
+
+			<a
+				target="_blank"
+				rel="noopener noreferrer"
+				href="https://mapbox.com/"
+			>
+				<img
+					src={
+						this.props.theme.palette.type === 'dark'
+							? mapbox_logo_darkmode
+							: mapbox_logo_lightmode
+					}
+					alt={this.props.getString('mapbox_logo_alt_text')}
+					className={classes.mapbox_logo}
+				/>
+			</a>
 
 			<Suspense fallback={this.props.globals.renderLazyLoader()}>
 				<MapboxLoader
