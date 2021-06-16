@@ -48,7 +48,7 @@
     "extends": "react-app"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "browserslist": {
     "production": [
