@@ -136,8 +136,7 @@
 }*/
 
 
-.mapboxgl-ctrl.mapboxgl-ctrl-attrib,
-.leaflet-container .leaflet-control-attribution{
+.mapboxgl-ctrl.mapboxgl-ctrl-attrib {
 	position: fixed;
 	right: 4px;
 	bottom: 4px;
