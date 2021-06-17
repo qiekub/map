@@ -226,7 +226,7 @@ class SearchBar extends React.Component {
 							return {
 								...result,
 								name_translated: getTranslationFromArray(result.name, this.props.globals.userLocales),
-								
+
 								___preset: (
 									!!preset && !!presets[preset]
 									? {
@@ -236,18 +236,18 @@ class SearchBar extends React.Component {
 									: presets.default
 								),
 								___color: (!!preset ? getColorByPreset(preset,colorsByPreset) : colors.default),
-		
+
 								key: JSON.stringify(result),
 							}
 						})
-		
+
 						const searchResults_poi = searchResults.filter(result =>
 							result.preset !== 'address'
 							&& result.preset !== 'boundary/administrative'
 						)
 						const searchResults_administratives = searchResults.filter(result => result.preset === 'boundary/administrative')
 						const searchResults_address = searchResults.filter(result => result.preset === 'address')
-		
+
 						this.setState({
 							showSearchResults: true,
 							loadingSearchResult: false,
@@ -258,14 +258,14 @@ class SearchBar extends React.Component {
 					}else{
 						reject(new Error('The search was too slow!'))
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					this.setState({
 						showSearchResults: false,
 						loadingSearchResult: false,
 						searchResults_poi: [],
 						searchResults_administratives: [],
 						searchResults_address: [],
-					}, () => reject(error) )
+					}, () => reject(error))
 				})
 			}else{
 				this.setState({
