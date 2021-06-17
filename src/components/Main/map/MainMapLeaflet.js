@@ -115,7 +115,7 @@ class MainMapLeaflet extends React.Component {
 					refetchMarkers: () => this.refetchMarkers(),
 				},
 			}
-			this.props.globals.mainMapFunctions = functions
+			this.props.globals.mainMapFunctions = functions.map
 			this.props.onFunctions(functions)
 		}
 
