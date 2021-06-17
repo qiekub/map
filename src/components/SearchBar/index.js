@@ -254,7 +254,7 @@ class SearchBar extends React.Component {
 							searchResults_poi,
 							searchResults_administratives,
 							searchResults_address,
-						}, () => resolve() )
+						}, () => resolve())
 					}else{
 						reject(new Error('The search-result was received slower than typed!'))
 					}
