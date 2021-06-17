@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 
 import { getILGA } from '../../functions.js'
 
@@ -36,9 +36,9 @@ import ilga_rotating_globe from '../../images/ilga_rotating_logo.gif'
 
 const IlgaGlobeIcon_inner = props => <Icon
 	style={{
-		backgroundImage:'url('+ilga_rotating_globe+')',
-		backgroundSize:'contain',
-		backgroundRepeat:'no-repeat',
+		backgroundImage: 'url(' + ilga_rotating_globe + ')',
+		backgroundSize: 'contain',
+		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center',
 		backgroundColor: 'white',
 		borderRadius: '100%',
@@ -47,57 +47,37 @@ const IlgaGlobeIcon_inner = props => <Icon
 		width: '30px',
 		filter: (
 			props.theme.palette.type === 'dark'
-			? 'invert(1) contrast(0.835) hue-rotate(180deg) saturate(2) brightness(1.5)'
-			: ''
+				? 'invert(1) contrast(0.835) hue-rotate(180deg) saturate(2) brightness(1.5)'
+				: ''
 		),
 	}}
 ></Icon>
 const IlgaGlobeIcon = withTheme(IlgaGlobeIcon_inner)
 
-class DiscriminationFacts extends React.Component {
-	constructor(props) {
-		super(props)
+function DiscriminationFacts({ toggleable, style, key, inline, getString, globals, theme, countryCode }) {
+	const [ilga, setIlga] = useState(null)
+	const [countryDoc, setCountryDoc] = useState(null)
+	const [expanded, setExpanded] = useState(false)
 
-		this.state = {
-			ilga: null,
-			countryDoc: null,
-			expanded: false,
-		}
+	const toggleExpanded = useCallback(()=>{
+		setExpanded(!expanded)
+	}, [expanded])
 
-		this.chipFunction = this.chipFunction.bind(this)
-		this.getData = this.getData.bind(this)
-		this.toggleExpanded = this.toggleExpanded.bind(this)
-	}
-
-	toggleExpanded(){
-		this.setState((state, props) => ({
-			expanded: !state.expanded,
-		}))
-	}
-
-	componentDidMount(){
-		this.getData()
-	}
-	componentDidChange(){
-		this.getData()
-	}
-
-	getData(){
-		const alpha3code = this.props.countryCode // tags['ISO3166-1:alpha3']
+	useEffect(() => {
+		const alpha3code = countryCode // tags['ISO3166-1:alpha3']
 		if (alpha3code) {
-			this.props.globals.getCountryByCode(alpha3code, countryDoc => {
+			globals.getCountryByCode(alpha3code, countryDoc => {
 				const ilga = getILGA(alpha3code)
-				this.setState({ilga, countryDoc})
+				setIlga(ilga)
+				setCountryDoc(countryDoc)
 			})
-		}else{
-			this.setState({
-				ilga: null,
-				countryDoc: null,
-			})
+		} else {
+			setIlga(null)
+			setCountryDoc(null)
 		}
-	}
+	}, [countryCode, globals])
 
-	chipFunction(label){
+	function chipFunction (label) {
 		if (typeof label === 'string') {
 			return (<Chip
 				component="div"
@@ -106,62 +86,58 @@ class DiscriminationFacts extends React.Component {
 					margin: '0 4px 4px 0',
 				}}
 				key={label}
-				label={this.props.getString(label.replace(/:/g, '_'), null, label+'')}
+				label={getString(label.replace(/:/g, '_'), null, label + '')}
 			/>)
 		}
 
 		return label
 	}
 
-	render(){
 		// if (tags.preset !== 'boundary/administrative') {
 		// 	return null
 		// }
 
-		const ilga = this.state.ilga
-
-
 		if (ilga) {
 			const getStatusColor = status => {
 				if (status === 'great') {
-					return this.props.theme.palette.success.main
+					return theme.palette.success.main
 				} else if (status === 'ok') {
-					return this.props.theme.palette.warning.main
+					return theme.palette.warning.main
 				} else if (status === 'bad') {
-					return this.props.theme.palette.error.main
+					return theme.palette.error.main
 				}
 				return ''
 			}
 
-			const ilga_criminalisation_secondary = ilga.criminalisation.description.map(this.chipFunction)
-			const ilga_protection_secondary = ilga.protection.description.map(this.chipFunction)
+			const ilga_criminalisation_secondary = ilga.criminalisation.description.map(chipFunction)
+			const ilga_protection_secondary = ilga.protection.description.map(chipFunction)
 			const ilga_penalty_secondary = ilga.penalty.description.map(item => {
 				if (
 					typeof item === 'string'
 					&& item.endsWith(':years')
 					&& ilga.penalty.vars.years
 				) {
-					item = this.props.getString('criminalisation_penalty_max_years', {
+					item = getString('criminalisation_penalty_max_years', {
 						n: ilga.penalty.vars.years,
 					})
 				}
-				return this.chipFunction(item)
+				return chipFunction(item)
 			})
-			const ilga_recognition_secondary = ilga.recognition.description.map(this.chipFunction)
+			const ilga_recognition_secondary = ilga.recognition.description.map(chipFunction)
 
-			const isToggleable = this.props.toggleable
+			const isToggleable = toggleable
 			const isExpanded = (
 				isToggleable
-				? this.state.expanded || false
-				: true
+					? expanded || false
+					: true
 			)
 
 			const countryName = (
-				!!this.state.countryDoc
-				&& !!this.state.countryDoc.properties
-				&& !!this.state.countryDoc.properties.name
-				? getTranslationFromArray(this.state.countryDoc.properties.name, this.props.globals.userLocales)
-				: null
+				!!countryDoc
+					&& !!countryDoc.properties
+					&& !!countryDoc.properties.name
+					? getTranslationFromArray(countryDoc.properties.name, globals.userLocales)
+					: null
 			)
 
 			const toggleButton = (
@@ -169,13 +145,13 @@ class DiscriminationFacts extends React.Component {
 					aria-expanded={isExpanded}
 					aria-label="show more"
 					style={{
-						transition: this.props.theme.transitions.create('transform', {
-							duration: this.props.theme.transitions.duration.shortest,
+						transition: theme.transitions.create('transform', {
+							duration: theme.transitions.duration.shortest,
 						}),
 						transform: (
 							isExpanded
-							? 'rotate(180deg)'
-							: 'rotate(0deg)'
+								? 'rotate(180deg)'
+								: 'rotate(0deg)'
 						),
 						marginRight: '-16px',
 						height: '48px',
@@ -187,68 +163,68 @@ class DiscriminationFacts extends React.Component {
 				</IconButton>
 			)
 
-			return (<React.Fragment key={this.props.key}>
+			return (<React.Fragment key={key}>
 				{
-					!!this.props.inline
-					? (
-						<ListItem
-							dense
-							button
-							onClick={this.toggleExpanded}
-							style={{
-								margin: '0 -16px',
-								...this.props.style,
-							}}
-						>
-							<ListItemIcon>
-								<IlgaGlobeIcon />
-							</ListItemIcon>
-							<ListItemText
-								primary={
-									!!countryName
-									? <Localized id="ilga_heading_main_for_country" vars={{country: countryName}} />
-									: <Localized id="ilga_heading_main" />
-								}
-								primaryTypographyProps={{
-									variant: 'body2',
-								}}
-							/>
-							{
-								isToggleable
-								? toggleButton
-								: null
-							}
-						</ListItem>
-					)
-					: (
-						<ListSubheader
-							onClick={this.toggleExpanded}
-							style={{
-								cursor: (isToggleable ? 'pointer' : 'default'),
-								display: 'flex',
-								justifyContent: 'space-between',
-								padding: '0 16px',
-							}}
-						>
-							<div
+					!!inline
+						? (
+							<ListItem
+								dense
+								button
+								onClick={toggleExpanded}
 								style={{
-									lineHeight: '20px',
-									padding: '14px 0',
+									margin: '0 -16px',
+									...style,
 								}}
 							>
+								<ListItemIcon>
+									<IlgaGlobeIcon />
+								</ListItemIcon>
+								<ListItemText
+									primary={
+										!!countryName
+											? <Localized id="ilga_heading_main_for_country" vars={{ country: countryName }} />
+											: <Localized id="ilga_heading_main" />
+									}
+									primaryTypographyProps={{
+										variant: 'body2',
+									}}
+								/>
 								{
-									!!countryName
-									? <Localized id="ilga_heading_main_for_country" vars={{country: countryName}} />
-									: <Localized id="ilga_heading_main" />
+									isToggleable
+										? toggleButton
+										: null
 								}
-							</div>
-							{
-								isToggleable
-								? toggleButton
-								: null
-							}
-						</ListSubheader>
-					)
+							</ListItem>
+						)
+						: (
+							<ListSubheader
+								onClick={toggleExpanded}
+								style={{
+									cursor: (isToggleable ? 'pointer' : 'default'),
+									display: 'flex',
+									justifyContent: 'space-between',
+									padding: '0 16px',
+								}}
+							>
+								<div
+									style={{
+										lineHeight: '20px',
+										padding: '14px 0',
+									}}
+								>
+									{
+										!!countryName
+											? <Localized id="ilga_heading_main_for_country" vars={{ country: countryName }} />
+											: <Localized id="ilga_heading_main" />
+									}
+								</div>
+								{
+									isToggleable
+										? toggleButton
+										: null
+								}
+							</ListSubheader>
+						)
 				}
 
 				<Collapse in={isExpanded} timeout="auto" unmountOnExit>
@@ -348,9 +324,6 @@ class DiscriminationFacts extends React.Component {
 		}
 
 		return null
-	}
 }
 
 export default withGlobals(withLocalization(withTheme(DiscriminationFacts)))
-
-
