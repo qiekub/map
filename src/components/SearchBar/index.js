@@ -256,7 +256,8 @@ class SearchBar extends React.Component {
 							searchResults_address,
 						}, () => resolve())
 					}else{
-						reject(new Error('The search-result was received slower than typed!'))
+						console.warn('The search - result was received slower than typed!')
+						resolve()
 					}
 				}).catch(error => {
 					this.setState({
@@ -277,7 +278,7 @@ class SearchBar extends React.Component {
 				}, () => reject('Error in loadSearchResults(): The state could not be set.'))
 			}
 		})
-		.catch(error => console.warn(error))
+		.catch(error => console.error(error))
 	}
 
 	searchKeypressed(event){
