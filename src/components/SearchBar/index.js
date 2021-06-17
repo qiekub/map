@@ -256,7 +256,7 @@ class SearchBar extends React.Component {
 							searchResults_address,
 						}, () => resolve() )
 					}else{
-						reject(new Error('The search was too slow!'))
+						reject(new Error('The search-result was received slower than typed!'))
 					}
 				}).catch(error => {
 					this.setState({
