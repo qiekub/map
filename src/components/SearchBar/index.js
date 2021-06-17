@@ -277,7 +277,7 @@ class SearchBar extends React.Component {
 				}, () => reject('Error in loadSearchResults(): The state could not be set.'))
 			}
 		})
-		.catch(error => console.error(error))
+		.catch(error => console.warn(error))
 	}
 
 	searchKeypressed(event){
