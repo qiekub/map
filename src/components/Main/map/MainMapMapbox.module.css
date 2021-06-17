@@ -3,8 +3,8 @@
   z-index: 2;
   bottom: 16px;
   left: 16px;
-  height: 32px;
-  opacity: 0.6;
+  height: 24px;
+  opacity: 0.4;
   cursor: pointer;
 }
 .mapbox_logo:hover {
