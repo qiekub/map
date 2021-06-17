@@ -330,7 +330,7 @@ class DiscriminationFacts extends React.Component {
 							/>
 						</ListItem>
 					</List>
-	
+
 					<Typography variant="caption" style={{
 						display: 'block',
 						margin: '0 16px 16px 16px',
@@ -346,7 +346,7 @@ class DiscriminationFacts extends React.Component {
 				</Collapse>
 			</React.Fragment>)
 		}
-		
+
 		return null
 	}
 }
