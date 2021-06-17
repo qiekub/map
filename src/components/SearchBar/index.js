@@ -132,7 +132,7 @@ class SearchBar extends React.Component {
 				if (this.props.globals.isSmallScreen) {
 					padding = 64
 				}
-						
+
 				this.props.globals.mainMapFunctions.fitBounds([
 					[
 						searchResult.geometry.boundingbox.southwest.lng,
@@ -165,7 +165,7 @@ class SearchBar extends React.Component {
 					animate: true,
 					duration: 1.5,
 				})
-			
+
 				// this.props.globals.mainMapFunctions.setBounds([
 				// 	[result.data.geocode.boundingbox[0], result.data.geocode.boundingbox[2]],
 				// 	[result.data.geocode.boundingbox[1], result.data.geocode.boundingbox[3]]
