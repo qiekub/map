@@ -274,7 +274,7 @@ class SearchBar extends React.Component {
 					searchResults_poi: [],
 					searchResults_administratives: [],
 					searchResults_address: [],
-				}, () => reject() )
+				}, () => reject('Error in loadSearchResults(): The state could not be set.'))
 			}
 		})
 		.catch(error => console.error(error))
