@@ -79,13 +79,13 @@ class MainMapLeaflet extends React.Component {
 		this.filtersChanged = this.filtersChanged.bind(this)
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		this.loadMarkers()
 		this.loadUndecidedPlaces()
 		this.loadBorders()
 
 		if (this.props.conic_gradient) {
-			this.props.conic_gradient.onReady(()=>{
+			this.props.conic_gradient.onReady(() => {
 				this.ConicGradient = this.props.conic_gradient.getConicGradient()
 				this.clusterGroup.RedrawIcons()
 			})
@@ -122,25 +122,25 @@ class MainMapLeaflet extends React.Component {
 		window.addEventListener('updateMainMapView', this.setMapPos)
 
 		this.mapViewport = {
-			center: this.props.store.get('map_center_real') || [51,10],
+			center: this.props.store.get('map_center_real') || [51, 10],
 			zoom: this.props.store.get('map_zoom') || 3,
 		}
 	}
-	componentDidUpdate(){
+	componentDidUpdate() {
 		if (this.props.filters !== this.filters) {
 			this.filters = this.props.filters
 			this.filterMarkers(this.filters)
 		}
 	}
-	componentWillUnmount(){
+	componentWillUnmount() {
 		window.removeEventListener('updateMainMapView', this.setMapPos)
-	
+
 		if (this.markerQuerySubscription) {
 			this.markerQuerySubscription.unsubscribe()
 		}
 	}
 
-	refetchMarkers(){
+	refetchMarkers() {
 		this.props.globals.graphql.query({
 			fetchPolicy: 'network-only',
 			query: query_markers,
@@ -150,31 +150,31 @@ class MainMapLeaflet extends React.Component {
 		})
 	}
 
-	setMapPos(event){
-		this.setState({center:this.props.globals.map_center})
+	setMapPos(event) {
+		this.setState({ center: this.props.globals.map_center })
 	}
 
-	useAsGeoChooser(yesOrNo, middleMarkerDoc){
+	useAsGeoChooser(yesOrNo, middleMarkerDoc) {
 		if (yesOrNo) {
 			this.setState({
 				isGeoChooser: true,
 				middleMarkerDoc,
-			}, ()=>{
+			}, () => {
 				this.filterMarkers(this.filters)
 				this.setGlobalMapCenter()
 			})
-		}else{
+		} else {
 			this.setState({
 				isGeoChooser: false,
 				middleMarkerDoc: undefined,
-			}, ()=>{
+			}, () => {
 				this.filterMarkers(this.filters)
 				this.setGlobalMapCenter()
 			})
 		}
 	}
 
-	loadMarkers(){
+	loadMarkers() {
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
 			query: query_markers,
@@ -183,45 +183,45 @@ class MainMapLeaflet extends React.Component {
 				// wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		})
-		.subscribe(({data}) => {
-			if (!!data && !!data.markers) {
-				const docs = JSON.parse(JSON.stringify(data.markers)).map(doc=>{
-					doc.___preset = (
-						!!doc.preset && !!presets[doc.preset]
-						? {
-							key: doc.preset,
-							...presets[doc.preset],
-						}
-						: presets.default
-					)
-					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+			.subscribe(({ data }) => {
+				if (!!data && !!data.markers) {
+					const docs = JSON.parse(JSON.stringify(data.markers)).map(doc => {
+						doc.___preset = (
+							!!doc.preset && !!presets[doc.preset]
+								? {
+									key: doc.preset,
+									...presets[doc.preset],
+								}
+								: presets.default
+						)
+						doc.___color = getColorByPreset(doc.___preset.key, colorsByPreset) || colors.default
 
-					return doc
-				})
+						return doc
+					})
 
-				this.docs = docs
-				this.addMarkersToPruneCluster(docs)
-			}
-		})
+					this.docs = docs
+					this.addMarkersToPruneCluster(docs)
+				}
+			})
 	}
 
-	loadUndecidedPlaces(){
+	loadUndecidedPlaces() {
 		if (!!this.props.globals.profileID) {
 			this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 				fetchPolicy: 'cache-and-network',
 				query: query_undecidedPlaces,
 				variables: {},
 			})
-			.subscribe(({data}) => {
-				if (!!data && !!data.undecidedPlaces) {
-					this.undecidedPlaces = data.undecidedPlaces.map(doc=>doc._id)
-					this.filterMarkers(this.filters)
-				}
-			})
+				.subscribe(({ data }) => {
+					if (!!data && !!data.undecidedPlaces) {
+						this.undecidedPlaces = data.undecidedPlaces.map(doc => doc._id)
+						this.filterMarkers(this.filters)
+					}
+				})
 		}
 	}
 
-	async loadBorders(){
+	async loadBorders() {
 		const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
 		const borders_response = await fetch(borders_path.default)
 		const borders = await borders_response.json()
@@ -229,21 +229,21 @@ class MainMapLeaflet extends React.Component {
 
 		// this.showBorders()
 	}
-	
-	showBorders(){
+
+	showBorders() {
 		if (!!this.map && !!this.borderGeojson) {
 			if (!(!!this.borderGeojsonLayer)) {
 
-			const getStatusColor = status => {
-				if (status === 'great' || status === 1) {
-					return this.props.theme.palette.success.main
-				} else if (status === 'ok' || status === 2) {
-					return this.props.theme.palette.warning.main
-				} else if (status === 'bad' || status === 3) {
-					return this.props.theme.palette.error.main
+				const getStatusColor = status => {
+					if (status === 'great' || status === 1) {
+						return this.props.theme.palette.success.main
+					} else if (status === 'ok' || status === 2) {
+						return this.props.theme.palette.warning.main
+					} else if (status === 'bad' || status === 3) {
+						return this.props.theme.palette.error.main
+					}
+					return this.props.theme.palette.background.default
 				}
-				return this.props.theme.palette.background.default
-			}
 
 				this.borderGeojsonLayer = L.geoJSON(this.borderGeojson, {
 					style: feature => {
@@ -251,10 +251,10 @@ class MainMapLeaflet extends React.Component {
 						const ilga = getILGA(country_code)
 						const color = getStatusColor(
 							ilga
-							&& ilga.overview
-							&& ilga.overview.statusNumber
-							? ilga.overview.statusNumber
-							: -1
+								&& ilga.overview
+								&& ilga.overview.statusNumber
+								? ilga.overview.statusNumber
+								: -1
 						)
 
 						return {
@@ -281,13 +281,13 @@ class MainMapLeaflet extends React.Component {
 			this.map.addLayer(this.borderGeojsonLayer)
 		}
 	}
-	hideBorders(){
+	hideBorders() {
 		if (!!this.map && !!this.borderGeojsonLayer) {
 			this.map.removeLayer(this.borderGeojsonLayer)
 		}
 	}
 
-	gotMapRef(Map){
+	gotMapRef(Map) {
 		if (!!Map && !!Map.leafletElement) {
 			this.mapRef = Map
 			this.map = Map.leafletElement
@@ -296,7 +296,7 @@ class MainMapLeaflet extends React.Component {
 		}
 	}
 
-	getConicGradient(values){
+	getConicGradient(values) {
 		if (!(!!this.ConicGradient)) {
 			return ''
 		}
@@ -306,23 +306,23 @@ class MainMapLeaflet extends React.Component {
 		const gapColor = 'transparent' // this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
 
 		if (values.length === 1) {
-			stops = [values[0][0]+' 0']
-		}else{
+			stops = [values[0][0] + ' 0']
+		} else {
 			let counter = 0
 			let currentPos = 0
 			for (const pair of values) {
 				currentPos += 5
 				if (counter === 0) {
-					stops.push(gapColor+' '+currentPos+'deg')
-				}else{
-					stops.push(gapColor+' 0 '+currentPos+'deg')
+					stops.push(gapColor + ' ' + currentPos + 'deg')
+				} else {
+					stops.push(gapColor + ' 0 ' + currentPos + 'deg')
 				}
-	
-				if (counter === values.length-1) {
-					stops.push(pair[0]+' 0')
-				}else{
-					currentPos += Math.ceil(pair[1]*360)
-					stops.push(pair[0]+' 0 '+currentPos+'deg')
+
+				if (counter === values.length - 1) {
+					stops.push(pair[0] + ' 0')
+				} else {
+					currentPos += Math.ceil(pair[1] * 360)
+					stops.push(pair[0] + ' 0 ' + currentPos + 'deg')
 				}
 
 				counter += 1
@@ -331,37 +331,37 @@ class MainMapLeaflet extends React.Component {
 		stops = stops.join(', ')
 
 		var gradient = new this.ConicGradient({
-		    stops: stops, // "gold 40%, #f06 0", // required
-		    repeating: false, // Default: false
-		    size: 100, // Default: Math.max(innerWidth, innerHeight)
+			stops: stops, // "gold 40%, #f06 0", // required
+			repeating: false, // Default: false
+			size: 100, // Default: Math.max(innerWidth, innerHeight)
 		})
 
 		return gradient
 	}
 
-	createPruneCluster(){
+	createPruneCluster() {
 		this.clusterGroup = new PruneClusterForLeaflet()
 		this.clusterGroup.Cluster.Size = this.defaultClusterSize
 
-		this.clusterGroup.BuildLeafletCluster = (cluster, position)=>{
+		this.clusterGroup.BuildLeafletCluster = (cluster, position) => {
 			const marker = new L.Marker(position, {
 				icon: this.clusterGroup.BuildLeafletClusterIcon(cluster),
 			})
-		
-			marker.on('click', ()=>{
+
+			marker.on('click', () => {
 				// Compute the cluster bounds (it's slow : O(n))
 				const markersArea = this.clusterGroup.Cluster.FindMarkersInArea(cluster.bounds)
 				const clusterBounds = this.clusterGroup.Cluster.ComputeBounds(markersArea)
-		
+
 				if (clusterBounds) {
 					const corner1 = new L.LatLng(clusterBounds.minLat, clusterBounds.maxLng)
 					const corner2 = new L.LatLng(clusterBounds.maxLat, clusterBounds.minLng)
 					const bounds = new L.LatLngBounds(corner1, corner2)
 					const distance = corner1.distanceTo(corner2)
-		
+
 					const zoomLevelBefore = this.clusterGroup._map.getZoom()
 					const zoomLevelAfter = this.clusterGroup._map.getBoundsZoom(bounds, false, new L.Point(20, 20, null))
-		
+
 					// If the zoom level doesn't change
 					if (
 						distance < 3 // if distance is less than 3 meters
@@ -374,14 +374,14 @@ class MainMapLeaflet extends React.Component {
 							center: marker.getLatLng(),
 							marker: marker,
 						})
-		
+
 						// this.clusterGroup._map.flyTo(position, zoomLevelAfter, {
 						// 	animate: true,
 						// 	duration: 0.75,
 						// 	paddingTopLeft: [(this.props.sidebarIsOpen ? 400 : 0), 64],
 						// 	paddingbottomRight: [0, 0]
 						// })
-					}else{
+					} else {
 						let padding = 128
 						if (this.props.globals.isSmallScreen) {
 							padding = 64
@@ -390,31 +390,31 @@ class MainMapLeaflet extends React.Component {
 						this.clusterGroup._map.flyToBounds(bounds, {
 							animate: true,
 							duration: 0.75,
-							paddingTopLeft: [(this.props.sidebarIsOpen ? 400+padding : padding), padding],
+							paddingTopLeft: [(this.props.sidebarIsOpen ? 400 + padding : padding), padding],
 							paddingBottomRight: [padding, padding]
 						})
 					}
 				}
 			})
-		
+
 			return marker
 		}
 
 
-		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc)=>{
+		this.clusterGroup.PrepareLeafletMarker = (leafletMarker, doc) => {
 			leafletMarker.setIcon(L.divIcon({
 				html: `
 					<div
 						class="wrapper material-icons-round"
 						style="${
-							// doc.___color.key !== 'default'
-							// ?
-							`
+					// doc.___color.key !== 'default'
+					// ?
+					`
 								--bg-color:${doc.___color.bg};
 								--fg-color:${doc.___color.fg};
 							`
-							// : ''
-						}"
+					// : ''
+					}"
 					>
 						${doc.___preset.icon ? doc.___preset.icon.toLowerCase() : 'place'}
 					</div>
@@ -422,7 +422,7 @@ class MainMapLeaflet extends React.Component {
 				className: 'marker-custom-icon',
 				iconSize: L.point(40, 40, true),
 			}))
-			
+
 			if (
 				!(!!leafletMarker.tooltipGotSet) // prevent duplicate tooltips
 				&& !!doc.name
@@ -439,11 +439,11 @@ class MainMapLeaflet extends React.Component {
 						`}"
 					>
 						${(
-							doc.name &&
+						doc.name &&
 							doc.name.length > 0
 							? getTranslationFromArray(doc.name, this.props.globals.userLocales)
 							: ''
-						)}
+					)}
 					</div>
 				`, {
 					sticky: false,
@@ -453,7 +453,7 @@ class MainMapLeaflet extends React.Component {
 					direction: 'bottom',
 				})
 			}
-		
+
 			leafletMarker.on('click', () => {
 				if (!this.state.isGeoChooser) {
 					navigate(`/view/${doc._id}/`)
@@ -461,31 +461,31 @@ class MainMapLeaflet extends React.Component {
 			})
 		}
 
-		this.clusterGroup.BuildLeafletClusterIcon = cluster=>{
+		this.clusterGroup.BuildLeafletClusterIcon = cluster => {
 			const colors = Object.entries(
 				cluster.GetClusterMarkers()
-				.filter(m => !!m.data.___color.key)
-				.map(m => 
-					// m.data.___color.key === 'default'
-					// ? 'transparent'
-					// :
-					m.data.___color.bg
-				)
-				.reduce((obj,preset_key)=>{
-					if (!(!!obj[preset_key])) {
-						obj[preset_key] = 0
-					}
-					obj[preset_key] += 1
-					return obj
-				},{})
-			).sort((a,b)=>a[1]-b[1])
-	
-			const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
-	
-			const gradient = this.getConicGradient(colors.map(pair=>{
-				return [pair[0] , pair[1]/colors_sum]
+					.filter(m => !!m.data.___color.key)
+					.map(m =>
+						// m.data.___color.key === 'default'
+						// ? 'transparent'
+						// :
+						m.data.___color.bg
+					)
+					.reduce((obj, preset_key) => {
+						if (!(!!obj[preset_key])) {
+							obj[preset_key] = 0
+						}
+						obj[preset_key] += 1
+						return obj
+					}, {})
+			).sort((a, b) => a[1] - b[1])
+
+			const colors_sum = colors.reduce((sum, pair) => sum + pair[1], 0)
+
+			const gradient = this.getConicGradient(colors.map(pair => {
+				return [pair[0], pair[1] / colors_sum]
 			}))
-	
+
 			return L.divIcon({
 				html: `
 					<div class="number">${cluster.population}</div>
@@ -498,7 +498,7 @@ class MainMapLeaflet extends React.Component {
 
 		this.map.addLayer(this.clusterGroup)
 	}
-	addMarkersToPruneCluster(docs){
+	addMarkersToPruneCluster(docs) {
 		this.markers = []
 		this.clusterGroup.RemoveMarkers()
 
@@ -515,48 +515,48 @@ class MainMapLeaflet extends React.Component {
 		this.filterMarkers(this.filters)
 	}
 
-	hideAllMarkers(){
+	hideAllMarkers() {
 		const markers_length = this.markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			this.markers[i].filtered = true
 		}
 		this.clusterGroup.ProcessView()
 	}
-	showAllMarkers(){
+	showAllMarkers() {
 		const markers_length = this.markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			this.markers[i].filtered = false
 		}
 		this.clusterGroup.ProcessView()
 	}
-	showAllMarkersButMiddleMarker(){
+	showAllMarkersButMiddleMarker() {
 		const middleMarkerID = this.state.middleMarkerDoc._id
 
 		const markers_length = this.markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			if (middleMarkerID === this.markers[i].data._id) {
 				this.markers[i].filtered = true
-			}else{
+			} else {
 				this.markers[i].filtered = false
 			}
 		}
 
 		this.clusterGroup.ProcessView()
 	}
-	filterMarkers(filters){
+	filterMarkers(filters) {
 		if (this.state.isGeoChooser) {
 			this.showBorders()
 			this.showAllMarkersButMiddleMarker()
-		}else{
+		} else {
 			this.hideBorders()
 
 			if (!!this.filters) {
 				const ids = this.filters.ids || []
-	
+
 				const presets = this.filters.presets || []
 				// const presets = ['amenity/community_centre']
 				const presets_length = presets.length
-	
+
 				const selectedAge = this.filters.selectedAge
 				const ageOption = this.filters.ageOption
 				const audienceQueerOptions = this.filters.audienceQueerOptions || []
@@ -564,10 +564,10 @@ class MainMapLeaflet extends React.Component {
 				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
 				const published = (
 					this.filters.published === false || this.filters.published === true
-					? this.filters.published
-					: null
+						? this.filters.published
+						: null
 				)
-	
+
 				if (
 					presets_length > 0
 					|| checkAudienceQueerOptions
@@ -579,74 +579,74 @@ class MainMapLeaflet extends React.Component {
 					const markers_length = this.markers.length
 					for (let i = markers_length - 1; i >= 0; i--) {
 						const marker = this.markers[i]
-	
+
 						if (ids.includes(marker.data._id)) {
 							this.markers[i].filtered = false
-						}else{
-							
+						} else {
+
 							let publishedFilter = false
 							if (published === true) {
 								publishedFilter = marker.data.tags.published === true
-							}else if (published === false) {
+							} else if (published === false) {
 								publishedFilter = marker.data.tags.published !== true
-							}else if (published === null) {
+							} else if (published === null) {
 								publishedFilter = true
 							}
-	
+
 							let hasUndecidedChangesets = true
 							if (mustHaveUndecidedChangeset) {
 								if (marker.data.status === 'undecided') {
 									hasUndecidedChangesets = true
-								}else{
+								} else {
 									hasUndecidedChangesets = this.undecidedPlaces.includes(marker.data._id)
 								}
 							}
-							
+
 							let isInPresets = true
 							if (presets_length > 0) {
-								isInPresets = presets.map(preset_key=>{
+								isInPresets = presets.map(preset_key => {
 									return marker.data.___preset.key.startsWith(preset_key)
-								}).reduce((bool,value) => (value ? true : bool), false)
+								}).reduce((bool, value) => (value ? true : bool), false)
 							}
-	
+
 							let matchesAudienceQueer = true
 							if (checkAudienceQueerOptions) {
 								if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
 									matchesAudienceQueer = false
 								}
 							}
-	
+
 							let isInAgeRange = true
 							if (!!selectedAge) {
 								isInAgeRange = false
-								if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+								if (ageOption !== 'open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
 									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
 									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
 									isInAgeRange = (
-										   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+										(!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
 										&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
 									)
-								}else{
+								} else {
 									if (!!marker.data.tags.min_age) {
 										const parsedMin = Number.parseFloat(marker.data.tags.min_age)
 										isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
 									}
-									if (isInAgeRange && !!marker.data.tags.max_age) {
+									if (isInAgeRange && !!marker.data.tags.max_age) {
 										const parsedMax = Number.parseFloat(marker.data.tags.max_age)
 										isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
 									}
 								}
 							}
-	
+
 							this.markers[i].filtered = !(publishedFilter && hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 						}
 					}
 					this.clusterGroup.ProcessView()
-				}else{
+				} else {
 					this.hideBorders()
 					this.showAllMarkers()
 				}
-			}else{
+			} else {
 				this.hideBorders()
 				this.showAllMarkers()
 			}
@@ -671,16 +671,16 @@ class MainMapLeaflet extends React.Component {
 	// 	return 80
 	// }
 
-	setGlobalMapCenter(){
+	setGlobalMapCenter() {
 		const viewport = this.mapViewport
-		
+
 		if (!(!!viewport && !!viewport.center && !!viewport.zoom)) {
 			return
 		}
 
-		let mapCenter = viewport.center || [NaN,NaN]
+		let mapCenter = viewport.center || [NaN, NaN]
 		if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
-			mapCenter = Object.values(this.map.unproject(this.map.project(mapCenter).add([200,0])) ) // map center with sidebar offset
+			mapCenter = Object.values(this.map.unproject(this.map.project(mapCenter).add([200, 0]))) // map center with sidebar offset
 		}
 
 		let mapZoom = viewport.zoom || NaN
@@ -703,43 +703,43 @@ class MainMapLeaflet extends React.Component {
 		window.dispatchEvent(new Event('mapViewportUpdated'))
 	}
 
-	viewportChanged(viewport){
+	viewportChanged(viewport) {
 		this.mapViewport = viewport
 		this.setGlobalMapCenter()
 	}
 
-	zoomIn(){
-		this.map.setZoom(this.map.getZoom()+1)
+	zoomIn() {
+		this.map.setZoom(this.map.getZoom() + 1)
 	}
-	zoomOut(){
-		this.map.setZoom(this.map.getZoom()-1)
+	zoomOut() {
+		this.map.setZoom(this.map.getZoom() - 1)
 	}
 
-	filtersChanged(...attr){
+	filtersChanged(...attr) {
 		if (this.props.onFiltersChanged) {
 			this.props.onFiltersChanged(...attr)
 		}
 	}
-	
+
 	render() {
 		// <ZoomControl position="bottomright" />
 
-		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>						
+		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>
 
 			<div className="filtersPanel">
-				<FiltersPanelContent onChange={this.filtersChanged}/>
+				<FiltersPanelContent onChange={this.filtersChanged} />
 			</div>
 
 			<div className={`markerInTheMiddel rainbow ${this.state.isGeoChooser ? 'visible' : 'hidden'}`}>
 				<div className="leaflet-marker-icon marker-custom-icon">
 					{
 						!!this.state.middleMarkerDoc &&
-						!!this.state.middleMarkerDoc.___color &&
-						!!this.state.middleMarkerDoc.___color.bg &&
-						!!this.state.middleMarkerDoc.___color.fg &&
-						!!this.state.middleMarkerDoc.___preset
-						? <div className="wrapper material-icons-round" style={{'--bg-color':this.state.middleMarkerDoc.___color.bg,'--fg-color':this.state.middleMarkerDoc.___color.fg}}>{this.state.middleMarkerDoc.___preset.icon ? this.state.middleMarkerDoc.___preset.icon.toLowerCase() : 'not_listed_location'}</div>
-						: <div className="wrapper material-icons-round">not_listed_location</div>
+							!!this.state.middleMarkerDoc.___color &&
+							!!this.state.middleMarkerDoc.___color.bg &&
+							!!this.state.middleMarkerDoc.___color.fg &&
+							!!this.state.middleMarkerDoc.___preset
+							? <div className="wrapper material-icons-round" style={{ '--bg-color': this.state.middleMarkerDoc.___color.bg, '--fg-color': this.state.middleMarkerDoc.___color.fg }}>{this.state.middleMarkerDoc.___preset.icon ? this.state.middleMarkerDoc.___preset.icon.toLowerCase() : 'not_listed_location'}</div>
+							: <div className="wrapper material-icons-round">not_listed_location</div>
 					}
 				</div>
 			</div>
@@ -789,14 +789,14 @@ class MainMapLeaflet extends React.Component {
 				ref={this.gotMapRef}
 				className={
 					'map'
-					+(this.state.isGeoChooser ? ' isGeoChooser' : '')
+					+ (this.state.isGeoChooser ? ' isGeoChooser' : '')
 				}
 
 				onViewportChanged={this.viewportChanged}
 
 				preferCanvas={true}
 				useFlyTo={true}
-				center={this.props.store.get('map_center_real') || [51,10]}
+				center={this.props.store.get('map_center_real') || [51, 10]}
 				minZoom={2}
 				zoom={this.props.store.get('map_zoom') || 3}
 				maxZoom={22}
@@ -808,48 +808,48 @@ class MainMapLeaflet extends React.Component {
 				worldCopyJump={true}
 				maxBoundsViscosity={1.0}
 
-				maxBounds={[[-180,99999],[180,-99999]]}
+				maxBounds={[[-180, 99999], [180, -99999]]}
 
 				style={{
 					backgroundColor: (
 						this.props.theme.palette.type === 'dark'
-						? this.props.theme.palette.background.default
-						: '#ebe7e1'
+							? this.props.theme.palette.background.default
+							: '#ebe7e1'
 					)
 				}}
 			>
 				{
 					this.props.theme.palette.type === 'light'
-					? (
-						<TileLayer
-							key="tilelayer_international_lables_light"
-							detectRetina={false}
-							tileSize={512}
-							zoomOffset={-1}
-							attribution={`
+						? (
+							<TileLayer
+								key="tilelayer_international_lables_light"
+								detectRetina={false}
+								tileSize={512}
+								zoomOffset={-1}
+								attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
 								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
-							url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
-						/>
-					)
-					: (
-						<TileLayer
-							key="tilelayer_international_lables_dark"
-							detectRetina={false}
-							tileSize={512}
-							zoomOffset={-1}
-							attribution={`
+								url="https://api.mapbox.com/styles/v1/qiekub/ck8aum3p70aa51in4ikxao8ii/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
+							/>
+						)
+						: (
+							<TileLayer
+								key="tilelayer_international_lables_dark"
+								detectRetina={false}
+								tileSize={512}
+								zoomOffset={-1}
+								attribution={`
 								<a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noreferrer">© Mapbox</a>
 								<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
 								| <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noreferrer">${this.props.getString('improve_this_map')}</a>
 							`}
-							url="https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
-						/>
-					)
+								url="https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/512/{z}/{x}/{y}{r}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g"
+							/>
+						)
 				}
-		
+
 				{/*<TileLayer
 					key="tilelayer_english_labels"
 					detectRetina={false}
