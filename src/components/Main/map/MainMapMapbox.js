@@ -1,4 +1,4 @@
-import React, {lazy, Suspense} from 'react'
+import React, { lazy, Suspense } from 'react'
 
 import { withLocalization } from '../../Localized/'
 import { withConicGradient } from '../../ConicGradient/'
@@ -95,15 +95,15 @@ class MainMapMapbox extends React.Component {
 		this.filtersChanged = this.filtersChanged.bind(this)
 	}
 
-	componentDidMount(){
+	componentDidMount() {
 		this.loadMarkers()
 		this.loadUndecidedPlaces()
 
 		if (this.props.conic_gradient) {
-			this.props.conic_gradient.onReady(()=>{
+			this.props.conic_gradient.onReady(() => {
 				this.ConicGradient = this.props.conic_gradient.getConicGradient()
 				// this.clusterGroup.RedrawIcons()
-				this.updateMarkers({forceRedraw:true})
+				this.updateMarkers({ forceRedraw: true })
 			})
 		}
 
@@ -127,7 +127,7 @@ class MainMapMapbox extends React.Component {
 					panBy: (...attr) => this.map ? this.map.panBy(...attr) : null,
 					panTo: (...attr) => this.map ? this.map.panTo(...attr) : null,
 					flyTo: (...attr) => this.map ? this.map.flyTo(...attr) : null,
-					invalidateSize: (...attr) => {}, // this.map.resize(...attr),
+					invalidateSize: (...attr) => { }, // this.map.resize(...attr),
 					project: (...attr) => this.leaflet_map ? this.leaflet_map.project(...attr) : null,
 					unproject: (...attr) => this.leaflet_map ? this.leaflet_map.unproject(...attr) : null,
 					latLngToContainerPoint: (...attr) => this.leaflet_map ? this.leaflet_map.latLngToContainerPoint(...attr) : null,
@@ -143,11 +143,11 @@ class MainMapMapbox extends React.Component {
 		window.addEventListener('updateMainMapView', this.setMapPos)
 
 		this.mapViewport = {
-			center: this.props.store.get('map_center_real') || [51,10],
+			center: this.props.store.get('map_center_real') || [51, 10],
 			zoom: this.props.store.get('map_zoom') || 3,
 		}
 	}
-	componentDidUpdate(){
+	componentDidUpdate() {
 		if (this.props.filters !== this.filters) {
 			this.filters = this.props.filters
 			this.filterMarkers(this.filters)
@@ -159,15 +159,15 @@ class MainMapMapbox extends React.Component {
 			this.map.setStyle(newStyleURL)
 		}
 	}
-	componentWillUnmount(){
+	componentWillUnmount() {
 		window.removeEventListener('updateMainMapView', this.setMapPos)
-	
+
 		if (this.markerQuerySubscription) {
 			this.markerQuerySubscription.unsubscribe()
 		}
 	}
 
-	refetchMarkers(){
+	refetchMarkers() {
 		this.props.globals.graphql.query({
 			fetchPolicy: 'network-only',
 			query: query_markers,
@@ -177,31 +177,31 @@ class MainMapMapbox extends React.Component {
 		})
 	}
 
-	setMapPos(event){
-		this.setState({center:this.props.globals.map_center})
+	setMapPos(event) {
+		this.setState({ center: this.props.globals.map_center })
 	}
 
-	useAsGeoChooser(yesOrNo, middleMarkerDoc){
+	useAsGeoChooser(yesOrNo, middleMarkerDoc) {
 		if (yesOrNo) {
 			this.setState({
 				isGeoChooser: true,
 				middleMarkerDoc,
-			}, ()=>{
+			}, () => {
 				this.filterMarkers(this.filters)
 				this.setGlobalMapCenter()
 			})
-		}else{
+		} else {
 			this.setState({
 				isGeoChooser: false,
 				middleMarkerDoc: undefined,
-			}, ()=>{
+			}, () => {
 				this.filterMarkers(this.filters)
 				this.setGlobalMapCenter()
 			})
 		}
 	}
 
-	loadMarkers(){
+	loadMarkers() {
 		this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 			fetchPolicy: 'cache-and-network',
 			query: query_markers,
@@ -210,51 +210,51 @@ class MainMapMapbox extends React.Component {
 				// wantedTags: ['min_age','max_age',...getWantedTagsList(presets)], // this gets us about 11% reduction in size
 			},
 		})
-		.subscribe(({data}) => {
-			if (!!data && !!data.markers) {
-				const docs = JSON.parse(JSON.stringify(data.markers)).map(doc=>{
-					doc.___preset = (
-						!!doc.preset && !!presets[doc.preset]
-						? {
-							key: doc.preset,
-							...presets[doc.preset],
-						}
-						: presets.default
-					)
-					doc.___color = getColorByPreset(doc.___preset.key,colorsByPreset) || colors.default
+			.subscribe(({ data }) => {
+				if (!!data && !!data.markers) {
+					const docs = JSON.parse(JSON.stringify(data.markers)).map(doc => {
+						doc.___preset = (
+							!!doc.preset && !!presets[doc.preset]
+								? {
+									key: doc.preset,
+									...presets[doc.preset],
+								}
+								: presets.default
+						)
+						doc.___color = getColorByPreset(doc.___preset.key, colorsByPreset) || colors.default
 
-					return doc
-				})
+						return doc
+					})
 
-				this.docs = docs
-				this.addMarkersToPruneCluster(docs)
-			}
-		})
+					this.docs = docs
+					this.addMarkersToPruneCluster(docs)
+				}
+			})
 	}
 
-	loadUndecidedPlaces(){
+	loadUndecidedPlaces() {
 		if (!!this.props.globals.profileID) {
 			this.markerQuerySubscription = this.props.globals.graphql.watchQuery({
 				fetchPolicy: 'cache-and-network',
 				query: query_undecidedPlaces,
 				variables: {},
 			})
-			.subscribe(({data}) => {
-				if (!!data && !!data.undecidedPlaces) {
-					this.undecidedPlaces = data.undecidedPlaces.map(doc=>doc._id)
-					this.filterMarkers(this.filters)
-				}
-			})
+				.subscribe(({ data }) => {
+					if (!!data && !!data.undecidedPlaces) {
+						this.undecidedPlaces = data.undecidedPlaces.map(doc => doc._id)
+						this.filterMarkers(this.filters)
+					}
+				})
 		}
 	}
-	
-	async showBorders(){
+
+	async showBorders() {
 		if (!this.borderGotLoaded) {
 			this.borderGotLoaded = true
 			const borders_path = await import('./border-files/borders_1to110m_p2.geojson')
 			const borders_response = await fetch(borders_path.default)
 			const borders = await borders_response.json()
-		
+
 			const getStatusColor = status => {
 				if (status === 'great' || status === 1) {
 					return this.props.theme.palette.success.main
@@ -265,18 +265,18 @@ class MainMapMapbox extends React.Component {
 				}
 				return this.props.theme.palette.background.default
 			}
-		
+
 			borders.features = borders.features.map(feature => {
 				const country_code = getCountryCode(feature.properties)
 				const ilga = getILGA(country_code)
 				const color = getStatusColor(
 					ilga
-					&& ilga.overview
-					&& ilga.overview.statusNumber
-					? ilga.overview.statusNumber
-					: -1
+						&& ilga.overview
+						&& ilga.overview.statusNumber
+						? ilga.overview.statusNumber
+						: -1
 				)
-		
+
 				return {
 					geometry: feature.geometry,
 					properties: {
@@ -305,7 +305,7 @@ class MainMapMapbox extends React.Component {
 				break
 			}
 		}
-	
+
 		this.map.addLayer({
 			'id': 'borders',
 			'type': 'fill',
@@ -317,21 +317,21 @@ class MainMapMapbox extends React.Component {
 			},
 		}, firstSymbolId)
 	}
-	hideBorders(){
+	hideBorders() {
 		if (!!this.map && this.map.getLayer('borders')) {
 			this.map.removeLayer('borders')
 		}
 	}
 
-	getStyleUrl(){
+	getStyleUrl() {
 		if (this.props.theme.palette.type === 'light') {
 			return 'mapbox://styles/qiekub/ck8aum3p70aa51in4ikxao8ii' // ?optimize=true
-		}else{
+		} else {
 			return 'mapbox://styles/qiekub/ck8ozalln0c1g1iog1mpl8aps' // ?optimize=true
 		}
 	}
 
-	getInitCenter(){
+	getInitCenter() {
 		let center = this.props.store.get('map_center_fake')
 
 		if (!(!!center)) {
@@ -350,11 +350,11 @@ class MainMapMapbox extends React.Component {
 		return center
 	}
 
-	gotMapRefLeaflet(element){
+	gotMapRefLeaflet(element) {
 		if (!!element && this.leaflet_map === null) {
 			this.leaflet_map = new L.Map(element, {
 				center: this.getInitCenter(),
-				zoom: (this.props.store.get('map_zoom') || 3)+1,
+				zoom: (this.props.store.get('map_zoom') || 3) + 1,
 				zoomSnap: 0,
 				zoomAnimation: false,
 				fadeAnimation: false,
@@ -363,15 +363,15 @@ class MainMapMapbox extends React.Component {
 				minZoom: 1,
 				maxZoom: 22,
 			})
-	
+
 			// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			// 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 			// }).addTo(this.leaflet_map);
-	
+
 			// L.tileLayer('https://api.mapbox.com/styles/v1/qiekub/ck8ozalln0c1g1iog1mpl8aps/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicWlla3ViIiwiYSI6ImNrOGF1ZGlpdzA1dDgzamx2ajNua3picmMifQ.OYr_o4fX7vPTvZCWZsUs4g', {
 			// 	attribution: ''
 			// }).addTo(this.leaflet_map)
-	
+
 			this.clusterGroup = new PruneClusterForLeaflet()
 			this.clusterGroup.Cluster.Size = this.defaultClusterSize
 			this.leaflet_map.addLayer(this.clusterGroup)
@@ -380,14 +380,14 @@ class MainMapMapbox extends React.Component {
 			}, 100)
 		}
 	}
-	loadedMapbox({ref, mapboxgl}){
+	loadedMapbox({ ref, mapboxgl }) {
 		this.mapboxgl = mapboxgl
-	
+
 		if (!!ref && this.map === null) {
 			this.currentStyleURL = this.getStyleUrl()
 
 			const center = this.getInitCenter()
-	
+
 			this.map = new this.mapboxgl.Map({
 				container: ref,
 				style: this.currentStyleURL,
@@ -420,12 +420,12 @@ class MainMapMapbox extends React.Component {
 					this.localizeTheMap()
 				}
 			})
-	
+
 			this.map.on('move', this.syncViewport)
 			this.map.on('moveend', this.syncViewport)
 			this.map.on('zoom', this.syncViewport)
 			this.map.on('zoomend', this.syncViewport)
-	
+
 			this.syncViewport()
 		}
 	}
@@ -440,30 +440,30 @@ class MainMapMapbox extends React.Component {
 		}
 	}
 
-	localizeTheMap(){
+	localizeTheMap() {
 		const language = this.props.getString('map_language')
 
 		const layerIDs = this.map.getStyle().layers
-		.filter(layer => (
-			layer.hasOwnProperty('layout')
-			&& layer.layout.hasOwnProperty('text-field')
-			&& layer.layout['text-field'].flat().includes('name')
-		))
-		.map(layer => layer.id)
+			.filter(layer => (
+				layer.hasOwnProperty('layout')
+				&& layer.layout.hasOwnProperty('text-field')
+				&& layer.layout['text-field'].flat().includes('name')
+			))
+			.map(layer => layer.id)
 
 		for (const layerID of layerIDs) {
 			this.map.setLayoutProperty(layerID, 'text-field', [
 				'coalesce',
-				['get', 'name_'+language],
+				['get', 'name_' + language],
 				['get', 'name_en'],
 				['get', 'name'],
 			])
-		}	
+		}
 	}
 
 
-		 
-	updateMarkers(options){
+
+	updateMarkers(options) {
 		options = options || {}
 
 		if (
@@ -490,20 +490,20 @@ class MainMapMapbox extends React.Component {
 		for (const feature of this.clusterGroup._objectsOnMap) {
 			const averagePosition = feature.averagePosition
 			const id = feature.hashCode
-	
+
 			let marker = this.mapbox_markers[id]
 			if (!marker) {
 				marker = this.mapbox_markers[id] = new this.mapboxgl.Marker({
 					element: (
 						feature.population === 1
-						? this.createPoiMarker(feature)
-						: this.createClusterMarker(feature)
+							? this.createPoiMarker(feature)
+							: this.createClusterMarker(feature)
 					)
 				})
-				.setLngLat(averagePosition)
+					.setLngLat(averagePosition)
 			}
 			newMarkers[id] = marker
-					 
+
 			if (!this.mapbox_markersOnScreen[id]) {
 				marker.addTo(this.map)
 			}
@@ -517,13 +517,13 @@ class MainMapMapbox extends React.Component {
 		}
 		this.mapbox_markersOnScreen = newMarkers
 	}
-	updateMarkersAfterPruneClusterUpdate(){
+	updateMarkersAfterPruneClusterUpdate() {
 		setTimeout(() => {
 			this.updateMarkers()
 		}, 100)
 	}
 
-	createPoiMarker(options){
+	createPoiMarker(options) {
 		const doc = options.lastMarker.data
 
 		const element = document.createElement('div')
@@ -532,13 +532,13 @@ class MainMapMapbox extends React.Component {
 		element.style.width = '40px'
 		element.style.height = '40px'
 
-		element.addEventListener('click', event=>{
+		element.addEventListener('click', event => {
 			if (!this.state.isGeoChooser) {
 				navigate(`/view/${doc._id}/`)
 			}
 		})
 
-		element.innerHTML =`
+		element.innerHTML = `
 			<div
 				class="wrapper material-icons-round"
 				style="
@@ -556,39 +556,39 @@ class MainMapMapbox extends React.Component {
 				"
 			>
 				${(
-					doc.name &&
+				doc.name &&
 					doc.name.length > 0
 					? getTranslationFromArray(doc.name, this.props.globals.userLocales)
 					: ''
-				)}
+			)}
 			</div>
 		`
-		
+
 		return element
 	}
-	createClusterMarker(options){
+	createClusterMarker(options) {
 		const colors = Object.entries(
 			options._clusterMarkers
-			.filter(m => !!m.data.___color.key)
-			.map(m => 
-				// m.data.___color.key === 'default'
-				// ? 'transparent'
-				// :
-				m.data.___color.bg
-			)
-			.reduce((obj,preset_key)=>{
-				if (!(!!obj[preset_key])) {
-					obj[preset_key] = 0
-				}
-				obj[preset_key] += 1
-				return obj
-			},{})
-		).sort((a,b)=>a[1]-b[1])
-	
-		const colors_sum = colors.reduce((sum,pair) => sum+pair[1], 0)
-	
-		const gradient = this.getConicGradient(colors.map(pair=>{
-			return [pair[0] , pair[1]/colors_sum]
+				.filter(m => !!m.data.___color.key)
+				.map(m =>
+					// m.data.___color.key === 'default'
+					// ? 'transparent'
+					// :
+					m.data.___color.bg
+				)
+				.reduce((obj, preset_key) => {
+					if (!(!!obj[preset_key])) {
+						obj[preset_key] = 0
+					}
+					obj[preset_key] += 1
+					return obj
+				}, {})
+		).sort((a, b) => a[1] - b[1])
+
+		const colors_sum = colors.reduce((sum, pair) => sum + pair[1], 0)
+
+		const gradient = this.getConicGradient(colors.map(pair => {
+			return [pair[0], pair[1] / colors_sum]
 		}))
 
 		const element = document.createElement('div')
@@ -602,8 +602,8 @@ class MainMapMapbox extends React.Component {
 			<div class="pieChart" style="background-image:url(${!!gradient ? gradient.dataURL : ''});"></div>
 		`
 
-		
-		element.addEventListener('click', event=>{
+
+		element.addEventListener('click', event => {
 			let padding = 128
 			if (this.props.globals.isSmallScreen) {
 				padding = 64
@@ -629,21 +629,21 @@ class MainMapMapbox extends React.Component {
 
 			this.map.flyTo({
 				center: options.position, // .averagePosition,
-				zoom: this.map.getZoom()+1,
+				zoom: this.map.getZoom() + 1,
 				padding: {
 					top: padding,
 					right: padding,
-					bottom: 116+padding,
-					left: (this.props.sidebarIsOpen ? 400+padding : padding)
+					bottom: 116 + padding,
+					left: (this.props.sidebarIsOpen ? 400 + padding : padding)
 				},
 				duration: 750,
 			})
 		})
-		
+
 		return element
 	}
 
-	getConicGradient(values){
+	getConicGradient(values) {
 		if (!(!!this.ConicGradient)) {
 			return null
 		}
@@ -653,23 +653,23 @@ class MainMapMapbox extends React.Component {
 		const gapColor = 'transparent' // this.props.theme.palette.type === 'dark' ? '#181818' : 'white'
 
 		if (values.length === 1) {
-			stops = [values[0][0]+' 0']
-		}else{
+			stops = [values[0][0] + ' 0']
+		} else {
 			let counter = 0
 			let currentPos = 0
 			for (const pair of values) {
 				currentPos += 5
 				if (counter === 0) {
-					stops.push(gapColor+' '+currentPos+'deg')
-				}else{
-					stops.push(gapColor+' 0 '+currentPos+'deg')
+					stops.push(gapColor + ' ' + currentPos + 'deg')
+				} else {
+					stops.push(gapColor + ' 0 ' + currentPos + 'deg')
 				}
-	
-				if (counter === values.length-1) {
-					stops.push(pair[0]+' 0')
-				}else{
-					currentPos += Math.ceil(pair[1]*360)
-					stops.push(pair[0]+' 0 '+currentPos+'deg')
+
+				if (counter === values.length - 1) {
+					stops.push(pair[0] + ' 0')
+				} else {
+					currentPos += Math.ceil(pair[1] * 360)
+					stops.push(pair[0] + ' 0 ' + currentPos + 'deg')
 				}
 
 				counter += 1
@@ -678,15 +678,15 @@ class MainMapMapbox extends React.Component {
 		stops = stops.join(', ')
 
 		const gradient = new this.ConicGradient({
-		    stops: stops, // "gold 40%, #f06 0", // required
-		    repeating: false, // Default: false
-		    size: 100, // Default: Math.max(innerWidth, innerHeight)
+			stops: stops, // "gold 40%, #f06 0", // required
+			repeating: false, // Default: false
+			size: 100, // Default: Math.max(innerWidth, innerHeight)
 		})
 
 		return gradient
 	}
 
-	addMarkersToPruneCluster(docs){
+	addMarkersToPruneCluster(docs) {
 		this.prune_markers = []
 		this.clusterGroup.RemoveMarkers()
 
@@ -703,7 +703,7 @@ class MainMapMapbox extends React.Component {
 		this.filterMarkers(this.filters)
 	}
 
-	hideAllMarkers(){
+	hideAllMarkers() {
 		const markers_length = this.prune_markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			this.prune_markers[i].filtered = true
@@ -711,7 +711,7 @@ class MainMapMapbox extends React.Component {
 		this.clusterGroup.ProcessView()
 		this.updateMarkersAfterPruneClusterUpdate()
 	}
-	showAllMarkers(){
+	showAllMarkers() {
 		const markers_length = this.prune_markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			this.prune_markers[i].filtered = false
@@ -719,14 +719,14 @@ class MainMapMapbox extends React.Component {
 		this.clusterGroup.ProcessView()
 		this.updateMarkersAfterPruneClusterUpdate()
 	}
-	showAllMarkersButMiddleMarker(){
+	showAllMarkersButMiddleMarker() {
 		const middleMarkerID = this.state.middleMarkerDoc._id
 
 		const markers_length = this.prune_markers.length
 		for (let i = markers_length - 1; i >= 0; i--) {
 			if (middleMarkerID === this.prune_markers[i].data._id) {
 				this.prune_markers[i].filtered = true
-			}else{
+			} else {
 				this.prune_markers[i].filtered = false
 			}
 		}
@@ -734,20 +734,20 @@ class MainMapMapbox extends React.Component {
 		this.clusterGroup.ProcessView()
 		this.updateMarkersAfterPruneClusterUpdate()
 	}
-	filterMarkers(filters){
+	filterMarkers(filters) {
 		if (this.state.isGeoChooser) {
 			this.showBorders()
 			this.showAllMarkersButMiddleMarker()
-		}else{
+		} else {
 			this.hideBorders()
 
 			if (!!this.filters) {
 				const ids = this.filters.ids || []
-	
+
 				const presets = this.filters.presets || []
 				// const presets = ['amenity/community_centre']
 				const presets_length = presets.length
-	
+
 				const selectedAge = this.filters.selectedAge
 				const ageOption = this.filters.ageOption
 				const audienceQueerOptions = this.filters.audienceQueerOptions || []
@@ -755,10 +755,10 @@ class MainMapMapbox extends React.Component {
 				const mustHaveUndecidedChangeset = this.filters.mustHaveUndecidedChangeset || false
 				const published = (
 					this.filters.published === false || this.filters.published === true
-					? this.filters.published
-					: null
+						? this.filters.published
+						: null
 				)
-	
+
 				if (
 					presets_length > 0
 					|| checkAudienceQueerOptions
@@ -770,90 +770,90 @@ class MainMapMapbox extends React.Component {
 					const markers_length = this.prune_markers.length
 					for (let i = markers_length - 1; i >= 0; i--) {
 						const marker = this.prune_markers[i]
-	
+
 						if (ids.includes(marker.data._id)) {
 							this.prune_markers[i].filtered = false
-						}else{
-							
+						} else {
+
 							let publishedFilter = false
 							if (published === true) {
 								publishedFilter = marker.data.tags.published === true
-							}else if (published === false) {
+							} else if (published === false) {
 								publishedFilter = marker.data.tags.published !== true
-							}else if (published === null) {
+							} else if (published === null) {
 								publishedFilter = true
 							}
-	
+
 							let hasUndecidedChangesets = true
 							if (mustHaveUndecidedChangeset) {
 								if (marker.data.status === 'undecided') {
 									hasUndecidedChangesets = true
-								}else{
+								} else {
 									hasUndecidedChangesets = this.undecidedPlaces.includes(marker.data._id)
 								}
 							}
-							
+
 							let isInPresets = true
 							if (presets_length > 0) {
-								isInPresets = presets.map(preset_key=>{
+								isInPresets = presets.map(preset_key => {
 									return marker.data.___preset.key.startsWith(preset_key)
-								}).reduce((bool,value) => (value ? true : bool), false)
+								}).reduce((bool, value) => (value ? true : bool), false)
 							}
-	
+
 							let matchesAudienceQueer = true
 							if (checkAudienceQueerOptions) {
 								if (!audienceQueerOptions.includes(marker.data.tags.audience_queer)) {
 									matchesAudienceQueer = false
 								}
 							}
-	
+
 							let isInAgeRange = true
 							if (!!selectedAge) {
 								isInAgeRange = false
-								if (ageOption!=='open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
+								if (ageOption !== 'open_end' && !!marker.data.tags.min_age && !!marker.data.tags.max_age) {
 									const parsedMin = Number.parseFloat(marker.data.tags.min_age)
 									const parsedMax = Number.parseFloat(marker.data.tags.max_age)
 									isInAgeRange = (
-										   (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
+										(!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
 										&& (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
 									)
-								}else{
+								} else {
 									if (!!marker.data.tags.min_age) {
 										const parsedMin = Number.parseFloat(marker.data.tags.min_age)
 										isInAgeRange = (!Number.isNaN(parsedMin) && parsedMin <= selectedAge)
 									}
-									if (isInAgeRange && !!marker.data.tags.max_age) {
+									if (isInAgeRange && !!marker.data.tags.max_age) {
 										const parsedMax = Number.parseFloat(marker.data.tags.max_age)
 										isInAgeRange = (!Number.isNaN(parsedMax) && parsedMax >= selectedAge)
 									}
 								}
 							}
-	
+
 							this.prune_markers[i].filtered = !(publishedFilter && hasUndecidedChangesets && isInPresets && matchesAudienceQueer && isInAgeRange)
 						}
 					}
 					this.clusterGroup.ProcessView()
 					this.updateMarkersAfterPruneClusterUpdate()
-				}else{
+				} else {
 					this.hideBorders()
 					this.showAllMarkers()
 				}
-			}else{
+			} else {
 				this.hideBorders()
 				this.showAllMarkers()
 			}
 		}
 	}
-	
 
-	setGlobalMapCenter(){
+
+	setGlobalMapCenter() {
 		const viewport = this.mapViewport
-		
+
 		if (!(!!viewport && !!viewport.center && !!viewport.zoom)) {
 			return
 		}
 
-		let mapCenter = viewport.center || {lng:0,lat:0}
+		let mapCenter = viewport.center || { lng: 0, lat: 0 }
 		// if (this.props.sidebarIsOpen) { // TODO this.props.sidebarIsOpen isn't enough on small screens
 		// 	const p1 = this.map.project(mapCenter)
 		// console.log('p1', p1)
@@ -895,11 +895,11 @@ class MainMapMapbox extends React.Component {
 		window.dispatchEvent(new Event('mapViewportUpdated'))
 	}
 
-	viewportChanged(viewport){
+	viewportChanged(viewport) {
 		if (this.leaflet_map) {
 			this.leaflet_map.setView(
 				viewport.center,
-				viewport.zoom+1,
+				viewport.zoom + 1,
 				{
 					animate: false,
 					duration: 0,
@@ -912,36 +912,36 @@ class MainMapMapbox extends React.Component {
 		this.setGlobalMapCenter()
 	}
 
-	zoomIn(){
-		this.map.zoomIn({duration: 200})
+	zoomIn() {
+		this.map.zoomIn({ duration: 200 })
 	}
-	zoomOut(){
-		this.map.zoomOut({duration: 200})
+	zoomOut() {
+		this.map.zoomOut({ duration: 200 })
 	}
 
-	filtersChanged(...attr){
+	filtersChanged(...attr) {
 		if (this.props.onFiltersChanged) {
 			this.props.onFiltersChanged(...attr)
 		}
 	}
-	
+
 	render() {
-		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>						
+		return (<div className={`${this.props.className} ${this.props.mapIsResizing ? 'mapIsResizing' : ''} ${this.props.sidebarIsOpen ? 'sidebarIsOpen' : ''}`}>
 
 			<div className="filtersPanel">
-				<FiltersPanelContent onChange={this.filtersChanged}/>
+				<FiltersPanelContent onChange={this.filtersChanged} />
 			</div>
 
 			<div className={`markerInTheMiddel rainbow ${this.state.isGeoChooser ? 'visible' : 'hidden'}`}>
 				<div className="leaflet-marker-icon marker-custom-icon">
 					{
 						!!this.state.middleMarkerDoc &&
-						!!this.state.middleMarkerDoc.___color &&
-						!!this.state.middleMarkerDoc.___color.bg &&
-						!!this.state.middleMarkerDoc.___color.fg &&
-						!!this.state.middleMarkerDoc.___preset
-						? <div className="wrapper material-icons-round" style={{'--bg-color':this.state.middleMarkerDoc.___color.bg,'--fg-color':this.state.middleMarkerDoc.___color.fg}}>{this.state.middleMarkerDoc.___preset.icon ? this.state.middleMarkerDoc.___preset.icon.toLowerCase() : 'not_listed_location'}</div>
-						: <div className="wrapper material-icons-round">not_listed_location</div>
+							!!this.state.middleMarkerDoc.___color &&
+							!!this.state.middleMarkerDoc.___color.bg &&
+							!!this.state.middleMarkerDoc.___color.fg &&
+							!!this.state.middleMarkerDoc.___preset
+							? <div className="wrapper material-icons-round" style={{ '--bg-color': this.state.middleMarkerDoc.___color.bg, '--fg-color': this.state.middleMarkerDoc.___color.fg }}>{this.state.middleMarkerDoc.___preset.icon ? this.state.middleMarkerDoc.___preset.icon.toLowerCase() : 'not_listed_location'}</div>
+							: <div className="wrapper material-icons-round">not_listed_location</div>
 					}
 				</div>
 			</div>
@@ -1008,7 +1008,7 @@ class MainMapMapbox extends React.Component {
 					onLoad={this.loadedMapbox}
 					className={
 						'map'
-						+(this.state.isGeoChooser ? ' isGeoChooser' : '')
+						+ (this.state.isGeoChooser ? ' isGeoChooser' : '')
 					}
 				/>
 			</Suspense>
