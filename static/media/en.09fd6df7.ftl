@@ -17,7 +17,7 @@ close-button = close
 # AudienceInput
 audience_input_instruction = Drag the audience groups into their category.
 audience_input_label_only = Only for…
-audience_input_label_primary = Primary for…
+audience_input_label_primary = Primarily for…
 audience_input_label_welcome = Welcome are…
 audience_input_label_no = Not welcome are…
 
@@ -40,17 +40,17 @@ for-which-age = For which age?
 for-age-x = For age {$age}
 for-age-x-and-up = For age {$age} and up
 
-button_audience_queer_default_text = Queer Acceptence
-menu_text_audience_queer_everything = <strong>Dont't filter</strong> by queer acceptence.
+button_audience_queer_default_text = Queer Acceptance
+menu_text_audience_queer_everything = <strong>Don't filter</strong> by queer acceptance.
 menu_text_audience_queer_only = <strong>Only</strong> for queer people
-menu_text_audience_queer_primary = <strong>Primary</strong> for queer people
+menu_text_audience_queer_primary = <strong>Primarily</strong> for queer people
 menu_text_audience_queer_welcome = Queer People are <strong>welcome</strong>
 menu_text_audience_queer_no = <strong>Not</strong> for queer people
 
 must_have_undecided_changes = Must have undecided changes?
 
 button_text_published = Published?
-menu_text_published_everything = <strong>Dont't filter</strong> by published.
+menu_text_published_everything = <strong>Don't filter</strong> by published.
 menu_text_published_unpublished = Only <strong>unpublished</strong> places
 menu_text_published_published = Only <strong>published</strong> places
 
@@ -100,7 +100,7 @@ privacy_info =
     You can find details on this in our <privacy_policy_link>Privacy Policy</privacy_policy_link>.
 
 sources_info = Name the source of your info.
-sources_placeholder = "Personal knowledge", links to websites...
+sources_placeholder = "Personal knowledge", links to websites…
 
 headings_thanks_stage = Thanks
 after_questions_thanks_text = Thanks for improving the map! We'll check your suggestions.
@@ -167,15 +167,15 @@ audience_text_queer_primary = Be who you are!
 
 audience_heading_queer_welcome = Queer people are welcome here!
 
-audience_heading_be_cautios = Please be cautios!
+audience_heading_be_cautios = Please be cautious!
 audience_text_be_cautios = We don't yet know if this place is a safe space.
 
 audience_only_heading = Only for:
-audience_primary_heading = Primary for:
+audience_primary_heading = Primarily for:
 audience_welcome_heading = Welcome are:
 
 age_restriction = Age restriction:
-max_age_text = Till age {$age}.
+max_age_text = Up to age {$age}.
 min_age_text = Age {$age} and up.
 age_range_text = Ages {$min_age} to {$max_age}.
 
