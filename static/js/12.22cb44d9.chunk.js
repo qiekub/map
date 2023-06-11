@@ -1,2 +1,0 @@
-(this.webpackJsonpundefined=this.webpackJsonpundefined||[]).push([[12],{361:function(e,n,s){e.exports=s.p+"static/media/borders_1to110m_p2.893f01da.geojson"}}]);
-//# sourceMappingURL=12.22cb44d9.chunk.js.map

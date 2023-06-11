@@ -1,1 +1,0 @@
-{"version":3,"sources":["locales/it.ftl"],"names":["module","exports"],"mappings":"4FAAAA,EAAOC,QAAU,IAA0B","file":"static/js/21.d6491868.chunk.js","sourcesContent":["module.exports = __webpack_public_path__ + \"static/media/it.46381bd6.ftl\";"],"sourceRoot":""}

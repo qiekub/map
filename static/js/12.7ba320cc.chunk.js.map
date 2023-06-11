@@ -1,0 +1,1 @@
+{"version":3,"sources":["components/Main/map/border-files/borders_1to110m_p2.geojson"],"names":["module","exports"],"mappings":"4FAAAA,EAAOC,QAAU,IAA0B","file":"static/js/12.7ba320cc.chunk.js","sourcesContent":["module.exports = __webpack_public_path__ + \"static/media/borders_1to110m_p2.893f01da.geojson\";"],"sourceRoot":""}
