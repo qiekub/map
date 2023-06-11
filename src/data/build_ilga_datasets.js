@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-
+const { load_ilga_data } = require('./ILGA-datasets/query_ilga_grahql.js')
 
 
 
@@ -14,8 +14,17 @@ const synonyms = {
 	'Democratic Republic of Congo': "Congo",
 	'Cape Verde': "Cabo Verde", // TODO: Is this correct?
 
+	// from 2023:
+	'Cote d\'Ivoire': 'Côte d\'Ivoire',
+	'Sao Tome e Principe': 'Sao Tome and Principe',
+	'Bonaire; Sint Eustatius and Saba (Netherlands)': 'Bonaire, Sint Eustatius and Saba',
+	'Falkland/Malvinas Islands (UK/Argentina)': 'Falkland Islands (Malvinas)',
+	'South Georgias and Sandwich (UK/Argentina)': 'South Georgia and the South Sandwich Islands',
+	'Turks and Caicos (UK)': 'Turks and Caicos Islands',
+	'US Virgin Islands (USA)': 'Virgin Islands (U.S.)',
+
 	// from 2019:
-	'Eswatini': 'Swati', // War früher Swasiland.
+	'Eswatini': 'Swaziland', // Swati? // TODO Why is the old name in the json file?!
 	'St Kitts & Nevis': 'Saint Kitts and Nevis',
 	'St Lucia': 'Saint Lucia',
 	'St Vincent & the Grenadines': 'Saint Vincent and the Grenadines',
@@ -60,8 +69,15 @@ function getCountryCode(countryName){
 
 	if (alpha3codes[countryName]) {
 		return alpha3codes[countryName]
-	} else if (synonyms[countryName] && alpha3codes[synonyms[countryName]]) {
+	}
+
+	if (synonyms[countryName] && alpha3codes[synonyms[countryName]]) {
 		return alpha3codes[synonyms[countryName]]
+	}
+
+	const country_name_without_brackets = remove_brackets(countryName)
+	if (alpha3codes[country_name_without_brackets]) {
+		return alpha3codes[country_name_without_brackets]
 	}
 
 	return null
@@ -618,19 +634,115 @@ function build_2016(){
 	return data_by_country
 }
 
+function remove_brackets(text) {
+	return text.replace(/\(.*?\)/g, '').trim()
+}
+async function build_2023() {
 
+	try {
+		const result_data = {}
 
+		let {
+			entriesCsssa,
+			entriesCt,
+			entriesProtection,
+		} = await load_ilga_data()
 
+		// first add empty default values
+		for (const entry of entriesCt) {
+			const alpha3code = getCountryCode(entry.motherEntry.jurisdiction.name || '')
+			if (alpha3code === null) {
+				console.error('no country code for', entry.motherEntry.jurisdiction.name)
+				continue
+			}
 
-const distPath = './dist/'
-if (!fs.existsSync(distPath)){
-	fs.mkdirSync(distPath)
+			result_data[alpha3code] = {
+				"criminalisation:legality": false,
+				"criminalisation:legality:by_gender": "illegal_for_all",
+				"criminalisation:penalty:max:years": null,
+				"protection:constitutional": false,
+				"protection:other": false,
+				"protection:employment": false,
+				"protection:hate_crime": false,
+				"protection:incitement": false,
+				"protection:ct_ban": false,
+				"recognition:marriage": false,
+				"recognition:civil_unions": false,
+				"recognition:joint_adoption": false,
+				"recognition:second_parent_adoption": false,
+				"criminalisation:penalty:max:lifetime": false,
+				"criminalisation:penalty:max:death": false
+			}
+		}
+
+		// add conversion-therapy data
+		for (const entry of entriesCt) {
+			const alpha3code = getCountryCode(entry.motherEntry.jurisdiction.name || '')
+			if (alpha3code === null) {
+				console.error('no country code for', entry.motherEntry.jurisdiction.name)
+				continue
+			}
+
+			let ct_ban = false
+			if (
+				typeof entry.all_adults_value === 'object'
+				&& entry.all_adults_value !== null
+				&& entry.all_adults_value.name === 'Yes'
+			) {
+				ct_ban = true
+			}
+
+			result_data[alpha3code]["protection:ct_ban"] = ct_ban
+		}
+
+		// add criminalisation-consensual-same-sex-sexual-acts
+		for (const entry of entriesCsssa) {
+			const alpha3code = getCountryCode(entry.motherEntry.jurisdiction.name || '')
+			if (alpha3code === null) {
+				console.error('no country code for', entry.motherEntry.jurisdiction.name)
+				continue
+			}
+
+			// result_data[alpha3code]["criminalisation:legality"] = false
+			// result_data[alpha3code]["criminalisation:legality:by_gender"] = "illegal_for_all"
+			result_data[alpha3code]["criminalisation:penalty:max:years"] = entry.max_prison_years
+			// result_data[alpha3code]["criminalisation:penalty:max:lifetime"] = false
+			// result_data[alpha3code]["criminalisation:penalty:max:death"] = false
+		}
+
+		// add protection
+		for (const entry of entriesProtection) {
+			const alpha3code = getCountryCode(entry.motherEntry.jurisdiction.name || '')
+			if (alpha3code === null) {
+				console.error('no country code for', entry.motherEntry.jurisdiction.name)
+				continue
+			}
+
+			result_data[alpha3code]["protection:constitutional"] = false
+			result_data[alpha3code]["protection:other"] = false
+			result_data[alpha3code]["protection:employment"] = false
+			result_data[alpha3code]["protection:hate_crime"] = false
+			result_data[alpha3code]["protection:incitement"] = false
+		}
+
+		return result_data
+	} catch (error) {
+		console.error(error)
+		return {}
+	}
 }
 
-fs.writeFileSync(distPath+'ilga_2019.json', JSON.stringify(build_2019()))
-fs.writeFileSync(distPath+'ilga_2017.json', JSON.stringify(build_2017()))
-fs.writeFileSync(distPath+'ilga_2016.json', JSON.stringify(build_2016()))
 
+async function start() {
+	const distPath = './dist/'
+	if (!fs.existsSync(distPath)){
+		fs.mkdirSync(distPath)
+	}
 
-
+	fs.writeFileSync(distPath+'ilga_2019.json', JSON.stringify(build_2019()))
+	fs.writeFileSync(distPath+'ilga_2017.json', JSON.stringify(build_2017()))
+	fs.writeFileSync(distPath+'ilga_2016.json', JSON.stringify(build_2016()))
+	// fs.writeFileSync(distPath+'ilga_2023.json', JSON.stringify(await build_2023(), null, 2))
+}
+start()
 
